@@ -1,0 +1,689 @@
+// modified from https://github.com/acornprover/acornlib 727e395 src/set.ac
+
+/// Sets with elements of type `K` are defined as Boolean functions over `K`, in the form of wrapper structure
+structure Set[K] {
+    contain: K -> Bool
+}
+// Obvious sets
+define constant_false[K](x: K) -> Bool {
+    false
+}
+define constant_true[K](x: K) -> Bool {
+    true
+}
+define negate_fn[K](f: K -> Bool) -> (K -> Bool) {
+    function(x: K) {
+        not f(x)
+    }
+}
+theorem dual_of_nagate_fn[K] (f: K -> Bool) {
+    negate_fn[K](negate_fn[K](f)) = f
+} by {
+    forall(x: K) {
+        negate_fn[K](negate_fn[K](f))(x) implies not not f(x)
+
+        negate_fn[K](negate_fn[K](f))(x) = f(x)
+    }
+}
+theorem dual_of_constant_bool_fn[K] {
+    negate_fn(constant_false[K]) = constant_true[K]
+}
+
+define singleton_fn[K](x: K, y: K) -> Bool {
+    x = y
+}
+
+/// Set basics
+attributes Set[K] {
+    // local empty & universal
+    let empty_set = Set[K].new(constant_false[K])
+    let universal_set = Set[K].new(constant_true[K])
+    let singleton: K -> Set[K] = function(x: K) {
+        Set[K].new(singleton_fn(x))
+    }
+    define not_contain(self, x: K) -> Bool {
+        not (self.contain(x))
+    }
+
+    define is_empty(self) -> Bool {
+        forall(x: K) {
+            not x ∈ self
+        }
+    }
+
+    define c(self) -> Set[K] {
+        Set[K].new(self.not_contain)
+    }
+
+    define is_singleton(self) -> Bool {
+        exists(x: K) {
+            self = Set[K].singleton(x)
+        }
+    }
+}
+
+let empty[K] = Set[K].empty_set
+let universe[K] = Set[K].universal_set
+
+theorem empty_set_is_empty[K](a: Set[K]) {
+    (a = empty[K]) = (a.is_empty)
+} by {
+    (a.is_empty) implies (a.contain = constant_false[K])
+
+    if (a.is_empty) {
+        a = empty[K]
+    } // too manual
+}
+
+theorem singleton_set_is_singleton[K](a: Set[K]) {
+    forall(x: K) {Set[K].singleton(x).is_singleton}
+
+    and 
+
+    (a.is_singleton) implies exists(x: K) {a = Set[K].singleton(x)}
+}
+
+theorem non_contain_is_negate_contain[K] (a: Set[K]) {
+    a.not_contain = negate_fn[K](a.contain)
+} by {
+    forall(x: K) {
+        not a.contain(x) = a.not_contain(x) 
+
+        not a.contain(x) = negate_fn[K](a.contain)(x)
+
+        a.not_contain(x) implies negate_fn[K](a.contain)(x) // too manual
+
+        a.not_contain(x) = negate_fn[K](a.contain)(x)
+    }
+}
+theorem not_contain_is_not_in [K](a: Set[K], x: K) {
+    (x ∉ a) = (not x ∈ a)
+} 
+theorem element_not_in_is_element_in_compl[K](a: Set[K], x: K) {
+    (x ∉ a) = (x ∈ a.c)
+} 
+theorem compl_contain_is_non_cotain[K](a: Set[K]) {
+    a.c.contain = a.not_contain
+} 
+
+theorem compl_is_reflect[K](a: Set[K]) {
+    a.c.c = a
+} by {
+    forall(x: K) {
+        (x ∈ a.c.c) implies not (not (x ∈ a))
+
+        (x ∈ a.c.c) = (x ∈ a)
+    }
+    a.c.c.contain = a.contain
+}
+
+theorem dual_of_empty_set_and_universal[K] {
+    empty[K].c = universe[K]
+    and 
+    universe[K].c = empty[K]
+} by {
+    empty[K].c.contain = universe[K].contain
+
+    empty[K].c = universe[K] // redundant
+}
+
+theorem singleton_set_is_not_empty[K](a: K) {
+    not (Set[K].singleton(a)).is_empty
+} 
+
+// Subsets
+define subset[K](a: Set[K], b: Set[K]) -> Bool {
+    forall(x: K) {
+        x ∈ a implies x ∈ b
+    }
+}
+
+define supset[K](a: Set[K], b: Set[K]) -> Bool {
+    forall(x: K) {
+        x ∈ b implies x ∈ a
+    }
+}
+
+theorem sym_of_subset_and_supset[K](a: Set[K], b: Set[K]) {
+    (a ⊂ b) = (b ⊃ a)
+} by {
+    (a ⊂ b) implies (b ⊃ a) // redundant?
+}
+
+// Subset theorems
+theorem empty_set_is_always_subset[K](a: Set[K]) {
+    empty[K] ⊂ a
+}
+
+theorem all_sets_subset_universal[K](a: Set[K]) {
+    a ⊂ universe[K]
+}
+
+theorem subset_refl[K](a: Set[K]) {
+    a ⊂ a
+}
+
+theorem subset_trans[K](a1: Set[K], a2: Set[K], a3: Set[K]) {
+    (a1 ⊂ a2 and a2 ⊂ a3) implies a1 ⊂ a3
+}
+
+theorem subset_and_supset_iff_equal[K](a1: Set[K], a2: Set[K]) {
+    (a1 = a2) = (a1 ⊂ a2 and a1 ⊃ a2)
+} by {
+    if (a1 ⊂ a2 and a1 ⊃ a2) {
+        forall(x: K) {
+            x ∈ a1 implies x ∈ a2
+            x ∈ a2 implies x ∈ a1
+            (x ∈ a1) = (x ∈ a2)
+        }
+        a1.contain = a2.contain
+        a1 = a2
+    }
+
+    (a1 = a2) implies (a1 ⊂ a2)
+    (a1 = a2) implies (a2 ⊂ a1)
+}
+
+define helper_prop[K](a: Set[K], b: Set[K]) -> Bool {
+    forall(x: K) {
+        ((x ∈ a) implies (x ∈ b)) 
+        and 
+        ((x ∈ b) implies (x ∈ a))
+    }
+}
+theorem set_equal_representationt[K](a: Set[K], b: Set[K]) {
+    (a = b) = helper_prop(a, b)
+} by {
+    (a = b) implies helper_prop(a, b)
+    
+    helper_prop(a, b) implies (a ⊂ b)
+
+    helper_prop(a, b) implies (a ⊃ b)
+}
+
+define elem_in_union[K](a1: Set[K], a2: Set[K], x: K) -> Bool {
+    x ∈ a1 or x ∈ a2
+}
+
+define elem_in_intersection[K](a1: Set[K], a2: Set[K], x: K) -> Bool {
+    x ∈ a1 and x ∈ a2
+}
+
+// Difference
+define elem_in_difference[K](a: Set[K], b: Set[K], x: K) -> Bool {
+    x ∈ a and not x ∈ b
+}
+
+/// a1 ∪ a2
+define union[K](a1: Set[K], a2: Set[K]) -> Set[K] {
+    Set[K].new(elem_in_union(a1, a2))
+}
+
+theorem in_union[K](a1: Set[K], a2: Set[K], x: K) {
+    (x ∈ (a1 ∪ a2)) = (x ∈ a1 or x ∈ a2)
+} by {
+    (x ∈ (a1 ∪ a2)) implies (x ∈ a1 or x ∈ a2) // redundant?
+
+    (x ∈ a1 or x ∈ a2) implies (x ∈ (a1 ∪ a2))
+}
+
+/// a1 ∩ a2
+define intersection[K](a1: Set[K], a2: Set[K]) -> Set[K] {
+    Set[K].new(elem_in_intersection(a1, a2))
+}
+
+theorem in_intersection[K](a1: Set[K], a2: Set[K], x: K) {
+    (x ∈ (a1 ∩ a2)) = (x ∈ a1 and x ∈ a2)
+    // parentheses required?
+} by {
+    (x ∈ (a1 ∩ a2)) implies (x ∈ a1 and x ∈ a2) // redundant?
+}
+
+/// a \ b
+define without[K](a: Set[K], b: Set[K]) -> Set[K] {
+    Set[K].new(elem_in_difference(a, b))
+}
+
+theorem without_is_intersection_with_compl[K](a: Set[K], b: Set[K]) {
+    (a ∖ b) = (a ∩ b.c)
+} by {
+    forall(x: K) {
+        (x ∈ (a ∖ b)) implies (x ∈ a) and (x ∉ b) 
+
+        (x ∈ (a ∖ b)) implies (x ∈ (a ∩ b.c))
+
+        (x ∈ (a ∖ b)) = (x ∈ (a ∩ b.c))
+    }
+}
+
+define sym_diffrence[K](a: Set[K], b: Set[K]) -> Set[K] {
+    (a ∖ b) ∪ (b ∖ a) 
+}
+
+theorem union_comm[K](a1: Set[K], a2: Set[K]) {
+    (a1 ∪ a2) = (a2 ∪ a1)
+} by {
+    forall(x: K) {
+        elem_in_union(a1, a2, x) implies elem_in_union(a2, a1, x)
+        
+        elem_in_union(a1, a2, x) = elem_in_union(a2, a1, x)
+        
+    }
+    elem_in_union(a1, a2) = elem_in_union(a2, a1)
+}
+
+theorem intersection_comm[K](a1: Set[K], a2: Set[K]) {
+    a1 ∩ a2 = a2 ∩ a1
+} by {
+    forall(x: K) {
+        elem_in_intersection(a1, a2, x) implies elem_in_intersection(a2, a1, x)
+        
+        elem_in_intersection(a1, a2, x) = elem_in_intersection(a2, a1, x)
+    }
+    elem_in_intersection(a1, a2) = elem_in_intersection(a2, a1)
+}
+
+theorem union_intersection_compl_dual[K](a1: Set[K], a2: Set[K]) {
+    (a1 ∪ a2).c = (a1.c ∩ a2.c)
+} by {
+    forall(x: K) {
+        (x ∉ (a1 ∪ a2)) implies ((x ∉ a1) and (x ∉ a2))
+
+        (x ∈ (a1 ∪ a2).c) implies ((x ∈ a1.c ∩ a2.c))
+
+        (x ∈ (a1 ∪ a2).c) = ((x ∈ a1.c ∩ a2.c))
+    }
+    (a1 ∪ a2).c.contain = (a1.c ∩ a2.c).contain
+}
+
+theorem set_in_union[K](a1: Set[K], a2: Set[K]) {
+    a1 ⊂ a1 ∪ a2 and a2 ⊂ a1 ∪ a2
+} by {
+    a1 ⊂ a1 ∪ a2
+    a2 ⊂ a1 ∪ a2
+    // redundant
+}
+
+theorem subset_union_is_subset[K](sub_1: Set[K], sub_2: Set[K], a: Set[K]) {
+    (sub_1 ⊂ a and sub_2 ⊂ a) implies ((sub_1 ∪ sub_2) ⊂ a)
+}
+
+theorem set_contain_intersection[K](a1: Set[K], a2: Set[K]) {
+    a1 ∩ a2 ⊂ a1 and a1 ∩ a2 ⊂ a2
+} by {
+    a1 ∩ a2 ⊂ a1
+    a1 ∩ a2 ⊂ a2
+    // redundant
+}
+
+theorem supset_intersection_is_supset[K](sup_1: Set[K], sup_2: Set[K], a: Set[K]) {
+    (sup_1 ⊃ a and sup_2 ⊃ a) implies ((sup_1 ∩ sup_2) ⊃ a)
+}
+
+theorem sym_diffrence_another_rep[K](a: Set[K], b: Set[K]) {
+    (a ∖ b) ∪ (b ∖ a) = (a ∪ b) ∖ (a ∩ b) 
+} by {
+    (a ∖ b) ⊂ (a ∪ b)
+    (b ∖ a) ⊂ (a ∪ b)
+
+    (a ∖ b) ⊂ (a ∩ b).c
+    (b ∖ a) ⊂ (a ∩ b).c 
+
+    (a ∖ b) ∪ (b ∖ a) ⊂ (a ∪ b) ∩ (a ∩ b).c
+
+    forall(x: K) {
+        if (x ∈ a) {
+            x ∈ (a ∪ b) ∖ (a ∩ b) implies x ∈ (a ∖ b) ∪ (b ∖ a)
+        }
+        x ∈ (a ∪ b) ∖ (a ∩ b) implies x ∈ (a ∖ b) ∪ (b ∖ a)
+    }
+    (a ∪ b) ∖ (a ∩ b) ⊂ (a ∖ b) ∪ (b ∖ a)
+}
+
+theorem union_associative[K](a1: Set[K], a2: Set[K], a3: Set[K]) {
+    (a1 ∪ a2) ∪ a3 = a1 ∪ (a2 ∪ a3)
+} by {
+    let u1 = (a1 ∪ a2) ∪ a3
+    let u2 = a1 ∪ (a2 ∪ a3)
+
+    a1 ⊂ u1
+    a2 ⊂ u1
+    a3 ⊂ u1
+    u2 ⊂ u1
+
+    a1 ⊂ u2
+    a2 ⊂ u2
+    a3 ⊂ u2
+    u2 ⊂ u1 
+}
+
+theorem intersection_associative[K](a1: Set[K], a2: Set[K], a3: Set[K]) {
+    (a1 ∩ a2) ∩ a3 = a1 ∩ (a2 ∩ a3)
+} by {
+    ((a1.c ∪ a2.c) ∪ a3.c).c = (a1.c ∪ (a2.c ∪ a3.c)).c
+}
+
+theorem union_idemp[K](a: Set[K]) {
+    a ∪ a = a
+}
+
+theorem intersection_idemp[K](a: Set[K]) {
+    a ∩ a = a
+}
+
+theorem union_subset_is_self[K](sub: Set[K], a: Set[K]) {
+    sub ⊂ a implies sub ∪ a = a
+}
+
+theorem intersection_subset_is_self[K](sup: Set[K], a: Set[K]) {
+    sup ⊃ a implies sup ∩ a = a
+}
+
+theorem union_empty_is_self[K](a: Set[K]) {
+    a ∪ empty[K] = a
+}
+
+theorem union_universal_is_universal[K](a: Set[K]) {
+    a ∪ universe[K] = universe[K]
+}
+
+theorem intersection_universal_is_self[K](a: Set[K]) {
+    a ∩ universe[K] = a
+}
+
+theorem intersection_empty_is_empty[K](s: Set[K]) {
+    s ∩ empty[K] = empty[K]
+}
+
+theorem bool_distributive_1(x1: Bool, x2: Bool, y: Bool) {
+    ((x1 or x2) and y) = ((x1 and y) or (x2 and y))
+    // parentheses is necessary
+} 
+theorem bool_distributive_2(x1: Bool, x2: Bool, y: Bool) {
+    ((x1 and x2) or y) = ((x1 or y) and (x2 or y)) 
+} // if put together, search fail
+
+theorem union_intersection_distributive_1[K](a1: Set[K], a2: Set[K], b: Set[K]) {
+    ((a1 ∪ a2) ∩ b) = ((a1 ∩ b) ∪ (a2 ∩ b))
+} // if put together with `and`, it say "Local assumptions are inconsistent"
+by {
+    a1 ∪ a2 ⊃ a1
+    a1 ∪ a2 ⊃ a2
+    ((a1 ∪ a2) ∩ b) ⊃ (a1 ∩ b) 
+    ((a1 ∪ a2) ∩ b) ⊃ (a2 ∩ b) 
+    ((a1 ∪ a2) ∩ b) ⊃ ((a1 ∩ b) ∪ (a2 ∩ b))
+
+    forall(x: K) {
+        (x ∈ (a1 ∪ a2) ∩ b) implies (x ∈ (a1 ∩ b) ∪ (a2 ∩ b))
+    }
+    ((a1 ∪ a2) ∩ b) ⊂ ((a1 ∩ b) ∪ (a2 ∩ b))
+}
+
+theorem union_intersection_distributive_2[K](a1: Set[K], a2: Set[K], b: Set[K]) {
+    ((a1 ∩ a2) ∪ b) = ((a1 ∪ b) ∩ (a2 ∪ b))
+} by {
+    ((a1.c ∪ a2.c) ∩ b.c).c = ((a1.c ∩ b.c) ∪ (a2.c ∩ b.c)).c
+}
+// Union and intersection over a index of sets
+define or_index[I, K] (f: I -> Set[K], x: K) -> Bool {
+    exists(i: I) {
+        x ∈ f(i)
+    }
+}
+
+define and_index[I, K] (f: I -> Set[K], x: K) -> Bool {
+    forall(i: I) {
+        x ∈ f(i)
+    }
+}
+
+define union_index[I, K](f: I -> Set[K]) -> Set[K] {
+    Set[K].new(or_index(f))
+}
+
+define intersection_index[I, K](f: I -> Set[K]) -> Set[K] {
+    Set[K].new(and_index(f))
+}
+
+define index_compl[I, K](f: I -> Set[K]) -> (I -> Set[K]) {function(i: I) {f(i).c}}
+
+theorem union_intersection_index_compl_dual[I, K](f: I -> Set[K]) {
+    union_index(f).c = intersection_index(index_compl[I, K](f))
+} by {
+        forall(x: K) {
+            x ∉ union_index(f) implies (
+                forall(i: I) {
+                    x ∉ f(i)
+                }
+            )
+
+        x ∈ union_index(f).c implies x ∈ intersection_index(index_compl[I, K](f))
+
+        (
+            forall(i: I) {
+                x ∉ f(i)
+            }
+        ) implies x ∉ union_index(f)
+
+        x ∈ intersection_index(index_compl[I, K](f)) implies x ∈ union_index(f).c
+
+        x ∈ union_index(f).c = x ∈ intersection_index(index_compl[I, K](f))
+    }
+}
+
+// Proving indexed union and intersection definitions are consistent
+// with index definitions
+
+inductive Two {
+    first
+    second
+}
+
+theorem test_two(x: Two) {
+    if (x = Two.first) {
+        x != Two.second
+    }
+}
+
+// Creates a function f: Two -> Set[K]
+define fn_two[K](a1: Set[K], a2: Set[K], x: Two) -> Set[K] {
+    match x {
+        Two.first {
+            a1
+        }
+        Two.second {
+            a2
+        }
+    }
+}
+
+theorem test_fn_two[K](a1: Set[K], a2: Set[K], x: Two) {
+    fn_two[K](a1, a2, x) ⊂ universe[K]
+}
+
+// Defines union in the case of two sets using index definition
+define union_index_of_two[K](a1: Set[K], a2: Set[K]) -> Set[K] {
+    union_index(fn_two(a1, a2))
+} 
+
+theorem union_is_union_index_of_two[K](a1: Set[K], a2: Set[K]) {
+    a1 ∪ a2 = union_index_of_two(a1, a2)
+} by {
+    forall(x: K) {
+        x ∈ a1 implies (
+            exists(i: Two) {
+                x ∈ fn_two(a1, a2, i)
+            }
+        )
+
+        x ∈ a2 implies (
+            exists(i: Two) {
+                x ∈ fn_two(a1, a2, i)
+            }
+        )
+
+        (x ∈ a1 ∪ a2) implies (x ∈ union_index_of_two(a1, a2))
+
+        (x ∈ union_index_of_two(a1, a2)) implies (
+            exists(i: Two) {
+                x ∈ fn_two(a1, a2, i)
+            }
+        )
+        (x ∈ union_index_of_two(a1, a2)) implies x ∈ a1 or x ∈ a2
+
+        (x ∈ a1 ∪ a2) = (x ∈ union_index_of_two(a1, a2))
+    }
+}
+
+define intersection_index_of_two[K](a1: Set[K], a2: Set[K]) -> Set[K] {
+    intersection_index(fn_two(a1, a2))
+} 
+
+theorem intersection_is_intersection_index_of_two[K](a1: Set[K], a2: Set[K]) {
+    a1 ∩ a2 = intersection_index_of_two(a1, a2)
+} by {
+    forall(x: K) {
+        (
+            forall(i: Two) {
+                x ∈ fn_two(a1, a2, i)
+            }
+        ) implies x ∈ a1
+
+        (
+            forall(i: Two) {
+                x ∈ fn_two(a1, a2, i)
+            }
+        ) implies x ∈ a2
+
+        (x ∈ intersection_index_of_two(a1, a2)) implies (x ∈ a1 and x ∈ a2) 
+
+        (x ∈ a1 and x ∈ a2) implies (
+            forall(i: Two) {
+                x ∈ fn_two(a1, a2, i)
+            }
+        )
+
+        (x ∈ a1 and x ∈ a2) implies (x ∈ intersection_index_of_two(a1, a2)) 
+
+        (x ∈ a1 ∩ a2) implies (x ∈ intersection_index_of_two(a1, a2))
+
+        (x ∈ a1 ∩ a2) = (x ∈ intersection_index_of_two(a1, a2))
+    }
+}
+
+inductive Sum[K1, K2] {
+    first(K1)
+    second(K2)
+}
+
+define elem_in_sum[K1, K2](a1: Set[K1], a2: Set[K2], p: Sum[K1, K2]) -> Bool {
+    match p {
+        Sum[K1, K2].first(x1) {
+            x1 ∈ a1
+        }
+        Sum[K1, K2].second(x2) {
+            x2 ∈ a2
+        }
+    }
+}
+
+define sum[K1, K2](a1: Set[K1], a2: Set[K2]) -> Set[Sum[K1,K2]] {
+    Set[Sum[K1,K2]].new(elem_in_sum(a1, a2))
+}
+
+theorem sum_test[K1, K2](a1: Set[K1], a2: Set[K2]) {
+    (a1 ⊔ a2) ⊂ Set[Sum[K1, K2]].universal_set
+}
+
+structure Product[K1, K2] {
+    first: K1
+    second: K2
+}
+
+define elem_in_product[K1,K2](a1: Set[K1], a2: Set[K2], p: Product[K1,K2]) -> Bool {
+    p.first ∈ a1 and p.second ∈ a2
+}
+
+define product[K1, K2](a1: Set[K1], a2: Set[K2]) -> Set[Product[K1,K2]] {
+    Set[Product[K1,K2]].new(elem_in_product(a1, a2))
+}
+
+theorem product_test[K1, K2](a1: Set[K1], a2: Set[K2]) {
+    (a1 × a2) ⊂ universe[Product[K1, K2]]
+}
+
+define elem_in_product_index[I, K](f: I -> Set[K], x: I -> K) -> Bool {
+    forall(i: I) {
+        x(i) ∈ f(i)
+    }
+}
+
+define elem_in_sum_index[I, K](f: I -> Set[K], x: Product[I, K]) -> Bool {
+    exists(i: I) {
+        x.first = i and x.second ∈ f(i)
+    }
+}
+
+define product_index[I, K](f: I -> Set[K]) -> Set[I -> K] {
+    Set[I -> K].new(elem_in_product_index(f))
+}
+
+define sum_index[I, K](f: I -> Set[K]) -> Set[Product[I, K]] {
+    Set[Product[I, K]].new(elem_in_sum_index(f))
+}
+
+// todo: (product/sum)_index_of_two
+
+define elem_in_map[K,L](in_space: Set[K], out_space: Set[L], m_image: Set[Product[K,L]]) -> Bool {
+    forall(x: K) {
+        x ∈ in_space implies exists(y: L) {
+            y ∈ out_space and Product[K,L].new(x,y) ∈ m_image
+        } and forall(y1: L, y2: L) {
+            Product[K,L].new(x,y1) ∈ m_image and Product[K,L].new(x,y2) ∈ m_image implies y1 = y2
+        }
+    }
+}
+
+define map[K, L](in_space: Set[K], out_space: Set[L]) -> Set[Set[Product[K,L]]] {
+    Set[Set[Product[K,L]]].new(elem_in_map(in_space, out_space))
+}
+
+theorem test_map[K, L](in_space: Set[K], out_space: Set[L]) {
+    (in_space --> out_space) ⊂ universe[Set[Product[K,L]]]
+}
+
+// may need to modify acorn to make set-theory function easy to use? currently, use some workaround 
+
+define elem_in_image_of_function[K,L](f: K -> L, p: Product[K,L]) -> Bool {
+    p.second = f(p.first)
+}
+
+define image_of_function[K,L](f: K -> L) -> Set[Product[K,L]] {
+    Set[Product[K,L]].new(elem_in_image_of_function(f))
+}
+
+structure Map_From_Function[K, L] {
+    in_space: Set[K]
+    out_space: Set[L]
+    fn: K -> L
+} constraint {
+    exists(m_image: Set[Product[K,L]]) {
+        m_image ∈ (in_space --> out_space) and m_image = (in_space × out_space ∩ image_of_function(fn))
+    }
+}
+
+// todo: map version of (union/intersection/product/sum)_index
+
+define elem_in_union_index_map[I, K](s: Map_From_Function[I, Set[K]], x: K) -> Bool {
+    exists(i: I) {
+        i ∈ s.in_space and x ∈ s.fn(i)
+    }
+}
+
+define union_index_map[I, K](s: Map_From_Function[I, Set[K]]) -> Set[K] {
+    Set[K].new(elem_in_union_index_map(s))
+}
+
+theorem test_union_index_map[I, K](s: Map_From_Function[I, Set[K]]) {
+    union_index_map(s) ⊂ universe[K]
+}
