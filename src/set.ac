@@ -497,10 +497,6 @@ define fn_two[K](a1: Set[K], a2: Set[K], x: Two) -> Set[K] {
     }
 }
 
-theorem test_fn_two[K](a1: Set[K], a2: Set[K], x: Two) {
-    fn_two[K](a1, a2, x) ⊂ universe[K]
-}
-
 // Defines union in the case of two sets using index definition
 define union_index_of_two[K](a1: Set[K], a2: Set[K]) -> Set[K] {
     union_index(fn_two(a1, a2))
@@ -608,10 +604,6 @@ define product[K1, K2](a1: Set[K1], a2: Set[K2]) -> Set[Product[K1,K2]] {
     Set[Product[K1,K2]].new(elem_in_product(a1, a2))
 }
 
-theorem product_test[K1, K2](a1: Set[K1], a2: Set[K2]) {
-    (a1 × a2) ⊂ universe[Product[K1, K2]]
-}
-
 define elem_in_product_index[I, K](f: I -> Set[K], x: I -> K) -> Bool {
     forall(i: I) {
         x(i) ∈ f(i)
@@ -649,10 +641,6 @@ define map[K, L](in_space: Set[K], out_space: Set[L]) -> Set[Set[Product[K,L]]] 
     Set[Set[Product[K,L]]].new(elem_in_map(in_space, out_space))
 }
 
-theorem test_map[K, L](in_space: Set[K], out_space: Set[L]) {
-    (in_space --> out_space) ⊂ universe[Set[Product[K,L]]]
-}
-
 // may need to modify acorn to make set-theory function easy to use? currently, use some workaround 
 
 define elem_in_image_of_function[K,L](f: K -> L, p: Product[K,L]) -> Bool {
@@ -663,43 +651,154 @@ define image_of_function[K,L](f: K -> L) -> Set[Product[K,L]] {
     Set[Product[K,L]].new(elem_in_image_of_function(f))
 }
 
-// if needed, add axiom
+define map_exists[K, L] (in_space: Set[K], out_space: Set[L], fn: K -> L) -> Bool {
+    exists(m_image: Set[Product[K,L]]) {
+        m_image ∈ (in_space --> out_space) and m_image = (in_space × out_space ∩ image_of_function(fn))
+    } 
+}
+
+axiom axiom_of_map[K, L](in_space: Set[K], out_space: Set[L], fn: K -> L) {
+    map_exists(in_space, out_space, fn)
+}
+
 structure Map[K, L] {
     in_space: Set[K]
     out_space: Set[L]
     fn: K -> L
 } constraint {
-    exists(m_image: Set[Product[K,L]]) {
-        m_image ∈ (in_space --> out_space) and m_image = (in_space × out_space ∩ image_of_function(fn))
-    }
-}
+    map_exists(in_space, out_space, fn)
+} 
 
-// todo: map version of (union/intersection/product/sum)_index
-
-define elem_in_union_index_map[I, K](s: Map[I, Set[K]], x: K) -> Bool {
+define elem_in_union_index_map[I, K](m: Map[I, Set[K]], x: K) -> Bool {
     exists(i: I) {
-        i ∈ s.in_space and x ∈ s.fn(i)
+        i ∈ m.in_space and x ∈ m.fn(i)
     }
 }
 
-define union_index_map[I, K](s: Map[I, Set[K]]) -> Set[K] {
-    Set[K].new(elem_in_union_index_map(s))
+define union_index_map[I, K](m: Map[I, Set[K]]) -> Set[K] {
+    Set[K].new(elem_in_union_index_map(m))
 }
 
-theorem test_union_index_map[I, K](s: Map[I, Set[K]]) {
-    union_index_map(s) ⊂ universe[K]
-}
-
-define elem_in_intersection_index_map[I, K](s: Map[I, Set[K]], x: K) -> Bool {
+define elem_in_intersection_index_map[I, K](m: Map[I, Set[K]], x: K) -> Bool {
     forall(i: I) {
-        i ∈ s.in_space implies x ∈ s.fn(i)
+        i ∈ m.in_space implies x ∈ m.fn(i)
     }
 }
 
-define intersection_index_map[I, K](s: Map[I, Set[K]]) -> Set[K] {
-    Set[K].new(elem_in_intersection_index_map(s))
+define intersection_index_map[I, K](m: Map[I, Set[K]]) -> Set[K] {
+    Set[K].new(elem_in_intersection_index_map(m))
 }
 
-theorem test_intersection_index_map[I, K](s: Map[I, Set[K]]) {
-    intersection_index_map(s) ⊂ universe[K]
+define elem_in_product_index_map[I, K](m: Map[I, Set[K]], x: I -> K) -> Bool {
+    forall(i: I) {
+        i ∈ m.in_space implies x(i) ∈ m.fn(i)
+    }
 }
+
+define product_index_map[I, K](m: Map[I, Set[K]]) -> Set[I -> K] {
+    Set[I -> K].new(elem_in_product_index_map(m))
+}
+
+// todo: map version of sum_index
+
+attributes Map[K, L] {
+    define is_injective(self) -> Bool {
+        forall(x1: K, x2: K) {
+            x1 ∈ self.in_space and x2 ∈ self.in_space implies (self.fn(x1) = self.fn(x2) implies x1 = x2) 
+        }
+    }
+    define is_surjective(self) -> Bool {
+        forall(y: L) {
+            y ∈ self.out_space implies exists(x: K) {
+                x ∈ self.in_space and self.fn(x) = y
+            }
+        }
+    }
+    define is_bijective(self) -> Bool {
+        self.is_injective and self.is_surjective
+    }
+}
+
+from nat.nat_base import Nat
+numerals Nat
+
+// 1 ~ n
+define element_in_finite_index(n: Nat, a: Nat) -> Bool {
+    if n = 0 {
+        false
+    } else {
+        1 <= a and a <= n
+    }
+}
+
+define finite_index(n: Nat) -> Set[Nat] {
+    Set[Nat].new(element_in_finite_index(n))
+}
+
+attributes Set[K] {
+    define is_finite_set(self) -> Bool {
+        exists(n: Nat, m: Map[Nat, K]) {
+            m.in_space = finite_index(n) and 
+            m.out_space = self and
+            m.is_bijective 
+        }
+    }
+}
+
+define cardinal_lte[K, L](a: Set[K], b: Set[L]) -> Bool {
+    exists(m: Map[K, L]) {
+        m.in_space = a and
+        m.out_space = b and
+        m.is_injective 
+    }
+}
+
+define cardinal_gte[K, L](a: Set[K], b: Set[L]) -> Bool {
+    exists(m: Map[K, L]) {
+        m.in_space = a and
+        m.out_space = b and
+        m.is_surjective 
+    }
+}
+
+define cardinal_eq[K, L](a: Set[K], b: Set[L]) -> Bool {
+    exists(m: Map[K, L]) {
+        m.in_space = a and
+        m.out_space = b and
+        m.is_bijective 
+    }
+}
+
+define power_set[K](a: Set[K]) -> Set[Set[K]] {
+    Set[Set[K]].new(supset(a))
+}
+
+define is_injective[K, L](f: K -> L) -> Bool {
+    forall(x1: K, x2: K) { f(x1) = f(x2) implies x1 = x2 }  
+}
+
+define is_surjective[K, L](f: K -> L) -> Bool {
+    forall(y: L) { exists(x: K) { f(x) = y } } 
+}
+
+// if change this to theorem, acorn give "fatal runtime error: stack overflow, aborting". why?
+axiom nat_set_uncountable(f: Nat -> Set[Nat]) {
+    not is_surjective(f)
+} by {
+    define p(g: Nat -> Set[Nat], x: Nat) -> Bool {
+        x ∉ g(x)
+    }
+    let omega = Set[Nat].new(p(f))
+    forall(x: Nat) {
+        x ∈ omega implies x ∉ f(x)
+        not (omega ⊂ f(x))
+        omega != f(x)
+    }
+}
+
+// if change this to theorem, acorn will eat all memory. why?
+axiom cardinal_lt_power_set[K](a: Set[K]) {
+    not cardinal_gte[K, Set[K]](a, power_set(a))
+}
+
+// is this mean that the "cantor diagonal argument" have some problem with acorn? do we need some additional axiom?
