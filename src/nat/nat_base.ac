@@ -1,0 +1,424 @@
+from order import PartialOrder, LinearOrder
+from util import is_transitive, is_acyclic
+
+/// Natural numbers, the soul of arithmetic.
+/// We build natural numbers from Acorn's inherent properties of inductive types.
+inductive Nat {
+    /// Zero is a natural number, because it's much more convenient this way.
+    0
+
+    /// The successor of a natural number is also a natural number.
+    suc(Nat)
+}
+
+attributes Nat {
+    let 1: Nat = Nat.0.suc
+    let 2: Nat = Nat.1.suc
+    let 3: Nat = Nat.2.suc
+    let 4: Nat = Nat.3.suc
+    let 5: Nat = Nat.4.suc
+    let 6: Nat = Nat.5.suc
+    let 7: Nat = Nat.6.suc
+    let 8: Nat = Nat.7.suc
+    let 9: Nat = Nat.8.suc
+    let 10: Nat = Nat.9.suc
+
+    /// Addition is defined recursively.
+    define add(self, other: Nat) -> Nat {
+        match other {
+            Nat.0 {
+                self
+            }
+            Nat.suc(pred) {
+                (self + pred).suc
+            }
+        }
+    }
+}
+
+axiom add_def_sym(n1: Nat, n2: Nat) {
+    n1 + n2 = match n1 {
+            Nat.0 {
+                n2
+            }
+            Nat.suc(pred) {
+                (n2 + pred).suc
+            }
+        }
+}
+
+numerals Nat
+
+
+// Now let's have some theorems.
+
+theorem add_zero(a: Nat) { a + 0 = a and 0 + a = a }
+
+theorem one_plus_one { 1 + 1 = 2 } by {
+    1 + 0.suc = 1.suc
+}
+
+theorem add_suc(a: Nat, b: Nat) {
+    a + b.suc = (a + b).suc and
+    a.suc + b = (a + b).suc
+}
+
+theorem add_one(a: Nat) {
+    a + 1 = a.suc and
+    1 + a = a.suc
+} by {
+    a + 0.suc = (a + 0).suc
+    0.suc + a = (0 + a).suc
+}
+
+theorem suc_ne(a: Nat) { a.suc != a } by {
+    suc_ne(0) // by property of inductive
+    forall(x: Nat) {
+        if suc_ne(x) {
+            x.suc != x
+            x.suc.suc != x.suc // by property of inductive
+            suc_ne(x.suc)
+        }
+    }
+    suc_ne(a)
+}
+
+theorem add_comm(a: Nat, b: Nat) { a + b = b + a } 
+
+theorem add_assoc_one(a: Nat, b: Nat) { (a + b) + 1 = a + (b + 1) }
+
+theorem add_assoc(a: Nat, b: Nat, c: Nat) { (a + b) + c = a + (b + c) } by {
+    define f(x: Nat) -> Bool {
+        add_assoc(a, b, x) // helper
+    }
+    f(0)
+    forall(x: Nat){
+        if f(x) {
+            f(x + 1)
+        }
+    }
+    add_assoc(a, b, c)
+}
+
+attributes Nat {
+    /// Multiplication is defined recursively.
+    define mul(self, b: Nat) -> Nat {
+        match b {
+            Nat.0 {
+                0
+            }
+            Nat.suc(pred) {
+                (self * pred) + self
+            }
+        }
+    }
+
+    /// The number formed by appending a digit to this one in base 10.
+    define read(self, other: Nat) -> Nat {
+        10 * self + other
+    }
+}
+
+axiom mul_def_sym(n1: Nat, n2: Nat) {
+    n1 * n2 = match n1 {
+        Nat.0 {
+            0
+        }
+        Nat.suc(pred) {
+            (pred * n2) + n2
+        }
+    }    
+}
+
+theorem mul_zero(a: Nat) { a * 0 = 0 and 0 * a = 0 }
+
+theorem mul_suc(a: Nat, b: Nat) {
+    a * (b + 1) = a * b + a 
+}
+
+theorem mul_suc_dual(a: Nat, b: Nat) {
+    (a + 1) * b = a * b + b
+} 
+
+theorem one_mul_one { 1 * 1 = 1 } 
+
+theorem mul_comm(a: Nat, b: Nat) { a * b = b * a } by {
+    define f(x: Nat) -> Bool { mul_comm(a, x) }
+    f(0)
+    forall(x: Nat) {
+        if f(x) {
+            f(x + 1)
+        }
+    }
+    mul_comm(a, b)
+}
+
+theorem distrib(a: Nat, b: Nat, c: Nat) {
+    a * (b + c) = a * b + a * c 
+} by {
+    define f(x: Nat) -> Bool { distrib(a, b, x) }
+    f(0)
+    forall(x: Nat) {
+        if f(x) {
+            distrib(a, b, x)
+            a * (b + x) = a * b + a * x            
+            mul_suc(a, b + x)
+            distrib(a, b, x + 1)
+        }
+    }
+    distrib(a, b, c)
+}
+
+theorem distrib_dual(a: Nat, b: Nat, c: Nat) {
+    (a + b) * c = a * c + b * c
+} // by mul_comm
+
+theorem mul_assoc(a: Nat, b: Nat, c: Nat) { (a * b) * c = a * (b * c) } by {
+    define f(x: Nat) -> Bool { mul_assoc(a, b, x) }
+    f(0)
+    forall(x: Nat) {
+        if f(x) {
+            (a * b) * x = a * (b * x)
+            mul_suc(a * b, x)
+            f(x + 1)
+        }
+    }
+    mul_assoc(a, b, c)
+}
+
+theorem mul_one(a: Nat) { a * 1 = a } by {
+    (a * 0) + a = a
+}
+
+theorem mul_one_dual(a: Nat) { 1 * a = a }
+
+theorem suc_cancels(a: Nat, b: Nat) { a + 1 = b + 1 implies a = b } by {
+    if a != b {
+        a.suc != b.suc // property of inductive
+    }
+}
+
+theorem add_identity(a: Nat, b: Nat) { a + b = b implies a = 0 } by {
+    define f(x: Nat) -> Bool { add_identity(a, x) }
+    f(0)
+    forall(x: Nat) {
+        if f(x) {
+            suc_cancels(a + x, x)
+            f(x + 1)
+        }
+    }
+    add_identity(a, b)
+}
+
+theorem add_identity_dual(a: Nat, b: Nat) { b + a = b implies a = 0 }
+
+theorem add_cancels(a: Nat, b: Nat, c: Nat) { a + c = b + c implies a = b } by {
+    define f(x: Nat) -> Bool { add_cancels(a, b, x) }
+    f(0)
+    forall(x: Nat) {
+        if f(x) {
+            add_cancels(a, b, x)
+            suc_cancels(a + x, b + x)
+            add_cancels(a, b, x + 1)
+        }
+    }
+    add_cancels(a, b, c)
+}
+
+theorem add_cancels_dual(a: Nat, b: Nat, c: Nat) { c + a = c + b implies a = b }
+
+// Ordering
+
+attributes Nat {
+    /// `a < b` if there's a positive natural number that can be added to `a` to get `b`.
+    define lt(self, other: Nat) -> Bool {
+        exists(n: Nat) {
+            n != 0 and self + n = other
+        }
+    }
+    define lte(self, other: Nat) -> Bool {
+        exists(c: Nat) {
+            self < other or self = other
+        }
+    }
+}
+
+theorem lt_trans(a: Nat, b: Nat, c: Nat) { a < b and b < c implies a < c } by {
+    let n1: Nat satisfy { a + n1 = b }
+    let n2: Nat satisfy { b + n2 = c }
+    a + (n1 + n2) = c
+}
+
+theorem nat_is_transitive {
+    is_transitive(Nat.lt)
+}
+
+theorem lt_and_eq_is_different_thing(a: Nat) {
+    not (a < a)
+} by {
+    if (a < a) {
+        let n: Nat satisfy { n != 0 and a + n = a }
+        not add_identity(a, a + n)
+        false
+    }
+}
+
+theorem lt_acyclic(a: Nat, b: Nat) {
+    not (a < b and b < a)
+} 
+
+theorem nat_is_acyclic {
+    is_acyclic(Nat.lt)
+}
+
+instance Nat: PartialOrder {
+    let lt = Nat.lt
+}
+
+theorem only_zero_lte_zero(a: Nat) {
+    a <= 0 implies a = 0
+} by {
+    exists(n: Nat) { a + n = 0 }
+}
+
+theorem not_lt_zero(a: Nat) {
+    not a < 0
+} by {
+    if a < 0 {
+        a != 0
+        false
+    }
+}
+
+theorem zero_or_suc(a: Nat) {
+    a = 0 or exists(b: Nat) { a = b + 1 }
+}
+
+theorem lt_cancel_suc(a: Nat, b: Nat) {
+    a + 1 < b + 1 implies a < b
+} by {
+    let n: Nat satisfy {
+        a + 1 + n = b + 1
+    }
+    suc_cancels(a + n, b)
+    a + n = b
+}
+
+theorem lte_cancel_suc(a: Nat, b: Nat) { a + 1 <= b + 1 implies a <= b } 
+
+theorem lt_and_lte(a: Nat, b: Nat, c: Nat) { a < b and b <= c implies a < c } 
+
+theorem lte_and_lt(a: Nat, b: Nat, c: Nat) { a <= b and b < c implies a < c } 
+
+theorem lte_trans(a: Nat, b: Nat, c: Nat) { a <= b and b <= c implies a <= c } 
+
+theorem lt_suc_left(a: Nat, b: Nat) { a < b implies a + 1 <= b } by {
+    let (n: Nat) satisfy { a + n = b and n != 0 }
+    let (m: Nat) satisfy { n = m + 1 }
+    if m = 0 {
+        a + 1 = b
+    } else {
+        m != 0
+        a + m + 1 = b
+        a + 1 < b
+    }
+}
+
+theorem lt_suc_right(a: Nat, b: Nat) { a < b + 1 implies a <= b } by {
+    let (n: Nat) satisfy { a + n = b + 1 and n != 0 }
+    let (m: Nat) satisfy { n = m + 1 }
+    a + m = b
+    if m = 0 {
+        a = b
+    } else {
+        a < b
+    }
+}
+
+theorem lt_add_left(a: Nat, b: Nat, c: Nat) { a < b implies a + c < b + c } by {
+    let (n: Nat) satisfy { a + n = b }
+    a + c + n = b + c
+}
+
+theorem trichotomy(a: Nat, b: Nat) { a < b or b < a or a = b } by {
+    define f(x: Nat) -> Bool { trichotomy(a, x) }
+    0 = a or 0 < a
+    f(0)
+    forall(x: Nat) {
+        if f(x) {
+            trichotomy(a, x)
+            a < x or x < a or a = x
+            if a <= x {
+                a < x + 1
+                trichotomy(a, x + 1)
+            }
+            if x < a {
+                x + 1 <= a
+                trichotomy(a, x + 1)
+            }
+            trichotomy(a, x + 1)
+        }
+    }
+    trichotomy(a, b)
+}
+
+theorem division_theorem(m: Nat, n: Nat) {
+    0 < n implies exists(q: Nat, r: Nat) {
+        r < n and m = q * n + r
+    }
+} by {
+    define f(x: Nat) -> Bool { division_theorem(x, n) }
+    if 0 < n {
+        0 = 0 * n + 0
+    }
+    division_theorem(0, n)
+    f(0)
+    forall(x: Nat) {
+        if f(x) {
+            division_theorem(x, n)
+            let (q: Nat, r: Nat) satisfy {
+                r < n and x = q * n + r
+            }
+            if r + 1 = n {
+                x + 1 = (q * n + r) + 1
+                x + 1 = q * n + (r + 1)
+                x + 1 = q * n + n
+                x + 1 = (q + 1) * n + 0
+                division_theorem(x + 1, n)
+            } else {
+                r + 1 < n
+                x + 1 = q * n + r + 1
+                division_theorem(x + 1, n)
+            }
+            division_theorem(x + 1, n)
+        }
+    }
+    division_theorem(m, n)
+}
+
+attributes Nat {
+    define is_composite(self) -> Bool {
+        exists(a: Nat, b: Nat) {
+            1 < a and 1 < b and self = a * b // 0,1 is useless
+        }
+    }
+
+    define is_prime(self) -> Bool {
+        1 < self and not self.is_composite
+    }
+
+    define divides(self, a: Nat) -> Bool {
+        exists(b: Nat) { self * b = a }
+    }
+
+    define factorial(self) -> Nat {
+        match self {
+            Nat.0 {
+                1
+            }
+            Nat.suc(pred) {
+                self * pred.factorial
+            }
+        }
+    }
+}

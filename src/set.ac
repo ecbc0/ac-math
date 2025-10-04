@@ -395,15 +395,15 @@ theorem intersection_empty_is_empty[K](s: Set[K]) {
     s ∩ empty[K] = empty[K]
 }
 
-theorem bool_distributive_1(x1: Bool, x2: Bool, y: Bool) {
+theorem bool_distributive(x1: Bool, x2: Bool, y: Bool) {
     ((x1 or x2) and y) = ((x1 and y) or (x2 and y))
     // parentheses is necessary
 } 
-theorem bool_distributive_2(x1: Bool, x2: Bool, y: Bool) {
+theorem bool_distributive_dual(x1: Bool, x2: Bool, y: Bool) {
     ((x1 and x2) or y) = ((x1 or y) and (x2 or y)) 
 } // if put together, search fail
 
-theorem union_intersection_distributive_1[K](a1: Set[K], a2: Set[K], b: Set[K]) {
+theorem union_intersection_distributive[K](a1: Set[K], a2: Set[K], b: Set[K]) {
     ((a1 ∪ a2) ∩ b) = ((a1 ∩ b) ∪ (a2 ∩ b))
 } // if put together with `and`, it say "Local assumptions are inconsistent"
 by {
@@ -419,7 +419,7 @@ by {
     ((a1 ∪ a2) ∩ b) ⊂ ((a1 ∩ b) ∪ (a2 ∩ b))
 }
 
-theorem union_intersection_distributive_2[K](a1: Set[K], a2: Set[K], b: Set[K]) {
+theorem union_intersection_distributive_dual[K](a1: Set[K], a2: Set[K], b: Set[K]) {
     ((a1 ∩ a2) ∪ b) = ((a1 ∪ b) ∩ (a2 ∪ b))
 } by {
     ((a1.c ∪ a2.c) ∩ b.c).c = ((a1.c ∩ b.c) ∪ (a2.c ∩ b.c)).c
@@ -634,6 +634,7 @@ define sum_index[I, K](f: I -> Set[K]) -> Set[Product[I, K]] {
 
 // todo: (product/sum)_index_of_two
 
+// if needed, add axiom
 define elem_in_map[K,L](in_space: Set[K], out_space: Set[L], m_image: Set[Product[K,L]]) -> Bool {
     forall(x: K) {
         x ∈ in_space implies exists(y: L) {
@@ -662,7 +663,8 @@ define image_of_function[K,L](f: K -> L) -> Set[Product[K,L]] {
     Set[Product[K,L]].new(elem_in_image_of_function(f))
 }
 
-structure Map_From_Function[K, L] {
+// if needed, add axiom
+structure Map[K, L] {
     in_space: Set[K]
     out_space: Set[L]
     fn: K -> L
@@ -674,16 +676,30 @@ structure Map_From_Function[K, L] {
 
 // todo: map version of (union/intersection/product/sum)_index
 
-define elem_in_union_index_map[I, K](s: Map_From_Function[I, Set[K]], x: K) -> Bool {
+define elem_in_union_index_map[I, K](s: Map[I, Set[K]], x: K) -> Bool {
     exists(i: I) {
         i ∈ s.in_space and x ∈ s.fn(i)
     }
 }
 
-define union_index_map[I, K](s: Map_From_Function[I, Set[K]]) -> Set[K] {
+define union_index_map[I, K](s: Map[I, Set[K]]) -> Set[K] {
     Set[K].new(elem_in_union_index_map(s))
 }
 
-theorem test_union_index_map[I, K](s: Map_From_Function[I, Set[K]]) {
+theorem test_union_index_map[I, K](s: Map[I, Set[K]]) {
     union_index_map(s) ⊂ universe[K]
+}
+
+define elem_in_intersection_index_map[I, K](s: Map[I, Set[K]], x: K) -> Bool {
+    forall(i: I) {
+        i ∈ s.in_space implies x ∈ s.fn(i)
+    }
+}
+
+define intersection_index_map[I, K](s: Map[I, Set[K]]) -> Set[K] {
+    Set[K].new(elem_in_intersection_index_map(s))
+}
+
+theorem test_intersection_index_map[I, K](s: Map[I, Set[K]]) {
+    intersection_index_map(s) ⊂ universe[K]
 }
