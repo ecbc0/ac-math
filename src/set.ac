@@ -626,48 +626,25 @@ define sum_index[I, K](f: I -> Set[K]) -> Set[Product[I, K]] {
 
 // todo: (product/sum)_index_of_two
 
-// if needed, add axiom
-define elem_in_map[K,L](in_space: Set[K], out_space: Set[L], m_image: Set[Product[K,L]]) -> Bool {
-    forall(x: K) {
-        x ∈ in_space implies exists(y: L) {
-            y ∈ out_space and Product[K,L].new(x,y) ∈ m_image
-        } and forall(y1: L, y2: L) {
-            Product[K,L].new(x,y1) ∈ m_image and Product[K,L].new(x,y2) ∈ m_image implies y1 = y2
-        }
-    }
-}
-
-define map[K, L](in_space: Set[K], out_space: Set[L]) -> Set[Set[Product[K,L]]] {
-    Set[Set[Product[K,L]]].new(elem_in_map(in_space, out_space))
-}
-
-// may need to modify acorn to make set-theory function easy to use? currently, use some workaround 
-
-define elem_in_image_of_function[K,L](f: K -> L, p: Product[K,L]) -> Bool {
-    p.second = f(p.first)
-}
-
-define image_of_function[K,L](f: K -> L) -> Set[Product[K,L]] {
-    Set[Product[K,L]].new(elem_in_image_of_function(f))
-}
-
-define map_exists[K, L] (in_space: Set[K], out_space: Set[L], fn: K -> L) -> Bool {
-    exists(m_image: Set[Product[K,L]]) {
-        m_image ∈ (in_space --> out_space) and m_image = (in_space × out_space ∩ image_of_function(fn))
-    } 
-}
-
-axiom axiom_of_map[K, L](in_space: Set[K], out_space: Set[L], fn: K -> L) {
-    map_exists(in_space, out_space, fn)
-}
-
 structure Map[K, L] {
     in_space: Set[K]
     out_space: Set[L]
     fn: K -> L
 } constraint {
-    map_exists(in_space, out_space, fn)
-} 
+    forall(x: K) {
+        x ∈ in_space implies fn(x) ∈ out_space
+    }
+}
+
+// maybe we sometime want to use f: a --> b instead of m: Map[K, L] ... is this possible?
+define elem_in_map[K, L](in_space: Set[K], out_space: Set[L], fn: K -> L) -> Bool {
+    forall(x: K) {
+        x ∈ in_space implies fn(x) ∈ out_space
+    }
+}
+define map[K, L](in_space: Set[K], out_space: Set[L]) -> Set[K -> L] {
+    Set[K -> L].new(elem_in_map(in_space, out_space))
+}
 
 define elem_in_union_index_map[I, K](m: Map[I, Set[K]], x: K) -> Bool {
     exists(i: I) {
