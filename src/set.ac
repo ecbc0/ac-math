@@ -131,18 +131,21 @@ theorem singleton_set_is_not_empty[K](a: K) {
     not (Set[K].singleton(a)).is_empty
 } 
 
-// Subsets
-define subset[K](a: Set[K], b: Set[K]) -> Bool {
-    forall(x: K) {
-        x ∈ a implies x ∈ b
+attributes Set[K] {
+    /// a ⊂ b
+    define subset(self, a: Set[K]) -> Bool {
+        forall(x: K) {
+            x ∈ self implies x ∈ a
+        }
+    }
+    /// a ⊃ b
+    define supset(self, a: Set[K]) -> Bool {
+        forall(x: K) {
+            x ∈ a implies x ∈ self
+        }
     }
 }
 
-define supset[K](a: Set[K], b: Set[K]) -> Bool {
-    forall(x: K) {
-        x ∈ b implies x ∈ a
-    }
-}
 
 theorem sym_of_subset_and_supset[K](a: Set[K], b: Set[K]) {
     (a ⊂ b) = (b ⊃ a)
@@ -214,9 +217,21 @@ define elem_in_difference[K](a: Set[K], b: Set[K], x: K) -> Bool {
     x ∈ a and not x ∈ b
 }
 
-/// a1 ∪ a2
-define union[K](a1: Set[K], a2: Set[K]) -> Set[K] {
-    Set[K].new(elem_in_union(a1, a2))
+attributes Set[K] {
+    /// a1 ∪ a2
+    define union(self, a: Set[K]) -> Set[K] {
+    Set[K].new(elem_in_union(self, a))
+    }
+
+    /// a1 ∩ a2
+    define intersection(self, a: Set[K]) -> Set[K] {
+        Set[K].new(elem_in_intersection(self, a))
+    }
+
+    /// a \ b
+    define without(self, a: Set[K]) -> Set[K] {
+        Set[K].new(elem_in_difference(self, a))
+    }
 }
 
 theorem in_union[K](a1: Set[K], a2: Set[K], x: K) {
@@ -227,21 +242,11 @@ theorem in_union[K](a1: Set[K], a2: Set[K], x: K) {
     (x ∈ a1 or x ∈ a2) implies (x ∈ (a1 ∪ a2))
 }
 
-/// a1 ∩ a2
-define intersection[K](a1: Set[K], a2: Set[K]) -> Set[K] {
-    Set[K].new(elem_in_intersection(a1, a2))
-}
-
 theorem in_intersection[K](a1: Set[K], a2: Set[K], x: K) {
     (x ∈ (a1 ∩ a2)) = (x ∈ a1 and x ∈ a2)
     // parentheses required?
 } by {
     (x ∈ (a1 ∩ a2)) implies (x ∈ a1 and x ∈ a2) // redundant?
-}
-
-/// a \ b
-define without[K](a: Set[K], b: Set[K]) -> Set[K] {
-    Set[K].new(elem_in_difference(a, b))
 }
 
 theorem without_is_intersection_with_compl[K](a: Set[K], b: Set[K]) {
@@ -721,7 +726,7 @@ define cardinal_eq[K, L](a: Set[K], b: Set[L]) -> Bool {
 }
 
 define power_set[K](a: Set[K]) -> Set[Set[K]] {
-    Set[Set[K]].new(supset(a))
+    Set[Set[K]].new(a.supset)
 }
 
 define is_injective[K, L](f: K -> L) -> Bool {
