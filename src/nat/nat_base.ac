@@ -1,5 +1,6 @@
 from order import PartialOrder, LinearOrder
 from util import is_transitive, is_acyclic
+from set import Set, Map, empty, universe, cardinal_lt_power, is_surjective
 
 /// Natural numbers, the soul of arithmetic.
 /// We build natural numbers from Acorn's inherent properties of inductive types.
@@ -48,7 +49,6 @@ axiom add_def_sym(n1: Nat, n2: Nat) {
 }
 
 numerals Nat
-
 
 // Now let's have some theorems.
 
@@ -244,8 +244,8 @@ attributes Nat {
 }
 
 theorem lt_trans(a: Nat, b: Nat, c: Nat) { a < b and b < c implies a < c } by {
-    let n1: Nat satisfy { a + n1 = b }
-    let n2: Nat satisfy { b + n2 = c }
+    let n1: Nat satisfy { a + n1 = b and n1 != 0 }
+    let n2: Nat satisfy { b + n2 = c and n1 != 0 }
     a + (n1 + n2) = c
 }
 
@@ -397,18 +397,20 @@ theorem division_theorem(m: Nat, n: Nat) {
 }
 
 attributes Nat {
-    define is_composite(self) -> Bool {
-        exists(a: Nat, b: Nat) {
-            1 < a and 1 < b and self = a * b // 0,1 is useless
+    define divides(self, a: Nat) -> Bool {
+        exists(b: Nat) { self * b = a }
+    }
+}
+
+attributes Nat {
+    define is_prime(self) -> Bool {
+        forall(n: Nat) {
+            1 < n and n < self implies not n.divides(self)
         }
     }
 
-    define is_prime(self) -> Bool {
-        1 < self and not self.is_composite
-    }
-
-    define divides(self, a: Nat) -> Bool {
-        exists(b: Nat) { self * b = a }
+    define is_composite(self) -> Bool {
+        not self.is_prime
     }
 
     define factorial(self) -> Nat {
@@ -420,5 +422,129 @@ attributes Nat {
                 self * pred.factorial
             }
         }
+    }
+}
+
+theorem mul_to_nonzero(a: Nat, b: Nat) { a != 0 and b != 0 implies a * b != 0 } by {
+    let b_pred: Nat satisfy { b_pred + 1 = b }
+    a * b = a * b_pred + a
+} 
+
+theorem mul_to_zero(a: Nat, b: Nat) { a * b = 0 implies a = 0 or b = 0 } 
+
+theorem mul_increase(a: Nat, b: Nat) {
+    a != 0 and 1 < b implies a < a * b
+} by {
+    let (b_pred: Nat) satisfy { b_pred + 1 = b and b_pred != 0 }
+    a * b = a * b_pred + a
+}
+
+theorem divides_self(a: Nat) { a.divides(a) }
+
+theorem divides_trans(a1: Nat, a2: Nat, a3: Nat) {
+    a1.divides(a2) and a2.divides(a3) implies a1.divides(a3)
+} by {
+    let (b1: Nat) satisfy { a1 * b1 = a2 }
+    let (b2: Nat) satisfy { a2 * b2 = a3 }
+    a1 * (b1 * b2) = a3
+}
+
+// 0 ~ n-1
+define element_in_finite_index(n: Nat, a: Nat) -> Bool {
+    if n = 0 { false } else { a < n }
+}
+
+define finite_index(n: Nat) -> Set[Nat] {
+    Set[Nat].new(element_in_finite_index(n))
+}
+
+theorem non_index_is_empty { finite_index(0) = empty[Nat] }
+
+attributes Set[K] {
+    define is_finite_set_with_all_params(self, num: Nat, m: Map[Nat, K]) -> Bool {
+        m.in_space = finite_index(num) and
+        m.out_space = self and
+        m.is_bijective
+    }
+    define is_finite_set(self) -> Bool {
+        exists(num: Nat, m: Map[Nat, K]) {
+            m.in_space = finite_index(num) and
+            m.out_space = self and
+            m.is_bijective
+        }
+    }
+    define is_finite_set_with_number(self, num: Nat) -> Bool {
+        exists(m: Map[Nat, K]) {
+            m.in_space = finite_index(num) and
+            m.out_space = self and
+            m.is_bijective
+        }
+    }
+}
+
+/// Finite Set
+structure Fin_Set[K] {
+    num: Nat
+    s: Set[K]
+} constraint {
+    s.is_finite_set_with_number(num)
+} by {
+    let fn: Nat -> K = axiom
+    let m = Map[Nat, K].new(empty[Nat], empty[K], fn)
+    m.in_space = empty[Nat]
+    let num: Nat = 0
+    m.in_space = finite_index(0)
+    let s = empty[K]
+    m.out_space = empty[K]
+    m.is_bijective
+}
+
+theorem nat_set_uncountable(f: Nat -> Set[Nat]) {
+    not is_surjective(f)
+} by {
+    cardinal_lt_power[Nat](f)
+}
+
+define true_below(f: Nat -> Bool, n: Nat) -> Bool {
+    forall(x: Nat) { x < n implies f(x) }
+}
+
+theorem strong_induction(f: Nat -> Bool) {
+    forall(k: Nat) {
+        true_below(f, k) implies f(k)
+    } implies forall(n: Nat) { f(n) }
+} by {
+    define g(x: Nat) -> Bool {
+        true_below(f, x)
+    }
+    true_below(f, 0)
+    g(0)
+    forall(x: Nat) {
+        if g(x) {
+            true_below(f, x)
+            f(x)
+            forall(y: Nat) {
+                if y < x.suc {
+                    if y < x {
+                        f(y)
+                    }
+                    if not (y < x) {
+                        y = x
+                        f(y)
+                    }
+                    f(y)
+                }
+            }
+            true_below(f, x.suc)
+            g(x.suc)
+        }
+    }
+    forall(x: Nat) {
+        g(x)
+    }
+    forall(n: Nat) {
+        g(n.suc)
+        true_below(f, n.suc)
+        f(n)
     }
 }
