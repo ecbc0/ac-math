@@ -2,7 +2,7 @@
 
 /// Sets with elements of type `K` are defined as Boolean functions over `K`, in the form of wrapper structure
 structure Set[K] {
-    contain: K -> Bool
+    contains: K -> Bool
 }
 // Obvious sets
 define constant_false[K](x: K) -> Bool {
@@ -41,8 +41,8 @@ attributes Set[K] {
     let singleton: K -> Set[K] = function(x: K) {
         Set[K].new(singleton_fn(x))
     }
-    define not_contain(self, x: K) -> Bool {
-        not (self.contain(x))
+    define not_contains(self, x: K) -> Bool {
+        not (self.contains(x))
     }
 
     define is_empty(self) -> Bool {
@@ -52,7 +52,7 @@ attributes Set[K] {
     }
 
     define c(self) -> Set[K] {
-        Set[K].new(self.not_contain)
+        Set[K].new(self.not_contains)
     }
 
     define is_singleton(self) -> Bool {
@@ -68,7 +68,7 @@ let universe[K] = Set[K].universal_set
 theorem empty_set_is_empty[K](a: Set[K]) {
     (a = empty[K]) = (a.is_empty)
 } by {
-    (a.is_empty) implies (a.contain = constant_false[K])
+    (a.is_empty) implies (a.contains = constant_false[K])
 
     if (a.is_empty) {
         a = empty[K]
@@ -83,27 +83,27 @@ theorem singleton_set_is_singleton[K](a: Set[K]) {
     (a.is_singleton) implies exists(x: K) {a = Set[K].singleton(x)}
 }
 
-theorem non_contain_is_negate_contain[K] (a: Set[K]) {
-    a.not_contain = negate_fn[K](a.contain)
+theorem non_contains_is_negate_contains[K] (a: Set[K]) {
+    a.not_contains = negate_fn[K](a.contains)
 } by {
     forall(x: K) {
-        not a.contain(x) = a.not_contain(x) 
+        not a.contains(x) = a.not_contains(x) 
 
-        not a.contain(x) = negate_fn[K](a.contain)(x)
+        not a.contains(x) = negate_fn[K](a.contains)(x)
 
-        a.not_contain(x) implies negate_fn[K](a.contain)(x) // too manual
+        a.not_contains(x) implies negate_fn[K](a.contains)(x) // too manual
 
-        a.not_contain(x) = negate_fn[K](a.contain)(x)
+        a.not_contains(x) = negate_fn[K](a.contains)(x)
     }
 }
-theorem not_contain_is_not_in [K](a: Set[K], x: K) {
+theorem not_contains_is_not_in [K](a: Set[K], x: K) {
     (x ∉ a) = (not x ∈ a)
 } 
 theorem element_not_in_is_element_in_compl[K](a: Set[K], x: K) {
     (x ∉ a) = (x ∈ a.c)
 } 
-theorem compl_contain_is_non_cotain[K](a: Set[K]) {
-    a.c.contain = a.not_contain
+theorem compl_contains_is_non_contains[K](a: Set[K]) {
+    a.c.contains = a.not_contains
 } 
 
 theorem compl_is_reflect[K](a: Set[K]) {
@@ -114,7 +114,7 @@ theorem compl_is_reflect[K](a: Set[K]) {
 
         (x ∈ a.c.c) = (x ∈ a)
     }
-    a.c.c.contain = a.contain
+    a.c.c.contains = a.contains
 }
 
 theorem dual_of_empty_set_and_universal[K] {
@@ -122,7 +122,7 @@ theorem dual_of_empty_set_and_universal[K] {
     and 
     universe[K].c = empty[K]
 } by {
-    empty[K].c.contain = universe[K].contain
+    empty[K].c.contains = universe[K].contains
 
     empty[K].c = universe[K] // redundant
 }
@@ -176,7 +176,7 @@ theorem subset_and_supset_iff_equal[K](a1: Set[K], a2: Set[K]) {
             x ∈ a2 implies x ∈ a1
             (x ∈ a1) = (x ∈ a2)
         }
-        a1.contain = a2.contain
+        a1.contains = a2.contains
         a1 = a2
     }
 
@@ -293,7 +293,7 @@ theorem union_intersection_compl_dual[K](a1: Set[K], a2: Set[K]) {
 
         (x ∈ (a1 ∪ a2).c) = ((x ∈ a1.c ∩ a2.c))
     }
-    (a1 ∪ a2).c.contain = (a1.c ∩ a2.c).contain
+    (a1 ∪ a2).c.contains = (a1.c ∩ a2.c).contains
 }
 
 theorem set_in_union[K](a1: Set[K], a2: Set[K]) {
@@ -308,7 +308,7 @@ theorem subset_union_is_subset[K](sub_1: Set[K], sub_2: Set[K], a: Set[K]) {
     (sub_1 ⊂ a and sub_2 ⊂ a) implies ((sub_1 ∪ sub_2) ⊂ a)
 }
 
-theorem set_contain_intersection[K](a1: Set[K], a2: Set[K]) {
+theorem set_contains_intersection[K](a1: Set[K], a2: Set[K]) {
     a1 ∩ a2 ⊂ a1 and a1 ∩ a2 ⊂ a2
 } by {
     a1 ∩ a2 ⊂ a1
