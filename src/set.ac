@@ -696,32 +696,6 @@ attributes Map[K, L] {
     }
 }
 
-from nat.nat_base import Nat
-numerals Nat
-
-// 1 ~ n
-define element_in_finite_index(n: Nat, a: Nat) -> Bool {
-    if n = 0 {
-        false
-    } else {
-        1 <= a and a <= n
-    }
-}
-
-define finite_index(n: Nat) -> Set[Nat] {
-    Set[Nat].new(element_in_finite_index(n))
-}
-
-attributes Set[K] {
-    define is_finite_set(self) -> Bool {
-        exists(n: Nat, m: Map[Nat, K]) {
-            m.in_space = finite_index(n) and 
-            m.out_space = self and
-            m.is_bijective 
-        }
-    }
-}
-
 define cardinal_lte[K, L](a: Set[K], b: Set[L]) -> Bool {
     exists(m: Map[K, L]) {
         m.in_space = a and
@@ -756,21 +730,6 @@ define is_injective[K, L](f: K -> L) -> Bool {
 
 define is_surjective[K, L](f: K -> L) -> Bool {
     forall(y: L) { exists(x: K) { f(x) = y } } 
-}
-
-// if change this to theorem, acorn give "fatal runtime error: stack overflow, aborting". why?
-axiom nat_set_uncountable(f: Nat -> Set[Nat]) {
-    not is_surjective(f)
-} by {
-    define p(g: Nat -> Set[Nat], x: Nat) -> Bool {
-        x ∉ g(x)
-    }
-    let omega = Set[Nat].new(p(f))
-    forall(x: Nat) {
-        x ∈ omega implies x ∉ f(x)
-        not (omega ⊂ f(x))
-        omega != f(x)
-    }
 }
 
 // if change this to theorem, acorn will eat all memory. why?
