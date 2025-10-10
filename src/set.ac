@@ -628,8 +628,10 @@ define elem_in_sum[K1, K2](a1: Set[K1], a2: Set[K2], p: Sum[K1, K2]) -> Bool {
     }
 }
 
-define sum[K1, K2](a1: Set[K1], a2: Set[K2]) -> Set[Sum[K1,K2]] {
-    Set[Sum[K1,K2]].new(elem_in_sum(a1, a2))
+attributes Set[K1] {
+    define add[K2](self, a: Set[K2]) -> Set[Sum[K1,K2]] {
+        Set[Sum[K1,K2]].new(elem_in_sum(self, a))
+    }
 }
 
 theorem add_test[K1, K2](a1: Set[K1], a2: Set[K2]) {
@@ -645,8 +647,14 @@ define elem_in_product[K1,K2](a1: Set[K1], a2: Set[K2], p: Product[K1,K2]) -> Bo
     p.first ∈ a1 and p.second ∈ a2
 }
 
-define product[K1, K2](a1: Set[K1], a2: Set[K2]) -> Set[Product[K1,K2]] {
-    Set[Product[K1,K2]].new(elem_in_product(a1, a2))
+attributes Set[K1] {
+    define product[K2](self, a: Set[K2]) -> Set[Product[K1,K2]] {
+        Set[Product[K1,K2]].new(elem_in_product(self, a))
+    }
+}
+
+theorem product_test[K1, K2](a1: Set[K1], a2: Set[K2]) {
+    a1 × a2 ⊆ Set[Product[K1, K2]].universal_set
 }
 
 define elem_in_product_index[I, K](f: I -> Set[K], x: I -> K) -> Bool {
