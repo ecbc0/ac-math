@@ -1,4 +1,4 @@
-from order import PartialOrder, LinearOrder
+from order import Partial_Order, Linear_Order
 from util import is_transitive, is_acyclic
 from set import Set, Map, empty, universe, cardinal_lt_power, is_surjective
 
@@ -57,12 +57,10 @@ theorem add_zero(a: Nat) { a + 0 = a and 0 + a = a }
 theorem one_plus_one { 1 + 1 = 2 } by {
     1 + 0.suc = 1.suc
 }
-
 theorem add_suc(a: Nat, b: Nat) {
     a + b.suc = (a + b).suc and
     a.suc + b = (a + b).suc
 }
-
 theorem add_one(a: Nat) {
     a + 1 = a.suc and
     1 + a = a.suc
@@ -70,7 +68,6 @@ theorem add_one(a: Nat) {
     a + 0.suc = (a + 0).suc
     0.suc + a = (0 + a).suc
 }
-
 theorem suc_ne(a: Nat) { a.suc != a } by {
     suc_ne(0) // by property of inductive
     forall(x: Nat) {
@@ -271,7 +268,7 @@ theorem nat_is_acyclic {
     is_acyclic(Nat.lt)
 }
 
-instance Nat: PartialOrder {
+instance Nat: Partial_Order {
     let lt = Nat.lt
 }
 
@@ -483,7 +480,7 @@ attributes Set[K] {
 }
 
 /// Finite Set
-structure Fin_Set[K] {
+structure Finite[K] {
     num: Nat
     s: Set[K]
 } constraint {
@@ -499,7 +496,7 @@ structure Fin_Set[K] {
     m.is_bijective
 }
 
-theorem nat_set_uncountable(f: Nat -> Set[Nat]) {
+theorem nat_power_set_uncountable(f: Nat -> Set[Nat]) {
     not is_surjective(f)
 } by {
     cardinal_lt_power[Nat](f)
@@ -514,6 +511,16 @@ theorem strong_induction(f: Nat -> Bool) {
         true_below(f, k) implies f(k)
     } implies forall(n: Nat) { f(n) }
 } by {
+    // under "strong_induction" assumption: 
+    // forall(k: Nat) {
+    //   true_below(f, k) => f(k)
+    // }
+    // try to prove that 
+    // true_below(f, x) => true_below(f, x.suc)
+    // then by induction, we get 
+    //   forall(x: Nat) { true_below(f, x) }
+    // then obviously 
+    //   forall(n: Nat) { f(n) }
     define g(x: Nat) -> Bool {
         true_below(f, x)
     }

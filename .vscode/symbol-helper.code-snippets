@@ -36,14 +36,14 @@
 	},
 	"⊂": {
 		"prefix": "subset",
-		"body": "⊂"
+		"body": "⊆"
 	},
 	"⊃": {
-		"prefix": "supset",
-		"body": "⊃"
+		"prefix": "superset",
+		"body": "⊇"
 	},
 	"∖": {
-		"prefix": "without",
+		"prefix": ["without", "set-minus"],
 		"body": "∖"
 	},
 	"set-forall": {
