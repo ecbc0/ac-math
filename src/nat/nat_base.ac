@@ -1,7 +1,3 @@
-from order import Partial_Order, Linear_Order
-from util import is_transitive, is_acyclic
-from set import Set, Map, empty, universe, cardinal_lt_power, is_surjective
-
 /// Natural numbers, the soul of arithmetic.
 /// We build natural numbers from Acorn's inherent properties of inductive types.
 inductive Nat {
@@ -320,6 +316,9 @@ theorem lt_trans(a: Nat, b: Nat, c: Nat) { a < b and b < c implies a < c } by {
     a < c
 }
 
+from order import Partial_Order, Linear_Order
+from util import is_transitive, is_acyclic
+
 theorem nat_is_transitive {
     is_transitive(Nat.lt)
 }
@@ -469,29 +468,9 @@ theorem division_theorem(m: Nat, n: Nat) {
 
 attributes Nat {
     define divides(self, a: Nat) -> Bool {
-        exists(b: Nat) { self * b = a }
-    }
-}
-
-attributes Nat {
-    define is_prime(self) -> Bool {
-        forall(n: Nat) {
-            1 < n and n < self implies not n.divides(self)
-        }
-    }
-
-    define is_composite(self) -> Bool {
-        not self.is_prime
-    }
-
-    define factorial(self) -> Nat {
-        match self {
-            Nat.0 {
-                1
-            }
-            Nat.suc(pred) {
-                self * pred.factorial
-            }
+        a != 0 and exists(b: Nat) { 
+            (1 < self and self < a) and
+            self * b = a 
         }
     }
 }
@@ -510,7 +489,41 @@ theorem mul_increase(a: Nat, b: Nat) {
     a * b = a * b_pred + a
 }
 
-theorem divides_self(a: Nat) { a.divides(a) }
+theorem factor_lt(a: Nat, b: Nat, n: Nat) {
+    (n != 0 and a * b = n) implies a <= n
+} by {
+    if (n != 0 and a * b = n) {
+        a != 0
+        b != 0
+        if b = 1 { a = n }
+        if b > 1 { 
+            a < a * b 
+            a < n
+        }
+        a <= n
+    }
+}
+
+theorem another_also_divides(n: Nat, a: Nat, b: Nat) {
+    a.divides(n) and n = a * b implies b.divides(n) 
+} by {
+    if b = 0 { 
+        n = 0 
+        false
+    }
+    if b = 1 { 
+        a = n
+        false
+    }
+    if b >= n {
+        let m: Nat satisfy { a = 1 + m and m != 0 }
+        a * b = b + m * b
+        m * b != 0
+        a * b > n 
+        false
+    }
+    1 < b and b < n
+}
 
 theorem divides_trans(a1: Nat, a2: Nat, a3: Nat) {
     a1.divides(a2) and a2.divides(a3) implies a1.divides(a3)
@@ -520,13 +533,35 @@ theorem divides_trans(a1: Nat, a2: Nat, a3: Nat) {
     a1 * (b1 * b2) = a3
 }
 
+attributes Nat {
+    define factorial(self) -> Nat {
+        match self {
+            Nat.0 {
+                1
+            }
+            Nat.suc(pred) {
+                self * pred.factorial
+            }
+        }
+    }    
+}
+
 // 0 ~ n-1
+// possibly related to stack overflow
 define element_in_finite_index(n: Nat, a: Nat) -> Bool {
     if n = 0 { 
         false 
     } else { 
         a < n 
     }
+}
+
+from set import Set, Map, Product, empty, universe, cardinal_lt_power, is_surjective
+
+theorem nat_power_set_uncountable(f: Nat -> Set[Nat]) {
+    not is_surjective(f)
+} by {
+    cardinal_lt_power[Nat](f)
 }
 
 define finite_index(n: Nat) -> Set[Nat] {
@@ -549,68 +584,9 @@ attributes Set[K] {
     }
 }
 
-structure Finite[K] {
-    s: Set[K]
-} constraint {
-    s.is_finite_set
-} 
-
-theorem nat_power_set_uncountable(f: Nat -> Set[Nat]) {
-    not is_surjective(f)
-} by {
-    cardinal_lt_power[Nat](f)
-}
-
-define true_below(f: Nat -> Bool, n: Nat) -> Bool {
-    forall(x: Nat) { x < n implies f(x) }
-}
-
-theorem strong_induction(f: Nat -> Bool) {
-    forall(k: Nat) {
-        true_below(f, k) implies f(k)
-    } implies forall(n: Nat) { f(n) }
-} by {
-    // under "strong_induction" assumption: 
-    // forall(k: Nat) {
-    //   true_below(f, k) => f(k)
-    // }
-    // try to prove that 
-    // true_below(f, x) => true_below(f, x.suc)
-    // then by induction, we get 
-    //   forall(x: Nat) { true_below(f, x) }
-    // then obviously 
-    //   forall(n: Nat) { f(n) }
-    define g(x: Nat) -> Bool {
-        true_below(f, x)
-    }
-    true_below(f, 0)
-    g(0)
-    forall(x: Nat) {
-        if g(x) {
-            true_below(f, x)
-            f(x)
-            forall(y: Nat) {
-                if y < x.suc {
-                    if y < x {
-                        f(y)
-                    }
-                    if not (y < x) {
-                        y = x
-                        f(y)
-                    }
-                    f(y)
-                }
-            }
-            true_below(f, x.suc)
-            g(x.suc)
-        }
-    }
-    forall(x: Nat) {
-        g(x)
-    }
-    forall(n: Nat) {
-        g(n.suc)
-        true_below(f, n.suc)
-        f(n)
-    }
-}
+// possibly related to stack overflow
+// structure Finite[K] {
+//     s: Set[K]
+// } constraint {
+//     s.is_finite_set
+// } 

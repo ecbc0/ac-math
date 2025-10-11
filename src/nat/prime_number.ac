@@ -1,0 +1,103 @@
+from nat.nat_base import Nat
+// from list import List
+numerals Nat
+
+attributes Nat {
+    define is_composite(self) -> Bool {
+        exists(a: Nat) {
+            a.divides(self)
+        }
+    }
+
+    define is_prime(self) -> Bool {
+        forall(a: Nat) {
+            not a.divides(self)
+        }
+    }
+}
+
+attributes Nat {
+    define is_direct_composite(self) -> Bool {
+        exists(a: Nat, b: Nat) {
+            (1 < a and a < self) and
+            (1 < b and b < self) and
+            a * b = self
+        }
+    }
+}
+
+theorem composite_is_direct_composite(n: Nat) {
+    n.is_composite iff n.is_direct_composite
+} by {
+    if n.is_composite {
+        let a: Nat satisfy { a.divides(n) }
+        let b: Nat satisfy { a * b = n }
+        b.divides(n)
+        (
+            (1 < a and a < n) and
+            (1 < b and b < n) and
+            a * b = n
+        )
+        n.is_direct_composite
+    }
+}
+
+theorem composite_is_not_prime(n: Nat) {
+    n.is_prime iff not n.is_composite
+} by {
+    n.is_prime implies not n.is_composite
+}
+
+define true_below(f: Nat -> Bool, n: Nat) -> Bool {
+    forall(x: Nat) { x < n implies f(x) }
+}
+
+theorem strong_induction(f: Nat -> Bool) {
+    forall(k: Nat) {
+        true_below(f, k) implies f(k)
+    } implies forall(n: Nat) { f(n) }
+} by {
+    // under "strong_induction" assumption: 
+    //     forall(k: Nat) {
+    //       true_below(f, k) => f(k)
+    //     }
+    // try to prove that 
+    //     true_below(f, x) => true_below(f, x.suc)
+    // then by induction, we get 
+    //     forall(x: Nat) { true_below(f, x) }
+    // then obviously 
+    //     forall(n: Nat) { f(n) }
+    define g(x: Nat) -> Bool {
+        true_below(f, x)
+    }
+    true_below(f, 0)
+    g(0)
+    forall(x: Nat) {
+        if g(x) {
+            true_below(f, x)
+            f(x)
+            forall(y: Nat) {
+                if y < x.suc {
+                    if y < x {
+                        f(y)
+                    }
+                    if not (y < x) {
+                        y = x
+                        f(y)
+                    }
+                    f(y)
+                }
+            }
+            true_below(f, x.suc)
+            g(x.suc)
+        }
+    }
+    forall(x: Nat) {
+        g(x)
+    }
+    forall(n: Nat) {
+        g(n.suc)
+        true_below(f, n.suc)
+        f(n)
+    }
+}

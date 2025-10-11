@@ -688,6 +688,16 @@ structure Map[K, L] {
     }
 }
 
+attributes Map[K, L] {
+    define restrict(self, a: Set[K]) -> Map[K, L] {
+        if a ⊆ self.in_space {
+            Map.new(a, self.out_space, self.fn)
+        } else {
+            self
+        }
+    }
+}
+
 // maybe we sometime want to use f: a --> b instead of m: Map[K, L] ... is this possible?
 define elem_in_map[K, L](in_space: Set[K], out_space: Set[L], fn: K -> L) -> Bool {
     forall(x: K) {
@@ -784,10 +794,10 @@ define cardinal_eq[K, L](a: Set[K], b: Set[L]) -> Bool {
     }
 }
 
-// stack overflow
-// define power_set[K](a: Set[K]) -> Set[Set[K]] {
-//     Set[Set[K]].new(a.supset)
-// }
+// possibly related to stack overflow
+define power_set[K](a: Set[K]) -> Set[Set[K]] {
+    Set[Set[K]].new(a.superset)
+}
 
 define is_injective[K, L](f: K -> L) -> Bool {
     forall(x1: K, x2: K) { f(x1) = f(x2) implies x1 = x2 }  

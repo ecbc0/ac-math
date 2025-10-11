@@ -1,9 +1,11 @@
 {
   "version": 1,
   "modules": {
-    "nat.nat_base": "4aa097f94d8d069027a9ebe6afd1f98d8546b87f008f56991975fed71413b02e",
+    "nat.nat_base": "ec47c55120c348e96506f63689274ee814df9836f57331d5166dd45f531e2b79",
+    "nat.prime_number": "f7c2de433a07115d3663770e781657047f43e36a7448ad1fe6034ee66e103519",
     "order": "ee24dfe87c9319680cc2f4fb777f890a35d4372b12794f7fb8740d76dc91f051",
-    "set": "befb7313f0e03eca8befbfba404e21eac0fa529d1ab7e971ebd4617f02bcf38c",
+    "set": "53dbb0212b6dba7afa1b92201f6caa22506b569aae4f27bd51ac71e8bb5b62d6",
+    "test": "c7dce3dbcdf6d5250f3f7e5fb2f1e587cac19a9a6c4d4b7722625de56ca14b3d",
     "util": "6c91b332b930f591d46793328d74316e8c16ad7c20efb962624fff4502192971"
   }
 }
