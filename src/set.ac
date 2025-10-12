@@ -1,5 +1,3 @@
-// modified from https://github.com/acornprover/acornlib 727e395 src/set.ac
-
 /// Sets with elements of type `K` are defined as Boolean functions over `K`, in the form of named wrapper structure
 structure Set[K] {
     /// ∈

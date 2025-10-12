@@ -69,6 +69,12 @@ define is_acyclic[T](f: (T, T) -> Bool) -> Bool {
     }
 }
 
+define is_trichotomy[T](f: (T, T) -> Bool) -> Bool {
+    forall(x: T, y: T) {
+        f(x, y) or f(y, x) or x = y
+    }
+}
+
 define is_equivalence[T](f: (T, T) -> Bool) -> Bool {
     is_reflexive(f) and is_symmetric(f) and is_transitive(f)
 }

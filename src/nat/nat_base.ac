@@ -170,7 +170,7 @@ theorem mul_comm(a: Nat, b: Nat) { a * b = b * a } by {
         if f(n) {
             // def of mul
             a * (n + 1) = a * n + a
-            // f(n)
+            // f(n) & add_comm
             a * n + a = n * a + a
             // mul_suc_dual
             (n + 1) * a = n * a + a
@@ -307,6 +307,12 @@ attributes Nat {
             self < other or self = other
         }
     }
+    define gt(self, other: Nat) -> Bool {
+        other < self
+    }
+    define gte(self, other: Nat) -> Bool {
+        other <= self
+    }
 }
 
 theorem lt_trans(a: Nat, b: Nat, c: Nat) { a < b and b < c implies a < c } by {
@@ -317,7 +323,7 @@ theorem lt_trans(a: Nat, b: Nat, c: Nat) { a < b and b < c implies a < c } by {
 }
 
 from order import Partial_Order, Linear_Order
-from util import is_transitive, is_acyclic
+from util import is_transitive, is_acyclic, is_trichotomy
 
 theorem nat_is_transitive {
     is_transitive(Nat.lt)
@@ -382,30 +388,39 @@ theorem lte_and_lt(a: Nat, b: Nat, c: Nat) { a <= b and b < c implies a < c }
 
 theorem lte_trans(a: Nat, b: Nat, c: Nat) { a <= b and b <= c implies a <= c } 
 
-theorem lt_suc_left(a: Nat, b: Nat) { a < b implies a + 1 <= b } by {
-    let (n: Nat) satisfy { a + n = b and n != 0 }
-    let (m: Nat) satisfy { n = m + 1 }
-    if m = 0 {
-        a + 1 = b
-    } else {
-        m != 0
-        a + m + 1 = b
-        a + 1 < b
+theorem lt_suc_left(a: Nat, b: Nat) { 
+    a < b implies a + 1 <= b 
+} by {
+    if a < b {    
+        let (n: Nat) satisfy { a + n = b and n != 0 }
+        let (m: Nat) satisfy { n = m + 1 }
+        if m = 0 {
+            a + 1 = b
+        } else {
+            m != 0
+            a + m + 1 = b
+            a + 1 < b
+        }
+        a + 1 <= b
     }
 }
 
 theorem lt_suc_right(a: Nat, b: Nat) { a < b + 1 implies a <= b } by {
-    let (n: Nat) satisfy { a + n = b + 1 and n != 0 }
-    let (m: Nat) satisfy { n = m + 1 }
-    a + m = b
-    if m = 0 {
-        a = b
-    } else {
-        a < b
-    }
+    if a < b + 1 {
+        let (n: Nat) satisfy { a + n = b + 1 and n != 0 }
+        let (m: Nat) satisfy { n = m + 1 }
+        a + m = b
+        if m = 0 {
+            a = b
+        } else {
+            a < b
+        }
+    } 
 }
 
-theorem lt_add_left(a: Nat, b: Nat, c: Nat) { a < b implies a + c < b + c } by {
+theorem lt_add_left(a: Nat, b: Nat, c: Nat) { 
+    a < b implies a + c < b + c 
+} by {
     let (n: Nat) satisfy { a + n = b }
     a + c + n = b + c
 }
@@ -431,6 +446,40 @@ theorem trichotomy(a: Nat, b: Nat) { a < b or b < a or a = b } by {
     }
     trichotomy(a, b)
 }
+
+theorem nat_is_trichotomy {
+    is_trichotomy(Nat.lt)
+}
+
+instance Nat: Linear_Order
+
+theorem lt_suc_left_augment(a: Nat, b: Nat) { 
+    a < b iff a + 1 <= b 
+} by {
+    a < b implies a + 1 <= b
+    if a = b {
+        a + 1 > b
+    }
+    if a > b {
+        a + 1 > b
+    }
+}
+
+theorem lt_suc_right_augment(a: Nat, b: Nat) { 
+    a < b + 1 iff a <= b 
+} by {
+    a < b + 1 implies a <= b
+    if a = b + 1 {
+        a > b
+    } 
+    if a > b + 1 {
+        a > b
+    }
+}
+
+theorem gt_suc_left(a: Nat, b: Nat) { a + 1 > b iff a >= b } 
+
+theorem gt_suc_right(a: Nat, b: Nat) { a > b implies a >= b + 1 } 
 
 theorem division_theorem(m: Nat, n: Nat) {
     0 < n implies exists(q: Nat, r: Nat) {
@@ -533,6 +582,30 @@ theorem divides_trans(a1: Nat, a2: Nat, a3: Nat) {
     a1 * (b1 * b2) = a3
 }
 
+// This is a "bounded" version of subtraction that returns 0 instead of negative numbers.
+let bounded_sub(a: Nat, b: Nat) -> d: Nat satisfy {
+    if a < b {
+        d = 0
+    } else {
+        d + b = a
+    }
+} by {
+    if a < b {
+        0 = 0
+    } else {
+        b <= a
+        let d: Nat satisfy { d + b = a }
+    }
+}
+
+attributes Nat {
+    /// Subtraction on natural numbers is defined oddly; it "caps out" at zero.
+    /// If `self < b`, then `self - b = 0`.
+    /// It would be better to define this as "not valid" on some inputs, but
+    /// the language doesn't make that convenient yet.
+    define sub(self, b: Nat) -> Nat { bounded_sub(self, b) }
+}
+
 attributes Nat {
     define factorial(self) -> Nat {
         match self {
@@ -543,7 +616,19 @@ attributes Nat {
                 self * pred.factorial
             }
         }
-    }    
+    }
+    let ! = Nat.factorial
+}
+
+theorem test_factorial { 
+    3.! = 6 
+} by {
+    3.! = (3 * 2.!) 
+    2.! = (2 * 1.!)
+    1.! = 1
+    2 * 1 = 2
+    3 * 2 = (3 + 3)
+    3 * 2 = 6
 }
 
 // 0 ~ n-1

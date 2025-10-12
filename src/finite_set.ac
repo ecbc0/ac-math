@@ -1,0 +1,191 @@
+from list import List
+
+/// A constant function that always returns false, regardless of input.
+define const_false[T](x: T) -> Bool {
+    false
+}
+
+/// True if a boolean function represents a finite set.
+/// A function satisfies the finite constraint if there exists a finite list containing all elements for which the function returns true.
+define finite_constraint[T](contains: T -> Bool) -> Bool {
+    exists(superset: List[T]) {
+        forall(x: T) {
+            contains(x) implies superset.contains(x)
+        }
+    }
+}
+
+theorem const_false_satisfies_finite_constraint[T] {
+    finite_constraint(const_false[T])
+}
+
+theorem list_contains_satisfies_finite_constraint[T](ts: List[T]) {
+    finite_constraint(ts.contains)
+}
+
+/// Creates a new function that returns true for the given item and delegates to the original function for all other inputs.  
+/// i.e. add a true value to f: T -> Bool by change f(item) to true 
+define functional_insert[T](f: T -> Bool, item: T, x: T) -> Bool {
+    if x = item {
+        true
+    } else {
+        f(x)
+    }
+}
+
+theorem functional_insert_preserve_finite_constraint[T](f: T -> Bool, item: T) {
+    finite_constraint(f) implies finite_constraint(functional_insert(f, item))
+}
+
+/// Creates a new function that returns false for the given item and delegates to the original function for all other inputs.  
+/// i.e. add a false value to f: T -> Bool by change f(item) to false 
+define functional_remove[T](f: T -> Bool, item: T, x: T) -> Bool {
+    if x = item {
+        false
+    } else {
+        f(x)
+    }
+}
+
+theorem functional_remove_preserve_finite_constraint[T](f: T -> Bool, item: T) {
+    finite_constraint(f) implies finite_constraint(functional_remove(f, item))
+}
+
+/// A finite set represented as a boolean membership function.
+/// The constraint ensures that only finitely many elements are members.
+structure Finite_Set[T] {
+    /// Finite sets are defined by a membership function.
+    contains: T -> Bool
+} constraint {
+    finite_constraint(contains)
+}
+
+attributes Finite_Set[T] {
+    /// Converts a list to a finite set.
+    let from_list: List[T] -> Finite_Set[T] = function(ts: List[T]) {
+        Finite_Set.new(ts.contains)
+    }
+
+    /// True if the set contains no elements.
+    define is_empty(self) -> Bool {
+        forall(x: T) {
+            not self.contains(x)
+        }
+    }
+
+    /// Removes an element from the set. If the item isn't present, this is a no-op.
+    define remove(self, item: T) -> Finite_Set[T] {
+        Finite_Set.new(functional_remove(self.contains, item))
+    }
+
+    /// Adds an element to the set. If the item is already present, this is a no-op.
+    define insert(self, item: T) -> Finite_Set[T] {
+        Finite_Set.new(functional_insert(self.contains, item))
+    }
+}
+
+theorem insert_contains[T](set: Finite_Set[T], item: T) {
+    set.insert(item).contains(item)
+}
+
+theorem remove_does_not_contain[T](set: Finite_Set[T], item: T) {
+    not set.remove(item).contains(item)
+}
+
+theorem insert_other_still_contains[T](set: Finite_Set[T], item: T, other: T) {
+    set.contains(item) implies set.insert(other).contains(item)
+} by {
+    finite_constraint(set.contains)
+    finite_constraint(set.insert(other).contains)
+}
+
+theorem remove_other_still_contains[T](set: Finite_Set[T], item: T, other: T) {
+    item != other and set.contains(item) implies set.remove(other).contains(item)
+} by {
+    finite_constraint(set.contains)
+    finite_constraint(set.remove(other).contains)
+}
+
+theorem insert_other_contains_imp_contains[T](set: Finite_Set[T], item: T, other: T) {
+    item != other and set.insert(other).contains(item) implies set.contains(item)
+} by {
+    finite_constraint(set.contains)
+    finite_constraint(set.insert(other).contains)
+}
+
+theorem remove_other_contains_imp_contains[T](set: Finite_Set[T], item: T, other: T) {
+    item != other and set.remove(other).contains(item) implies set.contains(item)
+} by {
+    finite_constraint(set.contains)
+    finite_constraint(set.remove(other).contains)
+}
+
+theorem insert_other_contains_iff[T](set: Finite_Set[T], item: T, other: T) {
+    item != other implies (set.contains(item) iff set.insert(other).contains(item))
+} by {
+    if set.contains(item) {
+        set.contains(item) = set.insert(other).contains(item)
+    } else {
+        not set.contains(item)
+        not set.insert(other).contains(item)
+        set.contains(item) = set.insert(other).contains(item)
+    }
+}
+
+theorem remove_other_contains_iff[T](set: Finite_Set[T], item: T, other: T) {
+    item != other implies (set.contains(item) iff set.remove(other).contains(item))
+} by {
+    if set.contains(item) {
+        set.contains(item) = set.remove(other).contains(item)
+    } else {
+        not set.contains(item)
+        not set.remove(other).contains(item)
+        set.contains(item) = set.remove(other).contains(item)
+    }
+}
+
+theorem remove_then_insert[T](set: Finite_Set[T], item: T) {
+    set.contains(item) implies set.remove(item).insert(item) = set
+} by {
+    if set.remove(item).insert(item) != set {
+        set.remove(item).insert(item).contains != set.contains
+        let t: T satisfy {
+            set.remove(item).insert(item).contains(t) != set.contains(t)
+        }
+        if item != t {
+            if set.contains(t) {
+                set.remove(item).contains(t)
+                false
+            } else {
+                false
+            }
+        } else {
+            item = t
+            not set.contains(t)
+            false
+        }
+    }
+}
+
+theorem insert_then_remove[T](set: Finite_Set[T], item: T) {
+    not set.contains(item) implies set.insert(item).remove(item) = set
+} by {
+    if set.insert(item).remove(item) != set {
+        set.insert(item).remove(item).contains != set.contains
+        let t: T satisfy {
+            set.insert(item).remove(item).contains(t) != set.contains(t)
+        }
+        if item != t {
+            if set.contains(t) {
+                false
+            } else {
+                set.insert(item).contains(t)
+                false
+            }
+        } else {
+            item = t
+            not set.contains(t)
+            false
+        }
+    }
+}
