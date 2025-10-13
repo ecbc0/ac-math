@@ -240,6 +240,7 @@ theorem suc_cancels(a: Nat, b: Nat) { a + 1 = b + 1 implies a = b } by {
     }
 }
 
+/// 0 is the identity of add: 0 + n = n = n + 0
 theorem add_identity(a: Nat, b: Nat) { a + b = b implies a = 0 } by {
     define f(x: Nat) -> Bool { add_identity(a, x) }
     f(0)
@@ -271,7 +272,7 @@ theorem add_cancels_dual(a: Nat, b: Nat, c: Nat) { c + a = c + b implies a = b }
 
 theorem suc_positive(n: Nat) {
     n.suc != 0
-} // by definition of inductive
+} // by definition of inductive, "0 is not suc of any natural number"
 
 theorem nonzero_add_to_nonzero(a: Nat, b: Nat) {
     (a != 0 or b != 0) implies a + b != 0

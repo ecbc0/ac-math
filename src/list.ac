@@ -36,6 +36,15 @@ attributes List[T] {
             }
         }
     }
+
+    define not_contains(self, item: T) -> Bool {
+        not self.contains(item)
+    }
+}
+
+// helper
+theorem not_contains_is_not_contains[T](list: List[T], item: T) {
+    (not item ∈ list) iff item ∉ list
 }
 
 theorem add_nil[T](list: List[T]) {
@@ -47,10 +56,10 @@ theorem add_nil_dual[T](list: List[T]) {
 }
 
 theorem add_contains_left[T](left: List[T], right: List[T], item: T) {
-    left.contains(item) implies (left + right).contains(item)
+    item ∈ left implies item ∈ (left + right)
 } by {
-    define f(x: List[T]) -> Bool {
-        x.contains(item) implies (x + right).contains(item)
+    define f(l: List[T]) -> Bool {
+        item ∈ l implies item ∈ (l + right)
     }
     f(List.nil)
     forall(head: T, tail: List[T]) {
@@ -62,10 +71,10 @@ theorem add_contains_left[T](left: List[T], right: List[T], item: T) {
 }
 
 theorem add_contains_right[T](left: List[T], right: List[T], item: T) {
-    right.contains(item) implies (left + right).contains(item)
+    item ∈ right implies item ∈ (left + right)
 } by {
     define f(x: List[T]) -> Bool {
-        (x + right).contains(item) // this helper function is different from that defined in add_contains_left
+        item ∈ (x + right) // this helper function is different from that defined in add_contains_left
     }
     f(List.nil)
     forall(head: T, tail: List[T]) {
@@ -76,11 +85,11 @@ theorem add_contains_right[T](left: List[T], right: List[T], item: T) {
 }
 
 theorem not_contains_add[T](left: List[T], right: List[T], item: T) {
-    not left.contains(item) and not right.contains(item) implies not (left + right).contains(item)
+    item ∉ left and item ∉ right implies item ∉ (left + right)
 } by {
-    // if not right.contains(item)
+    // if item ∉ right
     define f(x: List[T]) -> Bool {
-        not x.contains(item) implies not (x + right).contains(item)
+        not item ∈ x implies not item ∈ (x + right)
     }
     f(List.nil)
     forall(head: T, tail: List[T]) {
@@ -93,9 +102,9 @@ theorem not_contains_add[T](left: List[T], right: List[T], item: T) {
             // so its negative is 
             //     (p and (not q1)) or ((not p) and (not q2))
             // for 
-            //     not (head, tail).contains(item)
+            //     not item ∈ (head, tail)
             // either 
-            //     head = item & (head, tails).contains(head/item) = false
+            //     head = item & head/item ∈ (head, tails) = false
             // or 
             //     head != item & not tails.contain(item). 
             // induction is from `(head, tails) + right` forward to `tails + right`
@@ -110,14 +119,14 @@ attributes List[T] {
     /// True if this list contains every element of type T.
     define contains_every(self) -> Bool {
         forall(x: T) {
-            self.contains(x)
+            x ∈ self
         }
     }
 
     /// True if this list contains any element of type T.
     define contains_any(self) -> Bool {
         exists(x: T) {
-            self.contains(x)
+            x ∈ self
         }
     }
 
@@ -163,7 +172,7 @@ attributes List[T] {
                 List.nil[T]
             }
             List.cons(head, tail) {
-                if tail.contains(head) {
+                if head ∈ tail {
                     tail.unique
                 } else {
                     List.cons(head, tail.unique)
@@ -192,7 +201,7 @@ theorem unique_length[T](list: List[T]) {
         if f(tail) {
             tail.unique.length <= tail.length
             List.cons(head, tail).length = tail.length.suc
-            if tail.contains(head) {
+            if head ∈ tail {
                 List.cons(head, tail).unique = tail.unique
                 f(List.cons(head, tail))
             } else {
@@ -205,26 +214,26 @@ theorem unique_length[T](list: List[T]) {
 }
 
 theorem unique_decomposition[T](head: T, tail: List[T]) {
-    if tail.contains(head) { 
+    if head ∈ tail { 
         List.cons(head, tail).unique = tail.unique 
     } and 
-    if not tail.contains(head) { 
+    if not head ∈ tail { 
         List.cons(head, tail).unique = List.cons(head, tail.unique) 
     }
 } by {
     // helper
-    tail.contains(head) implies List.cons(head, tail).unique = tail.unique 
+    head ∈ tail implies List.cons(head, tail).unique = tail.unique 
 }
 
 theorem contains_decomposition[T](head: T, tail: List[T], item: T) {
-    List.cons(head, tail).contains(item) iff head = item or tail.contains(item)
+    item ∈ List.cons(head, tail) iff head = item or item ∈ tail
 } by {
     // helper
-    head = item or tail.contains(item) implies List.cons(head, tail).contains(item)
+    head = item or item ∈ tail implies item ∈ List.cons(head, tail)
 }
 
 theorem contains_decomposition_dual[T](head: T, tail: List[T], item: T) {
-    not List.cons(head, tail).contains(item) iff head != item and not tail.contains(item)
+    not item ∈ List.cons(head, tail) iff head != item and not item ∈ tail
 } by {
     // helper
     contains_decomposition[T](head, tail, item)
@@ -233,46 +242,46 @@ theorem contains_decomposition_dual[T](head: T, tail: List[T], item: T) {
 theorem contains_when_head_not_eq_item[T](head: T, tail: List[T], item: T) {
     if head != item {
         // def of contains
-        List.cons(head, tail).contains(item) iff tail.contains(item)
+        item ∈ List.cons(head, tail) iff item ∈ tail
     }
 } by {
     // helper
-    List.cons(head, tail).contains(item) implies tail.contains(item)
+    item ∈ List.cons(head, tail) implies item ∈ tail
 }
 
 theorem contains_when_tail_contains_head[T](head: T, tail: List[T], item: T) {
-    if tail.contains(head) {
-        List.cons(head, tail).contains(item) iff tail.contains(item) 
+    if head ∈ tail {
+        item ∈ List.cons(head, tail) iff item ∈ tail 
     }
 } by {
     if head = item {
-        tail.contains(item)
-        List.cons(head, tail).contains(item)
+        item ∈ tail
+        item ∈ List.cons(head, tail)
     }
     if head != item {
         // def of contains
         // helper
-        List.cons(head, tail).contains(item) implies tail.contains(item)
+        item ∈ List.cons(head, tail) implies item ∈ tail
 
-        List.cons(head, tail).contains(item) iff tail.contains(item)
+        item ∈ List.cons(head, tail) iff item ∈ tail
     }
 }
 
 theorem contains_when_tail_not_contains_head[T](head: T, tail: List[T], item: T) {
-    if not tail.contains(head) {
+    if head ∉ tail {
         if head = item {
             // def of contains
-            List.cons(head, tail).contains(item) iff head = item
+            item ∈ List.cons(head, tail) iff head = item
         } 
         // case head != item already handled
     }
 } 
 
 theorem unique_preserves_contains[T](list: List[T], item: T) {
-    list.unique.contains(item) iff list.contains(item)
+    item ∈ list.unique iff item ∈ list
 } by {
     define p(l: List[T]) -> Bool {
-        l.unique.contains(item) iff l.contains(item)
+        item ∈ l.unique iff item ∈ l
     }
 
     // Base case: empty list
@@ -282,31 +291,31 @@ theorem unique_preserves_contains[T](list: List[T], item: T) {
     forall(head: T, tail: List[T]) {
 
         if p(tail) {
-            if tail.contains(head) {
+            if head ∈ tail {
                 List.cons(head, tail).unique = tail.unique
 
-                List.cons(head, tail).contains(item) iff tail.contains(item)
+                item ∈ List.cons(head, tail) iff item ∈ tail
                 // p(tail)
-                tail.unique.contains(item) iff tail.contains(item)
+                item ∈ tail.unique iff item ∈ tail
                 // induction success
                 p(List.cons(head, tail))
             } 
-            if not tail.contains(head) {           
+            if head ∉ tail {           
                 List.cons(head, tail).unique = List.cons(head, tail.unique)
                 
                 if head = item {
-                    List.cons(head, tail).contains(item) iff head = item
+                    item ∈ List.cons(head, tail) iff head = item
                     // similar
-                    List.cons(head, tail.unique).contains(item) iff head = item
+                    item ∈ List.cons(head, tail.unique) iff head = item
                     
                     p(List.cons(head, tail))
                 }
                 if head != item {
-                    List.cons(head, tail).contains(item) iff tail.contains(item)
+                    item ∈ List.cons(head, tail) iff item ∈ tail
                     // similar
-                    List.cons(head, tail.unique).contains(item) iff tail.unique.contains(item)
+                    item ∈ List.cons(head, tail.unique) iff item ∈ tail.unique
                     // p(tail)
-                    tail.unique.contains(item) iff tail.contains(item)
+                    item ∈ tail.unique iff item ∈ tail
                     
                     p(List.cons(head, tail))
                 }
@@ -334,17 +343,17 @@ theorem unique_indemp[T](list: List[T]) {
         if f(tail) {
             tail.unique.unique = tail.unique
 
-            if tail.contains(head) {
+            if head ∈ tail {
                 List.cons(head, tail).unique = tail.unique
 
                 List.cons(head, tail).unique.unique = tail.unique.unique
                 // use f(tail)
                 f(List.cons(head, tail))
             } 
-            if not tail.contains(head) {
+            if head ∉ tail {
                 List.cons(head, tail).unique = List.cons(head, tail.unique)
 
-                not tail.unique.contains(head)
+                head ∉ tail.unique
 
                 List.cons(head, tail.unique).unique = List.cons(head, tail.unique.unique)
                 // use f(tail)
@@ -362,7 +371,7 @@ theorem unique_list_is_unique[T](list: List[T]) {
 theorem unique_implies_tail_unique[T](head: T, tail: List[T]) {
     List.cons(head, tail).is_unique implies tail.is_unique
 } by {
-    if tail.contains(head) {
+    if head ∈ tail {
         List.cons(head, tail).unique = tail.unique
 
         List.cons(head, tail).length = tail.length + 1
@@ -371,7 +380,7 @@ theorem unique_implies_tail_unique[T](head: T, tail: List[T]) {
 
         not List.cons(head, tail).is_unique
     } 
-    if not tail.contains(head) {
+    if head ∉ tail {
         List.cons(head, tail).unique = List.cons(head, tail.unique)
     }
 }
@@ -398,10 +407,10 @@ theorem count_increas[T](head: T, tail: List[T], item: T) {
 }
 
 theorem list_contains_implies_count_geq_one[T](list: List[T], item: T) {
-    list.contains(item) implies list.count(item) >= 1
+    item ∈ list implies list.count(item) >= 1
 } by {
     define p(l: List[T]) -> Bool {
-        l.contains(item) implies l.count(item) >= 1
+        item ∈ l implies l.count(item) >= 1
     }
 
     // Base case: empty list
@@ -410,13 +419,13 @@ theorem list_contains_implies_count_geq_one[T](list: List[T], item: T) {
     // Induction
     forall(head: T, tail: List[T]) {
         if p(tail) {
-            if List.cons(head, tail).contains(item) {
+            if item ∈ List.cons(head, tail) {
                 if head = item {
                     List.cons(head, tail).count(item) = 1 + tail.count(item)
                     List.cons(head, tail).count(item) >= 1
                 } 
                 if head != item {
-                    tail.contains(item)
+                    item ∈ tail
                     tail.count(item) >= 1
                     List.cons(head, tail).count(item) >= 1
                 }
@@ -428,16 +437,16 @@ theorem list_contains_implies_count_geq_one[T](list: List[T], item: T) {
 }
 
 theorem list_not_contains_iff_count_zero[T](list: List[T], item: T) {
-    not list.contains(item) iff list.count(item) = 0
+    not item ∈ list iff list.count(item) = 0
 } by {
     define p(l: List[T]) -> Bool {
-        not l.contains(item) implies l.count(item) = 0
+        not item ∈ l implies l.count(item) = 0
     }
     p(List.nil)
     forall(head: T, tail: List[T]) {
         if p(tail) {
-            if not List.cons(head, tail).contains(item) {
-                head != item and not tail.contains(item)
+            if item ∉ List.cons(head, tail) {
+                head != item and item ∉ tail
                 
                 List.cons(head, tail).count(item) = 0
 
@@ -460,16 +469,17 @@ theorem unique_implies_no_duplicate[T](list: List[T], item: T) {
 
     // Induction
     forall(head: T, tail: List[T]) {
-        if p(tail) and List.cons(head, tail).contains(item) {
-            head = item or tail.contains(item)
+        if p(tail) and item ∈ List.cons(head, tail) {
+            head = item or item ∈ tail
             if List.cons(head, tail).is_unique {
-                not tail.contains(head)
+                head ∉ tail
                 if head = item {
                     List.cons(head, tail).count(item) = 1 + tail.count(item)
-                    // head = item & tail.contains(head)
+                    // head = item & head ∈ tail
                     tail.count(item) = 0
                     List.cons(head, tail).count(item) <= 1
-                } else {
+                } 
+                if head != item {
                     List.cons(head, tail).count(item) = tail.count(item)
                     // p(tail)
                     List.cons(head, tail).count(item) <= 1
@@ -518,12 +528,12 @@ theorem no_duplicate_implies_unique[T](list: List[T]) {
             if (forall(item: T) { List.cons(head, tail).count(item) <= 1 }) {
                 (forall(item: T) { 
                     // helper
-                    if tail.contains(item) {
+                    if item ∈ tail {
                         tail.count(item) <= 1 
                     }
                 })
                 tail.is_unique
-                not tail.contains(head)
+                head ∉ tail
                 List.cons(head, tail).is_unique
             }
             p(List.cons(head, tail))
@@ -586,17 +596,16 @@ attributes List[T] {
     }
 
     /// Remove all instances of an element from the list.
-    // TODO: prove that this matches filter in the expected case
-    define remove_elem(self, elem: T) -> List[T] {
+    define without(self, elem: T) -> List[T] {
         match self {
             List.nil {
                 List.nil[T]
             }
             List.cons(head, tail) {
                 if head != elem {
-                    List.cons(head, tail.remove_elem(elem))
+                    List.cons(head, tail.without(elem))
                 } else {
-                    tail.remove_elem(elem)
+                    tail.without(elem)
                 }
             }
         }
@@ -608,10 +617,10 @@ define not_expect[T](elem: T, item: T) -> Bool {
 }
 
 theorem remove_elem_is_filter[T](list: List[T], elem: T) {
-    list.remove_elem(elem) = list.filter(not_expect(elem))   
+    list ∖ elem = list.filter(not_expect(elem))   
 } by {
     define p(l: List[T]) -> Bool {
-        l.remove_elem(elem) = l.filter(not_expect(elem)) 
+        l ∖ elem = l.filter(not_expect(elem)) 
     }
 
     // Base case: empty list
@@ -620,9 +629,9 @@ theorem remove_elem_is_filter[T](list: List[T], elem: T) {
     // Induction
     forall(head: T, tail: List[T]) {
         if p(tail) {
-            tail.remove_elem(elem) = tail.filter(not_expect(elem))
+            tail ∖ elem = tail.filter(not_expect(elem))
             if head != elem {
-                List.cons(head, tail).remove_elem(elem) = List.cons(head, tail.remove_elem(elem))
+                List.cons(head, tail) ∖ elem = List.cons(head, tail ∖ elem)
 
                 not_expect(elem, head) = true
 
@@ -631,7 +640,7 @@ theorem remove_elem_is_filter[T](list: List[T], elem: T) {
                 p(List.cons(head, tail))
             } 
             if head = elem {
-                List.cons(head, tail).remove_elem(elem) = tail.remove_elem(elem)
+                List.cons(head, tail) ∖ elem = tail ∖ elem
 
                 not_expect(elem, head) = false
 
@@ -646,23 +655,23 @@ theorem remove_elem_is_filter[T](list: List[T], elem: T) {
 }
 
 theorem remove_elem_does_remove[T](list: List[T], elem: T) {
-    not list.remove_elem(elem).contains(elem)   
+    elem ∉ (list ∖ elem)  
 } by {
     define p(l: List[T]) -> Bool {
-        not l.remove_elem(elem).contains(elem)
+        elem ∉ (l ∖ elem)
     }
     p(List.nil)
 
     forall(head: T, tail: List[T]) {
         if p(tail) {
-            not tail.remove_elem(elem).contains(elem)
+            elem ∉ (tail ∖ elem)
             if head = elem {
-                List.cons(head, tail).remove_elem(elem) = tail.remove_elem(elem)
+                List.cons(head, tail) ∖ elem = tail ∖ elem
             }
             if head != elem {
-                List.cons(head, tail).remove_elem(elem) = List.cons(head, tail.remove_elem(elem))
+                List.cons(head, tail) ∖ elem = List.cons(head, tail ∖ elem)
 
-                not List.cons(head, tail).remove_elem(elem).contains(elem)
+                elem ∉ (List.cons(head, tail) ∖ elem)
             }
             p(List.cons(head, tail))
         }
@@ -672,16 +681,16 @@ theorem remove_elem_does_remove[T](list: List[T], elem: T) {
 
 theorem remove_decrease_or_nothing[T](list: List[T], elem: T) {
     (
-        list.contains(elem) iff list.remove_elem(elem).length < list.length
+        elem ∈ list iff (list ∖ elem).length < list.length
     ) and (
-        not list.contains(elem) iff list.remove_elem(elem) = list
+        elem ∉ list iff list ∖ elem = list
     )
 } by {
     define p(l: List[T]) -> Bool {
         (
-            l.contains(elem) iff l.remove_elem(elem).length < l.length
+            elem ∈ l iff (l ∖ elem).length < l.length
         ) and (
-            not l.contains(elem) iff l.remove_elem(elem) = l
+            elem ∉ l iff l ∖ elem = l
         )   
     }
 
@@ -692,32 +701,32 @@ theorem remove_decrease_or_nothing[T](list: List[T], elem: T) {
     forall(head: T, tail: List[T]) {
         if p(tail) {   
             if head = elem {
-                List.cons(head, tail).remove_elem(elem) = tail.remove_elem(elem)
+                List.cons(head, tail) ∖ elem = tail ∖ elem
                 // p(tail)
-                tail.remove_elem(elem).length <= tail.length
+                (tail ∖ elem).length <= tail.length
 
-                List.cons(head, tail).remove_elem(elem).length < List.cons(head, tail).length
+                (List.cons(head, tail) ∖ elem).length < List.cons(head, tail).length
 
                 p(List.cons(head, tail))
             }
             if head != elem {
-                List.cons(head, tail).remove_elem(elem) = List.cons(head, tail.remove_elem(elem))
+                List.cons(head, tail) ∖ elem = List.cons(head, tail ∖ elem)
 
-                if List.cons(head, tail).contains(elem) {
-                    tail.contains(elem) 
+                if elem ∈ List.cons(head, tail) {
+                    elem ∈ tail 
                     // p(tail)
-                    tail.remove_elem(elem).length < tail.length
+                    (tail ∖ elem).length < tail.length
 
-                    List.cons(head, tail).remove_elem(elem).length < List.cons(head, tail).length
+                    (List.cons(head, tail) ∖ elem).length < List.cons(head, tail).length
 
                     p(List.cons(head, tail))
                 }
-                if not List.cons(head, tail).contains(elem) {
-                    not tail.contains(elem) 
+                if elem ∉ List.cons(head, tail) {
+                    elem ∉ tail 
                     // p(tail)
-                    tail.remove_elem(elem) = tail
+                    tail ∖ elem = tail
 
-                    List.cons(head, tail).remove_elem(elem) = List.cons(head, tail)
+                    List.cons(head, tail) ∖ elem = List.cons(head, tail)
                     
                     p(List.cons(head, tail))
                 }
@@ -730,11 +739,11 @@ theorem remove_decrease_or_nothing[T](list: List[T], elem: T) {
 }
 
 theorem remove_preserve_not_conatins[T](list: List[T], item: T, elem: T) {
-    not list.contains(item) implies not list.remove_elem(elem).contains(item)
+    item ∉ list implies item ∉ list ∖ elem
     // the reverse direction is rarely used and need forall(elem: T){ elem != item implies ...}, which make the proof too long
 } by {
     define p(l: List[T]) -> Bool {
-        not l.contains(item) implies not l.remove_elem(elem).contains(item)
+        item ∉ l implies item ∉ l ∖ elem
     }
 
     // Base case: empty list
@@ -743,24 +752,24 @@ theorem remove_preserve_not_conatins[T](list: List[T], item: T, elem: T) {
     // Induction
     forall(head: T, tail: List[T]) {
         if p(tail) {   
-            if not List.cons(head, tail).contains(item) {
+            if item ∉ List.cons(head, tail) {
                 head != item
-                not tail.contains(item)
+                item ∉ tail
                 
                 if head = elem {
-                    List.cons(head, tail).remove_elem(elem) = tail.remove_elem(elem)
+                    List.cons(head, tail) ∖ elem = tail ∖ elem
 
                     // p(tail)
-                    not tail.remove_elem(elem).contains(item)
+                    item ∉ tail ∖ elem
 
-                    not List.cons(head, tail).remove_elem(elem).contains(item)
+                    item ∉ List.cons(head, tail) ∖ elem
                 }
                 if head != elem {
-                    List.cons(head, tail).remove_elem(elem) = List.cons(head, tail.remove_elem(elem))
+                    List.cons(head, tail) ∖ elem = List.cons(head, tail ∖ elem)
 
-                    not List.cons(head, tail).remove_elem(elem).contains(item)
+                    item ∉ List.cons(head, tail) ∖ elem
                 }
-                not List.cons(head, tail).remove_elem(elem).contains(item)
+                item ∉ List.cons(head, tail) ∖ elem
                 
                 p(List.cons(head, tail))
             }
@@ -770,16 +779,16 @@ theorem remove_preserve_not_conatins[T](list: List[T], item: T, elem: T) {
 }
 
 theorem remove_unique[T](list: List[T], elem: T) {
-    if list.is_unique and list.contains(elem) {
-        list.remove_elem(elem).is_unique and
+    if list.is_unique and elem ∈ list {
+        (list ∖ elem).is_unique and
 
-        list.remove_elem(elem).length + 1 = list.length 
+        (list ∖ elem).length + 1 = list.length 
     }
 } by {
     define p(l: List[T]) -> Bool {
-        if l.is_unique and l.contains(elem) {
-            l.remove_elem(elem).is_unique and
-            l.remove_elem(elem).length + 1 = l.length 
+        if l.is_unique and elem ∈ l {
+            (l ∖ elem).is_unique and
+            (l ∖ elem).length + 1 = l.length 
         } // the reverse direction seems true, but rarely used, I think
     }
 
@@ -791,11 +800,11 @@ theorem remove_unique[T](list: List[T], elem: T) {
         if p(tail) {
             if 
             List.cons(head, tail).is_unique and 
-            List.cons(head, tail).contains(elem) {
+            elem ∈ List.cons(head, tail) {
                 if head = elem {
-                    not tail.contains(elem)
+                    elem ∉ tail
 
-                    List.cons(head, tail).remove_elem(elem) = tail
+                    List.cons(head, tail) ∖ elem = tail
 
                     tail.is_unique
 
@@ -804,21 +813,21 @@ theorem remove_unique[T](list: List[T], elem: T) {
                     p(List.cons(head, tail))
                 }
                 if head != elem {
-                    tail.contains(elem)
+                    elem ∈ tail
                     tail.is_unique
 
-                    List.cons(head, tail).remove_elem(elem) = List.cons(head, tail.remove_elem(elem))
+                    List.cons(head, tail) ∖ elem = List.cons(head, tail ∖ elem)
 
                     // p(tail)
-                    tail.remove_elem(elem).is_unique
+                    (tail ∖ elem).is_unique
 
-                    tail.remove_elem(elem).length + 1 = tail.length
+                    (tail ∖ elem).length + 1 = tail.length
 
-                    not tail.contains(head)
+                    head ∉ tail
 
-                    not tail.remove_elem(elem).contains(head)
+                    head ∉ tail ∖ elem
 
-                    List.cons(head, tail.remove_elem(elem)).is_unique
+                    List.cons(head, tail ∖ elem).is_unique
 
                     p(List.cons(head, tail))
                 }   
@@ -870,21 +879,21 @@ theorem length_range(n: Nat) {
 }
 
 theorem suc_range_contains(n: Nat) {
-    (n + 1).range.contains(n)
+    n ∈ (n + 1).range
 } by {
-    List.singleton(n).contains(n)
+    n ∈ List.singleton(n)
     (n + 1).range = n.range + List.singleton(n)
-    (n + 1).range.contains(n)
+    n ∈ (n + 1).range
 }
 
 theorem range_contains_all_leq(n: Nat) {
     forall(x: Nat) {
-        x < n implies n.range.contains(x)
+        x < n implies x ∈ n.range
     }
 } by {
     define p(m: Nat) -> Bool {
         forall(x: Nat) {
-            x < m implies m.range.contains(x)
+            x < m implies x ∈ m.range
         }
     }
 
@@ -894,19 +903,19 @@ theorem range_contains_all_leq(n: Nat) {
     // Induction
     forall(m: Nat) {
         if p(m) {
-            // Induction hypothesis: forall(x: Nat) { x < m implies m.range.contains(x) }
+            // Induction hypothesis: forall(x: Nat) { x < m implies x ∈ m.range }
             forall(x: Nat) {
                 if x < m + 1 {
                     if x < m {
-                        m.range.contains(x)
-                        (m + 1).range.contains(x)
+                        x ∈ m.range
+                        x ∈ (m + 1).range
                     } 
                     if x = m {
                         x = m
-                        (m + 1).range.contains(m)
-                        (m + 1).range.contains(x)
+                        m ∈ (m + 1).range
+                        x ∈ (m + 1).range
                     }
-                    (m + 1).range.contains(x)
+                    x ∈ (m + 1).range
                 }
             }
             p(m + 1)
@@ -918,11 +927,11 @@ theorem range_contains_all_leq(n: Nat) {
 }
 
 theorem range_does_not_contain_geq(m: Nat, n: Nat) {
-    n >= m implies not m.range.contains(n)
+    n >= m implies n ∉ m.range
 } by {
     define p(x: Nat) -> Bool {
         forall(y: Nat) {
-            y >= x implies not x.range.contains(y)
+            y >= x implies y ∉ x.range
         }
     }
 
@@ -936,10 +945,10 @@ theorem range_does_not_contain_geq(m: Nat, n: Nat) {
             forall(y: Nat) {
                 if y >= x + 1 {
                     y > x 
-                    not x.range.contains(y)
-                    not List.singleton(x).contains(y)
+                    y ∉ x.range
+                    y ∉ List.singleton(x)
 
-                    not (x + 1).range.contains(y)
+                    y ∉ (x + 1).range
                 }
             }
             p(x + 1)
@@ -949,15 +958,15 @@ theorem range_does_not_contain_geq(m: Nat, n: Nat) {
 
 theorem range_iff_contains_all_leq(n: Nat) {
     forall(x: Nat) {
-        x < n iff n.range.contains(x)
+        x < n iff x ∈ n.range
     }
 } by {
     forall(x: Nat) {
-        x < n implies n.range.contains(x)
+        x < n implies x ∈ n.range
         
-        not x < n implies not n.range.contains(x)
+        not x < n implies x ∉ n.range
 
-        x < n iff n.range.contains(x)
+        x < n iff x ∈ n.range
     }
 }
 
@@ -1197,11 +1206,17 @@ theorem drop_twice[T](a: List[T], m: Nat, n: Nat) {
             forall(l: List[T], k: Nat) {
                 // Induction hypothesis: l.drop(x).drop(k) = l.drop(x + k)
                 l.drop(x + 1).drop(k) = l.tail.drop(x).drop(k)
+
                 f(x)
+
                 l.tail.drop(x).drop(k) = l.tail.drop(x + k)
+
                 x + 1 + k = (x + k).suc
+
                 l.drop(x + 1 + k) = l.drop((x + k).suc)
+
                 l.drop((x + k).suc) = l.tail.drop(x + k)
+                
                 l.drop(x + 1).drop(k) = l.drop(x + 1 + k)
             }
             f(x + 1)
@@ -1241,7 +1256,9 @@ theorem drop_last_zero[T](a: List[T]) {
     forall(head: T, tail: List[T]) {
         if q(tail) {
             List.cons(head, tail).drop_last(0) = List.cons(head, tail.drop_last(0))
+
             List.cons(head, tail.drop_last(0)) = List.cons(head, tail)
+
             q(List.cons(head, tail))
         }
     }
@@ -1258,7 +1275,9 @@ theorem drop_last_all[T](l: List[T]) {
     forall(head: T, tail: List[T]) {
         if r(tail) {
             List.cons(head, tail).drop_last(List.cons(head, tail).length) = List.cons(head, tail).drop_last(tail.length.suc)
+
             List.cons(head, tail).drop_last(tail.length.suc) = List.nil[T]
+
             r(List.cons(head, tail))
         }
     }
@@ -1276,13 +1295,20 @@ theorem drop_last_cancels_add[T](a: List[T], b: List[T]) {
     forall(head: T, tail: List[T]) {
         if p(tail) {
             add_length(tail, b)
+
             let (c: Nat) satisfy { b.length + c = (tail + b).length }
+
             c = tail.length
             b.length <= (tail + b).length
+
             (List.cons(head, tail) + b).drop_last(b.length) = List.cons(head, tail + b).drop_last(b.length)
+
             List.cons(head, tail + b).drop_last(b.length) = List.cons(head, (tail + b).drop_last(b.length))
+
             p(tail)
+
             List.cons(head, (tail + b).drop_last(b.length)) = List.cons(head, tail)
+
             p(List.cons(head, tail))
         }
     }
@@ -1399,12 +1425,12 @@ from order import max_imp_gte
 
 theorem list_has_max(list: List[Nat]) {
     forall(a: Nat) {
-        list.contains(a) implies a <= max_list(list)
+        a ∈ list implies a <= max_list(list)
     }
 } by {
     define f(l: List[Nat]) -> Bool {
         forall(k: Nat) {
-            l.contains(k) implies k <= max_list(l)
+            k ∈ l implies k <= max_list(l)
         }
     }
 
@@ -1417,9 +1443,9 @@ theorem list_has_max(list: List[Nat]) {
             m >= max_list(tail)
             forall(x: Nat) {
                 head = x implies x <= m
-                tail.contains(x) implies x <= m
+                x ∈ tail implies x <= m
 
-                List.cons(head, tail).contains(x) implies x <= m
+                x ∈ List.cons(head, tail) implies x <= m
             }
 
             f(List.cons(head, tail))
@@ -1431,7 +1457,7 @@ theorem list_has_max(list: List[Nat]) {
 
 theorem no_list_contains_nat(list: List[Nat]) {
     exists(n: Nat) {
-        not list.contains(n)
+        n ∉ list
     } // max_list + 1
 }
 
