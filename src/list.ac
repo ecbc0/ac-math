@@ -112,6 +112,14 @@ theorem not_contains_add[T](left: List[T], right: List[T], item: T) {
     }
 }
 
+theorem contains_add[T](left: List[T], right: List[T], item: T) {
+    item ∈ (left + right) implies item ∈ left or item ∈ right
+}
+
+define common_item[T](l1: List[T], l2: List[T], x: T) -> Bool {
+    l1.contains(x) and l2.contains(x)
+}
+
 from nat.nat_base import Nat
 numerals Nat
 
@@ -783,13 +791,13 @@ theorem remove_unique[T](list: List[T], elem: T) {
         (list ∖ elem).is_unique and
 
         (list ∖ elem).length + 1 = list.length 
-    }
+    } // the reverse direction seems true, but rarely used, I think
 } by {
     define p(l: List[T]) -> Bool {
         if l.is_unique and elem ∈ l {
             (l ∖ elem).is_unique and
             (l ∖ elem).length + 1 = l.length 
-        } // the reverse direction seems true, but rarely used, I think
+        } 
     }
 
     // Base case: empty list
@@ -1076,6 +1084,10 @@ theorem sum_append[A: Add](initial: List[A], last: A) {
     sum(initial.append(last)) = sum(initial) + last
 }
 
+theorem sum_singleton[A: Add](x: A) {
+    sum(List.singleton(x)) = x
+}
+
 theorem add_assoc[T](a: List[T], b: List[T], c: List[T]) {
     (a + b) + c = a + (b + c)
 } by {
@@ -1244,7 +1256,6 @@ attributes List[T] {
         }
     }
 }
-
 
 theorem drop_last_zero[T](a: List[T]) {
     a.drop_last(0) = a

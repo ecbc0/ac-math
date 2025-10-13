@@ -1,0 +1,32 @@
+{"goal":"factorial_zero","proof":["0 != 0 or 0.factorial = 1"]}
+{"goal":"factorial_one","proof":["0.suc != 0.suc or 0.suc * 0.factorial = 0.suc.factorial","0 + 1 = 0.suc","1 * 1 = 1","0 + 1 = 1","0.suc * 0.factorial = 0.suc.factorial"]}
+{"goal":"3.factorial = 3 * 2.factorial","proof":["2.suc != 3 or 3 * 2.factorial = 3.factorial","2.suc != 3"]}
+{"goal":"2.factorial = 2 * 1.factorial","proof":["1.suc != 2 or 2 * 1.factorial = 2.factorial","1.suc != 2"]}
+{"goal":"1.factorial = 1","proof":["0.suc != 0.suc or 0.suc * 0.factorial = 0.suc.factorial","0 != 0 or 0.factorial = 1","0 + 1 = 0.suc","1 * 1 = 1","0 + 1 = 1","0.factorial = 1","0.suc * 0.factorial = 0.suc.factorial"]}
+{"goal":"2 * 1 = 2","proof":["2 * 1 = 1 * 2","1 * 2 != 2","1 * 2 = 2"]}
+{"goal":"3 * 2 = 3 + 3","proof":["3 * 1 + 3 = 3 * (1 + 1)","3 * 1 = 3","3 * (1 + 1) != 3 + 3"]}
+{"goal":"3 + 3 = 3 + 2 + 1","proof":["3 + 2 + 1 = 3 + (2 + 1)","3 + (2 + 1) != 3 + 3","2 + 1 != 3","2 + 1 = 1 + 2","1 + 2 != 3"]}
+{"goal":"3 + 2 = 3 + 1 + 1","proof":["3 + 1 + 1 = 3 + (1 + 1)","3 + (1 + 1) != 3 + 2","1 + 1 != 2"]}
+{"goal":"3 + 1 = 4","proof":["3 + 1 = 1 + 3","1 + 3 != 4"]}
+{"goal":"test_factorial","proof":["4 + 1 = 1 + 4","1 + 5 = 5.suc","3 + 2 + 1 = (3 + 2).suc"]}
+{"goal":"factorial_step","proof":["n + 1 != n.suc or (n + 1) * n.factorial = (n + 1).factorial","n + 1 != n.suc","n + 1 = 1 + n","1 + n = n.suc"]}
+{"goal":"not k < 0","proof":["let s0: (Nat, Nat) -> Nat satisfy { forall(x0: Nat, x1: Nat) { not x0 < x1 or 0 != s0(x0, x1) } and forall(x2: Nat, x3: Nat) { not x2 < x3 or x2 + s0(x2, x3) = x3 } and forall(x4: Nat, x5: Nat, x6: Nat) { x4 + x5 != x6 or x4 < x6 or 0 = x5 } }","not k < 0 or k + s0(k, 0) = 0","not k < 0 or s0(k, 0) != 0","s0(k, 0) != 0","k + s0(k, 0) != 0 or s0(k, 0) = 0","k + s0(k, 0) = 0"]}
+{"goal":"f(0)","proof":["divides_factorial(k, 0) = f(0)","k <= 0 or divides_factorial(k, 0)","not divides_factorial(k, 0)","not k <= 0 or k < 0 or 0 = k","k <= 0","not k <= 0"]}
+{"goal":"(x + 1).factorial = (x + 1) * x.factorial","proof":["(x + 1) * x.factorial = (x + 1).factorial"]}
+{"goal":"k.divides(x.factorial)","proof":["divides_factorial(k, x) = f(x)","not k <= x or not divides_factorial(k, x) or k.divides(x.factorial) or 0 = k","divides_factorial(k, x)","not divides_factorial(k, x)"]}
+{"goal":"k.divides((x + 1).factorial)","proof":["(x + 1) * x.factorial = (x + 1).factorial","not k.divides(x.factorial) or k.divides(x.factorial * (x + 1))","x.factorial * (x + 1) = (x + 1) * x.factorial","not k.divides((x + 1) * x.factorial)","k.divides(x.factorial * (x + 1))"]}
+{"goal":"f(x + 1)","proof":["divides_factorial(k, x + 1) = f(x + 1)","not k.divides((x + 1).factorial) or divides_factorial(k, x + 1)","not divides_factorial(k, x + 1)","divides_factorial(k, x + 1)"]}
+{"goal":"k.divides((x + 1).factorial)","proof":["(x + 1) * x.factorial != (x + 1).factorial or (x + 1).divides((x + 1).factorial)","not (x + 1).divides((x + 1).factorial)","(x + 1).divides((x + 1).factorial)"]}
+{"goal":"f(x + 1)","proof":["divides_factorial(k, x + 1) = f(x + 1)","not k.divides((x + 1).factorial) or divides_factorial(k, x + 1)","not divides_factorial(k, x + 1)","divides_factorial(k, x + 1)"]}
+{"goal":"f(x + 1)","proof":["not k <= x","divides_factorial(k, x + 1) = f(x + 1)","k <= x + 1 or divides_factorial(k, x + 1)","not divides_factorial(k, x + 1)","not k < x + 1 or k <= x","not k <= x + 1 or k < x + 1 or x + 1 = k","not k < x + 1","k <= x + 1","not k <= x + 1"]}
+{"goal":"divides_factorial(k, n)","proof":["divides_factorial(k, n) = f(n)","not f(n)","let s0: Nat -> Bool -> Nat satisfy { forall(x0: Nat -> Bool, x1: Nat) { not x0(0) or x0(s0(x0)) or x0(x1) } and forall(x2: Nat -> Bool, x3: Nat) { not x2(s0(x2).suc) or not x2(0) or x2(x3) } }","not f(s0(f)) or f(s0(f) + 1)","not f(s0(f).suc) or not f(0) or f(n)","not f(s0(f).suc)","not f(0) or f(s0(f)) or f(n)","f(s0(f))","s0(f) + 1 = s0(f).suc","f(s0(f) + 1)","not f(s0(f) + 1)"]}
+{"goal":"divides_factorial","proof":["not k <= n or not divides_factorial(k, n) or k.divides(n.factorial) or 0 = k"]}
+{"goal":"n.factorial <= (n + 1) * n.factorial","proof":["n.factorial <= n.factorial * n.suc or n.suc = 0","n.factorial * (n + 1) = (n + 1) * n.factorial","n + 1 = n.suc","n.suc != 0","not n.factorial <= n.factorial * (n + 1)","not n.factorial <= n.factorial * n.suc"]}
+{"goal":"factorial_nondecreasing","proof":["(n + 1) * n.factorial = (n + 1).factorial"]}
+{"goal":"1 <= 0.factorial","proof":["0.factorial != 1 or 1 <= 0.factorial","0.factorial != 1"]}
+{"goal":"lte_one_factorial(0)","proof":["1 <= 0.factorial = lte_one_factorial(0)"]}
+{"goal":"1 <= x.factorial","proof":["1 <= x.factorial = lte_one_factorial(x)"]}
+{"goal":"x.factorial <= (x + 1).factorial","proof":["x.factorial <= (x + 1).factorial"]}
+{"goal":"1 <= (x + 1).factorial","proof":["not 1 <= x.factorial or not x.factorial <= (x + 1).factorial or 1 <= (x + 1).factorial","not x.factorial <= (x + 1).factorial or not 1 <= x.factorial"]}
+{"goal":"lte_one_factorial(x + 1)","proof":["1 <= (x + 1).factorial = lte_one_factorial(x + 1)"]}
+{"goal":"lte_one_factorial","proof":["let s0: Nat -> Bool -> Nat satisfy { forall(x0: Nat -> Bool, x1: Nat) { not x0(0) or x0(s0(x0)) or x0(x1) } and forall(x2: Nat -> Bool, x3: Nat) { not x2(s0(x2).suc) or not x2(0) or x2(x3) } }","not lte_one_factorial(s0(lte_one_factorial)) or lte_one_factorial(s0(lte_one_factorial) + 1)","1 <= a.factorial = lte_one_factorial(a)","not lte_one_factorial(a)","not lte_one_factorial(s0(lte_one_factorial).suc) or not lte_one_factorial(0) or lte_one_factorial(a)","not lte_one_factorial(s0(lte_one_factorial).suc)","not lte_one_factorial(0) or lte_one_factorial(s0(lte_one_factorial)) or lte_one_factorial(a)","lte_one_factorial(s0(lte_one_factorial))","s0(lte_one_factorial) + 1 = s0(lte_one_factorial).suc","lte_one_factorial(s0(lte_one_factorial) + 1)","not lte_one_factorial(s0(lte_one_factorial) + 1)"]}

@@ -194,7 +194,7 @@ theorem subset_and_supset_iff_equal[K](a1: Set[K], a2: Set[K]) {
     (a1 = a2) implies (a2 ⊆ a1)
 }
 
-define helper_prop[K](a: Set[K], b: Set[K]) -> Bool {
+define set_eq_prop[K](a: Set[K], b: Set[K]) -> Bool {
     forall(x: K) {
         ((x ∈ a) implies (x ∈ b)) 
         and 
@@ -203,13 +203,13 @@ define helper_prop[K](a: Set[K], b: Set[K]) -> Bool {
 }
 
 theorem set_equal_representation[K](a: Set[K], b: Set[K]) {
-    (a = b) iff helper_prop(a, b)
+    (a = b) iff set_eq_prop(a, b)
 } by {
-    (a = b) implies helper_prop(a, b)
+    (a = b) implies set_eq_prop(a, b)
     
-    helper_prop(a, b) implies (a ⊆ b)
+    set_eq_prop(a, b) implies (a ⊆ b)
 
-    helper_prop(a, b) implies (a ⊇ b)
+    set_eq_prop(a, b) implies (a ⊇ b)
 }
 
 define elem_in_union[K](a1: Set[K], a2: Set[K], x: K) -> Bool {

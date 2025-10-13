@@ -1,0 +1,367 @@
+from nat.nat_base import Nat
+// from list import List
+numerals Nat
+
+theorem division_theorem(m: Nat, n: Nat) {
+    0 < n implies exists(q: Nat, r: Nat) {
+        r < n and m = q * n + r
+    }
+} by {
+    define f(x: Nat) -> Bool { division_theorem(x, n) }
+    if 0 < n {
+        0 = 0 * n + 0
+    }
+    division_theorem(0, n)
+    f(0)
+    forall(x: Nat) {
+        if f(x) {
+            division_theorem(x, n)
+            let (q: Nat, r: Nat) satisfy {
+                r < n and x = q * n + r
+            }
+            if r + 1 = n {
+                x + 1 = (q * n + r) + 1
+                x + 1 = q * n + (r + 1)
+                x + 1 = q * n + n
+                x + 1 = (q + 1) * n + 0
+                division_theorem(x + 1, n)
+            } else {
+                r + 1 < n
+                x + 1 = q * n + r + 1
+                division_theorem(x + 1, n)
+            }
+            division_theorem(x + 1, n)
+        }
+    }
+    division_theorem(m, n)
+}
+
+theorem division_theorem_uniqueness_lemma(m: Nat, n: Nat, q1: Nat, q2: Nat, r1: Nat, r2: Nat) {
+    (0 < n) and
+    (r1 < n and m = q1 * n + r1) and
+    (r2 < n and m = q2 * n + r2) implies
+    (r1 <= r2)
+} by {
+    if r2 < r1 {
+        q2 * n + r2 = q1 * n + r1
+        q2 * n = q1 * n + r1 - r2
+        q2 * n = q1 * n + (r1 - r2)
+        q2 * n - q1 * n = (r1 - r2)
+        (q2 - q1) * n = r1 - r2
+        r1 - r2 < n
+        if (q2 - q1) != 0 {
+            (q2 - q1) * n >= n
+            r1 - r2 >= n
+            false
+        } 
+        q2 - q1 = 0
+        r2 - r1 = 0
+        false 
+    }
+    r1 <= r2
+}
+
+theorem division_theorem_uniqueness(m: Nat, n: Nat, q1: Nat, q2: Nat, r1: Nat, r2: Nat) {
+    (0 < n) and
+    (r1 < n and m = q1 * n + r1) and
+    (r2 < n and m = q2 * n + r2) implies
+    (r1 = r2) and (q1 = q2)
+} by {
+    r1 <= r2
+    r2 <= r1
+    r1 = r2
+    q1 * n = q2 * n
+    q1 = q2
+}
+
+attributes Nat {
+    define divides(self, a: Nat) -> Bool {
+        exists(b: Nat) { self * b = a }
+    }
+
+    define proper_divides(self, a: Nat) -> Bool {
+        a != 0 and exists(b: Nat) { 
+            (1 < self and self < a) and
+            self * b = a 
+        }
+    }
+}
+
+theorem divides_zero(n: Nat) {
+    n.divides(0)
+}
+
+
+theorem zero_divides(n: Nat) {
+    0.divides(n) implies n = 0
+}
+
+theorem factor_lt(a: Nat, b: Nat, n: Nat) {
+    (n != 0 and a * b = n) implies a <= n
+} by {
+    if (n != 0 and a * b = n) {
+        a != 0
+        b != 0
+        if b = 1 { a = n }
+        if b > 1 { 
+            a < a * b 
+            a < n
+        }
+        a <= n
+    }
+}
+
+theorem divides_lt(a: Nat, n: Nat) {
+    a.divides(n) implies n = 0 or a <= n
+} 
+
+theorem divides_self(a: Nat) { a.divides(a) }
+
+theorem another_also_proper_divides(n: Nat, a: Nat, b: Nat) {
+    a.proper_divides(n) and n = a * b implies b.proper_divides(n) 
+} by {
+    // just need to prove 1 < b < n. proved by contradiction
+    if b = 0 { 
+        n = 0 
+        false
+    }
+    if b = 1 { 
+        a = n
+        false
+    }
+    if b >= n {
+        1 < a
+        let m: Nat satisfy { a = 1 + m and m != 0 }
+        a * b = b + m * b
+        m * b != 0
+        a * b > n 
+        false
+    }
+    1 < b and b < n
+}
+
+theorem proper_divides_gt_one(a: Nat, b: Nat) {
+    a.proper_divides(b) implies 1 < a and 1 < b
+} 
+
+theorem divides_trans(a1: Nat, a2: Nat, a3: Nat) {
+    a1.divides(a2) and a2.divides(a3) implies a1.divides(a3)
+} by {
+    let (b1: Nat) satisfy { a1 * b1 = a2 }
+    let (b2: Nat) satisfy { a2 * b2 = a3 }
+    a1 * (b1 * b2) = a3
+}
+
+theorem divides_mul(a1: Nat, a2: Nat, a3: Nat) {
+    a1.divides(a2) implies a1.divides(a2 * a3)
+} 
+
+theorem divides_suc(a: Nat, b: Nat) { a.divides(b) and a.divides(b + 1) implies a = 1 } by {
+    let (c: Nat) satisfy { a * c = b }
+    let (d: Nat) satisfy { a * d = b + 1 }
+    a != 0
+    a * c < a * d
+    c <= d
+    let (e: Nat) satisfy { c + e = d }
+    a * (c + e) = b + 1
+    a * c + a * e = b + 1
+    b + a * e = b + 1
+    a * e = 1
+    a = 1
+}
+
+
+
+theorem divides_add(a: Nat, b: Nat, d: Nat) {
+    d.divides(a) and d.divides(b) implies d.divides(a + b)
+} by {
+    let (qa: Nat) satisfy { qa * d = a }
+    let (qb: Nat) satisfy { qb * d = b }
+    (qa + qb) * d = qa * d + b
+    (qa + qb) * d = a + b
+    d.divides((qa + qb) * d)
+}
+
+theorem divides_symm(a: Nat, b: Nat) { 
+    a.divides(b) and b.divides(a) implies a = b 
+} by {
+    a = 0 implies b = 0
+    b = 0 implies a = 0
+    if a != 0 and b != 0 {
+        a.divides(b)
+        a <= b
+        b.divides(a)
+        a >= b
+        a = b
+    }
+}
+
+let mod(a: Nat, m: Nat) -> r: Nat satisfy {
+    if m != 0 {
+        r < m and exists(q: Nat) { q * m + r = a }
+    } else {
+        // It doesn't really matter how we define "mod 0".
+        // We pick a mod 0 = a.
+        r = a
+    }
+} by {
+    if m != 0 {
+        0 < m
+        let (q: Nat, r: Nat) satisfy { r < m and q * m + r = a }
+        // should add uniqueness? or unimportant, so quotient ... or, because it's `let`, so it just select one of them that satisfy the condition
+    } else {
+        a = a
+    }
+}
+
+attributes Nat {
+    let mod = mod
+}
+
+theorem add_mod(a: Nat, m: Nat) {
+    exists(q: Nat) { q * m + a.mod(m) = a }
+} by {
+    if m = 0 {
+        a.mod(0) = a
+        0 * 0 = 0
+        0 * 0 + a.mod(0) = a
+        let (q: Nat) satisfy { q * m + a.mod(m) = a }
+    } else {
+        let (q: Nat) satisfy { q * m + a.mod(m) = a }
+    }
+}
+
+theorem mod_by_zero(a: Nat) { a.mod(0) = a }
+
+theorem mod_of_zero(m: Nat) {
+    0.mod(m) = 0
+} by {
+    if m = 0 {
+        0.mod(m) = 0
+    } else {
+        0.mod(m) = 0
+    }
+}
+
+theorem mod_lte(a: Nat, m: Nat) {
+    a.mod(m) <= a
+} by {
+    if m = 0 {
+        a.mod(m) <= a
+    } else {
+        let q: Nat satisfy { q * m + a.mod(m) = a }
+        a.mod(m) + q * m = a
+        a.mod(m) <= a
+    }
+}
+
+theorem div_sub_mod(a: Nat, m: Nat) { m.divides(a - a.mod(m)) } by {
+    let (q: Nat) satisfy { q * m + a.mod(m) = a }
+    a - a.mod(m) = q * m
+    m.divides(q * m)
+}
+
+theorem divides_sub(a: Nat, b: Nat, d: Nat) {
+    d.divides(a) and d.divides(b) implies d.divides(a - b)
+} by {
+    let qa: Nat satisfy { qa * d = a }
+    let qb: Nat satisfy { qb * d = b }
+    a - b = qa * d - qb * d
+    a - b = (qa - qb) * d
+    d.divides((qa - qb) * d)
+    d.divides(a - b)
+}
+
+theorem divides_mod(a: Nat, m: Nat, d: Nat) {
+    d.divides(a) and d.divides(m) implies d.divides(a.mod(m))
+} by {
+    let (q: Nat) satisfy { q * m + a.mod(m) = a }
+    a.mod(m) + q * m = a
+    a.mod(m) = a - q * m
+    d.divides(q * m)
+    d.divides(a - q * m)
+    d.divides(a.mod(m))
+}
+
+theorem div_imp_mod(a: Nat, m: Nat) { m.divides(a) implies a.mod(m) = 0 } by {
+    if m != 0 {
+        m.divides(m)
+        m.divides(a)
+        m.divides(a.mod(m))
+        a.mod(m) < m
+        not (m <= a.mod(m))
+        a.mod(m) = 0
+    } else {
+        a = 0
+        a.mod(m) = 0
+    }
+    a.mod(m) = 0
+}
+
+theorem small_mod(a: Nat, m: Nat) { a < m implies a.mod(m) = a } by {
+    let (q: Nat) satisfy { q * m + a.mod(m) = a }
+    if q = 0 {
+        0 + a.mod(m) = a
+        a.mod(m) = a
+    } else {
+        m != 0
+        q * m != 0
+        m.divides(q * m)
+        m <= q * m
+        m <= a
+        false
+    }
+    a.mod(m) = a
+}
+
+theorem mod_mod(a: Nat, m: Nat) { a.mod(m).mod(m) = a.mod(m) } by {
+    if m != 0 {
+        a.mod(m) < m
+        a.mod(m).mod(m) = a.mod(m)
+        mod_mod(a, m)
+    } else {
+        a.mod(m).mod(m) = a.mod(m)
+        mod_mod(a, m)
+    }
+}
+
+theorem mod_mul(m: Nat, q: Nat) { (q * m).mod(m) = 0 } by {
+    m.divides(q * m)
+}
+
+theorem divides_unmod(d: Nat, a: Nat, m: Nat) {
+    d.divides(m) and d.divides(a.mod(m)) implies d.divides(a)
+} by {
+    let (q: Nat) satisfy { q * m + a.mod(m) = a }
+    m.divides(q * m)
+    d.divides(q * m)
+    d.divides(q * m + a.mod(m))
+    d.divides(a)
+}
+
+theorem divides_cancel(a: Nat, b: Nat, c: Nat) {
+    a != 0 and (a * b).divides(a * c) implies b.divides(c)
+} by {
+    let d: Nat satisfy {
+        a * b * d = a * c
+    }
+    a * (b * d) = a * c
+    b * d = c
+}
+
+theorem divides_cancel_dual(a: Nat, b: Nat, c: Nat) {
+    a != 0 and (b * a).divides(c * a) implies b.divides(c)
+}
+
+theorem mul_divides(a: Nat, b: Nat, m: Nat) {
+    a.divides(b) implies (m * a).divides(m * b)
+} by {
+    let d: Nat satisfy {
+        a * d = b
+    }
+    m * a * d = m * b
+}
+
+theorem mul_divides_dual(a: Nat, b: Nat, m: Nat) {
+    a.divides(b) implies (a * m).divides(b * m)
+}
