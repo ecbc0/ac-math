@@ -17,31 +17,31 @@
 {"goal":"finite_constraint[T](set.contains)","proof":["finite_constraint[T](set.contains)"]}
 {"goal":"finite_constraint[T](set.remove(other).contains)","proof":["finite_constraint[T](set.remove(other).contains)"]}
 {"goal":"remove_other_contains_imp_contains","proof":["Finite_Set.new[T](functional_remove(set.contains, other)) = set.remove(other)","not functional_remove(set.contains, other, item) or other = item or item ∈ set","not finite_constraint[T](functional_remove(set.contains, other)) or item ∈ Finite_Set.new[T](functional_remove(set.contains, other)) = functional_remove(set.contains, other, item)","not finite_constraint[T](set.contains) or finite_constraint[T](functional_remove(set.contains, other))","not item ∈ Finite_Set.new[T](functional_remove(set.contains, other)) or not finite_constraint[T](functional_remove(set.contains, other)) or functional_remove(set.contains, other, item)","finite_constraint[T](functional_remove(set.contains, other))","not functional_remove(set.contains, other, item) or item ∈ set","item ∈ Finite_Set.new[T](functional_remove(set.contains, other))","functional_remove(set.contains, other, item)"]}
-{"goal":"set.contains(item) = set.insert(other).contains(item)","proof":["not item ∈ set.insert(other)","not item ∈ set or item ∈ set.insert(other)"]}
-{"goal":"not set.contains(item)","proof":[]}
-{"goal":"not set.insert(other).contains(item)","proof":["not item ∈ set.insert(other) or item ∈ set or other = item"]}
-{"goal":"set.contains(item) = set.insert(other).contains(item)","proof":["item ∈ set.insert(other)"]}
-{"goal":"insert_other_contains_iff","proof":[]}
-{"goal":"set.contains(item) = set.remove(other).contains(item)","proof":["not item ∈ set.remove(other)","not item ∈ set or item ∈ set.remove(other) or other = item"]}
-{"goal":"not set.contains(item)","proof":[]}
-{"goal":"not set.remove(other).contains(item)","proof":["not item ∈ set.remove(other) or item ∈ set or other = item"]}
-{"goal":"set.contains(item) = set.remove(other).contains(item)","proof":["item ∈ set.remove(other)"]}
-{"goal":"remove_other_contains_iff","proof":[]}
+{"goal":"item ∈ set = item ∈ set.insert(other)","proof":["not item ∈ set.insert(other)","not item ∈ set or item ∈ set.insert(other)"]}
+{"goal":"not item ∈ set","proof":[]}
+{"goal":"not item ∈ set.insert(other)","proof":["not item ∈ set.insert(other) or item ∈ set or other = item"]}
+{"goal":"item ∈ set = item ∈ set.insert(other)","proof":["item ∈ set.insert(other)"]}
+{"goal":"insert_other_contains_eq","proof":[]}
+{"goal":"item ∈ set = item ∈ set.remove(other)","proof":["not item ∈ set.remove(other)","not item ∈ set or item ∈ set.remove(other) or other = item"]}
+{"goal":"not item ∈ set","proof":[]}
+{"goal":"not item ∈ set.remove(other)","proof":["not item ∈ set.remove(other) or item ∈ set or other = item"]}
+{"goal":"item ∈ set = item ∈ set.remove(other)","proof":["item ∈ set.remove(other)"]}
+{"goal":"remove_other_contains_eq","proof":[]}
 {"goal":"set.remove(item).insert(item).contains != set.contains","proof":["Finite_Set.new[T](set.contains) = set","Finite_Set.new[T](set.remove(item).insert(item).contains) = set.remove(item).insert(item)"]}
-{"goal":"exists(k0: T) { set.remove(item).insert(item).contains(k0) != set.contains(k0) }","proof":["let s0: T satisfy { s0 ∈ set.remove(item).insert(item) != s0 ∈ set }","s0 ∈ set.remove(item).insert(item) = s0 ∈ set"]}
-{"goal":"set.remove(item).contains(t)","proof":["not t ∈ set or t ∈ set.remove(item) or t = item"]}
+{"goal":"exists(k0: T) { k0 ∈ set.remove(item).insert(item) != k0 ∈ set }","proof":["let s0: T satisfy { s0 ∈ set.remove(item).insert(item) != s0 ∈ set }","s0 ∈ set.remove(item).insert(item) = s0 ∈ set"]}
+{"goal":"t ∈ set.remove(item)","proof":["not t ∈ set or t ∈ set.remove(item) or t = item"]}
 {"goal":"false","proof":["not t ∈ set.remove(item) or t ∈ set.remove(item).insert(item)","not t ∈ set.remove(item).insert(item)"]}
 {"goal":"false","proof":["not t ∈ set.remove(item).insert(item) or t ∈ set.remove(item) or t = item","not t ∈ set.remove(item) or t ∈ set or t = item","t ∈ set.remove(item).insert(item)","t ∈ set.remove(item)"]}
 {"goal":"item = t","proof":[]}
-{"goal":"not set.contains(t)","proof":["not t ∈ set.remove(item).insert(item)","not item ∈ set.remove(item).insert(item)","item ∈ set.remove(item).insert(item)"]}
+{"goal":"not t ∈ set","proof":["not t ∈ set.remove(item).insert(item)","not item ∈ set.remove(item).insert(item)","item ∈ set.remove(item).insert(item)"]}
 {"goal":"false","proof":[]}
 {"goal":"remove_then_insert","proof":[]}
 {"goal":"set.insert(item).remove(item).contains != set.contains","proof":["Finite_Set.new[T](set.contains) = set","Finite_Set.new[T](set.insert(item).remove(item).contains) = set.insert(item).remove(item)"]}
-{"goal":"exists(k0: T) { set.insert(item).remove(item).contains(k0) != set.contains(k0) }","proof":["let s0: T satisfy { s0 ∈ set.insert(item).remove(item) != s0 ∈ set }","s0 ∈ set.insert(item).remove(item) = s0 ∈ set"]}
+{"goal":"exists(k0: T) { k0 ∈ set.insert(item).remove(item) != k0 ∈ set }","proof":["let s0: T satisfy { s0 ∈ set.insert(item).remove(item) != s0 ∈ set }","s0 ∈ set.insert(item).remove(item) = s0 ∈ set"]}
 {"goal":"false","proof":["not t ∈ set.insert(item) or t ∈ set.insert(item).remove(item) or t = item","not t ∈ set or t ∈ set.insert(item)","not t ∈ set.insert(item).remove(item)","t ∈ set.insert(item)"]}
-{"goal":"set.insert(item).contains(t)","proof":["not t ∈ set.insert(item).remove(item) or t ∈ set.insert(item) or t = item","t ∈ set.insert(item).remove(item)"]}
+{"goal":"t ∈ set.insert(item)","proof":["not t ∈ set.insert(item).remove(item) or t ∈ set.insert(item) or t = item","t ∈ set.insert(item).remove(item)"]}
 {"goal":"false","proof":["not t ∈ set.insert(item) or t ∈ set or t = item"]}
 {"goal":"item = t","proof":[]}
-{"goal":"not set.contains(t)","proof":[]}
+{"goal":"not t ∈ set","proof":[]}
 {"goal":"false","proof":["not t ∈ set.insert(item).remove(t)","t ∈ set.insert(item).remove(item)"]}
 {"goal":"insert_then_remove","proof":[]}

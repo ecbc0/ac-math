@@ -14,25 +14,22 @@
 {"goal":"division_theorem(x + 1, n)","proof":[]}
 {"goal":"division_theorem(m, n)","proof":["let s0: Nat -> Bool -> Nat satisfy { forall(x0: Nat -> Bool, x1: Nat) { not x0(0) or x0(s0(x0)) or x0(x1) } and forall(x2: Nat -> Bool, x3: Nat) { not x2(s0(x2).suc) or not x2(0) or x2(x3) } }","division_theorem(m, n) = f(m)","division_theorem(s0(f) + 1, n) = f(s0(f) + 1)","not f(m)","not f(s0(f)) or division_theorem(s0(f) + 1, n)","not f(s0(f).suc) or not f(0) or f(m)","not f(s0(f).suc)","not f(0) or f(s0(f)) or f(m)","f(s0(f))","s0(f) + 1 = s0(f).suc","not f(s0(f) + 1)","division_theorem(s0(f) + 1, n)","not division_theorem(s0(f) + 1, n)"]}
 {"goal":"division_theorem","proof":["let (s0: (Nat, Nat) -> Nat, s1: (Nat, Nat) -> Nat) satisfy { forall(x0: Nat, x1: Nat) { not 0 < x0 or not division_theorem(x1, x0) or s1(x1, x0) < x0 } and forall(x2: Nat, x3: Nat) { not 0 < x2 or not division_theorem(x3, x2) or s0(x3, x2) * x2 + s1(x3, x2) = x3 } and forall(x4: Nat, x5: Nat) { 0 < x4 or division_theorem(x5, x4) } and forall(x6: Nat, x7: Nat, x8: Nat, x9: Nat) { x6 * x7 + x8 != x9 or not x8 < x7 or division_theorem(x9, x7) } }","s0(m, n) * n + s1(m, n) != m or not s1(m, n) < n","not 0 < n or not division_theorem(m, n) or s1(m, n) < n","not 0 < n or not division_theorem(m, n) or s0(m, n) * n + s1(m, n) = m","s1(m, n) < n","s0(m, n) * n + s1(m, n) = m"]}
-{"goal":"q2 * n + r2 = q1 * n + r1","proof":["q1 * n + r1 != m"]}
-{"goal":"q2 * n = q1 * n + r1 - r2","proof":["m - r2 != q2 * n","q2 * n + r2 != m or m - r2 = q2 * n"]}
-{"goal":"q2 * n = q1 * n + (r1 - r2)","proof":["not r1 >= r2 or q1 * n + r1 - r2 = q1 * n + (r1 - r2)","r1 >= r2 = r2 <= r1","not r2 < r1 or r2 <= r1","r2 <= r1","q1 * n + r1 - r2 != q1 * n + (r1 - r2)","r1 >= r2","not r1 >= r2"]}
-{"goal":"q2 * n - q1 * n = r1 - r2","proof":["r1 - r2 + q1 * n != q2 * n or q2 * n - q1 * n = r1 - r2","r1 - r2 + q1 * n = q1 * n + (r1 - r2)","r1 - r2 + q1 * n != q2 * n","r1 - r2 + q1 * n = q2 * n"]}
-{"goal":"(q2 - q1) * n = r1 - r2","proof":["q2 * n - q1 * n = (q2 - q1) * n"]}
-{"goal":"r1 - r2 < n","proof":["not r1 - r2 <= r1 or not r1 < n or r1 - r2 < n","r1 - r2 <= r1","not r1 - r2 <= r1 or not r1 < n"]}
-{"goal":"(q2 - q1) * n >= n","proof":["n <= n * (q2 - q1) or q2 - q1 = 0","n * (q2 - q1) >= n = n <= n * (q2 - q1)","n * (q2 - q1) = (q2 - q1) * n","not n * (q2 - q1) >= n","not n <= n * (q2 - q1)"]}
-{"goal":"r1 - r2 >= n","proof":[]}
-{"goal":"false","proof":["not n <= r1 - r2 or n < r1 - r2 or r1 - r2 = n","not n < r1 - r2 or not r1 - r2 < n","r1 - r2 >= n = n <= r1 - r2","n <= r1 - r2","not n < n","not n < r1 - r2","r1 - r2 = n"]}
-{"goal":"q2 - q1 = 0","proof":[]}
-{"goal":"r2 - r1 = 0","proof":["not r2 < r1 or r2 - r1 = 0"]}
-{"goal":"false","proof":["not q2 * n <= q1 * n or q2 * n + r2 != q1 * n + r1 or r1 <= r2","not r1 <= r2 or not r2 < r1 or r2 < r2","m - r2 = q2 * n","q1 * n = n * q1","r1 - r2 + q1 * n = q1 * n + (r1 - r2)","m - r2 != q2 * n or m - r2 <= q2 * n","0 * n = 0","0 + n * q1 = n * q1","not r2 < r2","not r1 <= r2 or r2 < r2","not r1 <= r2","m - r2 <= q2 * n","not q2 * n <= q1 * n"]}
-{"goal":"r1 <= r2","proof":["r1 < r2 or r2 < r1 or r2 = r1","not r1 < r2 or r1 <= r2","not r1 < r2","r2 = r1","r2 != r1 or r1 <= r2"]}
-{"goal":"division_theorem_uniqueness_lemma","proof":[]}
-{"goal":"r1 <= r2","proof":["q1 * n + r1 != m or q2 * n + r2 != m or not 0 < n or not r1 < n or not r2 < n or r1 <= r2","q2 * n + r2 != m or q1 * n + r1 != m or not r2 < n or not 0 < n or not r1 < n","q2 * n + r2 != m"]}
-{"goal":"r2 <= r1","proof":["q2 * n + r2 != m or q1 * n + r1 != m or not 0 < n or not r2 < n or not r1 < n or r2 <= r1","q2 * n + r2 != m or q1 * n + r1 != m or not r2 < n or not 0 < n or not r1 < n","q2 * n + r2 != m"]}
-{"goal":"r1 = r2","proof":["not r1 <= r2 or r1 < r2 or r2 = r1","not r2 <= r1 or r2 < r1 or r2 = r1","r2 < r1","r1 < r2","not r1 < r2 or not r2 < r1"]}
+{"goal":"q1 * n + r1 = q2 * n + r2","proof":["q1 * n + r1 != m"]}
+{"goal":"q2 * n > q1 * n","proof":["not q1 < q2 or q1 * n < q2 * n or 0 = n","not n < n or not n < n","q2 * n > q1 * n = q1 * n < q2 * n","not q1 * n < q2 * n","0 = n","n < n"]}
+{"goal":"r1 = q2 * n + r2 - q1 * n","proof":["q1 * n + r1 - q1 * n != r1","r1 + q1 * n - q1 * n = r1","r1 + q1 * n = q1 * n + r1"]}
+{"goal":"q2 * n + r2 - q1 * n = q2 * n - q1 * n + r2","proof":["not q2 * n >= q1 * n or q2 * n + r2 - q1 * n = q2 * n - q1 * n + r2","q2 * n >= q1 * n = q1 * n <= q2 * n","q2 * n > q1 * n = q1 * n < q2 * n","not q1 * n < q2 * n or q1 * n <= q2 * n","q1 * n < q2 * n","not q2 * n >= q1 * n","q1 * n <= q2 * n","not q1 * n <= q2 * n"]}
+{"goal":"r1 = q2 * n - q1 * n + r2","proof":["q2 * n + r2 - q1 * n != q2 * n - q1 * n + r2"]}
+{"goal":"r1 = (q2 - q1) * n + r2","proof":["q2 * n - q1 * n = (q2 - q1) * n"]}
+{"goal":"q2 - q1 >= 1","proof":["q1 * n + r1 != m or m - r1 = q1 * n","q2 * n + r2 != m or m - r2 = q2 * n","not q2 * n < q1 * n or not q1 * n < q2 * n","q2 * n > q1 * n = q1 * n < q2 * n","r2 + (q2 - q1) * n = (q2 - q1) * n + r2","q2 - q1 >= 1 or q2 - q1 = 0","q2 - q1 = 0","0 * n = 0","r2 + 0 = r2","q1 * n < q2 * n","m - r2 = q2 * n","m - r1 = q1 * n","not q2 * n < q1 * n"]}
+{"goal":"(q2 - q1) * n >= n","proof":["not q2 - q1 >= 1 or (q2 - q1) * n >= 1 * n","1 * n = n","not (q2 - q1) * n >= 1 * n"]}
+{"goal":"r1 >= n","proof":["not n <= r1 - r2 or not r1 - r2 <= r1 or n <= r1","(q2 - q1) * n + r2 != r1 or (q2 - q1) * n = r1 - r2","(q2 - q1) * n >= n = n <= (q2 - q1) * n","r1 >= n = n <= r1","not n <= r1","r1 - r2 <= r1","n <= (q2 - q1) * n","not r1 - r2 <= r1 or not n <= r1 - r2","not n <= r1 - r2","(q2 - q1) * n = r1 - r2"]}
+{"goal":"false","proof":["not n <= r1 or n < r1 or r1 = n","not n < r1 or not r1 < n","r1 >= n = n <= r1","n <= r1","not n < n","not n < r1","r1 = n"]}
+{"goal":"division_theorem_uniqueness_half","proof":["q2 < q1 or q1 < q2 or q2 = q1","q1 >= q2 = q2 <= q1","not q2 <= q1","not q2 < q1 or q2 <= q1","not q2 < q1","q2 = q1","q2 != q1 or q2 <= q1"]}
+{"goal":"q1 >= q2","proof":["q1 * n + r1 != m or q2 * n + r2 != m or not 0 < n or not r1 < n or not r2 < n or q1 >= q2","q2 * n + r2 != m or q1 * n + r1 != m or not 0 < n or not r1 < n or not r2 < n","q2 * n + r2 != m or not r2 < n"]}
+{"goal":"q2 >= q1","proof":["q2 * n + r2 != m or q1 * n + r1 != m or not 0 < n or not r2 < n or not r1 < n or q2 >= q1","q2 * n + r2 != m or q1 * n + r1 != m or not 0 < n or not r2 < n or not r1 < n","q2 * n + r2 != m or not r2 < n"]}
+{"goal":"q1 = q2","proof":["not q1 <= q2 or q1 < q2 or q2 = q1","not q2 <= q1 or q2 < q1 or q2 = q1","not q1 < q2 or not q2 < q1","q1 >= q2 = q2 <= q1","q2 >= q1 = q1 <= q2","q1 <= q2","q2 <= q1","q2 < q1","q1 < q2","not q1 < q2"]}
 {"goal":"q1 * n = q2 * n","proof":["q2 * n + r1 != q1 * n + r1 or q2 * n = q1 * n","q2 * n + r1 = m","q2 * n + r1 != q1 * n + r1"]}
-{"goal":"q1 = q2","proof":["n * q2 != n * q1 or 0 = n or q2 = q1","q1 * n = n * q1","q2 * n = n * q2","q2 * n = n * q1","not n < n","n * q2 = n * q1","0 = n"]}
+{"goal":"r1 = r2","proof":["q1 * n + r2 != q1 * n + r1 or r2 = r1","q1 * n + r2 = m","q1 * n + r2 != q1 * n + r1"]}
 {"goal":"division_theorem_uniqueness","proof":["r2 != r1"]}
 {"goal":"divides_zero","proof":["n * 0 != 0 or n.divides(0)","n * 0 != 0","0 != 0 or n * 0 = 0","0 != 0"]}
 {"goal":"zero_divides","proof":["let s0: (Nat, Nat) -> Nat satisfy { forall(x0: Nat, x1: Nat) { not x0.divides(x1) or x0 * s0(x0, x1) = x1 } and forall(x2: Nat, x3: Nat, x4: Nat) { x2 * x3 != x4 or x2.divides(x4) } }","not 0.divides(n) or 0 * s0(0, n) = n","0 * s0(0, n) = 0","0 * s0(0, n) != n"]}

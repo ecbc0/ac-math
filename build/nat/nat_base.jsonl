@@ -91,6 +91,7 @@
 {"goal":"a + b != 0","proof":["0 + b = 0","0 + b != 0 or 0 = b"]}
 {"goal":"nonzero_add_to_nonzero","proof":["0 + b = 0","0 + b != 0 or 0 = b"]}
 {"goal":"add_to_zero","proof":["a + b != 0 or 0 = b","a + b != 0 or 0 = a","0 = a","0 = b","0 != b"]}
+{"goal":"non_zero_gte_one","proof":["let s0: Nat -> Nat satisfy { forall(x0: Nat) { s0(x0).suc = x0 or 0 = x0 } }","1 + s0(n) != n or 1 < n or s0(n) = 0","n >= 1 = 1 <= n","not 1 <= n","not 1 < n or 1 <= n","not 1 < n","s0(n).suc = n or 0 = n","0.suc != n or 0.suc <= n","1 + s0(n) = s0(n).suc","not 0.suc <= n","s0(n).suc = n","0.suc != n","1 + s0(n) = n","s0(n) = 0"]}
 {"goal":"exists(k0: Nat) { a + k0 = b and k0 != 0 }","proof":["let s0: (Nat, Nat) -> Nat satisfy { forall(x0: Nat, x1: Nat) { not x0 < x1 or 0 != s0(x0, x1) } and forall(x2: Nat, x3: Nat) { not x2 < x3 or x2 + s0(x2, x3) = x3 } and forall(x4: Nat, x5: Nat, x6: Nat) { x4 + x5 != x6 or x4 < x6 or 0 = x5 } }","a + s0(a, b) != b or s0(a, b) = 0","not a < b or a + s0(a, b) = b","not a < b or s0(a, b) != 0","s0(a, b) != 0","a + s0(a, b) = b","a + s0(a, b) != b"]}
 {"goal":"exists(k0: Nat) { b + k0 = c and n1 != 0 }","proof":["let s0: (Nat, Nat) -> Nat satisfy { forall(x0: Nat, x1: Nat) { not x0 < x1 or 0 != s0(x0, x1) } and forall(x2: Nat, x3: Nat) { not x2 < x3 or x2 + s0(x2, x3) = x3 } and forall(x4: Nat, x5: Nat, x6: Nat) { x4 + x5 != x6 or x4 < x6 or 0 = x5 } }","b + s0(b, c) != c or n1 = 0","b + s0(b, c) != c","not b < c or b + s0(b, c) = c"]}
 {"goal":"a + (n1 + n2) = c","proof":["a + (n1 + n2) = a + n1 + n2"]}
@@ -179,6 +180,12 @@
 {"goal":"a * b + a * n = a * c","proof":["a * b + a * n = a * (b + n)"]}
 {"goal":"a * b <= a * c","proof":["a * b + a * n != a * c or a * b < a * c or a * n = 0","not a * b < a * c or a * b <= a * c","a * b = b * a","a * n + a * b = a * b + a * n","a * c != a * b or a * b <= a * c","a * c != a * b","0 + b * a = b * a","not a * b < a * c","a * n = 0"]}
 {"goal":"lte_mul_both","proof":[]}
+{"goal":"gt_mul_both","proof":["not c < b or a * c < a * b or 0 = a","a * b > a * c = a * c < a * b","b > c = c < b","not a * c < a * b","c < b","not c < b"]}
+{"goal":"gte_mul_both","proof":["not c <= b or a * c <= a * b","a * b >= a * c = a * c <= a * b","b >= c = c <= b","not a * c <= a * b","c <= b","not c <= b"]}
+{"goal":"lt_mul_both_dual","proof":["not b < c or a * b < a * c or 0 = a","b * a = a * b","c * a = a * c","not a * b < c * a","not a * b < a * c"]}
+{"goal":"lte_mul_both_dual","proof":["not b <= c or a * b <= a * c","a * b = b * a","a * c = c * a","not a * b <= c * a","a * b <= a * c"]}
+{"goal":"gt_mul_both_dual","proof":["not c < b or c * a < b * a or 0 = a","b * a > c * a = c * a < b * a","b > c = c < b","not c * a < b * a","c < b","not c < b"]}
+{"goal":"gte_mul_both_dual","proof":["not c <= b or c * a <= b * a","b * a >= c * a = c * a <= b * a","b >= c = c <= b","not c * a <= b * a","c <= b","not c <= b"]}
 {"goal":"a * c <= a * b","proof":["not c <= b or a * c <= a * b","not c <= b","b >= c = c <= b"]}
 {"goal":"false","proof":["not a * c <= a * b or a * c < a * b or a * c = a * b","not a * c < a * b or not a * b < a * c","not a * b < a * b","not a * c < a * b","a * c = a * b"]}
 {"goal":"lt_cancel_mul","proof":["b < c or c < b or c = b","b >= c = c <= b","not c <= b","not c < b or c <= b","c != b or c <= b","c != b","not c < b","c < b"]}
@@ -222,6 +229,7 @@
 {"goal":"add_sub_dual","proof":["a + b - b + b != a + b or a + b - b = a"]}
 {"goal":"a + (b - c) + c = a + b","proof":["a + (b - c + c) = a + (b - c) + c","not c <= b or b - c + c = b","b >= c = c <= b","c <= b","a + (b - c + c) != a + b","b - c + c = b","b - c + c != b"]}
 {"goal":"add_sub_comm","proof":["a + (b - c) + c - c = a + (b - c)"]}
+{"goal":"add_sub_comm_dual","proof":["not a >= c or b + a - c = b + (a - c)","b + (a - c) = a - c + b","b + a = a + b","b + a - c != a - c + b","b + a - c = b + (a - c)"]}
 {"goal":"a - b = 0","proof":["not a < b or a - b = 0"]}
 {"goal":"0 <= a","proof":["a < 0 or 0 < a or 0 = a","not 0 < a or 0 <= a","not 0 < a","0 != a or 0 <= a","0 != a","not a < 0"]}
 {"goal":"a - b <= a","proof":[]}

@@ -316,6 +316,10 @@ attributes Nat {
     }
 }
 
+theorem non_zero_gte_one(n: Nat) {
+    n != 0 implies n >= 1
+}
+
 theorem lt_trans(a: Nat, b: Nat, c: Nat) { a < b and b < c implies a < c } by {
     let n1: Nat satisfy { a + n1 = b and n1 != 0 }
     let n2: Nat satisfy { b + n2 = c and n1 != 0 }
@@ -527,6 +531,31 @@ theorem lte_mul_both(a: Nat, b: Nat, c: Nat) {
     a * b <= a * c
 }
 
+theorem gt_mul_both(a: Nat, b: Nat, c: Nat) { 
+    a != 0 and b > c implies a * b > a * c 
+} 
+
+theorem gte_mul_both(a: Nat, b: Nat, c: Nat) { 
+    b >= c implies a * b >= a * c 
+}
+
+// helper for proof search
+theorem lt_mul_both_dual(a: Nat, b: Nat, c: Nat) { 
+    a != 0 and b < c implies b * a < c * a 
+}
+
+theorem lte_mul_both_dual(a: Nat, b: Nat, c: Nat) { 
+    b <= c implies b * a <= c * a 
+}
+
+theorem gt_mul_both_dual(a: Nat, b: Nat, c: Nat) { 
+    a != 0 and b > c implies b * a > c * a 
+}
+
+theorem gte_mul_both_dual(a: Nat, b: Nat, c: Nat) { 
+    b >= c implies b * a >= c * a 
+}
+
 theorem lt_cancel_mul(a: Nat, b: Nat, c: Nat) { 
     a != 0 and a * b < a * c implies b < c 
 } by {
@@ -630,6 +659,10 @@ theorem add_sub_comm(a: Nat, b: Nat, c: Nat) {
 } by {
     a + (b - c) + c = a + b
 }
+
+theorem add_sub_comm_dual(a: Nat, b: Nat, c: Nat) {
+    a >= c implies (a + b) - c = (a - c) + b 
+} 
 
 theorem sub_decrease(a: Nat, b: Nat) {
     a - b <= a

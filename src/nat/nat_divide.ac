@@ -2,6 +2,8 @@ from nat.nat_base import Nat
 // from list import List
 numerals Nat
 
+/// the idea of division is, for m, successively substract n until reminder r < n. the times of substraction is q  
+/// according to the concept of successive substraction, r, q is obviously unique
 theorem division_theorem(m: Nat, n: Nat) {
     0 < n implies exists(q: Nat, r: Nat) {
         r < n and m = q * n + r
@@ -36,29 +38,25 @@ theorem division_theorem(m: Nat, n: Nat) {
     division_theorem(m, n)
 }
 
-theorem division_theorem_uniqueness_lemma(m: Nat, n: Nat, q1: Nat, q2: Nat, r1: Nat, r2: Nat) {
+// swap 1,2 to get dual and then get all
+theorem division_theorem_uniqueness_half(m: Nat, n: Nat, q1: Nat, q2: Nat, r1: Nat, r2: Nat) {
     (0 < n) and
     (r1 < n and m = q1 * n + r1) and
     (r2 < n and m = q2 * n + r2) implies
-    (r1 <= r2)
+    (q1 >= q2) 
 } by {
-    if r2 < r1 {
-        q2 * n + r2 = q1 * n + r1
-        q2 * n = q1 * n + r1 - r2
-        q2 * n = q1 * n + (r1 - r2)
-        q2 * n - q1 * n = (r1 - r2)
-        (q2 - q1) * n = r1 - r2
-        r1 - r2 < n
-        if (q2 - q1) != 0 {
-            (q2 - q1) * n >= n
-            r1 - r2 >= n
-            false
-        } 
-        q2 - q1 = 0
-        r2 - r1 = 0
+    q1 * n + r1 = q2 * n + r2
+    if q1 < q2 {
+        q2 * n > q1 * n
+        r1 = (q2 * n + r2) - q1 * n
+        (q2 * n + r2) - q1 * n = (q2 * n - q1 * n) + r2
+        r1 = (q2 * n - q1 * n) + r2
+        r1 = (q2 - q1) * n + r2
+        q2 - q1 >= 1
+        (q2 - q1) * n >= n
+        r1 >= n
         false 
     }
-    r1 <= r2
 }
 
 theorem division_theorem_uniqueness(m: Nat, n: Nat, q1: Nat, q2: Nat, r1: Nat, r2: Nat) {
@@ -67,11 +65,11 @@ theorem division_theorem_uniqueness(m: Nat, n: Nat, q1: Nat, q2: Nat, r1: Nat, r
     (r2 < n and m = q2 * n + r2) implies
     (r1 = r2) and (q1 = q2)
 } by {
-    r1 <= r2
-    r2 <= r1
-    r1 = r2
-    q1 * n = q2 * n
+    q1 >= q2
+    q2 >= q1
     q1 = q2
+    q1 * n = q2 * n
+    r1 = r2
 }
 
 attributes Nat {
@@ -90,7 +88,6 @@ attributes Nat {
 theorem divides_zero(n: Nat) {
     n.divides(0)
 }
-
 
 theorem zero_divides(n: Nat) {
     0.divides(n) implies n = 0
