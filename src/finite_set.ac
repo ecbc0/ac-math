@@ -69,7 +69,7 @@ attributes Finite_Set[T] {
     /// True if the set contains no elements.
     define is_empty(self) -> Bool {
         forall(x: T) {
-            not self.contains(x)
+            not x ∈ self
         }
     }
 
@@ -85,106 +85,106 @@ attributes Finite_Set[T] {
 }
 
 theorem insert_contains[T](set: Finite_Set[T], item: T) {
-    set.insert(item).contains(item)
+    item ∈ set.insert(item)
 }
 
 theorem remove_does_not_contain[T](set: Finite_Set[T], item: T) {
-    not set.remove(item).contains(item)
+    not item ∈ set.remove(item)
 }
 
 theorem insert_other_still_contains[T](set: Finite_Set[T], item: T, other: T) {
-    set.contains(item) implies set.insert(other).contains(item)
+    item ∈ set implies item ∈ set.insert(other)
 } by {
     finite_constraint(set.contains)
     finite_constraint(set.insert(other).contains)
 }
 
 theorem remove_other_still_contains[T](set: Finite_Set[T], item: T, other: T) {
-    item != other and set.contains(item) implies set.remove(other).contains(item)
+    item != other and item ∈ set implies item ∈ set.remove(other)
 } by {
     finite_constraint(set.contains)
     finite_constraint(set.remove(other).contains)
 }
 
 theorem insert_other_contains_imp_contains[T](set: Finite_Set[T], item: T, other: T) {
-    item != other and set.insert(other).contains(item) implies set.contains(item)
+    item != other and item ∈ set.insert(other) implies item ∈ set
 } by {
     finite_constraint(set.contains)
     finite_constraint(set.insert(other).contains)
 }
 
 theorem remove_other_contains_imp_contains[T](set: Finite_Set[T], item: T, other: T) {
-    item != other and set.remove(other).contains(item) implies set.contains(item)
+    item != other and item ∈ set.remove(other) implies item ∈ set
 } by {
     finite_constraint(set.contains)
     finite_constraint(set.remove(other).contains)
 }
 
-theorem insert_other_contains_iff[T](set: Finite_Set[T], item: T, other: T) {
-    item != other implies (set.contains(item) iff set.insert(other).contains(item))
+theorem insert_other_contains_eq[T](set: Finite_Set[T], item: T, other: T) {
+    item != other implies item ∈ set = item ∈ set.insert(other)
 } by {
-    if set.contains(item) {
-        set.contains(item) = set.insert(other).contains(item)
+    if item ∈ set {
+        item ∈ set iff item ∈ set.insert(other)
     } else {
-        not set.contains(item)
-        not set.insert(other).contains(item)
-        set.contains(item) = set.insert(other).contains(item)
+        not item ∈ set
+        not item ∈ set.insert(other)
+        item ∈ set = item ∈ set.insert(other)
     }
 }
 
-theorem remove_other_contains_iff[T](set: Finite_Set[T], item: T, other: T) {
-    item != other implies (set.contains(item) iff set.remove(other).contains(item))
+theorem remove_other_contains_eq[T](set: Finite_Set[T], item: T, other: T) {
+    item != other implies item ∈ set = item ∈ set.remove(other)
 } by {
-    if set.contains(item) {
-        set.contains(item) = set.remove(other).contains(item)
+    if item ∈ set {
+        item ∈ set iff item ∈ set.remove(other)
     } else {
-        not set.contains(item)
-        not set.remove(other).contains(item)
-        set.contains(item) = set.remove(other).contains(item)
+        not item ∈ set
+        not item ∈ set.remove(other)
+        item ∈ set = item ∈ set.remove(other)
     }
 }
 
 theorem remove_then_insert[T](set: Finite_Set[T], item: T) {
-    set.contains(item) implies set.remove(item).insert(item) = set
+    item ∈ set implies set.remove(item).insert(item) = set
 } by {
     if set.remove(item).insert(item) != set {
         set.remove(item).insert(item).contains != set.contains
         let t: T satisfy {
-            set.remove(item).insert(item).contains(t) != set.contains(t)
+            t ∈ set.remove(item).insert(item) != t ∈ set
         }
         if item != t {
-            if set.contains(t) {
-                set.remove(item).contains(t)
+            if t ∈ set {
+                t ∈ set.remove(item)
                 false
             } else {
                 false
             }
         } else {
             item = t
-            not set.contains(t)
+            not t ∈ set
             false
         }
     }
 }
 
 theorem insert_then_remove[T](set: Finite_Set[T], item: T) {
-    not set.contains(item) implies set.insert(item).remove(item) = set
+    not item ∈ set implies set.insert(item).remove(item) = set
 } by {
     if set.insert(item).remove(item) != set {
         set.insert(item).remove(item).contains != set.contains
         let t: T satisfy {
-            set.insert(item).remove(item).contains(t) != set.contains(t)
+            t ∈ set.insert(item).remove(item) != t ∈ set
         }
         if item != t {
-            if set.contains(t) {
+            if t ∈ set {
                 false
             } else {
-                set.insert(item).contains(t)
+                t ∈ set.insert(item)
                 false
             }
         } else {
             item = t
-            not set.contains(t)
+            not t ∈ set
             false
         }
     }
