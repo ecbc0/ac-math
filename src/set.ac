@@ -140,13 +140,13 @@ theorem singleton_set_is_not_empty[K](a: K) {
 
 attributes Set[K] {
     /// a ⊆ b
-    let subset = function(a: Set[K], b: Set[K]) {
+    let subset_eq = function(a: Set[K], b: Set[K]) {
         forall(x: K) {
             x ∈ a implies x ∈ b
         }
     }
     /// a ⊇ b
-    let superset = function(a: Set[K], b: Set[K]) {
+    let superset_eq = function(a: Set[K], b: Set[K]) {
         forall(x: K) {
             x ∈ b implies x ∈ a
         }
@@ -234,8 +234,8 @@ attributes Set[K] {
         Set[K].new(elem_in_intersection(a, b))
     }
     /// a \ b  
-    /// "without" is from Typst. In LaTeX it's "set minus"
-    let without = function(a: Set[K], b: Set[K]) {
+    /// in Typst it's "without". In LaTeX it's "setminus"
+    let difference = function(a: Set[K], b: Set[K]) {
         Set[K].new(elem_in_difference(a, b))
     }
 }
@@ -255,7 +255,7 @@ theorem in_intersection[K](a1: Set[K], a2: Set[K], x: K) {
     x ∈ (a1 ∩ a2) implies (x ∈ a1 and x ∈ a2)
 }
 
-theorem without_is_intersection_with_compl[K](a: Set[K], b: Set[K]) {
+theorem difference_is_intersection_with_compl[K](a: Set[K], b: Set[K]) {
     (a ∖ b) = (a ∩ b.c)
 } by {
     forall(x: K) {
@@ -327,11 +327,11 @@ theorem supset_intersection_is_supset[K](sup_1: Set[K], sup_2: Set[K], a: Set[K]
     (sup_1 ⊇ a and sup_2 ⊇ a) implies ((sup_1 ∩ sup_2) ⊇ a)
 }
 
-define sym_diffrence[K](a: Set[K], b: Set[K]) -> Set[K] {
+define sym_difference[K](a: Set[K], b: Set[K]) -> Set[K] {
     (a ∖ b) ∪ (b ∖ a) 
 }
 
-theorem sym_diffrence_another_rep[K](a: Set[K], b: Set[K]) {
+theorem sym_difference_another_rep[K](a: Set[K], b: Set[K]) {
     (a ∖ b) ∪ (b ∖ a) = (a ∪ b) ∖ (a ∩ b) 
 } by {
     // =>
@@ -437,7 +437,12 @@ by {
 
     // ⊆
     forall(x: K) {
-        (x ∈ (a1 ∪ a2) ∩ b) implies (x ∈ (a1 ∩ b) ∪ (a2 ∩ b))
+        if x ∈ (a1 ∪ a2) ∩ b {
+            (x ∈ a1 or x ∈ a2) and x ∈ b
+            (x ∈ a1 and x ∈ b) or (x ∈ a2 and x ∈ b)
+            (x ∈ a1 ∩ b) or (x ∈ a2 ∩ b)
+            x ∈ (a1 ∩ b) ∪ (a2 ∩ b)
+        }
     }
 
     ((a1 ∪ a2) ∩ b) ⊆ ((a1 ∩ b) ∪ (a2 ∩ b))
@@ -652,7 +657,7 @@ attributes Set[K1] {
 }
 
 theorem product_test[K1, K2](a1: Set[K1], a2: Set[K2]) {
-    a1 × a2 ⊆ Set[Product[K1, K2]].universal_set
+    a1.product(a2) ⊆ Set[Product[K1, K2]].universal_set
 }
 
 define elem_in_product_index[I, K](f: I -> Set[K], x: I -> K) -> Bool {
@@ -792,9 +797,8 @@ define cardinal_eq[K, L](a: Set[K], b: Set[L]) -> Bool {
     }
 }
 
-// possibly related to stack overflow
 define power_set[K](a: Set[K]) -> Set[Set[K]] {
-    Set[Set[K]].new(a.superset)
+    Set[Set[K]].new(a.superset_eq)
 }
 
 define is_injective[K, L](f: K -> L) -> Bool {

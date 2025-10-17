@@ -336,7 +336,7 @@ theorem divides_unmod(d: Nat, a: Nat, m: Nat) {
     d.divides(a)
 }
 
-theorem divides_cancel(a: Nat, b: Nat, c: Nat) {
+theorem divides_cancel_left(a: Nat, b: Nat, c: Nat) {
     a != 0 and (a * b).divides(a * c) implies b.divides(c)
 } by {
     let d: Nat satisfy {
@@ -346,11 +346,11 @@ theorem divides_cancel(a: Nat, b: Nat, c: Nat) {
     b * d = c
 }
 
-theorem divides_cancel_dual(a: Nat, b: Nat, c: Nat) {
+theorem divides_cancel_right(a: Nat, b: Nat, c: Nat) {
     a != 0 and (b * a).divides(c * a) implies b.divides(c)
 }
 
-theorem mul_divides(a: Nat, b: Nat, m: Nat) {
+theorem mul_divides_left(a: Nat, b: Nat, m: Nat) {
     a.divides(b) implies (m * a).divides(m * b)
 } by {
     let d: Nat satisfy {
@@ -359,6 +359,6 @@ theorem mul_divides(a: Nat, b: Nat, m: Nat) {
     m * a * d = m * b
 }
 
-theorem mul_divides_dual(a: Nat, b: Nat, m: Nat) {
+theorem mul_divides_right(a: Nat, b: Nat, m: Nat) {
     a.divides(b) implies (a * m).divides(b * m)
 }

@@ -47,11 +47,11 @@ theorem not_contains_is_not_contains[T](list: List[T], item: T) {
     (not item ∈ list) iff item ∉ list
 }
 
-theorem add_nil[T](list: List[T]) {
+theorem add_nil_right[T](list: List[T]) {
     list + List.nil[T] = list
 }
 
-theorem add_nil_dual[T](list: List[T]) {
+theorem add_nil_left[T](list: List[T]) {
     List.nil[T] + list = list
 }
 
@@ -240,7 +240,7 @@ theorem contains_decomposition[T](head: T, tail: List[T], item: T) {
     head = item or item ∈ tail implies item ∈ List.cons(head, tail)
 }
 
-theorem contains_decomposition_dual[T](head: T, tail: List[T], item: T) {
+theorem contains_decomposition_neg_dual[T](head: T, tail: List[T], item: T) {
     not item ∈ List.cons(head, tail) iff head != item and not item ∈ tail
 } by {
     // helper
@@ -604,16 +604,16 @@ attributes List[T] {
     }
 
     /// Remove all instances of an element from the list.
-    define without(self, elem: T) -> List[T] {
+    define difference(self, elem: T) -> List[T] {
         match self {
             List.nil {
                 List.nil[T]
             }
             List.cons(head, tail) {
                 if head != elem {
-                    List.cons(head, tail.without(elem))
+                    List.cons(head, tail.difference(elem))
                 } else {
-                    tail.without(elem)
+                    tail.difference(elem)
                 }
             }
         }
@@ -1378,7 +1378,7 @@ theorem range_add_until(a: Nat, b: Nat) {
 
     // Base case: x = 0
     until_self(a)
-    add_nil(a.range)
+    add_nil_right(a.range)
     f(0)
 
     // Inductive step

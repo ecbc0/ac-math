@@ -43,7 +43,7 @@ theorem one_plus_one { 1 + 1 = 2 } by {
     1 + 0.suc = 1.suc
 }
 
-theorem add_one(a: Nat) {
+theorem add_one_right(a: Nat) {
     a + 1 = a.suc
 } by {
     a + 0.suc = (a + 0).suc
@@ -71,7 +71,7 @@ theorem add_suc(n1: Nat, n2: Nat) {
     f(n2)
 }
 
-theorem add_one_dual(a: Nat) {
+theorem add_one_left(a: Nat) {
     1 + a = a.suc
 } by {
     add_suc(0, a)
@@ -138,11 +138,11 @@ attributes Nat {
 
 theorem mul_zero(a: Nat) { a * 0 = 0 and 0 * a = 0 } // 0 * a = 0 by easy induction
 
-theorem mul_suc(a: Nat, b: Nat) {
+theorem mul_suc_right(a: Nat, b: Nat) {
     a * (b + 1) = a * b + a 
 }
 
-theorem mul_suc_dual(a: Nat, b: Nat) {
+theorem mul_suc_left(a: Nat, b: Nat) {
     (a + 1) * b = a * b + b
 } by {
     define f(n: Nat) -> Bool {
@@ -172,7 +172,7 @@ theorem mul_comm(a: Nat, b: Nat) { a * b = b * a } by {
             a * (n + 1) = a * n + a
             // f(n) & add_comm
             a * n + a = n * a + a
-            // mul_suc_dual
+            // mul_suc
             (n + 1) * a = n * a + a
             f(n + 1)
         }
@@ -183,23 +183,23 @@ theorem mul_comm(a: Nat, b: Nat) { a * b = b * a } by {
 
 theorem one_mul_one { 1 * 1 = 1 } 
 
-theorem distrib(a: Nat, b: Nat, c: Nat) {
+theorem distrib_right(a: Nat, b: Nat, c: Nat) {
     a * (b + c) = a * b + a * c 
 } by {
-    define f(x: Nat) -> Bool { distrib(a, b, x) }
+    define f(x: Nat) -> Bool { distrib_right(a, b, x) }
     f(0)
     forall(x: Nat) {
         if f(x) {
-            distrib(a, b, x)
+            distrib_right(a, b, x)
             a * (b + x) = a * b + a * x            
-            mul_suc(a, b + x)
-            distrib(a, b, x + 1)
+            mul_suc_right(a, b + x)
+            distrib_right(a, b, x + 1)
         }
     }
-    distrib(a, b, c)
+    distrib_right(a, b, c)
 }
 
-theorem distrib_dual(a: Nat, b: Nat, c: Nat) {
+theorem distrib_left(a: Nat, b: Nat, c: Nat) {
     (a + b) * c = a * c + b * c
 } // by mul_comm
 
@@ -209,18 +209,18 @@ theorem mul_assoc(a: Nat, b: Nat, c: Nat) { (a * b) * c = a * (b * c) } by {
     forall(x: Nat) {
         if f(x) {
             (a * b) * x = a * (b * x)
-            mul_suc(a * b, x)
+            mul_suc_right(a * b, x)
             f(x + 1)
         }
     }
     mul_assoc(a, b, c)
 }
 
-theorem mul_one(a: Nat) { a * 1 = a } by {
+theorem mul_one_right(a: Nat) { a * 1 = a } by {
     (a * 0) + a = a
 }
 
-theorem mul_one_dual(a: Nat) { 1 * a = a }
+theorem mul_one_left(a: Nat) { 1 * a = a }
 
 theorem suc_ne(a: Nat) { a.suc != a } by {
     suc_ne(0) // by property of inductive
@@ -241,8 +241,8 @@ theorem suc_cancels(a: Nat, b: Nat) { a + 1 = b + 1 implies a = b } by {
 }
 
 /// 0 is the identity of add: 0 + n = n = n + 0
-theorem add_identity(a: Nat, b: Nat) { a + b = b implies a = 0 } by {
-    define f(x: Nat) -> Bool { add_identity(a, x) }
+theorem add_identity_left(a: Nat, b: Nat) { a + b = b implies a = 0 } by {
+    define f(x: Nat) -> Bool { add_identity_left(a, x) }
     f(0)
     forall(x: Nat) {
         if f(x) {
@@ -250,25 +250,25 @@ theorem add_identity(a: Nat, b: Nat) { a + b = b implies a = 0 } by {
             f(x + 1)
         }
     }
-    add_identity(a, b)
+    add_identity_left(a, b)
 }
 
-theorem add_identity_dual(a: Nat, b: Nat) { b + a = b implies a = 0 }
+theorem add_identity_right(a: Nat, b: Nat) { b + a = b implies a = 0 }
 
-theorem add_cancels(a: Nat, b: Nat, c: Nat) { a + c = b + c implies a = b } by {
-    define f(n: Nat) -> Bool { add_cancels(a, b, n) }
+theorem add_cancels_right(a: Nat, b: Nat, c: Nat) { a + c = b + c implies a = b } by {
+    define f(n: Nat) -> Bool { add_cancels_right(a, b, n) }
     f(0)
     forall(n: Nat) {
         if f(n) {
-            add_cancels(a, b, n)
+            add_cancels_right(a, b, n)
             suc_cancels(a + n, b + n)
-            add_cancels(a, b, n + 1)
+            add_cancels_right(a, b, n + 1)
         }
     }
-    add_cancels(a, b, c)
+    add_cancels_right(a, b, c)
 }
 
-theorem add_cancels_dual(a: Nat, b: Nat, c: Nat) { c + a = c + b implies a = b }
+theorem add_cancels_left(a: Nat, b: Nat, c: Nat) { c + a = c + b implies a = b }
 
 theorem suc_positive(n: Nat) {
     n.suc != 0
@@ -339,7 +339,7 @@ theorem lt_and_eq_is_different_thing(a: Nat) {
 } by {
     if (a < a) {
         let n: Nat satisfy { n != 0 and a + n = a }
-        not add_identity(a, a + n)
+        not add_identity_right(a, a + n)
         false
     }
 }
@@ -505,14 +505,14 @@ theorem mul_increase(a: Nat, b: Nat) {
 }
 
 theorem lt_imp_lt_suc(a: Nat, b: Nat) { 
-    a < b implies a < b + 1 
+    a <= b implies a < b + 1 
 } by {
-    let (c: Nat) satisfy { a + c = b and c != 0 }
+    let (c: Nat) satisfy { a + c = b }
     a + (c + 1) = b + 1
     c + 1 != 0
 }
 
-theorem lt_mul_both(a: Nat, b: Nat, c: Nat) { 
+theorem lt_mul_both_left(a: Nat, b: Nat, c: Nat) { 
     a != 0 and b < c implies a * b < a * c 
 } by {
     let (n: Nat) satisfy { b + n = c and n != 0 }
@@ -522,7 +522,7 @@ theorem lt_mul_both(a: Nat, b: Nat, c: Nat) {
     a * b < a * c
 }
 
-theorem lte_mul_both(a: Nat, b: Nat, c: Nat) { 
+theorem lte_mul_both_left(a: Nat, b: Nat, c: Nat) { 
     b <= c implies a * b <= a * c 
 } by {
     let (n: Nat) satisfy { b + n = c }
@@ -531,28 +531,28 @@ theorem lte_mul_both(a: Nat, b: Nat, c: Nat) {
     a * b <= a * c
 }
 
-theorem gt_mul_both(a: Nat, b: Nat, c: Nat) { 
+theorem gt_mul_both_left(a: Nat, b: Nat, c: Nat) { 
     a != 0 and b > c implies a * b > a * c 
 } 
 
-theorem gte_mul_both(a: Nat, b: Nat, c: Nat) { 
+theorem gte_mul_both_left(a: Nat, b: Nat, c: Nat) { 
     b >= c implies a * b >= a * c 
 }
 
 // helper for proof search
-theorem lt_mul_both_dual(a: Nat, b: Nat, c: Nat) { 
+theorem lt_mul_both_right(a: Nat, b: Nat, c: Nat) { 
     a != 0 and b < c implies b * a < c * a 
 }
 
-theorem lte_mul_both_dual(a: Nat, b: Nat, c: Nat) { 
+theorem lte_mul_both_right(a: Nat, b: Nat, c: Nat) { 
     b <= c implies b * a <= c * a 
 }
 
-theorem gt_mul_both_dual(a: Nat, b: Nat, c: Nat) { 
+theorem gt_mul_both_right(a: Nat, b: Nat, c: Nat) { 
     a != 0 and b > c implies b * a > c * a 
 }
 
-theorem gte_mul_both_dual(a: Nat, b: Nat, c: Nat) { 
+theorem gte_mul_both_right(a: Nat, b: Nat, c: Nat) { 
     b >= c implies b * a >= c * a 
 }
 
@@ -572,6 +572,10 @@ theorem lte_cancel_mul(a: Nat, b: Nat, c: Nat) {
         a * c > a * b
         false
     }
+}
+
+theorem mul_preserve_gt_one(a: Nat, b: Nat) {
+    a > 1 and b > 1 implies a * b > 1
 }
 
 theorem mul_identity(a: Nat, b: Nat) {
@@ -643,24 +647,24 @@ attributes Nat {
 
 theorem sub_lt(a: Nat, b: Nat) { a < b implies a - b = 0 }
 
-theorem add_sub(a: Nat, b: Nat) {
+theorem add_sub_left(a: Nat, b: Nat) {
     b <= a implies (a - b) + b = a
 } 
 
-theorem add_sub_dual(a: Nat, b: Nat) { 
+theorem add_sub_right(a: Nat, b: Nat) { 
     (a + b) - b = a 
 } by {
     b <= a + b
     ((a + b) - b) + b = a + b
 }
 
-theorem add_sub_comm(a: Nat, b: Nat, c: Nat) {
+theorem add_sub_comm_add(a: Nat, b: Nat, c: Nat) {
     b >= c implies (a + b) - c = a + (b - c) 
 } by {
     a + (b - c) + c = a + b
 }
 
-theorem add_sub_comm_dual(a: Nat, b: Nat, c: Nat) {
+theorem add_sub_comm_sub(a: Nat, b: Nat, c: Nat) {
     a >= c implies (a + b) - c = (a - c) + b 
 } 
 
@@ -684,32 +688,32 @@ theorem sub_zero(a: Nat) { a - 0 = a }
 
 theorem add_imp_sub(a: Nat, b: Nat, c: Nat) { a + b = c implies c - b = a }
 
-theorem sub_distrib(a: Nat, b: Nat, c: Nat) {
+theorem sub_distrib_right(a: Nat, b: Nat, c: Nat) {
     a * (b - c) = a * b - a * c
 } by {
     if a = 0 {
         a * (b - c) = a * b - a * c
-        sub_distrib(a, b, c)
+        sub_distrib_right(a, b, c)
     } else {
         if b < c {
             a * b < a * c
             a * b - a * c = 0
             b - c = 0
             a * (b - c) = a * b - a * c
-            sub_distrib(a, b, c)
+            sub_distrib_right(a, b, c)
         }
         if not (b < c) {
             b - c + c = b
             a * (b - c) + a * c = a * b
             a * (b - c) = a * b - a * c
-            sub_distrib(a, b, c)
+            sub_distrib_right(a, b, c)
         }
-        sub_distrib(a, b, c)
+        sub_distrib_right(a, b, c)
     }
-    sub_distrib(a, b, c)
+    sub_distrib_right(a, b, c)
 }
 
-theorem sub_distrib_dual(a: Nat, b: Nat, c: Nat) {
+theorem sub_distrib_left(a: Nat, b: Nat, c: Nat) {
     (a - b) * c = a * c - b * c
 } 
 
@@ -832,6 +836,7 @@ theorem exp_gt_one(a: Nat, b: Nat) {
     a.exp(b) = a * a.exp(b_pred)
     a.exp(b_pred) >= 1
     a > 1
+    a * a.exp(b_pred) > 1
     a.exp(b) > 1
 }
 
