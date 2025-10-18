@@ -93,7 +93,7 @@ theorem zero_divides(n: Nat) {
     0.divides(n) implies n = 0
 }
 
-theorem factor_lt(a: Nat, b: Nat, n: Nat) {
+theorem factor_lte(a: Nat, b: Nat, n: Nat) {
     (n != 0 and a * b = n) implies a <= n
 } by {
     if (n != 0 and a * b = n) {
@@ -108,7 +108,7 @@ theorem factor_lt(a: Nat, b: Nat, n: Nat) {
     }
 }
 
-theorem divides_lt(a: Nat, n: Nat) {
+theorem divides_lte(a: Nat, n: Nat) {
     a.divides(n) implies n = 0 or a <= n
 } 
 

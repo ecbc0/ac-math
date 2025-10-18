@@ -1504,4 +1504,64 @@ attributes List[T] {
             }
         }
     }
+
+    define remove_first(self, elem: T) -> List[T] {
+        match self {
+            List.nil {
+                List.nil[T]
+            }
+            List.cons(head, tail) {
+                if head != elem {
+                    List.cons(head, tail.remove_first(elem))
+                } else {
+                    tail
+                }
+            }
+        }
+    }
+}
+
+attributes List[T] {
+    define is_permutation(self, l: List[T]) -> Bool {
+        forall(item: T) {
+            self.count(item) = l.count(item)
+        }
+    }
+}
+
+theorem self_permutation[T](list: List[T]) {
+    list.is_permutation(list)
+} 
+
+theorem remove_first_is_sublist[T](item: T, list: List[T], elem: T) {
+    item ∈ list.remove_first(elem) implies item ∈ list
+} by {
+    define f(l: List[T]) -> Bool {
+        remove_first_is_sublist(item, l, elem)
+    }
+    f(List[T].nil)
+    forall(head: T, tail: List[T]) {
+        if f(tail) {
+            if item ∈ List.cons(head, tail).remove_first(elem) {
+                if head = elem {
+                    List.cons(head, tail).remove_first(elem) = tail
+                    item ∈ List.cons(head, tail)
+                }
+                if head != elem {
+                    List.cons(head, tail).remove_first(elem) = List.cons(head, tail.remove_first(elem))
+                    if head = item {
+                        item ∈ List.cons(head, tail)
+                    } 
+                    if head != item {
+                        item ∈ tail.remove_first(elem)
+                        item ∈ tail
+                        item ∈ List.cons(head, tail)
+                    }
+                }
+                item ∈ List.cons(head, tail)
+            }
+            f(List.cons(head, tail))
+        }
+    }
+    f(list)
 }
