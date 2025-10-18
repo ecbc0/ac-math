@@ -39,7 +39,7 @@ theorem division_theorem(m: Nat, n: Nat) {
 }
 
 // swap 1,2 to get dual and then get all
-theorem division_theorem_uniqueness_half(m: Nat, n: Nat, q1: Nat, q2: Nat, r1: Nat, r2: Nat) {
+theorem division_theorem_uniqueness_helper(m: Nat, n: Nat, q1: Nat, q2: Nat, r1: Nat, r2: Nat) {
     (0 < n) and
     (r1 < n and m = q1 * n + r1) and
     (r2 < n and m = q2 * n + r2) implies

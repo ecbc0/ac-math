@@ -900,7 +900,7 @@ theorem remove_product(x: Nat, l: List[Nat]) {
     f(l)
 }
 
-theorem divides_iff_contains(x: Nat, l: List[Nat], q: Nat) {
+theorem prime_divides_prime_list_iff_contains(x: Nat, l: List[Nat], q: Nat) {
     x.is_prime and x.divides(product(l)) and all_prime(l) implies l.count(x) != 0
 } 
 
@@ -913,7 +913,7 @@ theorem remove_preserve_all_prime(x: Nat, l: List[Nat]) {
     }
 }
 
-theorem prime_list_same_count_prime_half(x: Nat, l1: List[Nat], l2: List[Nat]) {
+theorem prime_decomposition_have_same_count_of_prime_helper(x: Nat, l1: List[Nat], l2: List[Nat]) {
     x.is_prime and 
     all_prime(l1) and all_prime(l2) and
     product(l1) = product(l2) 

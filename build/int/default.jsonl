@@ -1,0 +1,323 @@
+{"goal":"mul_from_nat","proof":["from_nat(j).mul_nat(k) = from_nat(j * k)","from_nat(j) * from_nat(k) = from_nat(j).mul_nat(k)"]}
+{"goal":"abs_zero_imp_zero","proof":["-from_nat(abs(a)) = a or from_nat(abs(a)) = a","abs(a) != Nat.0 or -from_nat(abs(a)) = 0","abs(a) != Nat.0 or from_nat(abs(a)) = 0","from_nat(abs(a)) = 0","-from_nat(abs(a)) = 0","-from_nat(abs(a)) != from_nat(abs(a)) or from_nat(abs(a)) = a","from_nat(abs(a)) != a","-from_nat(abs(a)) = from_nat(abs(a))","-from_nat(abs(a)) != from_nat(abs(a))"]}
+{"goal":"abs(a) * abs(b) = Nat.0","proof":["abs(a) * abs(b) = abs(a * b)","abs(a * b) != Nat.0","abs(0) != Nat.0"]}
+{"goal":"abs(a) = Nat.0 or abs(b) = Nat.0","proof":["abs(a) * abs(b) != Nat.0 or abs(a) = Nat.0 or abs(b) = Nat.0"]}
+{"goal":"mul_zero_imp_factor_zero","proof":["abs(a) != Nat.0 or 0 = a","abs(b) != Nat.0 or 0 = b","abs(a) != Nat.0","abs(b) != Nat.0","abs(b) = Nat.0"]}
+{"goal":"a >= 0","proof":["a >= 0 = 0 <= a","not 0 <= a","a > 0 = 0 < a","0 < a","not 0 < a or 0 <= a"]}
+{"goal":"b >= 0","proof":["b >= 0 = 0 <= b","not 0 <= b","b > 0 = 0 < b","0 < b","not 0 < b or 0 <= b"]}
+{"goal":"a * b >= 0","proof":["not a >= 0 or not b >= 0 or a * b >= 0"]}
+{"goal":"a != 0","proof":["a > a","not a < a or not a < a","a > a = a < a","a < a"]}
+{"goal":"b != 0","proof":["b > b","not b < b or not b < b","b > b = b < b","b < b"]}
+{"goal":"a * b != 0","proof":["a * b != 0 or 0 = a or 0 = b"]}
+{"goal":"mul_pos_pos","proof":["a * b > 0 or a * b < 0 or a * b = 0","a * b < 0","not 0 <= a * b or 0 < a * b or a * b = 0","not a * b < 0 or not 0 < a * b","a * b >= 0 = 0 <= a * b","0 <= a * b","not 0 < a * b","0 < a * b"]}
+{"goal":"a != 0","proof":["a > a","not a < a or not a < a","a > a = a < a","a < a"]}
+{"goal":"b != 0","proof":["0 < 0","not 0 < 0 or not 0 < 0"]}
+{"goal":"a * b != 0","proof":["a * b != 0 or 0 = a or 0 = b"]}
+{"goal":"mul_pos_neg","proof":["not a >= 0 or not b <= 0 or a * b <= 0","not a * b <= 0 or a * b < 0 or a * b = 0","not a * b <= 0","a >= 0 = 0 <= a","a > 0 = 0 < a","0 < a","not 0 < a or 0 <= a","not b < 0 or b <= 0","b <= 0","0 <= a","not a >= 0","a >= 0"]}
+{"goal":"mul_neg_pos","proof":["not b > 0 or not a < 0 or b * a < 0","b * a = a * b","not b * a < 0"]}
+{"goal":"a != 0","proof":["0 < 0","not 0 < 0 or not 0 < 0"]}
+{"goal":"b != 0","proof":["0 < 0","not 0 < 0 or not 0 < 0"]}
+{"goal":"a * b != 0","proof":["a * b != 0 or 0 = a or 0 = b"]}
+{"goal":"mul_neg_neg","proof":["not a <= 0 or not b <= 0 or a * b >= 0","not 0 <= a * b or 0 < a * b or a * b = 0","a * b >= 0 = 0 <= a * b","a * b > 0 = 0 < a * b","not 0 < a * b","not a < 0 or a <= 0","not b < 0 or b <= 0","not 0 <= a * b","b <= 0","a <= 0","not a * b >= 0"]}
+{"goal":"a.mul_nat(j * k) = from_nat(abs(a) * j * k)","proof":["from_nat(abs(a) * (j * k)) = a.mul_nat(j * k) or a < 0","abs(a) * (j * k) = abs(a) * j * k","not a < 0 or not 0 < a","a > 0 = 0 < a","0 < a","not a < 0","from_nat(abs(a) * (j * k)) != a.mul_nat(j * k)"]}
+{"goal":"a.mul_nat(j * k) = from_nat(abs(a)) * from_nat(j) * from_nat(k)","proof":["from_nat(abs(a) * j) * from_nat(k) = from_nat(abs(a) * j * k)","from_nat(abs(a)) * from_nat(j) = from_nat(abs(a) * j)"]}
+{"goal":"from_nat(abs(a)) = a","proof":["not a >= 0 or from_nat(abs(a)) = a","not a >= 0","a >= 0 = 0 <= a","not 0 <= a","a > 0 = 0 < a","0 < a","not 0 < a or 0 <= a"]}
+{"goal":"a.mul_nat(j * k) = a * from_nat(j) * from_nat(k)","proof":["from_nat(abs(a)) * from_nat(j) * from_nat(k) != a.mul_nat(j * k)"]}
+{"goal":"a.mul_nat(j * k) = -from_nat(abs(a) * j * k)","proof":["not a <= 0 or -from_nat(abs(a) * (j * k)) = a.mul_nat(j * k)","abs(a) * (j * k) = abs(a) * j * k","a > 0 != a <= 0","a > 0 or a <= 0","a <= 0","-from_nat(abs(a) * (j * k)) != a.mul_nat(j * k)"]}
+{"goal":"a.mul_nat(j * k) = -(from_nat(abs(a)) * from_nat(j) * from_nat(k))","proof":["from_nat(abs(a) * j) * from_nat(k) = from_nat(abs(a) * j * k)","from_nat(abs(a)) * from_nat(j) = from_nat(abs(a) * j)"]}
+{"goal":"from_nat(abs(a)) = -a","proof":["a > 0 = 0 < a","not 0 < a","from_nat(abs(-a)) = -a or (-a).is_negative","0 < a = a.is_positive","not a.is_positive","(-a).is_negative = a.is_positive","abs(-a) = abs(a)","from_nat(abs(-a)) != -a","not (-a).is_negative","(-a).is_negative"]}
+{"goal":"a.mul_nat(j * k) = a * from_nat(j) * from_nat(k)","proof":["from_nat(abs(a) * j) * from_nat(k) = from_nat(abs(a) * j * k)","from_nat(abs(a)) * from_nat(j) = from_nat(abs(a) * j)","-a * from_nat(j) = -(a * from_nat(j))","from_nat(abs(a) * j).mul_nat(k) = from_nat(abs(a) * j * k)","(-(from_nat(abs(a)) * from_nat(j))).mul_nat(k) = -(from_nat(abs(a)) * from_nat(j)).mul_nat(k)","a * from_nat(j) * from_nat(k) = (a * from_nat(j)).mul_nat(k)","a * from_nat(j) = a.mul_nat(j)","--a.mul_nat(j) = a.mul_nat(j)"]}
+{"goal":"int_mul_nat_mul","proof":[]}
+{"goal":"a.mul_nat(j * k) = a * from_nat(j) * from_nat(k)","proof":["a * from_nat(j) * from_nat(k) = a.mul_nat(j * k)"]}
+{"goal":"mul_int_nat_nat_assoc","proof":["a * from_nat(j) * from_nat(k) = (a * from_nat(j)).mul_nat(k)","a * from_nat(j) = a.mul_nat(j)"]}
+{"goal":"(a * b).mul_nat(n) = a * from_nat(abs(b)) * from_nat(n)","proof":["a * from_nat(abs(b)) * from_nat(n) = (a * from_nat(abs(b))).mul_nat(n)","(a * from_nat(abs(b))).mul_nat(n) != (a * b).mul_nat(n)","a * from_nat(abs(b)) != a * b","from_nat(abs(b)) != b","not b >= 0 or from_nat(abs(b)) = b"]}
+{"goal":"(a * b).mul_nat(n) = a * (from_nat(abs(b)) * from_nat(n))","proof":["a * from_nat(abs(b)) * from_nat(n) = a.mul_nat(abs(b) * n)","from_nat(abs(b)) * from_nat(n) = from_nat(abs(b) * n)","a * from_nat(abs(b) * n) = a.mul_nat(abs(b) * n)"]}
+{"goal":"(a * b).mul_nat(n) = a * b.mul_nat(n)","proof":["from_nat(abs(b)) * from_nat(n) = from_nat(abs(b)).mul_nat(n)","not b >= 0 or from_nat(abs(b)) = b","a * from_nat(abs(b)).mul_nat(n) = (a * b).mul_nat(n)","from_nat(abs(b)) = b"]}
+{"goal":"-b > 0","proof":["b >= 0 = 0 <= b","not 0 <= b","-b > 0 = 0 < -b","not 0 < -b","0 <= b != b.is_negative","0 < -b = (-b).is_positive","not (-b).is_positive","(--b).is_negative = (-b).is_positive","--b = b","not (--b).is_negative","not b.is_negative","0 <= b or b.is_negative"]}
+{"goal":"(a * b).mul_nat(n) = -(a * -b) * from_nat(n)","proof":["a * -b = -(a * b)","--(a * b) * from_nat(n) != (a * b).mul_nat(n)","a * b * from_nat(n) = (a * b).mul_nat(n)","--(a * b) = a * b"]}
+{"goal":"(a * b).mul_nat(n) = -(a * from_nat(abs(-b))) * from_nat(n)","proof":["-a.mul_nat(abs(b)) = a * b or b > 0","-(a * from_nat(abs(b))) * from_nat(n) = (-(a * from_nat(abs(b)))).mul_nat(n)","a * from_nat(abs(b)) = a.mul_nat(abs(b))","b >= 0 = 0 <= b","not 0 <= b","b > 0 = 0 < b","not 0 < b or 0 <= b","abs(-b) = abs(b)","-(a * from_nat(abs(b))) * from_nat(n) != (a * b).mul_nat(n)","(-(a * from_nat(abs(b)))).mul_nat(n) != (a * b).mul_nat(n)","-(a * from_nat(abs(b))) != a * b","-a.mul_nat(abs(b)) != a * b","not 0 < b","b > 0","not b > 0"]}
+{"goal":"(a * b).mul_nat(n) = -(a * (from_nat(abs(-b)) * from_nat(n)))","proof":["a * from_nat(abs(-b)) * from_nat(n) = a.mul_nat(abs(-b) * n)","from_nat(abs(-b)) * from_nat(n) = from_nat(abs(-b) * n)","-(a * from_nat(abs(-b))) * from_nat(n) = -(a * from_nat(abs(-b)) * from_nat(n))","a * from_nat(abs(-b) * n) = a.mul_nat(abs(-b) * n)"]}
+{"goal":"(a * b).mul_nat(n) = -(a * (-b).mul_nat(n))","proof":["(-b).mul_nat(n) * -a = -((-b).mul_nat(n) * a)","from_nat(abs(-b)) * from_nat(n) * -a = -(from_nat(abs(-b)) * from_nat(n) * a)","(-b).mul_nat(n) = -b.mul_nat(n)","-b * from_nat(n) = (-b).mul_nat(n)","a * (from_nat(abs(-b)) * from_nat(n)) = from_nat(abs(-b)) * from_nat(n) * a","a * -b.mul_nat(n) = -b.mul_nat(n) * a","from_nat(n) * -b = -b * from_nat(n)","from_nat(n) * from_nat(abs(-b)) = from_nat(abs(-b)) * from_nat(n)","-b > 0 = 0 < -b","0 < -b","sub_nat((-b).pos_part, (-b).neg_part) = -b","not (-b).is_positive or (-b).pos_part = abs(-b)","0 < -b = (-b).is_positive","(-b).is_positive","not (-b).is_positive or (-b).neg_part = Nat.0","sub_nat(abs(-b), Nat.0) = from_nat(abs(-b))","(-b).neg_part = Nat.0","(-b).pos_part = abs(-b)"]}
+{"goal":"(a * b).mul_nat(n) = a * b.mul_nat(n)","proof":["a * -(-b).mul_nat(n) = -(a * (-b).mul_nat(n))","(-b).mul_nat(n) = -b.mul_nat(n)","--b.mul_nat(n) = b.mul_nat(n)"]}
+{"goal":"mul_int_int_nat_assoc","proof":[]}
+{"goal":"a * b * c = a * b * from_nat(abs(c))","proof":["not c >= 0 or (a * b).mul_nat(abs(c)) = a * b * c","a * b * from_nat(abs(c)) = (a * b).mul_nat(abs(c))","(a * b).mul_nat(abs(c)) != a * b * c"]}
+{"goal":"a * b * c = a * (b * from_nat(abs(c)))","proof":["a * b.mul_nat(abs(c)) = (a * b).mul_nat(abs(c))","a * b * from_nat(abs(c)) = (a * b).mul_nat(abs(c))","b * from_nat(abs(c)) = b.mul_nat(abs(c))"]}
+{"goal":"a * b * c = a * (b * c)","proof":["not c >= 0 or from_nat(abs(c)) = c","from_nat(abs(c)) = c"]}
+{"goal":"-c > 0","proof":["c >= 0 = 0 <= c","not 0 <= c","-c > 0 = 0 < -c","not 0 < -c","0 <= c != c.is_negative","0 < -c = (-c).is_positive","not (-c).is_positive","(--c).is_negative = (-c).is_positive","--c = c","not (--c).is_negative","not c.is_negative","0 <= c or c.is_negative"]}
+{"goal":"a * b * -c = a * b * from_nat(abs(-c))","proof":["not -c > 0 or (a * b).mul_nat(abs(-c)) = a * b * -c","a * b * from_nat(abs(-c)) = (a * b).mul_nat(abs(-c))","(a * b).mul_nat(abs(-c)) != a * b * -c"]}
+{"goal":"a * b * -c = a * (b * from_nat(abs(-c)))","proof":["a * b.mul_nat(abs(-c)) = (a * b).mul_nat(abs(-c))","a * b * from_nat(abs(-c)) = (a * b).mul_nat(abs(-c))","b * from_nat(abs(-c)) = b.mul_nat(abs(-c))"]}
+{"goal":"a * b * c = a * (b * c)","proof":["not -c > 0 or b.mul_nat(abs(-c)) = b * -c","a * -(b * c) = -(a * (b * c))","a * b * -c = -(a * b * c)","b * -c = -(b * c)","b * from_nat(abs(-c)) = b.mul_nat(abs(-c))","a * (b * c) = b * c * a","0 - -(a * (b * c)) = --(a * (b * c))","0 - -(a * b * c) = --(a * b * c)","--(a * b * c) = a * b * c","--(b * c * a) = b * c * a","b.mul_nat(abs(-c)) = b * -c"]}
+{"goal":"mul_assoc","proof":[]}
+{"goal":"b - a > 0","proof":["not b.is_positive or (b + -a).is_positive or (-a).is_negative","b + -a = b - a","b + -a > 0 = 0 < b + -a","b > 0 = 0 < b","0 < b","not b + -a > 0","a <= 0 != a.is_positive","0 < b + -a = (b + -a).is_positive","0 < b = b.is_positive","b.is_positive","(-a).is_negative = a.is_positive","not 0 < b + -a","not (b + -a).is_positive","not a <= 0 or not a.is_positive","not a.is_positive","(-a).is_negative","not (-a).is_negative"]}
+{"goal":"nonpos_lt_pos","proof":["(b - a).is_positive = a < b","not (b - a).is_positive","b - a > 0 = 0 < b - a","0 < b - a","0 < b - a = (b - a).is_positive"]}
+{"goal":"neg_lt_nonneg","proof":["not a < 0 or not 0 < b or a < b","not 0 <= b or 0 < b or 0 = b","b >= 0 = 0 <= b","0 <= b","not 0 < b or not a < 0","not 0 < b","0 = b"]}
+{"goal":"a <= b","proof":[]}
+{"goal":"a <= b","proof":["not b >= 0 or not a < 0 or a < b","not a < b or a <= b","not a < b"]}
+{"goal":"a <= b","proof":["not a <= 0 or a < 0 or 0 = a","0 = a","b >= a","b >= a = a <= b"]}
+{"goal":"nonpos_lte_nonneg","proof":["not a <= 0 or a < 0 or 0 = a","0 = a","b >= a","b >= a = a <= b"]}
+{"goal":"a <= from_nat(abs(a))","proof":["a > 0 = 0 < a","0 < a","from_nat(abs(a)) = a or a.is_negative","0 < a = a.is_positive","a.is_positive","from_nat(abs(a)) != a or a <= from_nat(abs(a))","from_nat(abs(a)) != a","not a.is_positive or not a.is_negative","a.is_negative","not a.is_negative"]}
+{"goal":"a <= 0","proof":["a > 0 or a < 0 or 0 = a","not a < 0 or a <= 0","not a < 0","0 = a","0 != a or a <= 0"]}
+{"goal":"a <= from_nat(abs(a))","proof":["not from_nat(abs(a)) >= 0 or not a <= 0 or a <= from_nat(abs(a))","not from_nat(abs(a)) >= 0","from_nat(abs(a)) >= 0"]}
+{"goal":"lte_abs","proof":[]}
+{"goal":"c - b > 0","proof":["(c - b).is_positive = b < c","c - b > 0 = 0 < c - b","0 < c - b = (c - b).is_positive"]}
+{"goal":"a + c - (a + b) = c - b","proof":["a + c - (a + b) = c - b"]}
+{"goal":"a + c - (a + b) > 0","proof":[]}
+{"goal":"lt_add_left","proof":["(a + c - (a + b)).is_positive = a + b < a + c","(c - b).is_positive = b < c"]}
+{"goal":"lte_add_left","proof":["not b < c or a + b < a + c","not b <= c or b < c or c = b","not a + b < a + c or a + b <= a + c","a + c != a + b or a + b <= a + c","a + c != a + b","c != b","b < c","not a + b < a + c"]}
+{"goal":"lt_add_right","proof":["c + a - (b + a) = c - b","(c + a - (b + a)).is_positive = b + a < c + a","(c - b).is_positive = b < c"]}
+{"goal":"lte_add_right","proof":["not b < c or b + a < c + a","not b <= c or b < c or c = b","not b + a < c + a or b + a <= c + a","c + a != b + a or b + a <= c + a","c + a != b + a","c != b","b < c","not b + a < c + a"]}
+{"goal":"a + -b < b + c + -b","proof":["not a < b + c or a + -b < b + c + -b"]}
+{"goal":"lt_sub","proof":["a + -b = a - b","b + c + -b = b + c - b","c + b - b = c","c + b = b + c","a + -b < b + c - b","not a - b < c + b - b","a - b < b + c - b"]}
+{"goal":"a - b = c","proof":["c + b - b = c","c + b = b + c","b + c - b != c"]}
+{"goal":"a - b <= c","proof":["a - b != c or a - b <= c"]}
+{"goal":"a - b < c","proof":["not a < b + c or a - b < c","not a < b + c","not a <= b + c or a < b + c or b + c = a"]}
+{"goal":"a - b <= c","proof":["not a - b < c or a - b <= c"]}
+{"goal":"lte_sub","proof":[]}
+{"goal":"a + -b > b + c + -b","proof":["not b + c < a or b + c + -b < a + -b","a + -b > b + c + -b = b + c + -b < a + -b","a > b + c = b + c < a","not b + c + -b < a + -b","b + c < a","not b + c < a"]}
+{"goal":"gt_sub","proof":["a + -b = a - b","b + c + -b = b + c - b","c + b - b = c","c + b = b + c","a + -b > b + c - b","not a - b > c + b - b","a - b > b + c - b"]}
+{"goal":"a - b = c","proof":["c + b - b = c","c + b = b + c","b + c - b != c"]}
+{"goal":"a - b >= c","proof":["a - b >= c = c <= a - b","not c <= a - b","a - b != c or c <= a - b"]}
+{"goal":"a - b > c","proof":["not a > b + c or a - b > c","not a > b + c","not b + c <= a or b + c < a or b + c = a","a >= b + c = b + c <= a","b + c <= a","a > b + c = b + c < a","b + c < a","not b + c < a"]}
+{"goal":"a - b >= c","proof":["a - b >= c = c <= a - b","not c <= a - b","a - b > c = c < a - b","c < a - b","not c < a - b or c <= a - b"]}
+{"goal":"gte_sub","proof":[]}
+{"goal":"from_nat(abs(a)) = a","proof":["not a >= 0 or from_nat(abs(a)) = a"]}
+{"goal":"from_nat(abs(b)) = b","proof":["not b >= 0 or from_nat(abs(b)) = b"]}
+{"goal":"from_nat(abs(a)) + from_nat(abs(b)) = from_nat(abs(a) + abs(b))","proof":["from_nat(abs(a)) + from_nat(abs(b)) = from_nat(abs(a) + abs(b))"]}
+{"goal":"abs_add_nonneg","proof":["abs(-(a + b)) = abs(a + b)","abs(-from_nat(abs(a) + abs(b))) = abs(a) + abs(b)"]}
+{"goal":"-a >= 0","proof":["not 0 >= a + 0 or 0 - a >= 0","0 >= a = a <= 0","0 - a = -a","not 0 - a >= 0","a + 0 = a","0 >= a","not 0 >= a + 0","0 >= a + 0"]}
+{"goal":"-b >= 0","proof":["not 0 >= b + 0 or 0 - b >= 0","0 >= b = b <= 0","0 - b = -b","not 0 - b >= 0","b + 0 = b","0 >= b","not 0 >= b + 0","0 >= b + 0"]}
+{"goal":"abs_add_nonpos","proof":["from_nat(abs(a)) + from_nat(abs(b)) = from_nat(abs(a) + abs(b))","-a + -b = -(a + b)","not a <= 0 or from_nat(abs(a)) = -a","not b <= 0 or from_nat(abs(b)) = -b","abs(-from_nat(abs(a) + abs(b))) = abs(a) + abs(b)","--(a + b) = a + b","from_nat(abs(b)) = -b","from_nat(abs(a)) = -a"]}
+{"goal":"exists(k0: Nat) { k0 + abs(b) = abs(a) }","proof":["abs(a) - abs(b) + abs(b) != abs(a)","not abs(b) <= abs(a) or abs(a) - abs(b) + abs(b) = abs(a)"]}
+{"goal":"from_nat(n) + from_nat(abs(b)) = from_nat(abs(a))","proof":["from_nat(n) + from_nat(abs(b)) = from_nat(n + abs(b))"]}
+{"goal":"from_nat(n) + -b = from_nat(abs(a))","proof":["not b <= 0 or from_nat(abs(b)) = -b","from_nat(abs(b)) = -b"]}
+{"goal":"from_nat(n) + -b = a","proof":["from_nat(abs(a)) != a","not a >= 0 or from_nat(abs(a)) = a"]}
+{"goal":"a + b = from_nat(n)","proof":["from_nat(n) - b != a or b + a = from_nat(n)","from_nat(n) + -b = from_nat(n) - b","from_nat(n) - b = a","b + a = a + b","b + a = from_nat(n)","b + a != from_nat(n)"]}
+{"goal":"abs(a + b) = n","proof":["abs(from_nat(n)) != n","abs(-from_nat(n)) = abs(from_nat(n))","abs(-from_nat(n)) = n"]}
+{"goal":"n <= abs(a)","proof":["n + abs(b) != abs(a) or n < abs(a) or abs(b) = Nat.0","not n < abs(a) or n <= abs(a)","not n < abs(a)","abs(b) = Nat.0","n + abs(b) = abs(b) + n","abs(a) != n or n <= abs(a)","abs(a) != n","abs(from_nat(n))^Nat.1 = abs(from_nat(n))","n^Nat.1 - Nat.0 = n^Nat.1","Nat.1 * (n - Nat.0) = n - Nat.0","Nat.0 + Nat.1 * n = Nat.1 * n"]}
+{"goal":"abs(a) <= abs(a) + abs(b)","proof":["abs(a) + abs(b) != abs(a) + abs(b) or abs(a) < abs(a) + abs(b) or abs(b) = Nat.0","not abs(a) < abs(a) + abs(b) or abs(a) <= abs(a) + abs(b)","abs(b) != Nat.0 or abs(a) + abs(b) = abs(a)","abs(a) + abs(b) != abs(a) or abs(a) <= abs(a) + abs(b)","abs(a) + abs(b) != abs(a)","not abs(a) < abs(a) + abs(b)","abs(a) < abs(a) + abs(b) or abs(b) = Nat.0","abs(b) != Nat.0","abs(b) = Nat.0"]}
+{"goal":"n <= abs(a) + abs(b)","proof":["not n <= abs(a) or not abs(a) <= abs(a) + abs(b) or n <= abs(a) + abs(b)","not abs(a) <= abs(a) + abs(b) or not n <= abs(a)"]}
+{"goal":"triangle_nonpos_lte_nonneg","proof":["not n <= abs(a) + abs(b)"]}
+{"goal":"abs(a + b) <= abs(a) + abs(b)","proof":["not abs(b) <= abs(a) or not a >= 0 or not b <= 0 or abs(a + b) <= abs(a) + abs(b)"]}
+{"goal":"abs(a) <= abs(b)","proof":["abs(a) < abs(b) or abs(b) < abs(a) or abs(b) = abs(a)","not abs(a) < abs(b) or abs(a) <= abs(b)","not abs(b) < abs(a) or abs(b) <= abs(a)","not abs(a) < abs(b)","abs(b) != abs(a) or abs(a) <= abs(b)","abs(b) != abs(a)","not abs(b) < abs(a)","abs(b) < abs(a)"]}
+{"goal":"abs(-a) <= abs(-b)","proof":["abs(-b) >= abs(-a) = abs(-a) <= abs(-b)","abs(b) >= abs(a) = abs(a) <= abs(b)","abs(-a) = abs(a)","abs(-b) = abs(b)"]}
+{"goal":"-b >= 0","proof":["not 0 >= b + 0 or 0 - b >= 0","0 >= b = b <= 0","0 - b = -b","not 0 - b >= 0","b + 0 = b","0 >= b","not 0 >= b + 0","0 >= b + 0"]}
+{"goal":"-a <= 0","proof":["not 0 <= a + 0 or 0 - a <= 0","a >= 0 = 0 <= a","0 <= a","0 - a = -a","not 0 - a <= 0","a + 0 = a","not 0 <= a + 0","0 <= a + 0"]}
+{"goal":"abs(-b + -a) <= abs(-b) + abs(-a)","proof":["not abs(-a) <= abs(-b) or not -b >= 0 or not -a <= 0 or abs(-b + -a) <= abs(-b) + abs(-a)"]}
+{"goal":"abs(a + b) <= abs(a) + abs(b)","proof":["-b + -a = -(b + a)","b + a = a + b","abs(-b) + abs(-a) >= abs(-b + -a) = abs(-b + -a) <= abs(-b) + abs(-a)","abs(a) + abs(b) >= abs(a + b) = abs(a + b) <= abs(a) + abs(b)","abs(-b) + abs(-a) = abs(-a) + abs(-b)","abs(-(a + b)) = abs(a + b)","abs(-a) = abs(a)","abs(-b) = abs(b)"]}
+{"goal":"triangle_nonneg_nonpos","proof":[]}
+{"goal":"abs(a + b) <= abs(a) + abs(b)","proof":["not a <= 0 or not b <= 0 or abs(a) + abs(b) = abs(a + b)","not a < 0 or a <= 0","not b < 0 or b <= 0","abs(a) + abs(b) != abs(a + b) or abs(a + b) <= abs(a) + abs(b)","b <= 0","a <= 0","abs(a) + abs(b) != abs(a + b)"]}
+{"goal":"abs(b + a) <= abs(b) + abs(a)","proof":["not b >= 0 or not a <= 0 or abs(b + a) <= abs(b) + abs(a)","b >= 0 = 0 <= b","not a < 0 or a <= 0","not b >= 0 or not a <= 0","0 <= b != b.is_negative","b < 0 = b.is_negative","not b.is_negative","a <= 0","not b >= 0","not 0 <= b","0 <= b or b.is_negative"]}
+{"goal":"abs(a + b) <= abs(a) + abs(b)","proof":["b + a = a + b","abs(a) + abs(b) >= abs(a + b) = abs(a + b) <= abs(a) + abs(b)","abs(b) + abs(a) >= abs(b + a) = abs(b + a) <= abs(b) + abs(a)","abs(b) + abs(a) = abs(a) + abs(b)"]}
+{"goal":"abs(a + b) <= abs(a) + abs(b)","proof":["not a >= 0 or not b <= 0 or abs(a + b) <= abs(a) + abs(b)","not b < 0 or b <= 0","from_nat(abs(a)) = a or a.is_negative","not a >= 0 or not b <= 0","a < 0 = a.is_negative","not a.is_negative","from_nat(abs(a)) = a","from_nat(abs(a)) >= 0","b <= 0","not a >= 0"]}
+{"goal":"abs(a + b) <= abs(a) + abs(b)","proof":["from_nat(abs(a)) + from_nat(abs(b)) = from_nat(abs(a) + abs(b))","from_nat(abs(a)) = a or a.is_negative","from_nat(abs(b)) = b or b.is_negative","a < 0 = a.is_negative","b < 0 = b.is_negative","not b.is_negative","not a.is_negative","from_nat(abs(a)) = a","from_nat(abs(b)) = b","abs(a) + abs(b) != abs(a + b) or abs(a + b) <= abs(a) + abs(b)","abs(from_nat(abs(a) + abs(b))) = abs(a) + abs(b)","abs(a) + abs(b) != abs(a + b)"]}
+{"goal":"triangle_ineq","proof":[]}
+{"goal":"exists(k0: Nat) { b = a + k0 and k0 != Nat.0 }","proof":["let s0: (Nat, Nat) -> Nat satisfy { forall(x0: Nat, x1: Nat) { not x0 < x1 or Nat.0 != s0(x0, x1) } and forall(x2: Nat, x3: Nat) { not x2 < x3 or x2 + s0(x2, x3) = x3 } and forall(x4: Nat, x5: Nat, x6: Nat) { x4 + x5 != x6 or x4 < x6 or Nat.0 = x5 } }","a + s0(a, b) != b or s0(a, b) = Nat.0","not a < b or a + s0(a, b) = b","not a < b or s0(a, b) != Nat.0","s0(a, b) != Nat.0","a + s0(a, b) = b","a + s0(a, b) != b"]}
+{"goal":"from_nat(b) = from_nat(a) + from_nat(n)","proof":["from_nat(a) + from_nat(n) = from_nat(a + n)"]}
+{"goal":"from_nat(n) > 0","proof":["from_nat(n) > 0 = 0 < from_nat(n)","not 0 < from_nat(n)","0 < from_nat(n) = from_nat(n).is_positive","not from_nat(n).is_positive","from_nat(n).pos_part = Nat.0 or from_nat(n).is_positive","from_nat(n).pos_part = n","from_nat(n).pos_part = Nat.0","from_nat(n).pos_part != Nat.0"]}
+{"goal":"from_nat(a) < from_nat(b)","proof":["let s0: Nat satisfy { a + s0 = b and s0 != Nat.0 }","from_nat(b) + -from_nat(a) = sub_nat(b, a)","a + n != b or sub_nat(b, a) = from_nat(n)","a + s0 != b or sub_nat(b, a) = from_nat(s0)","(from_nat(b) - from_nat(a)).is_positive = from_nat(a) < from_nat(b)","from_nat(b) + -from_nat(a) = from_nat(b) - from_nat(a)","from_nat(n) > 0 = 0 < from_nat(n)","0 < from_nat(n) = from_nat(n).is_positive","0 - from_nat(n) = -from_nat(n)","0 - from_nat(s0) = -from_nat(s0)","(-(from_nat(b) - from_nat(a))).is_negative = (from_nat(b) - from_nat(a)).is_positive","(-from_nat(n)).is_negative = from_nat(n).is_positive","sub_nat(b, a) = from_nat(s0)","sub_nat(b, a) = from_nat(n)"]}
+{"goal":"a >= b","proof":["b < a or a < b or b = a","a >= b = b <= a","not b <= a","not b < a or b <= a","not b < a","b = a","b != a or b <= a"]}
+{"goal":"exists(k0: Nat) { a = b + k0 }","proof":["b + (a - b) != a","not b <= a or from_nat(a - b) = sub_nat(a, b)","from_nat(a - b) != sub_nat(a, b) or b + (a - b) = a","from_nat(a - b) != sub_nat(a, b)","a >= b = b <= a","not b <= a","b <= a"]}
+{"goal":"from_nat(a) = from_nat(b) + from_nat(n)","proof":["from_nat(b) + from_nat(n) = from_nat(b + n)"]}
+{"goal":"0 <= from_nat(n)","proof":["from_nat(n) >= 0 = 0 <= from_nat(n)","not from_nat(n) >= 0","from_nat(n) >= 0"]}
+{"goal":"from_nat(a) >= from_nat(b)","proof":["not 0 <= from_nat(n) or from_nat(b) + 0 <= from_nat(b) + from_nat(n)","from_nat(b) + from_nat(n) >= from_nat(b) = from_nat(b) <= from_nat(b) + from_nat(n)","from_nat(b) + 0 = from_nat(b)","not from_nat(b) + from_nat(n) >= from_nat(b)","not from_nat(b) <= from_nat(b) + from_nat(n)","from_nat(b) + 0 <= from_nat(b) + from_nat(n)"]}
+{"goal":"not from_nat(a) < from_nat(b)","proof":["not from_nat(b) <= from_nat(a) or from_nat(b) < from_nat(a) or from_nat(b) = from_nat(a)","not from_nat(b) < from_nat(a) or not from_nat(a) < from_nat(b)","not from_nat(b) < from_nat(a)","from_nat(a) >= from_nat(b) = from_nat(b) <= from_nat(a)","from_nat(b) <= from_nat(a)","from_nat(a) > from_nat(b) = from_nat(b) < from_nat(a)","from_nat(b) > from_nat(a) = from_nat(a) < from_nat(b)","from_nat(b) = from_nat(a)"]}
+{"goal":"nat_lt_embed","proof":["from_nat(a) < from_nat(b) or a < b","a < b","from_nat(a) < from_nat(b)","not from_nat(a) < from_nat(b)"]}
+{"goal":"a <= b implies from_nat(a) <= from_nat(b)","proof":["from_nat(a) < from_nat(b) = a < b","not a <= b or a < b or b = a","not from_nat(a) < from_nat(b) or from_nat(a) <= from_nat(b)","not from_nat(a) < from_nat(b)","not a < b","b = a","from_nat(b) != from_nat(a) or from_nat(a) <= from_nat(b)","from_nat(b) != from_nat(a)"]}
+{"goal":"nat_lte_embed","proof":["from_nat(a) <= from_nat(b) or a <= b","not from_nat(a) <= from_nat(b) or not a <= b","not a <= b","from_nat(a) <= from_nat(b)","from_nat(b) < from_nat(a) = b < a","a < b or b < a or b = a","from_nat(a) > from_nat(b) != from_nat(a) <= from_nat(b)","from_nat(a) > from_nat(b) = from_nat(b) < from_nat(a)","not a < b or a <= b","not a < b","b != a or a <= b","b != a","not from_nat(a) > from_nat(b) or not from_nat(a) <= from_nat(b)","not from_nat(a) > from_nat(b)","not from_nat(b) < from_nat(a)","b < a","not b < a"]}
+{"goal":"a = from_nat(abs(a))","proof":["not a >= 0 or from_nat(abs(a)) = a","not a >= 0","a >= 0 = 0 <= a","not 0 <= a","a > 0 = 0 < a","0 < a","not 0 < a or 0 <= a"]}
+{"goal":"from_nat(abs(a)) < from_nat(abs(b))","proof":["not a < from_nat(abs(b))"]}
+{"goal":"abs(a) < abs(b)","proof":["from_nat(abs(a)) < from_nat(abs(b)) = abs(a) < abs(b)"]}
+{"goal":"-a = from_nat(abs(-a))","proof":["not -a >= 0 or from_nat(abs(-a)) = -a","not -a >= 0","-a >= 0 = 0 <= -a","not 0 <= -a","-a > 0 = 0 < -a","0 < -a","not 0 < -a or 0 <= -a"]}
+{"goal":"from_nat(abs(-a)) < from_nat(abs(b))","proof":["not -a < from_nat(abs(b))"]}
+{"goal":"abs(-a) < abs(b)","proof":["from_nat(abs(-a)) < from_nat(abs(b)) = abs(-a) < abs(b)"]}
+{"goal":"abs(a) < abs(b)","proof":["abs(-a) = abs(a)"]}
+{"goal":"pos_neg_lt_abs","proof":["from_nat(abs(a)) < from_nat(abs(b)) = abs(a) < abs(b)","-(0 - a) = a - 0","a > 0 = 0 < a","not 0 < a","sub_nat((-a).pos_part, (-a).neg_part) = -a","a.neg_part = abs(a) or a.is_positive","0 < a = a.is_positive","not a.is_positive","0 - a = -a","(--a).neg_part = (-a).pos_part","(-a).neg_part = a.pos_part","a.pos_part = Nat.0 or a.is_positive","a.pos_part = Nat.0","sub_nat(abs(a), Nat.0) = from_nat(abs(a))","a - 0 = a","a.neg_part = abs(a)"]}
+{"goal":"a = from_nat(abs(a))","proof":["not a >= 0 or from_nat(abs(a)) = a","not a >= 0","a >= 0 = 0 <= a","not 0 <= a","a > 0 = 0 < a","0 < a","not 0 < a or 0 <= a"]}
+{"goal":"from_nat(abs(a)) <= from_nat(abs(b))","proof":["not a <= from_nat(abs(b))"]}
+{"goal":"abs(a) <= abs(b)","proof":["from_nat(abs(a)) <= from_nat(abs(b)) = abs(a) <= abs(b)"]}
+{"goal":"-a = from_nat(abs(-a))","proof":["not -a >= 0 or from_nat(abs(-a)) = -a","not -a >= 0","-a >= 0 = 0 <= -a","not 0 <= -a","-a > 0 = 0 < -a","0 < -a","not 0 < -a or 0 <= -a"]}
+{"goal":"from_nat(abs(-a)) <= from_nat(abs(b))","proof":["not -a <= from_nat(abs(b))"]}
+{"goal":"abs(-a) <= abs(b)","proof":["from_nat(abs(-a)) <= from_nat(abs(b)) = abs(-a) <= abs(b)"]}
+{"goal":"abs(a) <= abs(b)","proof":["abs(-a) = abs(a)"]}
+{"goal":"pos_neg_lte_abs","proof":["from_nat(abs(a)) <= from_nat(abs(b)) = abs(a) <= abs(b)","-(0 - a) = a - 0","a > 0 = 0 < a","not 0 < a","sub_nat((-a).pos_part, (-a).neg_part) = -a","a.neg_part = abs(a) or a.is_positive","0 < a = a.is_positive","not a.is_positive","0 - a = -a","(--a).neg_part = (-a).pos_part","(-a).neg_part = a.pos_part","a.pos_part = Nat.0 or a.is_positive","a.pos_part = Nat.0","sub_nat(abs(a), Nat.0) = from_nat(abs(a))","a - 0 = a","a.neg_part = abs(a)"]}
+{"goal":"abs(a) = abs(a - b + b)","proof":["a - b + b != a","-(a - b) != b - a or b + (a - b) = a","-(a - b) = b - a","b + (a - b) = a - b + b","b + (a - b) != a"]}
+{"goal":"abs(a) <= abs(a - b) + abs(b)","proof":["abs(a - b + b) <= abs(a - b) + abs(b)"]}
+{"goal":"from_nat(abs(a)) <= from_nat(abs(a - b)) + from_nat(abs(b))","proof":["from_nat(abs(a - b)) + from_nat(abs(b)) = from_nat(abs(a - b) + abs(b))","not from_nat(abs(a)) <= from_nat(abs(a - b) + abs(b))","from_nat(abs(a)) <= from_nat(abs(a - b) + abs(b)) = abs(a) <= abs(a - b) + abs(b)"]}
+{"goal":"from_nat(abs(a)) - from_nat(abs(b)) <= from_nat(abs(a - b))","proof":["not from_nat(abs(a)) <= from_nat(abs(b)) + from_nat(abs(a - b)) or from_nat(abs(a)) - from_nat(abs(b)) <= from_nat(abs(a - b))","from_nat(abs(b)) + from_nat(abs(a - b)) = from_nat(abs(a - b)) + from_nat(abs(b))","not from_nat(abs(a)) <= from_nat(abs(b)) + from_nat(abs(a - b))","from_nat(abs(a)) <= from_nat(abs(b)) + from_nat(abs(a - b))"]}
+{"goal":"abs(b) = abs(b - a + a)","proof":["b - a + a != b","-(b - a) != a - b or a + (b - a) = b","-(b - a) = a - b","a + (b - a) = b - a + a","a + (b - a) != b"]}
+{"goal":"abs(b) <= abs(b - a) + abs(a)","proof":["abs(b - a + a) <= abs(b - a) + abs(a)"]}
+{"goal":"from_nat(abs(b)) <= from_nat(abs(b - a)) + from_nat(abs(a))","proof":["from_nat(abs(b - a)) + from_nat(abs(a)) = from_nat(abs(b - a) + abs(a))","not from_nat(abs(b)) <= from_nat(abs(b - a) + abs(a))","from_nat(abs(b)) <= from_nat(abs(b - a) + abs(a)) = abs(b) <= abs(b - a) + abs(a)"]}
+{"goal":"from_nat(abs(b)) - from_nat(abs(a)) <= from_nat(abs(b - a))","proof":["not from_nat(abs(b)) <= from_nat(abs(a)) + from_nat(abs(b - a)) or from_nat(abs(b)) - from_nat(abs(a)) <= from_nat(abs(b - a))","from_nat(abs(a)) + from_nat(abs(b - a)) = from_nat(abs(b - a)) + from_nat(abs(a))","not from_nat(abs(b)) <= from_nat(abs(a)) + from_nat(abs(b - a))","from_nat(abs(b)) <= from_nat(abs(a)) + from_nat(abs(b - a))"]}
+{"goal":"triangle_ineq_sub","proof":["not -(from_nat(abs(a)) - from_nat(abs(b))) <= from_nat(abs(a - b)) or not from_nat(abs(a)) - from_nat(abs(b)) <= from_nat(abs(a - b)) or abs(from_nat(abs(a)) - from_nat(abs(b))) <= abs(a - b)","-(a - b) = b - a","-(from_nat(abs(a)) - from_nat(abs(b))) = from_nat(abs(b)) - from_nat(abs(a))","sub_nat(abs(a - b), Nat.0) = from_nat(abs(a - b))","sub_nat(abs(b - a), Nat.0) = from_nat(abs(b - a))","abs(-(a - b)) = abs(a - b)","not -(from_nat(abs(a)) - from_nat(abs(b))) <= from_nat(abs(a - b))"]}
+{"goal":"b * c - a * c = (b - a) * c","proof":["b * c - a * c = (b - a) * c"]}
+{"goal":"b - a > 0","proof":["(b - a).is_positive = a < b","b - a > 0 = 0 < b - a","0 < b - a = (b - a).is_positive"]}
+{"goal":"b * c - a * c > 0","proof":["not (b - a) * c > 0","not b - a > 0 or not c > 0 or (b - a) * c > 0"]}
+{"goal":"lt_mul_pos","proof":["(b * c - a * c - 0).is_positive = 0 < b * c - a * c","(b * c - a * c).is_positive = a * c < b * c","b * c - a * c > 0 = 0 < b * c - a * c","b * c - a * c - 0 = b * c - a * c"]}
+{"goal":"a * c - b * c = c * (a - b)","proof":["a * c - b * c = (a - b) * c","c * (a - b) != (a - b) * c","c * (a - b) = (a - b) * c"]}
+{"goal":"a - b < 0","proof":["(0 - (a - b)).is_positive = a - b < 0","(b - a).is_positive = a < b","-(a - b) = b - a","0 - (a - b) = -(a - b)"]}
+{"goal":"c * (a - b) > 0","proof":["not c < 0 or not a - b < 0 or c * (a - b) > 0"]}
+{"goal":"a * c - b * c > 0","proof":[]}
+{"goal":"lt_mul_neg","proof":["(a * c - b * c).is_positive = b * c < a * c","(c * (a - b) - 0).is_positive = 0 < c * (a - b)","a * c - b * c > 0 = 0 < a * c - b * c","a * c - b * c - 0 = a * c - b * c"]}
+{"goal":"a <= c","proof":[]}
+{"goal":"a <= c","proof":[]}
+{"goal":"a <= c","proof":[]}
+{"goal":"a <= c","proof":["not a <= b or a < b or b = a","not b <= c or b < c or c = b","b < c","a < b","a < c","not a < c or a <= c"]}
+{"goal":"lte_trans","proof":[]}
+{"goal":"a < c","proof":[]}
+{"goal":"a < c","proof":["not a < b or not b < c or a < c","not b <= c or b < c or c = b","b < c","not b < c or not a < b"]}
+{"goal":"lt_and_lte","proof":[]}
+{"goal":"a < c","proof":[]}
+{"goal":"a < c","proof":["not a < b or not b < c or a < c","not a <= b or a < b or b = a","a < b","not b < c or not a < b"]}
+{"goal":"lte_and_lt","proof":[]}
+{"goal":"abs(u) = Nat.1","proof":["not is_unit(u) or abs(u) = Nat.1"]}
+{"goal":"u = from_nat(abs(u))","proof":["not u >= 0 or from_nat(abs(u)) = u","not u >= 0","u >= 0 = 0 <= u","not 0 <= u","u > 0 = 0 < u","0 < u","not 0 < u or 0 <= u"]}
+{"goal":"u = from_nat(Nat.1)","proof":["from_nat(abs(u)) != u"]}
+{"goal":"1 = Int.pos_suc(Nat.0)","proof":[]}
+{"goal":"Int.pos_suc(Nat.0) = from_nat(Nat.0.suc)","proof":["Nat.0 + Nat.1 = Nat.0.suc","from_nat(Nat.0 + Nat.1) != Int.pos_suc(Nat.0)","Nat.0 + Nat.1 = Nat.1","from_nat(Nat.1) != Int.pos_suc(Nat.0)","from_nat(Nat.1) != 1"]}
+{"goal":"1 = from_nat(Nat.1)","proof":[]}
+{"goal":"u = 1","proof":["from_nat(Nat.1) != u"]}
+{"goal":"-u > 0","proof":["from_nat(u.pos_part) + -from_nat(u.neg_part) = sub_nat(u.pos_part, u.neg_part)","u * -1 = -(u * 1)","-(0 - u) = u - 0","u * 1 = 1 * u","-u > 0 = 0 < -u","u > 0 = 0 < u","not 0 < -u","sub_nat(u.pos_part, u.neg_part) = u","(-u).neg_part = abs(-u) or (-u).is_positive","0 < -u = (-u).is_positive","0 < u = u.is_positive","not (-u).is_positive","0 - 0 = -0","0 - u = -u","(--u).neg_part = (-u).pos_part","(-u).neg_part = u.pos_part","(-u).pos_part = Nat.0 or (-u).is_positive","(-1).is_negative = 1.is_positive","(-u).is_negative = u.is_positive","abs(-u) = abs(u)","Nat.0 != Nat.0 or from_nat(Nat.0) = 0","1 * -1 = -1","1 * u = u","0 - 0 = 0","1 * u - 0 = 1 * u","1 + 0 = 1","(-u).pos_part = Nat.0","from_nat(Nat.0) = 0","(-u).neg_part = abs(-u)"]}
+{"goal":"-u = from_nat(abs(-u))","proof":["not -u >= 0 or from_nat(abs(-u)) = -u","not -u >= 0","-u >= 0 = 0 <= -u","not 0 <= -u","-u > 0 = 0 < -u","0 < -u","not 0 < -u or 0 <= -u"]}
+{"goal":"-u = from_nat(Nat.1)","proof":["from_nat(abs(u)) != -u","abs(-u) = abs(u)"]}
+{"goal":"1 = Int.pos_suc(Nat.0)","proof":[]}
+{"goal":"Int.pos_suc(Nat.0) = from_nat(Nat.0.suc)","proof":["Nat.0 + Nat.1 = Nat.0.suc","from_nat(Nat.0 + Nat.1) != Int.pos_suc(Nat.0)","Nat.0 + Nat.1 = Nat.1","from_nat(Nat.1) != Int.pos_suc(Nat.0)","from_nat(Nat.1) != 1"]}
+{"goal":"1 = from_nat(Nat.1)","proof":[]}
+{"goal":"-u = 1","proof":["from_nat(Nat.1) != -u"]}
+{"goal":"u = -1","proof":["-u != 1 or 1 + u = 0","u + 1 != 0 or -1 = u","u + 1 != 0","u + 1 = 1 + u","1 + u = 0","1 + u != 0"]}
+{"goal":"two_units","proof":[]}
+{"goal":"u * u = 1","proof":["1 * u != 1","1 * u != u","1 * u = u"]}
+{"goal":"u * u = 1","proof":["u * --u = -(u * -u)","not is_unit(u) or -1 = u or 1 = u","-1 = u","-sub_nat(1.neg_part, 1.pos_part) = sub_nat(1.pos_part, 1.neg_part)","u * 1 = 1 * u","sub_nat((-1).pos_part, (-1).neg_part) = -1","sub_nat(1.pos_part, 1.neg_part) = 1","(-1).neg_part = 1.pos_part","(-1).pos_part = 1.neg_part","1 * -1 = -1"]}
+{"goal":"unit_squared","proof":[]}
+{"goal":"abs(u * v) = abs(u) * abs(v)","proof":["abs(u) * abs(v) = abs(u * v)"]}
+{"goal":"abs(u) = Nat.1","proof":["not is_unit(u) or abs(u) = Nat.1"]}
+{"goal":"abs(v) = Nat.1","proof":["not is_unit(v) or abs(v) = Nat.1"]}
+{"goal":"abs(u * v) = Nat.1","proof":["Nat.1 * Nat.1 = Nat.1"]}
+{"goal":"mul_units","proof":["abs(u * v) != Nat.1 or is_unit(u * v)"]}
+{"goal":"unit_sign(a) = -1","proof":["let s0: Int -> Nat satisfy { forall(x0: Int) { not x0.is_negative or Int.neg_suc(s0(x0)) = x0 } }","Int.neg_suc(s0(a)) != a or unit_sign(a) = -1","Int.neg_suc(s0(a)) != a","not a.is_negative or Int.neg_suc(s0(a)) = a","a < 0 = a.is_negative","not a.is_negative","a.is_negative"]}
+{"goal":"abs(-1) = Nat.1","proof":["abs(-1) = abs(1)","abs(from_nat(Nat.1)) = Nat.1","abs(-1) != abs(from_nat(Nat.1))","abs(from_nat(Nat.1)) != abs(1)","from_nat(Nat.1) != 1"]}
+{"goal":"is_unit(unit_sign(a))","proof":["not is_unit(-1)","abs(-1) != Nat.1 or is_unit(-1)"]}
+{"goal":"unit_sign(a) = 1","proof":["let (s0: Int -> Nat, s1: Int -> Nat) satisfy { forall(x0: Int) { Int.neg_suc(s1(x0)) = x0 or Int.pos_suc(s0(x0)) = x0 or 0 = x0 } }","Int.neg_suc(s1(a)) = a or Int.pos_suc(s0(a)) = a or 0 = a","Int.pos_suc(s0(a)) != a or unit_sign(a) = 1","Int.pos_suc(s0(a)) != a","Int.neg_suc(s1(a)) = a","a < 0 = a.is_negative","not a.is_negative","Int.neg_suc(s1(a)) != a or a.is_negative"]}
+{"goal":"abs(1) = Nat.1","proof":["abs(from_nat(Nat.1)) = Nat.1","abs(from_nat(Nat.1)) != abs(1)","from_nat(Nat.1) != 1"]}
+{"goal":"is_unit(unit_sign(a))","proof":["not is_unit(1)","abs(1) != Nat.1 or is_unit(1)"]}
+{"goal":"unit_sign_is_unit","proof":[]}
+{"goal":"unit_sign(a) = 0","proof":["unit_sign(0) != 0","0 != 0 or unit_sign(0) = 0"]}
+{"goal":"unit_sign(a) * from_nat(abs(a)) = a","proof":["0 * from_nat(abs(a)) != a","0 * from_nat(abs(a)) = 0"]}
+{"goal":"unit_sign(a) = -1","proof":["let s0: Int -> Nat satisfy { forall(x0: Int) { not x0.is_negative or Int.neg_suc(s0(x0)) = x0 } }","Int.neg_suc(s0(a)) != a or unit_sign(a) = -1","Int.neg_suc(s0(a)) != a","not a.is_negative or Int.neg_suc(s0(a)) = a","a < 0 = a.is_negative","not a.is_negative","a.is_negative"]}
+{"goal":"unit_sign(a) * from_nat(abs(a)) = a","proof":["-1 * from_nat(abs(a)) != a","-1 * from_nat(abs(a)) = -(1 * from_nat(abs(a)))","-(1 * from_nat(abs(a))) != a","-from_nat(abs(a)) = a or a.is_positive","a.is_positive != a.is_negative or 0 = a","a.is_positive != a.is_negative","not a.is_positive or not a.is_negative","a < 0 = a.is_negative","a.is_negative","1 * from_nat(abs(a)) = from_nat(abs(a))","-from_nat(abs(a)) != a","not a.is_positive","a.is_positive"]}
+{"goal":"unit_sign(a) = 1","proof":["let s0: Int -> Nat satisfy { forall(x0: Int) { not x0.is_negative or Int.neg_suc(s0(x0)) = x0 } }","Int.neg_suc(s0(-a)) != -a or Int.pos_suc(s0(-a)) = --a","Int.pos_suc(s0(-a)) != --a or unit_sign(--a) = 1","a > 0 = 0 < a","0 < a","not (-a).is_negative or Int.neg_suc(s0(-a)) = -a","0 < a = a.is_positive","a.is_positive","(-a).is_negative = a.is_positive","--a = a","unit_sign(--a) != 1","(-a).is_negative","Int.pos_suc(s0(-a)) != --a","Int.neg_suc(s0(-a)) != -a"]}
+{"goal":"unit_sign(a) * from_nat(abs(a)) = a","proof":["1 * from_nat(abs(a)) != a","from_nat(abs(a)) = a or a.is_negative","a < 0 = a.is_negative","not a.is_negative","from_nat(abs(a)) = a","1 * from_nat(abs(a)) = from_nat(abs(a))"]}
+{"goal":"abs_decomp","proof":["a > 0 or a < 0 or 0 = a"]}
+{"goal":"unit_sign(a) * a = from_nat(abs(a))","proof":["abs(a) != Nat.0 or from_nat(abs(a)) = 0","unit_sign(a) * 0 = 0","abs(a) = Nat.0","unit_sign(a) * 0 != from_nat(abs(a))","from_nat(abs(a)) = 0","from_nat(abs(a)) != 0"]}
+{"goal":"unit_sign(a) * a = unit_sign(a) * (unit_sign(a) * from_nat(abs(a)))","proof":["unit_sign(a) * from_nat(abs(a)) != a","unit_sign(a) * from_nat(abs(a)) = a"]}
+{"goal":"unit_sign(a) * unit_sign(a) = 1","proof":["not is_unit(unit_sign(a)) or unit_sign(a) * unit_sign(a) = 1","not is_unit(unit_sign(a))","is_unit(unit_sign(a)) or 0 = a"]}
+{"goal":"unit_sign(a) * a = 1 * from_nat(abs(a))","proof":["unit_sign(a) * (unit_sign(a) * from_nat(abs(a))) = unit_sign(a) * unit_sign(a) * from_nat(abs(a))"]}
+{"goal":"abs_alt_decomp","proof":["1 * from_nat(abs(a)) = from_nat(abs(a))"]}
+{"goal":"exists(k0: Int) { k0 * a = b }","proof":["let s0: (Int, Int) -> Int satisfy { forall(x0: Int, x1: Int) { not x0.divides(x1) or s0(x0, x1) * x0 = x1 } and forall(x2: Int, x3: Int, x4: Int) { x2 * x3 != x4 or x3.divides(x4) } }","s0(a, b) * a != b","not a.divides(b) or s0(a, b) * a = b"]}
+{"goal":"exists(k0: Int) { k0 * b = c }","proof":["let s0: (Int, Int) -> Int satisfy { forall(x0: Int, x1: Int) { not x0.divides(x1) or s0(x0, x1) * x0 = x1 } and forall(x2: Int, x3: Int, x4: Int) { x2 * x3 != x4 or x3.divides(x4) } }","s0(b, c) * b != c","not b.divides(c) or s0(b, c) * b = c"]}
+{"goal":"e * (d * a) = c","proof":[]}
+{"goal":"e * d * a = c","proof":["e * (d * a) = e * d * a"]}
+{"goal":"a.divides(c)","proof":["e * d * a != c or a.divides(c)"]}
+{"goal":"div_trans","proof":[]}
+{"goal":"exists(k0: Int) { k0 * a = b }","proof":["let s0: (Int, Int) -> Int satisfy { forall(x0: Int, x1: Int) { not x0.divides(x1) or s0(x0, x1) * x0 = x1 } and forall(x2: Int, x3: Int, x4: Int) { x2 * x3 != x4 or x3.divides(x4) } }","s0(a, b) * a != b","not a.divides(b) or s0(a, b) * a = b"]}
+{"goal":"abs(d) * abs(a) = abs(b)","proof":["abs(d) * abs(a) = abs(d * a)"]}
+{"goal":"abs(a).divides(abs(b))","proof":["abs(a) * abs(d) != abs(b) or abs(a).divides(abs(b))","abs(d) * abs(a) = abs(a) * abs(d)","abs(a) * abs(d) != abs(b)"]}
+{"goal":"div_imp_div_abs","proof":[]}
+{"goal":"exists(k0: Nat) { k0 * j = k }","proof":["let s0: (Nat, Nat) -> Nat satisfy { forall(x0: Nat, x1: Nat) { not x0.divides(x1) or x0 * s0(x0, x1) = x1 } and forall(x2: Nat, x3: Nat, x4: Nat) { x2 * x3 != x4 or x2.divides(x4) } }","s0(j, k) * j != k","not j.divides(k) or j * s0(j, k) = k","s0(j, k) * j = j * s0(j, k)","j * s0(j, k) = k"]}
+{"goal":"from_nat(n) * from_nat(j) = from_nat(k)","proof":["from_nat(n) * from_nat(j) = from_nat(n * j)"]}
+{"goal":"from_nat(j).divides(from_nat(k))","proof":["from_nat(n) * from_nat(j) != from_nat(k) or from_nat(j).divides(from_nat(k))"]}
+{"goal":"div_from_nat","proof":[]}
+{"goal":"from_nat(abs(a)) = a * unit_sign(a)","proof":["unit_sign(a) * a = from_nat(abs(a))","a * unit_sign(a) = unit_sign(a) * a"]}
+{"goal":"div_abs","proof":["unit_sign(a) * a != from_nat(abs(a)) or a.divides(from_nat(abs(a)))","unit_sign(a) * a = from_nat(abs(a))","unit_sign(a) * a != from_nat(abs(a))"]}
+{"goal":"a.divides(from_nat(abs(a)))","proof":["unit_sign(a) * a != from_nat(abs(a)) or a.divides(from_nat(abs(a)))","unit_sign(a) * a = from_nat(abs(a))","unit_sign(a) * a != from_nat(abs(a))"]}
+{"goal":"from_nat(abs(a)).divides(from_nat(abs(b)))","proof":["not abs(a).divides(abs(b)) or from_nat(abs(a)).divides(from_nat(abs(b)))"]}
+{"goal":"from_nat(abs(b)).divides(b)","proof":["unit_sign(b) * from_nat(abs(b)) != b or from_nat(abs(b)).divides(b)","unit_sign(b) * from_nat(abs(b)) = b","unit_sign(b) * from_nat(abs(b)) != b"]}
+{"goal":"div_abs_imp_div","proof":["not a.divides(from_nat(abs(a))) or not from_nat(abs(a)).divides(b) or a.divides(b)","not from_nat(abs(a)).divides(from_nat(abs(b))) or not from_nat(abs(b)).divides(b) or from_nat(abs(a)).divides(b)","not from_nat(abs(a)).divides(b) or not a.divides(from_nat(abs(a)))","a.divides(from_nat(abs(a)))","not from_nat(abs(a)).divides(b)","not from_nat(abs(a)).divides(from_nat(abs(b))) or from_nat(abs(a)).divides(b)"]}
+{"goal":"a = unit_sign(a) * from_nat(abs(a))","proof":["unit_sign(a) * from_nat(abs(a)) = a"]}
+{"goal":"b = unit_sign(b) * from_nat(abs(b))","proof":["unit_sign(b) * from_nat(abs(b)) = b"]}
+{"goal":"is_unit(u)","proof":["not is_unit(unit_sign(a)) or not is_unit(unit_sign(b)) or is_unit(unit_sign(a) * unit_sign(b))","not is_unit(unit_sign(a) * unit_sign(b))","is_unit(unit_sign(a)) or 0 = a","is_unit(unit_sign(b)) or 0 = b","is_unit(unit_sign(a))","is_unit(unit_sign(b))","not is_unit(unit_sign(b))"]}
+{"goal":"u * a = b","proof":["a * (unit_sign(a) * unit_sign(b)) = a * unit_sign(a) * unit_sign(b)","unit_sign(a) * a = from_nat(abs(a))","a * unit_sign(a) = unit_sign(a) * a","u * a = a * u","unit_sign(b) * from_nat(abs(b)) = from_nat(abs(b)) * unit_sign(b)"]}
+{"goal":"abs_eq_imp_unit","proof":["u * a != b or not is_unit(u)","u * a != b"]}
+{"goal":"exists(k0: Int) { is_unit(k0) and k0 * a = b }","proof":["let s0: (Int, Int) -> Int satisfy { forall(x0: Int, x1: Int) { abs(x0) != abs(x1) or is_unit(s0(x0, x1)) or 0 = x0 or 0 = x1 } and forall(x2: Int, x3: Int) { abs(x2) != abs(x3) or s0(x2, x3) * x2 = x3 or 0 = x2 or 0 = x3 } }","s0(a, b) * a != b or not is_unit(s0(a, b))","abs(b) != abs(a) or s0(a, b) * a = b or 0 = a or 0 = b","abs(b) != abs(a) or is_unit(s0(a, b)) or 0 = a or 0 = b","is_unit(s0(a, b))","s0(a, b) * a = b","s0(a, b) * a != b"]}
+{"goal":"abs_eq_imp_div","proof":["let s0: Int satisfy { is_unit(s0) and s0 * a = b }","s0 * a != b or a.divides(b)"]}
+{"goal":"abs(a).divides(abs(b))","proof":["not a.divides(b) or abs(a).divides(abs(b))"]}
+{"goal":"from_nat(abs(a)) <= from_nat(abs(b))","proof":["from_nat(abs(a)) <= from_nat(abs(b)) = abs(a) <= abs(b)","not abs(a) <= abs(b)","not abs(a).divides(abs(b)) or abs(a) <= abs(b) or abs(b) = Nat.0","abs(b) = Nat.0","b > 0 != b <= 0","abs(b) != Nat.0 or 0 = b","0 != b or b <= 0","not b > 0 or not b <= 0","not b <= 0","0 = b","0 != b"]}
+{"goal":"from_nat(abs(a)) <= b","proof":["not from_nat(abs(a)) <= from_nat(abs(b)) or not from_nat(abs(b)) <= b or from_nat(abs(a)) <= b","not b < 0 or not 0 < b","b > 0 = 0 < b","0 < b","from_nat(abs(b)) = b or b.is_negative","b < 0 = b.is_negative","from_nat(abs(b)) != b or from_nat(abs(b)) <= b","not from_nat(abs(a)) <= from_nat(abs(b)) or not from_nat(abs(b)) <= b","not from_nat(abs(b)) <= b","not b < 0","not b.is_negative","from_nat(abs(b)) != b","from_nat(abs(b)) = b"]}
+{"goal":"a <= from_nat(abs(a))","proof":["a <= from_nat(abs(a))"]}
+{"goal":"a <= b","proof":["not a <= from_nat(abs(a)) or not from_nat(abs(a)) <= b or a <= b","not from_nat(abs(a)) <= b or not a <= from_nat(abs(a))"]}
+{"goal":"div_pos_imp_lte","proof":[]}
+{"goal":"lt_mul_both","proof":["not a > 0 or not b < c or b * a < c * a","b * a = a * b","c * a = a * c","not a * b < c * a","not a > 0 or b * a < c * a","not b * a < c * a","b * a < c * a"]}
+{"goal":"lte_mul_both","proof":["not a > 0 or not b < c or a * b < a * c","not b <= c or b < c or c = b","not a * b < a * c or a * b <= a * c","a * c != a * b or a * b <= a * c","a * c != a * b","c != b","b < c","not a * b < a * c"]}
+{"goal":"a * c < b * a","proof":["not a < 0 or not b < c or c * a < b * a","c * a = a * c","not c * a < b * a"]}
+{"goal":"lt_mul_both_neg","proof":["b * a = a * b","a * b > a * c = a * c < a * b"]}
+{"goal":"lte_mul_both_neg","proof":["not a < 0 or not b < c or a * b > a * c","not b <= c or b < c or c = b","a * b >= a * c = a * c <= a * b","not a * c <= a * b","a * b > a * c = a * c < a * b","not a * c < a * b or a * c <= a * b","a * c != a * b or a * c <= a * b","a * c != a * b","c != b","b < c","not a * c < a * b","not b < c or a * b > a * c","not a * b > a * c","a * b > a * c"]}
+{"goal":"lt_cancel_mul","proof":["not a > 0 or not c <= b or a * c <= a * b","a * c > a * b != a * c <= a * b","c > b != c <= b","a * c > a * b = a * b < a * c","c > b = b < c","not c > b","c > b or c <= b","not a * c > a * b or not a * c <= a * b","a * c > a * b","not c <= b or a * c <= a * b","c <= b","not a * c <= a * b","a * c <= a * b"]}
+{"goal":"lte_cancel_mul","proof":["not a > 0 or not c < b or a * c < a * b","a * b > a * c != a * b <= a * c","b > c != b <= c","a * b > a * c = a * c < a * b","b > c = c < b","not a * c < a * b or a * b > a * c","b > c or b <= c","b > c","c < b","not a * b > a * c or not a * b <= a * c","not a * b > a * c","not c < b or a * c < a * b","not a * c < a * b","a * c < a * b"]}
+{"goal":"lt_cancel_mul_neg","proof":["not a * a * c < a * a * b or not a * a > 0 or c < b","not a < 0 or not a * b < a * c or a * (a * b) > a * (a * c)","not a < 0 or not a < 0 or a * a > 0","a * (a * b) = a * a * b","a * (a * c) = a * a * c","a * a * b > a * (a * c) = a * (a * c) < a * a * b","b > c = c < b","not c < b","not a * a * c < a * a * b or not a * a > 0","not a < 0 or a * a > 0","a * a > 0","not a < 0 or a * (a * b) > a * (a * c)","a * (a * b) > a * (a * c)","a * a * b > a * (a * c)","a * (a * c) < a * a * b","not a * a * c < a * a * b","a * a * c < a * a * b"]}
+{"goal":"lte_cancel_mul_neg","proof":["not a < 0 or not b < c or a * b > a * c","a * b > a * c != a * b <= a * c","c > b != c <= b","b >= c = c <= b","not c <= b","c > b = b < c","c > b or c <= b","c > b","b < c","not a * b > a * c or not a * b <= a * c","not a * b > a * c"]}
+{"goal":"mul_pos_cancel_left","proof":["a * c - a * b = a * (c - b)","a * (c - b) != 0 or 0 = a or c - b = 0","a > 0 != a <= 0","a * c != a * b or a * c - a * b = 0","c - b != 0 or c = b","c - b != 0","0 != a or a <= 0","not a > 0 or not a <= 0","not a <= 0","a * c - a * b = 0","a * (c - b) = 0","0 != a","0 = a"]}
+{"goal":"mul_pos_cancel_right","proof":["not a > 0 or a * c != a * b or c = b","b * a = a * b","c * a = a * c","c * a = a * b","a * c = a * b"]}
+{"goal":"mul_neg_cancel_left","proof":["a * c - a * b = a * (c - b)","a * (c - b) != 0 or 0 = a or c - b = 0","a * c != a * b or a * c - a * b = 0","c - b != 0 or c = b","c - b != 0","0 <= a != a.is_negative","a < 0 = a.is_negative","a.is_negative","0 != a or 0 <= a","not 0 <= a or not a.is_negative","not 0 <= a","a * c - a * b = 0","a * (c - b) = 0","0 != a","0 = a"]}
+{"goal":"mul_neg_cancel_right","proof":["not a < 0 or a * c != a * b or c = b","b * a = a * b","c * a = a * c","c * a = a * b","a * c = a * b"]}
+{"goal":"mul_cancel_left","proof":["not a < 0 or a * c != a * b or c = b","not a < 0","not a > 0 or a * c != a * b or c = b","not a > 0","a > 0 or a < 0 or 0 = a"]}
+{"goal":"mul_cancel_right","proof":["not a < 0 or c * a != b * a or c = b","not a < 0","not a > 0 or c * a != b * a or c = b","not a > 0","a > 0 or a < 0 or 0 = a"]}
+{"goal":"exists(k0: Int) { a * b * k0 = a * c }","proof":["let s0: (Int, Int) -> Int satisfy { forall(x0: Int, x1: Int) { not x0.divides(x1) or s0(x0, x1) * x0 = x1 } and forall(x2: Int, x3: Int, x4: Int) { x2 * x3 != x4 or x3.divides(x4) } }","a * b * s0(a * b, a * c) != a * c","not (a * b).divides(a * c) or s0(a * b, a * c) * (a * b) = a * c","s0(a * b, a * c) * (a * b) = a * b * s0(a * b, a * c)","s0(a * b, a * c) * (a * b) = a * c"]}
+{"goal":"a * (b * d) = a * c","proof":["a * (b * d) = a * b * d"]}
+{"goal":"b * d = c","proof":["a * (b * d) != a * c or 0 = a or b * d = c"]}
+{"goal":"divides_cancel_left","proof":["d * b != c or b.divides(c)","d * b != c","d * b = b * d"]}
+{"goal":"divides_cancel_right","proof":["not (a * b).divides(a * c) or b.divides(c) or 0 = a","b * a = a * b","c * a = a * c","(b * a).divides(a * c)","not (a * b).divides(a * c) or 0 = a","(a * b).divides(a * c)","not (a * b).divides(a * c)"]}
+{"goal":"exists(k0: Int) { k0 * a = b }","proof":["let s0: (Int, Int) -> Int satisfy { forall(x0: Int, x1: Int) { not x0.divides(x1) or s0(x0, x1) * x0 = x1 } and forall(x2: Int, x3: Int, x4: Int) { x2 * x3 != x4 or x3.divides(x4) } }","s0(a, b) * a != b","not a.divides(b) or s0(a, b) * a = b"]}
+{"goal":"m * d * a = m * b","proof":["m * (d * a) = m * d * a"]}
+{"goal":"divides_mul_left","proof":["d * (m * a) = d * m * a","d * (m * a) != m * b or (m * a).divides(m * b)","m * d = d * m","d * m * a = m * b","d * (m * a) != m * b"]}
+{"goal":"divides_mul_right","proof":["not a.divides(b) or (m * a).divides(m * b)","m * a = a * m","m * b = b * m","not (m * a).divides(b * m)","(m * a).divides(m * b)"]}
+{"goal":"2 = from_nat(Nat.1 + Nat.1)","proof":["from_nat(Nat.2) != 2"]}
+{"goal":"one_plus_one","proof":["from_nat(Nat.1) + from_nat(Nat.1) = from_nat(Nat.1 + Nat.1)"]}
+{"goal":"2 = 1 + 1","proof":[]}
+{"goal":"2 * a = (1 + 1) * a","proof":["1 + 1 != 2"]}
+{"goal":"2 * a = 1 * a + 1 * a","proof":["1 * a + 1 * a = (1 + 1) * a"]}
+{"goal":"times_two","proof":["sub_nat((1 * a).pos_part + (1 * a).pos_part, (1 * a).neg_part + (1 * a).neg_part) = 1 * a + 1 * a","sub_nat(a.pos_part + a.pos_part, a.neg_part + a.neg_part) = a + a","1 * a = a"]}
+{"goal":"b + c <= b + d","proof":["not c <= d or b + c <= b + d"]}
+{"goal":"a + c <= b + c","proof":["not a <= b or a + c <= b + c"]}
+{"goal":"add_lte","proof":["not b + c <= b + d"]}
+{"goal":"from_nat(abs(n)) = -n","proof":["not n <= 0 or from_nat(abs(n)) = -n","not n <= 0","not n < 0 or n <= 0"]}
+{"goal":"n + from_nat(abs(n)) = 0","proof":["n + -n != 0","n + -n = n - n","n - n != 0","n != n or n - n = 0"]}
+{"goal":"n + from_nat(abs(n)) = n + n","proof":["from_nat(abs(n)) != n","from_nat(abs(n)) = n or n.is_negative","n.is_negative","n < 0 = n.is_negative"]}
+{"goal":"n + from_nat(abs(n)) >= 0","proof":["not (n + n).is_negative or n.is_negative or n.is_negative","n + from_nat(abs(n)) >= 0 = 0 <= n + from_nat(abs(n))","not 0 <= n + from_nat(abs(n))","not 0 <= n + n","0 <= n + n != (n + n).is_negative","n < 0 = n.is_negative","not n.is_negative","0 <= n + n or (n + n).is_negative","(n + n).is_negative"]}
+{"goal":"plus_abs_gte_zero","proof":["n + from_nat(abs(n)) >= 0 = 0 <= n + from_nat(abs(n))","not 0 <= n + from_nat(abs(n))","n + from_nat(abs(n)) != 0 or 0 <= n + from_nat(abs(n))"]}
+{"goal":"a * a^Nat.0 = a","proof":["Nat.0 != Nat.0 or a^Nat.0 = 1","a * 1 = a","a * a^Nat.0 != a * 1","a^Nat.0 != 1"]}
+{"goal":"a^Nat.0.suc = a","proof":["Nat.0.suc != Nat.0.suc or a * a^Nat.0 = a^Nat.0.suc","a * a^Nat.0 != a^Nat.0.suc"]}
+{"goal":"pow_one","proof":["Nat.0 + Nat.1 = Nat.0.suc","Nat.0 + Nat.1 = Nat.1"]}
+{"goal":"pow_zero","proof":["Nat.0 != Nat.0 or a^Nat.0 = 1"]}
+{"goal":"f(Nat.0)","proof":["a^b * a^Nat.0 != a^(b + Nat.0) or f(Nat.0)","a^Nat.0 = 1","a^b * 1 = a^b","b + Nat.0 = b","a^b * a^Nat.0 != a^(b + Nat.0)"]}
+{"goal":"a^(b + x) = a^b * a^x","proof":["not f(x) or a^b * a^x = a^(b + x)"]}
+{"goal":"a^(b + x.suc) = a^b * a^x.suc","proof":["(b + x).suc != (b + x).suc or a * a^(b + x) = a^(b + x).suc","x.suc != x.suc or a * a^x = a^x.suc","a * (a^x * a^b) = a * a^x * a^b","x.suc != x.suc or b + x.suc = (b + x).suc","a^b * a^x.suc = a^x.suc * a^b","a^x * a^b = a^b * a^x","b + x.suc = (b + x).suc","a * a^(b + x) = a^(b + x).suc","a * a^x = a^x.suc"]}
+{"goal":"f(x.suc)","proof":["a^b * a^x.suc != a^(b + x.suc) or f(x.suc)"]}
+{"goal":"f(c)","proof":["let s0: Nat -> Bool -> Nat satisfy { forall(x0: Nat -> Bool, x1: Nat) { not x0(Nat.0) or x0(s0(x0)) or x0(x1) } and forall(x2: Nat -> Bool, x3: Nat) { not x2(s0(x2).suc) or not x2(Nat.0) or x2(x3) } }","not f(s0(f)) or f(s0(f).suc)","not f(s0(f).suc) or not f(Nat.0) or f(c)","not f(s0(f).suc)","not f(Nat.0) or f(s0(f)) or f(c)","not f(s0(f))","f(s0(f))"]}
+{"goal":"pow_add","proof":["not f(c) or a^b * a^c = a^(b + c)"]}
+{"goal":"f(Nat.0)","proof":["a^b^Nat.0 != a^(b * Nat.0) or f(Nat.0)","b * Nat.0 != Nat.0 or a^(b * Nat.0) = 1","a^b^Nat.0 = 1","b * Nat.0 = Nat.0","a^b^Nat.0 != a^(b * Nat.0)","a^(b * Nat.0) != 1"]}
+{"goal":"a^(b * x) = a^b^x","proof":["not f(x) or a^b^x = a^(b * x)"]}
+{"goal":"a^(b * x.suc) = a^b^x.suc","proof":["a^(b * x) * a^b = a^(b * x + b)","a^b^x * a^b^Nat.1 = a^b^(x + Nat.1)","x.suc != x.suc or b * x + b = b * x.suc","x + Nat.1 = x.suc","a^b^Nat.1 = a^b","b * x + b = b * x.suc"]}
+{"goal":"f(x.suc)","proof":["a^b^x.suc != a^(b * x.suc) or f(x.suc)"]}
+{"goal":"f(c)","proof":["let s0: Nat -> Bool -> Nat satisfy { forall(x0: Nat -> Bool, x1: Nat) { not x0(Nat.0) or x0(s0(x0)) or x0(x1) } and forall(x2: Nat -> Bool, x3: Nat) { not x2(s0(x2).suc) or not x2(Nat.0) or x2(x3) } }","not f(s0(f)) or f(s0(f).suc)","not f(s0(f).suc) or not f(Nat.0) or f(c)","not f(s0(f).suc)","not f(Nat.0) or f(s0(f)) or f(c)","not f(s0(f))","f(s0(f))"]}
+{"goal":"pow_mul","proof":["not f(c) or a^b^c = a^(b * c)"]}
+{"goal":"exists(k0: Nat) { n = k0.suc }","proof":["let s0: Nat -> Nat satisfy { forall(x0: Nat) { s0(x0).suc = x0 or Nat.0 = x0 } }","s0(n).suc != n","s0(n).suc = n or Nat.0 = n"]}
+{"goal":"zero_pow","proof":["b.suc != b.suc or 0 * 0^b = 0^b.suc","0^b.suc != 0","0 * 0^b = 0","0 * 0^b = 0^b.suc"]}
+{"goal":"one_pow(Nat.0)","proof":["1^Nat.0 != 1 or one_pow(Nat.0)","1^Nat.0 != 1","Nat.0 != Nat.0 or 1^Nat.0 = 1"]}
+{"goal":"one_pow(n)","proof":["let s0: Nat -> Bool -> Nat satisfy { forall(x0: Nat -> Bool, x1: Nat) { not x0(Nat.0) or x0(s0(x0)) or x0(x1) } and forall(x2: Nat -> Bool, x3: Nat) { not x2(s0(x2).suc) or not x2(Nat.0) or x2(x3) } }","1^s0(one_pow).suc != 1 or one_pow(s0(one_pow).suc)","not one_pow(s0(one_pow)) or 1^s0(one_pow) = 1","s0(one_pow).suc != s0(one_pow).suc or 1 * 1^s0(one_pow) = 1^s0(one_pow).suc","not one_pow(s0(one_pow).suc) or not one_pow(Nat.0) or one_pow(n)","not one_pow(s0(one_pow).suc)","not one_pow(Nat.0) or one_pow(s0(one_pow)) or one_pow(n)","one_pow(s0(one_pow))","1 * 1 = 1","1 * 1^s0(one_pow) = 1^s0(one_pow).suc","1^s0(one_pow) = 1","1^s0(one_pow).suc != 1"]}
+{"goal":"one_pow","proof":["not one_pow(n) or 1^n = 1"]}
+{"goal":"f(Nat.0)","proof":["a^Nat.0 > 0 = f(Nat.0)","not a^Nat.0 > 0","1 > 0 = 0 < 1","0 < 1 = 1.is_positive","a^Nat.0 = 1","not 1 > 0","not 0 < 1","not 1.is_positive"]}
+{"goal":"f(n)","proof":["let s0: Nat -> Bool -> Nat satisfy { forall(x0: Nat -> Bool, x1: Nat) { not x0(Nat.0) or x0(s0(x0)) or x0(x1) } and forall(x2: Nat -> Bool, x3: Nat) { not x2(s0(x2).suc) or not x2(Nat.0) or x2(x3) } }","a^s0(f) > 0 = f(s0(f))","a^s0(f).suc > 0 = f(s0(f).suc)","s0(f).suc != s0(f).suc or a * a^s0(f) = a^s0(f).suc","not a > 0 or not a^s0(f) > 0 or a * a^s0(f) > 0","not f(s0(f).suc) or not f(Nat.0) or f(n)","not f(s0(f).suc)","not f(Nat.0) or f(s0(f)) or f(n)","f(s0(f))","a * a^s0(f) = a^s0(f).suc","not a^s0(f) > 0 or a * a^s0(f) > 0","a^s0(f) > 0","not a^s0(f).suc > 0","a * a^s0(f) > 0","not a * a^s0(f) > 0"]}
+{"goal":"pos_pow","proof":["a^n > 0 = f(n)"]}
+{"goal":"sq_eq_mul","proof":["a^Nat.1 * a^Nat.1 = a^(Nat.1 + Nat.1)","a^Nat.1 = a"]}
+{"goal":"sq_pos","proof":["not a < 0 or not a < 0 or a * a > 0","not a > 0 or a^Nat.2 > 0","not a > 0","a > 0 or a < 0 or 0 = a","a < 0","a^Nat.2 = a * a","not a * a > 0"]}
+{"goal":"f(Nat.0)","proof":["abs(a^Nat.0) != abs(a)^Nat.0 or f(Nat.0)","a^Nat.0 = 1","abs(from_nat(Nat.1)) = Nat.1","abs(a)^Nat.0 = Nat.1","abs(a^Nat.0) != abs(a)^Nat.0"]}
+{"goal":"abs(a^x) = abs(a)^x","proof":["not f(x) or abs(a^x) = abs(a)^x"]}
+{"goal":"abs(a^x.suc) = abs(a)^x.suc","proof":["x.suc != x.suc or a * a^x = a^x.suc","x.suc != x.suc or abs(a) * abs(a)^x = abs(a)^x.suc","abs(a) * abs(a^x) = abs(a * a^x)","abs(a) * abs(a)^x = abs(a)^x.suc","a * a^x = a^x.suc"]}
+{"goal":"f(x.suc)","proof":["abs(a^x.suc) != abs(a)^x.suc or f(x.suc)"]}
+{"goal":"f(n)","proof":["let s0: Nat -> Bool -> Nat satisfy { forall(x0: Nat -> Bool, x1: Nat) { not x0(Nat.0) or x0(s0(x0)) or x0(x1) } and forall(x2: Nat -> Bool, x3: Nat) { not x2(s0(x2).suc) or not x2(Nat.0) or x2(x3) } }","not f(s0(f)) or f(s0(f).suc)","not f(s0(f).suc) or not f(Nat.0) or f(n)","not f(s0(f).suc)","not f(Nat.0) or f(s0(f)) or f(n)","not f(s0(f))","f(s0(f))"]}
+{"goal":"pow_abs_eq_abs_pow","proof":["not f(n) or abs(a^n) = abs(a)^n"]}
+{"goal":"member_abs_neg","proof":["not a <= 0 or from_nat(abs(a)) = -a","not a < 0 or a <= 0","from_nat(abs(a)) = a.abs","from_nat(abs(a)) != -a","a <= 0","not a <= 0"]}
+{"goal":"member_abs_nonneg","proof":["not a >= 0 or from_nat(abs(a)) = a","from_nat(abs(a)) = a.abs","from_nat(abs(a)) = a","from_nat(abs(a)) != a"]}
+{"goal":"member_abs_pos","proof":["not a >= 0 or a.abs = a","not a >= 0","a >= 0 = 0 <= a","not 0 <= a","a > 0 = 0 < a","0 < a","not 0 < a or 0 <= a"]}
+{"goal":"member_abs_nonpos","proof":["not a <= 0 or from_nat(abs(a)) = -a","from_nat(abs(a)) = a.abs","from_nat(abs(a)) = -a","from_nat(abs(a)) != -a"]}
+{"goal":"abs(a + b) <= abs(a) + abs(b)","proof":["abs(a + b) <= abs(a) + abs(b)"]}
+{"goal":"member_triangle","proof":["from_nat(abs(a)) + from_nat(abs(b)) = from_nat(abs(a) + abs(b))","from_nat(abs(a + b)) <= from_nat(abs(a) + abs(b)) = abs(a + b) <= abs(a) + abs(b)","from_nat(abs(a + b)) = (a + b).abs","from_nat(abs(a)) = a.abs","from_nat(abs(b)) = b.abs"]}

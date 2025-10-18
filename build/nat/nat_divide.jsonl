@@ -24,7 +24,7 @@
 {"goal":"(q2 - q1) * n >= n","proof":["not q2 - q1 >= 1 or (q2 - q1) * n >= 1 * n","1 * n = n","not (q2 - q1) * n >= 1 * n"]}
 {"goal":"r1 >= n","proof":["not n <= r1 - r2 or not r1 - r2 <= r1 or n <= r1","(q2 - q1) * n + r2 != r1 or (q2 - q1) * n = r1 - r2","(q2 - q1) * n >= n = n <= (q2 - q1) * n","r1 >= n = n <= r1","not n <= r1","r1 - r2 <= r1","n <= (q2 - q1) * n","not r1 - r2 <= r1 or not n <= r1 - r2","not n <= r1 - r2","(q2 - q1) * n = r1 - r2"]}
 {"goal":"false","proof":["not n <= r1 or n < r1 or r1 = n","not n < r1 or not r1 < n","r1 >= n = n <= r1","n <= r1","not n < n","not n < r1","r1 = n"]}
-{"goal":"division_theorem_uniqueness_half","proof":["q2 < q1 or q1 < q2 or q2 = q1","q1 >= q2 = q2 <= q1","not q2 <= q1","not q2 < q1 or q2 <= q1","not q2 < q1","q2 = q1","q2 != q1 or q2 <= q1"]}
+{"goal":"division_theorem_uniqueness_helper","proof":["q2 < q1 or q1 < q2 or q2 = q1","q1 >= q2 = q2 <= q1","not q2 <= q1","not q2 < q1 or q2 <= q1","not q2 < q1","q2 = q1","q2 != q1 or q2 <= q1"]}
 {"goal":"q1 >= q2","proof":["q1 * n + r1 != m or q2 * n + r2 != m or not 0 < n or not r1 < n or not r2 < n or q1 >= q2","q2 * n + r2 != m or q1 * n + r1 != m or not 0 < n or not r1 < n or not r2 < n","q2 * n + r2 != m or not r2 < n"]}
 {"goal":"q2 >= q1","proof":["q2 * n + r2 != m or q1 * n + r1 != m or not 0 < n or not r2 < n or not r1 < n or q2 >= q1","q2 * n + r2 != m or q1 * n + r1 != m or not 0 < n or not r2 < n or not r1 < n","q2 * n + r2 != m or not r2 < n"]}
 {"goal":"q1 = q2","proof":["not q1 <= q2 or q1 < q2 or q2 = q1","not q2 <= q1 or q2 < q1 or q2 = q1","not q1 < q2 or not q2 < q1","q1 >= q2 = q2 <= q1","q2 >= q1 = q1 <= q2","q1 <= q2","q2 <= q1","q2 < q1","q1 < q2","not q1 < q2"]}
@@ -35,16 +35,16 @@
 {"goal":"zero_divides","proof":["let s0: (Nat, Nat) -> Nat satisfy { forall(x0: Nat, x1: Nat) { not x0.divides(x1) or x0 * s0(x0, x1) = x1 } and forall(x2: Nat, x3: Nat, x4: Nat) { x2 * x3 != x4 or x2.divides(x4) } }","not 0.divides(n) or 0 * s0(0, n) = n","0 * s0(0, n) = 0","0 * s0(0, n) != n"]}
 {"goal":"a != 0","proof":["0 * b = n","0 * b != n or 0.divides(n)","not 0.divides(n) or 0 = n","0.divides(n)","not 0.divides(n)"]}
 {"goal":"b != 0","proof":["b != 0 or a * b = 0","a * b = 0"]}
-{"goal":"a = n","proof":["a - 0 = nat_base.bounded_sub(a, 0)","b * a = a * b","a.exp(1) = a","a.exp(1) - 0 = a.exp(1)","1 * nat_base.bounded_sub(a, 0) = nat_base.bounded_sub(a, 0)"]}
+{"goal":"a = n","proof":["a - 0 = nat_base.bounded_sub(a, 0)","b * a = a * b","a.pow(1) = a","a.pow(1) - 0 = a.pow(1)","1 * nat_base.bounded_sub(a, 0) = nat_base.bounded_sub(a, 0)"]}
 {"goal":"a < a * b","proof":["not 1 < b or a < a * b or 0 = a","not 1 < b","b > 1 = 1 < b"]}
 {"goal":"a < n","proof":["not a < a * b"]}
 {"goal":"a <= n","proof":["not a <= a * b","a <= a * b or b = 0"]}
-{"goal":"factor_lt","proof":["a * b != n"]}
-{"goal":"divides_lt","proof":["let s0: (Nat, Nat) -> Nat satisfy { forall(x0: Nat, x1: Nat) { not x0.divides(x1) or x0 * s0(x0, x1) = x1 } and forall(x2: Nat, x3: Nat, x4: Nat) { x2 * x3 != x4 or x2.divides(x4) } }","a * s0(a, n) != n or a <= n or 0 = n","a * s0(a, n) != n","not a.divides(n) or a * s0(a, n) = n"]}
+{"goal":"factor_lte","proof":["a * b != n"]}
+{"goal":"divides_lte","proof":["let s0: (Nat, Nat) -> Nat satisfy { forall(x0: Nat, x1: Nat) { not x0.divides(x1) or x0 * s0(x0, x1) = x1 } and forall(x2: Nat, x3: Nat, x4: Nat) { x2 * x3 != x4 or x2.divides(x4) } }","a * s0(a, n) != n or a <= n or 0 = n","a * s0(a, n) != n","not a.divides(n) or a * s0(a, n) = n"]}
 {"goal":"divides_self","proof":["a * 1 != a or a.divides(a)","a * 1 != a","a * 1 = a"]}
 {"goal":"n = 0","proof":["a * b != 0","a * 0 != 0","0 != 0 or a * 0 = 0"]}
 {"goal":"false","proof":["not a.proper_divides(n) or 0 != n"]}
-{"goal":"a = n","proof":["a - 0 = nat_base.bounded_sub(a, 0)","b * a = a * b","a.exp(1) = a","a.exp(1) - 0 = a.exp(1)","1 * nat_base.bounded_sub(a, 0) = nat_base.bounded_sub(a, 0)"]}
+{"goal":"a = n","proof":["a - 0 = nat_base.bounded_sub(a, 0)","b * a = a * b","a.pow(1) = a","a.pow(1) - 0 = a.pow(1)","1 * nat_base.bounded_sub(a, 0) = nat_base.bounded_sub(a, 0)"]}
 {"goal":"false","proof":["a.proper_divides(a)","not a.proper_divides(a) or a < a","not a < a"]}
 {"goal":"1 < a","proof":["not a.proper_divides(n) or 1 < a"]}
 {"goal":"exists(k0: Nat) { a = 1 + k0 and k0 != 0 }","proof":["let s0: (Nat, Nat) -> Nat satisfy { forall(x0: Nat, x1: Nat) { not x0 < x1 or 0 != s0(x0, x1) } and forall(x2: Nat, x3: Nat) { not x2 < x3 or x2 + s0(x2, x3) = x3 } and forall(x4: Nat, x5: Nat, x6: Nat) { x4 + x5 != x6 or x4 < x6 or 0 = x5 } }","1 + s0(1, a) != a or s0(1, a) = 0","not 1 < a or 1 + s0(1, a) = a","not 1 < a or s0(1, a) != 0","s0(1, a) != 0","1 + s0(1, a) = a","1 + s0(1, a) != a"]}
@@ -64,7 +64,7 @@
 {"goal":"exists(k0: Nat) { a * k0 = b + 1 }","proof":["let s0: (Nat, Nat) -> Nat satisfy { forall(x0: Nat, x1: Nat) { not x0.divides(x1) or x0 * s0(x0, x1) = x1 } and forall(x2: Nat, x3: Nat, x4: Nat) { x2 * x3 != x4 or x2.divides(x4) } }","a * s0(a, b + 1) != b + 1","not a.divides(b + 1) or a * s0(a, b + 1) = b + 1"]}
 {"goal":"a != 0","proof":["let s0: Nat satisfy { a * s0 = b + 1 }","0 * s0 = b + 1","b + 1 = b.suc","0 * s0 = 0","b + 1 = 0","b.suc = 0","b.suc != 0"]}
 {"goal":"a * c < a * d","proof":["not a * c < b + 1","a * c < b + 1 = a * c <= b","not a * c <= b","a * c != b or a * c <= b"]}
-{"goal":"c <= d","proof":["not a * c < a * d or c < d or 0 = a","not c < d or c < d + 1","c < d + 1 = c <= d","not c < d + 1","c < d","not c < d"]}
+{"goal":"c <= d","proof":["not a * c < a * d or c < d or 0 = a","not c < d or c <= d","c < d","not c < d"]}
 {"goal":"exists(k0: Nat) { c + k0 = d }","proof":["let s0: (Nat, Nat) -> Nat satisfy { forall(x0: Nat, x1: Nat) { not x0 < x1 or 0 != s0(x0, x1) } and forall(x2: Nat, x3: Nat) { not x2 < x3 or x2 + s0(x2, x3) = x3 } and forall(x4: Nat, x5: Nat, x6: Nat) { x4 + x5 != x6 or x4 < x6 or 0 = x5 } }","c + s0(c, d) != d","not a * c < a * d or c < d or 0 = a","not c < d or c + s0(c, d) = d","c < d","not c < d"]}
 {"goal":"a * (c + e) = b + 1","proof":["a * d != b + 1"]}
 {"goal":"a * c + a * e = b + 1","proof":["a * c + a * e = a * (c + e)"]}
@@ -91,7 +91,7 @@
 {"goal":"a = a","proof":[]}
 {"goal":"exists(k0: Nat) { if m != 0 { k0 < m and exists(k1: Nat) { k1 * m + k0 = a } } else { k0 = a } }","proof":["let (s0: Nat, s1: Nat) satisfy { s1 < m or 0 = m and (s0 * m + s1 = a or 0 = m) }","s0 * m + s1 != a or not s1 < m or 0 = m","0 != m or a != a","0 != m"]}
 {"goal":"mod(a)(0) = a","proof":["0 != 0 or mod(a, 0) = a"]}
-{"goal":"0 * 0 = 0","proof":["0.exp(2) = 0 * 0","0.exp(2) != 0","0.exp(2) = 0 or 2 = 0","2 = 0"]}
+{"goal":"0 * 0 = 0","proof":["0.pow(2) = 0 * 0","0.pow(2) != 0","0.pow(2) = 0 or 2 = 0","2 = 0"]}
 {"goal":"0 * 0 + mod(a)(0) = a","proof":["0 + mod(a, 0) != a","m + mod(a, 0) != a","m + mod(a, 0) = mod(a, 0) + m","mod(a, 0) + m != a","a + m != a","0 != m or a + m = a"]}
 {"goal":"exists(k0: Nat) { k0 * m + mod(a)(m) = a }","proof":["let s0: (Nat, Nat) -> Nat satisfy { forall(x0: Nat, x1: Nat) { not add_mod(x0, x1) or s0(x0, x1) * x1 + mod(x0, x1) = x0 } and forall(x2: Nat, x3: Nat, x4: Nat) { x2 * x3 + mod(x4, x3) != x4 or add_mod(x4, x3) } }","s0(a, m) * m + mod(a, m) != a","0 * 0 + mod(a, 0) != a or add_mod(a, 0)","not add_mod(a, m) or s0(a, m) * m + mod(a, m) = a","not add_mod(a, m)","add_mod(a, 0)","not add_mod(a, 0)"]}
 {"goal":"exists(k0: Nat) { k0 * m + mod(a)(m) = a }","proof":["let s0: (Nat, Nat) -> Nat satisfy { forall(x0: Nat, x1: Nat) { mod(x0, x1) < x1 or 0 = x1 } and forall(x2: Nat, x3: Nat) { s0(x2, x3) * x3 + mod(x2, x3) = x2 or 0 = x3 } and forall(x4: Nat, x5: Nat) { 0 != x4 or mod(x5, x4) = x5 } }","s0(a, m) * m + mod(a, m) != a","s0(a, m) * m + mod(a, m) = a or 0 = m"]}
@@ -161,9 +161,9 @@
 {"goal":"exists(k0: Nat) { a * b * k0 = a * c }","proof":["let s0: (Nat, Nat) -> Nat satisfy { forall(x0: Nat, x1: Nat) { not x0.divides(x1) or x0 * s0(x0, x1) = x1 } and forall(x2: Nat, x3: Nat, x4: Nat) { x2 * x3 != x4 or x2.divides(x4) } }","a * b * s0(a * b, a * c) != a * c","not (a * b).divides(a * c) or a * b * s0(a * b, a * c) = a * c"]}
 {"goal":"a * (b * d) = a * c","proof":["a * (b * d) = a * b * d"]}
 {"goal":"b * d = c","proof":["a * (b * d) != a * c or 0 = a or b * d = c"]}
-{"goal":"divides_cancel","proof":["b * d != c or b.divides(c)"]}
-{"goal":"divides_cancel_dual","proof":["not (a * b).divides(a * c) or b.divides(c) or 0 = a","b * a = a * b","c * a = a * c","(b * a).divides(a * c)","not (a * b).divides(a * c) or 0 = a","(a * b).divides(a * c)","not (a * b).divides(a * c)"]}
+{"goal":"divides_cancel_left","proof":["b * d != c or b.divides(c)"]}
+{"goal":"divides_cancel_right","proof":["not (a * b).divides(a * c) or b.divides(c) or 0 = a","b * a = a * b","c * a = a * c","(b * a).divides(a * c)","not (a * b).divides(a * c) or 0 = a","(a * b).divides(a * c)","not (a * b).divides(a * c)"]}
 {"goal":"exists(k0: Nat) { a * k0 = b }","proof":["let s0: (Nat, Nat) -> Nat satisfy { forall(x0: Nat, x1: Nat) { not x0.divides(x1) or x0 * s0(x0, x1) = x1 } and forall(x2: Nat, x3: Nat, x4: Nat) { x2 * x3 != x4 or x2.divides(x4) } }","a * s0(a, b) != b","not a.divides(b) or a * s0(a, b) = b"]}
 {"goal":"m * a * d = m * b","proof":["m * (a * d) = m * a * d"]}
-{"goal":"mul_divides","proof":["m * a * d != m * b or (m * a).divides(m * b)"]}
-{"goal":"mul_divides_dual","proof":["not a.divides(b) or (m * a).divides(m * b)","m * a = a * m","m * b = b * m","not (m * a).divides(b * m)","(m * a).divides(m * b)"]}
+{"goal":"mul_divides_left","proof":["m * a * d != m * b or (m * a).divides(m * b)"]}
+{"goal":"mul_divides_right","proof":["not a.divides(b) or (m * a).divides(m * b)","m * a = a * m","m * b = b * m","not (m * a).divides(b * m)","(m * a).divides(m * b)"]}
