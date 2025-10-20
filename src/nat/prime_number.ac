@@ -1,25 +1,25 @@
-from nat.nat_divide import Nat, divides_suc
+from nat.nat_divide import ℕ, divides_suc
 from nat.nat_base import true_below, strong_induction
 // from list import List
-numerals Nat
+numerals ℕ
 
-attributes Nat {
+attributes ℕ {
     define is_composite(self) -> Bool {
-        exists(a: Nat) {
+        exists(a: ℕ) {
             a.proper_divides(self)
         }
     }
 
     define is_prime(self) -> Bool {
-        forall(a: Nat) {
+        forall(a: ℕ) {
             self > 1 and not a.proper_divides(self)
         }
     }
 }
 
-attributes Nat {
+attributes ℕ {
     define is_direct_composite(self) -> Bool {
-        exists(a: Nat, b: Nat) {
+        exists(a: ℕ, b: ℕ) {
             (1 < a and a < self) and
             (1 < b and b < self) and
             a * b = self
@@ -27,7 +27,7 @@ attributes Nat {
     }
 
     define is_normal_composite(self) -> Bool {
-        exists(a: Nat, b: Nat) {
+        exists(a: ℕ, b: ℕ) {
             (1 < a) and
             (1 < b) and
             a * b = self
@@ -35,12 +35,12 @@ attributes Nat {
     }
 }
 
-theorem composite_is_direct_composite(n: Nat) {
+theorem composite_is_direct_composite(n: ℕ) {
     n.is_composite iff n.is_direct_composite
 } by {
     if n.is_composite {
-        let a: Nat satisfy { a.proper_divides(n) }
-        let b: Nat satisfy { a * b = n }
+        let a: ℕ satisfy { a.proper_divides(n) }
+        let b: ℕ satisfy { a * b = n }
         b.proper_divides(n)
         (
             (1 < a and a < n) and
@@ -49,15 +49,17 @@ theorem composite_is_direct_composite(n: Nat) {
         )
         n.is_direct_composite
     }
+
+    n.is_direct_composite implies n.is_composite
 }
 
-theorem normal_composite_is_direct_composite(n: Nat) {
+theorem normal_composite_is_direct_composite(n: ℕ) {
     n.is_normal_composite iff n.is_direct_composite
 } by {
     n.is_direct_composite implies n.is_normal_composite
 
     if n.is_normal_composite {
-        let (a: Nat, b: Nat) satisfy {
+        let (a: ℕ, b: ℕ) satisfy {
             (1 < a) and
             (1 < b) and
             a * b = n
@@ -77,29 +79,29 @@ theorem normal_composite_is_direct_composite(n: Nat) {
     }
 }
 
-theorem composite_is_normal_composite(n: Nat) {
+theorem composite_is_normal_composite(n: ℕ) {
     n.is_composite iff n.is_normal_composite
 }
 
-theorem composite_is_not_prime(n: Nat) {
+theorem composite_is_not_prime(n: ℕ) {
     n.is_prime iff n > 1 and not n.is_composite
 } by {
     n.is_prime implies not n.is_composite
 }
 
-theorem not_prime_iff_lte_one_or_composite(n: Nat) {
+theorem not_prime_iff_lte_one_or_composite(n: ℕ) {
     not n.is_prime iff n <= 1 or n.is_composite
 } by {
     not n.is_prime implies n <= 1 or n.is_composite
     n <= 1 or n.is_composite implies not n.is_prime
 }
 
-theorem has_prime_divisor(n: Nat) {
-    1 < n implies exists(p: Nat) {
+theorem has_prime_divisor(n: ℕ) {
+    1 < n implies exists(p: ℕ) {
         p.is_prime and p.divides(n)
     }
 } by {
-    forall(k: Nat) {
+    forall(k: ℕ) {
         if true_below(has_prime_divisor, k) {
             if k.is_prime {
                 k.divides(k)
@@ -107,11 +109,11 @@ theorem has_prime_divisor(n: Nat) {
             }
             if k.is_composite {
                 k.is_direct_composite
-                let (b: Nat, c: Nat) satisfy {
+                let (b: ℕ, c: ℕ) satisfy {
                     1 < b and b < k and k = b * c
                 }
                 has_prime_divisor(b)
-                let (p: Nat) satisfy {
+                let (p: ℕ) satisfy {
                     p.is_prime and p.divides(b)
                 }
                 p.divides(k)
@@ -123,34 +125,33 @@ theorem has_prime_divisor(n: Nat) {
     has_prime_divisor(n)
 }
 
-from list import List, Add, sum, common_item
+from list import List, Add, sum
 
-define all_prime(l: List[Nat]) -> Bool {
-    forall(n: Nat) {
+define all_prime(l: List[ℕ]) -> Bool {
+    forall(n: ℕ) {
         n ∈ l implies n.is_prime
     }
 }
 
-instance Nat: Add {
-    let add: (Nat, Nat) -> Nat = Nat.mul
+instance ℕ: Add {
+    let add: (ℕ, ℕ) -> ℕ = ℕ.mul
 
-    let 0 = Nat.1
+    let 0 = ℕ.1
 }
 
-let product = sum[Nat] 
+let product = sum[ℕ] 
 
-// todo: uniqueness
-theorem prime_decomposition(n: Nat) {
-    1 < n implies exists(l: List[Nat]) {
+theorem prime_decomposition(n: ℕ) {
+    1 < n implies exists(l: List[ℕ]) {
         all_prime(l) and n = product(l)
     }
 } by {
-    forall(k: Nat) {
+    forall(k: ℕ) {
         if true_below(prime_decomposition, k) {
             if k.is_prime {
                 let l = List.singleton(k)
                 product(l) = k
-                forall(m: Nat) {
+                forall(m: ℕ) {
                     m ∈ l implies m = k
                     k.is_prime
                     m ∈ l implies m.is_prime
@@ -160,21 +161,21 @@ theorem prime_decomposition(n: Nat) {
             } 
             if k.is_composite {
                 k.is_direct_composite
-                let (a: Nat, b: Nat) satisfy {
+                let (a: ℕ, b: ℕ) satisfy {
                     (1 < a and a < k) and
                     (1 < b and b < k) and 
                     a * b = k
                 }
                 prime_decomposition(a)
                 prime_decomposition(b)
-                let la: List[Nat] satisfy {
+                let la: List[ℕ] satisfy {
                     all_prime(la) and a = product(la)
                 }
-                let lb: List[Nat] satisfy {
+                let lb: List[ℕ] satisfy {
                     all_prime(lb) and b = product(lb)
                 }
                 let l = la + lb
-                forall(x: Nat) {
+                forall(x: ℕ) {
                     x ∈ la + lb implies x ∈ la or x ∈ lb
                     x ∈ la implies x.is_prime
                     x ∈ lb implies x.is_prime
@@ -193,14 +194,14 @@ theorem prime_decomposition(n: Nat) {
 
 from nat.nat_combo import divides_factorial
 
-theorem exists_infinite_primes(n: Nat) {
-    exists(p: Nat) {
+theorem exists_infinite_primes(n: ℕ) {
+    exists(p: ℕ) {
         p > n and p.is_prime
     }
 } by {
-    let m: Nat = n.! + 1
+    let m: ℕ = n.! + 1
     1 < m
-    let (p: Nat) satisfy {
+    let (p: ℕ) satisfy {
         p.is_prime and p.divides(m)
     }
     p > 1
@@ -217,17 +218,16 @@ theorem exists_infinite_primes(n: Nat) {
 }
 
 // prepare for the defition of rational number
-attributes Nat {
-    define relative_prime(self, a: Nat) -> Bool {
-        forall(l: List[Nat], la: List[Nat]) {
-            (all_prime(l) and product(l) = self) and
-            (all_prime(la) and product(la) = a) implies
-            forall(p: Nat) {
-                not common_item(l, la, p)
-            }
+define relative_prime(a: ℕ, b: ℕ) -> Bool {
+    forall(la: List[ℕ], lb: List[ℕ]) {
+        (all_prime(la) and product(la) = a) and
+        (all_prime(lb) and product(lb) = b) implies
+        forall(p: ℕ) {
+            not (la.contains(p) and lb.contains(p))
         }
     }
 }
+
 
 // we need Euclid algorithm and gcd to prove uniqueness of prime_decomposition
 
@@ -238,7 +238,7 @@ structure Pair[T1, T2] {
 
 /// Performs one step of the Euclidean algorithm for computing GCD.
 /// Takes the pair (a, b) and replaces it with (b, a mod b).
-define gcd_step(p: Pair[Nat, Nat]) -> Pair[Nat, Nat] {
+define gcd_step(p: Pair[ℕ, ℕ]) -> Pair[ℕ, ℕ] {
     if p.second = 0 {
         p
     } else {
@@ -247,46 +247,46 @@ define gcd_step(p: Pair[Nat, Nat]) -> Pair[Nat, Nat] {
 }
 
 /// Performs n steps of the Euclidean GCD algorithm.
-define gcd_step_n(p: Pair[Nat, Nat], n: Nat) -> Pair[Nat, Nat] {
+define gcd_step_n(p: Pair[ℕ, ℕ], n: ℕ) -> Pair[ℕ, ℕ] {
     match n {
-        Nat.0 {
+        ℕ.0 {
             p
         }
-        Nat.suc(pred) {
+        ℕ.suc(pred) {
             gcd_step(gcd_step_n(p, pred))
         }
     }
 }
 
 /// True if a predicate is false for all values below n.
-define false_below(f: Nat -> Bool, n: Nat) -> Bool { 
-    forall(x: Nat) { x < n implies f(x) = false } 
+define false_below(f: ℕ -> Bool, n: ℕ) -> Bool { 
+    forall(x: ℕ) { x < n implies f(x) = false } 
 }
 
-theorem all_false_below(f: Nat -> Bool) {
-    forall(x: Nat) { false_below(f, x) } implies forall(x: Nat) { not f(x) }
+theorem all_false_below(f: ℕ -> Bool) {
+    forall(x: ℕ) { false_below(f, x) } implies forall(x: ℕ) { not f(x) }
 }
 
 /// True if m is the smallest natural number for which the predicate f is true.
-define is_min(f: Nat -> Bool, m: Nat) -> Bool {
+define is_min(f: ℕ -> Bool, m: ℕ) -> Bool {
     f(m) = true and false_below(f, m)
 }
 
 // If f is true anywhere (somewhere) on the naturals, it has a min.
-theorem has_min(f: Nat -> Bool, n: Nat) {
-    f(n) implies exists(m: Nat) { is_min(f, m) }
+theorem has_min(f: ℕ -> Bool, n: ℕ) {
+    f(n) implies exists(m: ℕ) { is_min(f, m) }
 } by {
-    define g(x: Nat) -> Bool { has_min(f, x) }
+    define g(x: ℕ) -> Bool { has_min(f, x) }
     strong_induction(g)
-    forall(k: Nat) {
+    forall(k: ℕ) {
         if true_below(g, k) {
             if f(k) {
                 if false_below(f, k) {
                     is_min(f, k)
                     has_min(f, k)
                 } else {
-                    exists(a: Nat) { a < k and f(a) }
-                    let a: Nat satisfy { a < k and f(a) } 
+                    exists(a: ℕ) { a < k and f(a) }
+                    let a: ℕ satisfy { a < k and f(a) } 
                     g(a)
                     has_min(f, a)
                     has_min(f, k)
@@ -302,26 +302,26 @@ theorem has_min(f: Nat -> Bool, n: Nat) {
 }
 
 // A decreasing_to_zero function strictly decreases until it hits zero.
-define decreasing_to_zero(f: Nat -> Nat) -> Bool {
-    forall(x: Nat) {
+define decreasing_to_zero(f: ℕ -> ℕ) -> Bool {
+    forall(x: ℕ) {
         f(x) = 0 or f(x.suc) < f(x)
     }
 }
 
-theorem no_infinite_decreasing(f: Nat -> Nat) {
-    exists(x: Nat) { f(x) <= f(x.suc) }
+theorem no_infinite_decreasing(f: ℕ -> ℕ) {
+    exists(x: ℕ) { f(x) <= f(x.suc) }
 } by {
     if not no_infinite_decreasing(f) {
-        forall(x: Nat) {
+        forall(x: ℕ) {
             not (f(x) <= f(x.suc))
             f(x.suc) < f(x)
         }
         // Intuitively, f(x.suc) < f(x) make the decreasing speed of f >= 1, so, start from f(0), after f(0) steps, we must have f(f(0)) <= 0 hence contradiction.
-        let h = function(x: Nat) { x + f(x) <= f(0) }
-        Nat.induction(h)
+        let h = function(x: ℕ) { x + f(x) <= f(0) }
+        ℕ.induction(h)
         0 + f(0) <= f(0)
         h(0)
-        forall(x: Nat) {
+        forall(x: ℕ) {
             if h(x) {
                 x + f(x) <= f(0)
                 not (f(x) <= f(x.suc))
@@ -333,7 +333,7 @@ theorem no_infinite_decreasing(f: Nat -> Nat) {
                 h(x.suc)
             }
         }
-        forall(x: Nat) {
+        forall(x: ℕ) {
             h(x)
         }
         h(f(0).suc)
@@ -344,26 +344,26 @@ theorem no_infinite_decreasing(f: Nat -> Nat) {
     }
 }
 
-theorem dtz_terminates(f: Nat -> Nat) {
-    decreasing_to_zero(f) implies exists(n: Nat) { f(n) = 0 }
+theorem dtz_terminates(f: ℕ -> ℕ) {
+    decreasing_to_zero(f) implies exists(n: ℕ) { f(n) = 0 }
 } by {
-    let (n: Nat) satisfy { f(n) <= f(n.suc) }
+    let (n: ℕ) satisfy { f(n) <= f(n.suc) }
     f(n) = 0 or f(n.suc) < f(n)
     f(n) = 0
 }
 
-theorem gcd_terminates(p: Pair[Nat, Nat]) {
-    exists(n: Nat) { gcd_step_n(p, n).second = 0 }
+theorem gcd_terminates(p: Pair[ℕ, ℕ]) {
+    exists(n: ℕ) { gcd_step_n(p, n).second = 0 }
 } by {
     // prove that gcd_step_n(p, x).second decreasing_to_zero
     // use 
     //     gcd_step(p) = Pair.new(p.second, p.first.mod(p.second)) 
     // and 
     //     p.first.mod(p.second) < p.second
-    let f = function(x: Nat) { 
+    let f = function(x: ℕ) { 
         gcd_step_n(p, x).second 
     }
-    forall(x: Nat) {
+    forall(x: ℕ) {
         if f(x) != 0 {
             let q = gcd_step_n(p, x)
 
@@ -393,36 +393,36 @@ theorem gcd_terminates(p: Pair[Nat, Nat]) {
     decreasing_to_zero(f)
 }
 
-define gcd_termination(p: Pair[Nat, Nat]) -> (Nat -> Bool) {
-    function(n: Nat) {
+define gcd_termination(p: Pair[ℕ, ℕ]) -> (ℕ -> Bool) {
+    function(n: ℕ) {
         gcd_step_n(p, n).second = 0
     }
 }
 
-let num_gcd_steps(p: Pair[Nat, Nat]) -> n: Nat satisfy {
+let num_gcd_steps(p: Pair[ℕ, ℕ]) -> n: ℕ satisfy {
     is_min(gcd_termination(p), n)
 } by {
-    exists(k: Nat) { gcd_termination(p, k) }
+    exists(k: ℕ) { gcd_termination(p, k) }
 }
 
-theorem num_gcd_steps_terminates(p: Pair[Nat, Nat]) {
+theorem num_gcd_steps_terminates(p: Pair[ℕ, ℕ]) {
     gcd_step_n(p, num_gcd_steps(p)).second = 0
 } by {
-    exists(n: Nat) { is_min(gcd_termination(p), n) }
+    exists(n: ℕ) { is_min(gcd_termination(p), n) }
     let f = gcd_termination(p)
     is_min(f, num_gcd_steps(p))
     gcd_termination(p)(num_gcd_steps(p)) = true
 }
 
-define gcd_of_pair(p: Pair[Nat, Nat]) -> Nat { gcd_step_n(p, num_gcd_steps(p)).first }
+define gcd_of_pair(p: Pair[ℕ, ℕ]) -> ℕ { gcd_step_n(p, num_gcd_steps(p)).first }
 
-define gcd(a: Nat, b: Nat) -> Nat { gcd_of_pair(Pair.new(a, b)) }
+define gcd(a: ℕ, b: ℕ) -> ℕ { gcd_of_pair(Pair.new(a, b)) }
 
-define divides_both(a: Nat, p: Pair[Nat, Nat]) -> Bool {
+define divides_both(a: ℕ, p: Pair[ℕ, ℕ]) -> Bool {
     a.divides(p.first) and a.divides(p.second)
 }
 
-theorem divides_both_step(a: Nat, p: Pair[Nat, Nat]) {
+theorem divides_both_step(a: ℕ, p: Pair[ℕ, ℕ]) {
     divides_both(a, p) implies divides_both(a, gcd_step(p))
 } by {
     a.divides(p.first)
@@ -432,20 +432,20 @@ theorem divides_both_step(a: Nat, p: Pair[Nat, Nat]) {
         gcd_step(p) = p
         divides_both(a, gcd_step(p))
     } else {
-        gcd_step(p) = Pair[Nat, Nat].new(p.second, p.first.mod(p.second))
+        gcd_step(p) = Pair[ℕ, ℕ].new(p.second, p.first.mod(p.second))
         divides_both(a, gcd_step(p))
     }
 }
 
-theorem divides_gcd_step_n(d: Nat, p: Pair[Nat, Nat], n: Nat) {
+theorem divides_gcd_step_n(d: ℕ, p: Pair[ℕ, ℕ], n: ℕ) {
     divides_both(d, p) implies divides_both(d, gcd_step_n(p, n))
 } by {
-    let f = function(x: Nat) { 
+    let f = function(x: ℕ) { 
         divides_both(d, gcd_step_n(p, x)) 
     }
     divides_both(d, gcd_step_n(p, 0))
     f(0)
-    forall(x: Nat) {
+    forall(x: ℕ) {
         if f(x) {
             divides_both(d, gcd_step_n(p, x))
             divides_both(d, gcd_step(gcd_step_n(p, x)))
@@ -456,7 +456,7 @@ theorem divides_gcd_step_n(d: Nat, p: Pair[Nat, Nat], n: Nat) {
     divides_both(d, gcd_step_n(p, n))
 }
 
-theorem divides_gcd_of_pair(d: Nat, p: Pair[Nat, Nat]) {
+theorem divides_gcd_of_pair(d: ℕ, p: Pair[ℕ, ℕ]) {
     divides_both(d, p) implies d.divides(gcd_of_pair(p))
 } by {
     divides_both(d, gcd_step_n(p, num_gcd_steps(p)))
@@ -464,26 +464,26 @@ theorem divides_gcd_of_pair(d: Nat, p: Pair[Nat, Nat]) {
     d.divides(gcd_step_n(p, num_gcd_steps(p)).first)
 }
 
-theorem divides_gcd(d: Nat, a: Nat, b: Nat) {
+theorem divides_gcd(d: ℕ, a: ℕ, b: ℕ) {
     d.divides(a) and d.divides(b) implies d.divides(gcd(a, b))
 } by {
-    d.divides(Pair[Nat, Nat].new(a, b).first)
-    d.divides(Pair[Nat, Nat].new(a, b).second)
-    divides_both(d, Pair[Nat, Nat].new(a, b))
-    divides_gcd_of_pair(d, Pair[Nat, Nat].new(a, b))
+    d.divides(Pair[ℕ, ℕ].new(a, b).first)
+    d.divides(Pair[ℕ, ℕ].new(a, b).second)
+    divides_both(d, Pair[ℕ, ℕ].new(a, b))
+    divides_gcd_of_pair(d, Pair[ℕ, ℕ].new(a, b))
 
-    d.divides(gcd_of_pair(Pair[Nat, Nat].new(a, b)))
+    d.divides(gcd_of_pair(Pair[ℕ, ℕ].new(a, b)))
     d.divides(gcd(a, b))
 }
 
-theorem divides_both_unstep(a: Nat, p: Pair[Nat, Nat]) {
+theorem divides_both_unstep(a: ℕ, p: Pair[ℕ, ℕ]) {
     divides_both(a, gcd_step(p)) implies divides_both(a, p)
 } by {
     if p.second = 0 {
         p = gcd_step(p)
         divides_both(a, p)
     } else {
-        gcd_step(p) = Pair[Nat, Nat].new(p.second, p.first.mod(p.second))
+        gcd_step(p) = Pair[ℕ, ℕ].new(p.second, p.first.mod(p.second))
         a.divides(gcd_step(p).first)
         a.divides(p.second)
         a.divides(gcd_step(p).second)
@@ -493,19 +493,19 @@ theorem divides_both_unstep(a: Nat, p: Pair[Nat, Nat]) {
     }
 }
 
-theorem divides_gcd_step_n_converse(d: Nat, p: Pair[Nat, Nat], n: Nat) {
+theorem divides_gcd_step_n_converse(d: ℕ, p: Pair[ℕ, ℕ], n: ℕ) {
     divides_both(d, gcd_step_n(p, n)) implies divides_both(d, p)
 } by {
-    let f = function(x: Nat) {
+    let f = function(x: ℕ) {
         divides_gcd_step_n_converse(d, p, x)
     }
-    Nat.induction(f)
+    ℕ.induction(f)
     if divides_both(d, gcd_step_n(p, 0)) {
         divides_both(d, p)
     }
     divides_gcd_step_n_converse(d, p, 0)
     f(0)
-    forall(x: Nat) {
+    forall(x: ℕ) {
         if f(x) {
             if divides_both(d, gcd_step_n(p, x.suc)) {
                 gcd_step_n(p, x.suc) = gcd_step(gcd_step_n(p, x))
@@ -518,7 +518,7 @@ theorem divides_gcd_step_n_converse(d: Nat, p: Pair[Nat, Nat], n: Nat) {
     }
 }
 
-theorem divides_gcd_pair_converse(d: Nat, p: Pair[Nat, Nat]) {
+theorem divides_gcd_pair_converse(d: ℕ, p: Pair[ℕ, ℕ]) {
     d.divides(gcd_of_pair(p)) implies divides_both(d, p)
 } by {
     gcd_of_pair(p) = gcd_step_n(p, num_gcd_steps(p)).first
@@ -529,10 +529,10 @@ theorem divides_gcd_pair_converse(d: Nat, p: Pair[Nat, Nat]) {
     divides_both(d, p)
 }
 
-theorem gcd_divides(d: Nat, a: Nat, b: Nat) {
+theorem gcd_divides(d: ℕ, a: ℕ, b: ℕ) {
     d.divides(gcd(a, b)) implies d.divides(a) and d.divides(b)
 } by {
-    let p = Pair[Nat, Nat].new(a, b)
+    let p = Pair[ℕ, ℕ].new(a, b)
     p.first = a
     p.second = b
     d.divides(gcd_of_pair(p))
@@ -544,13 +544,13 @@ theorem gcd_divides(d: Nat, a: Nat, b: Nat) {
     d.divides(a) and d.divides(b)
 }
 
-theorem gcd_divides_both(a: Nat, b: Nat) {
+theorem gcd_divides_both(a: ℕ, b: ℕ) {
     gcd(a, b).divides(a) and gcd(a, b).divides(b)
 } by {
     gcd(a, b).divides(gcd(a, b))
 }
 
-theorem gcd_is_gcd(a: Nat, b: Nat, d: Nat) {
+theorem gcd_is_gcd(a: ℕ, b: ℕ, d: ℕ) {
     a != 0 and b != 0 and d.divides(a) and d.divides(b) implies d <= gcd(a, b)
 } by {
     gcd(a, b) != 0
@@ -558,7 +558,11 @@ theorem gcd_is_gcd(a: Nat, b: Nat, d: Nat) {
     d <= gcd(a, b)
 }
 
-theorem gcd_nonzero_left(a: Nat, b: Nat) {
+theorem gcd_one_is_relative_prime(a: ℕ, b: ℕ) {
+    relative_prime(a, b) iff gcd(a, b) = 1
+}
+
+theorem gcd_nonzero_left(a: ℕ, b: ℕ) {
     a != 0 or b != 0 implies gcd(a, b) != 0
 } by {
     if gcd(a, b) = 0 {
@@ -569,14 +573,14 @@ theorem gcd_nonzero_left(a: Nat, b: Nat) {
     }
 }
 
-theorem gcd_zero_right(a: Nat) { gcd(a, 0) = a } by {
+theorem gcd_zero_right(a: ℕ) { gcd(a, 0) = a } by {
     a.divides(a)
     a.divides(0)
     a.divides(gcd(a, 0))
     gcd(a, 0).divides(a)
 }
 
-theorem gcd_zero_left(a: Nat) { gcd(0, a) = a } by {
+theorem gcd_zero_left(a: ℕ) { gcd(0, a) = a } by {
     gcd(a, 0).divides(0)
     gcd(a, 0).divides(a)
     gcd(a, 0).divides(gcd(0, a))
@@ -586,7 +590,7 @@ theorem gcd_zero_left(a: Nat) { gcd(0, a) = a } by {
     gcd(0, a).divides(a)
 }
 
-theorem gcd_comm(a: Nat, b: Nat) { gcd(a, b) = gcd(b, a) } by {
+theorem gcd_comm(a: ℕ, b: ℕ) { gcd(a, b) = gcd(b, a) } by {
     (
         a.divides(gcd(a, b)) and b.divides(gcd(a, b)) 
         iff 
@@ -596,15 +600,15 @@ theorem gcd_comm(a: Nat, b: Nat) { gcd(a, b) = gcd(b, a) } by {
     gcd(a, b).divides(gcd(b, a))
 }
 
-define mod_maintains(f: Nat -> Bool) -> Bool {
-    forall(a: Nat, b: Nat) { f(a) and f(b) implies f(a.mod(b)) }
+define mod_maintains(f: ℕ -> Bool) -> Bool {
+    forall(a: ℕ, b: ℕ) { f(a) and f(b) implies f(a.mod(b)) }
 }
 
-theorem mod_maintains_imp_gcd(f: Nat -> Bool, a: Nat, b: Nat) {
+theorem mod_maintains_imp_gcd(f: ℕ -> Bool, a: ℕ, b: ℕ) {
     mod_maintains(f) and f(a) and f(b) implies f(gcd(a, b))
 } by {
-    let p = Pair[Nat, Nat].new(a, b)
-    let g = function(n: Nat) {
+    let p = Pair[ℕ, ℕ].new(a, b)
+    let g = function(n: ℕ) {
         f(gcd_step_n(p, n).first) and f(gcd_step_n(p, n).second)
     }
     gcd_step_n(p, 0).first = a
@@ -612,7 +616,7 @@ theorem mod_maintains_imp_gcd(f: Nat -> Bool, a: Nat, b: Nat) {
     f(gcd_step_n(p, 0).second)
     f(gcd_step_n(p, 0).first)
     g(0)
-    forall(x: Nat) {
+    forall(x: ℕ) {
         if g(x) {
             gcd_step_n(p, x.suc) = gcd_step(gcd_step_n(p, x))
             f(gcd_step_n(p, x).first)
@@ -647,21 +651,21 @@ theorem mod_maintains_imp_gcd(f: Nat -> Bool, a: Nat, b: Nat) {
     f(gcd(a, b))
 }
 
-theorem gcd_one_right(a: Nat) {
+theorem gcd_one_right(a: ℕ) {
     gcd(a, 1) = 1
 }
 
-theorem gcd_one_left(a: Nat) {
+theorem gcd_one_left(a: ℕ) {
     gcd(1, a) = 1
 }
 
-theorem gcd_mul_left_nonzero(a: Nat, b: Nat, m: Nat) {
+theorem gcd_mul_left_nonzero(a: ℕ, b: ℕ, m: ℕ) {
     m != 0 implies m * gcd(a, b) = gcd(m * a, m * b)
 } by {
     m.divides(m * a)
     m.divides(m * b)
     m.divides(gcd(m * a, m * b))
-    let d: Nat satisfy {
+    let d: ℕ satisfy {
         m * d = gcd(m * a, m * b)
     }
 
@@ -681,7 +685,7 @@ theorem gcd_mul_left_nonzero(a: Nat, b: Nat, m: Nat) {
     (m * gcd(a, b)).divides(gcd(m * a, m * b))
 }
 
-theorem gcd_mul_left(a: Nat, b: Nat, m: Nat) {
+theorem gcd_mul_left(a: ℕ, b: ℕ, m: ℕ) {
     m * gcd(a, b) = gcd(m * a, m * b)
 } by {
     if m = 0 {
@@ -692,7 +696,7 @@ theorem gcd_mul_left(a: Nat, b: Nat, m: Nat) {
     }
 }
 
-theorem gcd_mul_right(a: Nat, b: Nat, m: Nat) {
+theorem gcd_mul_right(a: ℕ, b: ℕ, m: ℕ) {
     gcd(a, b) * m = gcd(a * m, b * m)
 } by {
     gcd_mul_left(a, b, m)
@@ -700,7 +704,7 @@ theorem gcd_mul_right(a: Nat, b: Nat, m: Nat) {
     gcd_comm(m * a, m * b)
 }
 
-theorem cofactor(a: Nat, b: Nat, af: Nat, bf: Nat) {
+theorem cofactor(a: ℕ, b: ℕ, af: ℕ, bf: ℕ) {
     (
         gcd(a, b) != 0 and
         af * gcd(a, b) = a and
@@ -717,11 +721,11 @@ theorem cofactor(a: Nat, b: Nat, af: Nat, bf: Nat) {
     gcd(af, bf) = 1
 }
 
-theorem gcd_of_prime(p: Nat, n: Nat) {
+theorem gcd_of_prime(p: ℕ, n: ℕ) {
     p.is_prime implies gcd(p, n) = 1 or p.divides(n)
 } by {
     gcd(p, n).divides(p)
-    let d: Nat satisfy {
+    let d: ℕ satisfy {
         d * gcd(p, n) = p
     }
     d != 0
@@ -739,7 +743,7 @@ theorem gcd_of_prime(p: Nat, n: Nat) {
     }
 }
 
-theorem euclids_lemma_prime(a: Nat, b: Nat, c: Nat) {
+theorem euclids_lemma_prime(a: ℕ, b: ℕ, c: ℕ) {
     a.is_prime and a.divides(b * c) implies a.divides(b) or a.divides(c)
 } by {
     if not a.divides(b) {
@@ -753,7 +757,7 @@ theorem euclids_lemma_prime(a: Nat, b: Nat, c: Nat) {
     }
 }
 
-theorem divides_prime(a: Nat, b: Nat) {
+theorem divides_prime(a: ℕ, b: ℕ) {
     a.is_prime and b.is_prime and a.divides(b) implies a = b 
 } by {
     a <= b
@@ -761,23 +765,23 @@ theorem divides_prime(a: Nat, b: Nat) {
     a = b    
 }
 
-theorem euclids_lemma_divides_primes(a: Nat, b: Nat, c: Nat) {
+theorem euclids_lemma_divides_primes(a: ℕ, b: ℕ, c: ℕ) {
     a.is_prime and b.is_prime and c.is_prime and a.divides(b * c) implies a = b or a = c
 } 
 
-theorem all_prime_decomposition(head: Nat, tail: List[Nat]) {
+theorem all_prime_decomposition(head: ℕ, tail: List[ℕ]) {
     all_prime(List.cons(head, tail)) iff head.is_prime and all_prime(tail)
 } by {
     if all_prime(List.cons(head, tail)) {
         head.is_prime
-        forall(x: Nat) {
+        forall(x: ℕ) {
             x ∈ tail implies x ∈ List.cons(head, tail)
             x ∈ tail implies x.is_prime
         }
         all_prime(tail)
     }
     if head.is_prime and all_prime(tail) {
-        forall(x: Nat) {
+        forall(x: ℕ) {
             x ∈ List.cons(head, tail) implies x = head or x ∈ tail
             x ∈ List.cons(head, tail) implies x.is_prime
         }
@@ -785,38 +789,38 @@ theorem all_prime_decomposition(head: Nat, tail: List[Nat]) {
     }
 }
 
-theorem euclids_lemma_prime_divides_list(a: Nat, l: List[Nat]) {
-    a.is_prime and a.divides(product(l)) implies exists(b: Nat) {
+theorem euclids_lemma_prime_divides_list(a: ℕ, l: List[ℕ]) {
+    a.is_prime and a.divides(product(l)) implies exists(b: ℕ) {
         b ∈ l and a.divides(b)
     } 
 } by {
-    define f(ps: List[Nat]) -> Bool {
+    define f(ps: List[ℕ]) -> Bool {
         euclids_lemma_prime_divides_list(a, ps)
     }
-    product(List[Nat].nil) = 1
+    product(List[ℕ].nil) = 1
     not a.divides(1)
-    f(List[Nat].nil)
+    f(List[ℕ].nil)
 
-    forall(head: Nat, tail: List[Nat]) {
+    forall(head: ℕ, tail: List[ℕ]) {
         product(List.cons(head, tail)) = head * product(tail)
         if f(tail) {
             if a.divides(product(List.cons(head, tail))) {
                 a.divides(head) or a.divides(product(tail))
                 if a.divides(head) { 
-                    exists(b: Nat) {
+                    exists(b: ℕ) {
                         b ∈ List.cons(head, tail) and a.divides(b)
                     }
                 } else {
                     a.divides(product(tail))
-                    let (n: Nat) satisfy {
+                    let (n: ℕ) satisfy {
                         n ∈ tail and a.divides(n)
                     }
                     n ∈ List.cons(head, tail) and a.divides(n)
-                    exists(b: Nat) {
+                    exists(b: ℕ) {
                         b ∈ List.cons(head, tail) and a.divides(b)
                     }
                 }
-                exists(b: Nat) {
+                exists(b: ℕ) {
                     b ∈ List.cons(head, tail) and a.divides(b)
                 }
                 f(List.cons(head, tail))
@@ -831,25 +835,25 @@ theorem euclids_lemma_prime_divides_list(a: Nat, l: List[Nat]) {
     f(l)
 }
 
-theorem euclids_lemma_prime_divides_prime_list(a: Nat, l: List[Nat]) {
-    a.is_prime and all_prime(l) and a.divides(product(l)) implies exists(p: Nat) {
+theorem euclids_lemma_prime_divides_prime_list(a: ℕ, l: List[ℕ]) {
+    a.is_prime and all_prime(l) and a.divides(product(l)) implies exists(p: ℕ) {
         p ∈ l and a = p
     } 
 } by {
-    let (p: Nat) satisfy {
+    let (p: ℕ) satisfy {
         p ∈ l and a.divides(p)
     } 
     a = p
 }
 
-theorem remove_product(x: Nat, l: List[Nat]) {
+theorem remove_product(x: ℕ, l: List[ℕ]) {
     x^(l.count(x)) * product(l ∖ x) = product(l)
 } by {
-    define f(ns: List[Nat]) -> Bool {
+    define f(ns: List[ℕ]) -> Bool {
         x^(ns.count(x)) * product(ns ∖ x) = product(ns)
     }
-    f(List[Nat].nil)
-    forall(head: Nat, tail: List[Nat]) {
+    f(List[ℕ].nil)
+    forall(head: ℕ, tail: List[ℕ]) {
         product(List.cons(head, tail)) = head * product(tail)        
         if f(tail) {
             if x ∈ List.cons(head, tail) {
@@ -900,20 +904,20 @@ theorem remove_product(x: Nat, l: List[Nat]) {
     f(l)
 }
 
-theorem prime_divides_prime_list_iff_contains(x: Nat, l: List[Nat], q: Nat) {
+theorem prime_divides_prime_list_iff_contains(x: ℕ, l: List[ℕ], q: ℕ) {
     x.is_prime and x.divides(product(l)) and all_prime(l) implies l.count(x) != 0
 } 
 
-theorem remove_preserve_all_prime(x: Nat, l: List[Nat]) {
+theorem remove_preserve_all_prime(x: ℕ, l: List[ℕ]) {
     all_prime(l) and x.is_prime implies all_prime(l ∖ x)
 } by {
-    forall(n: Nat) {
+    forall(n: ℕ) {
         n ∈ l ∖ x implies n ∈ l
         n ∈ l ∖ x implies n.is_prime
     }
 }
 
-theorem prime_decomposition_have_same_count_of_prime_helper(x: Nat, l1: List[Nat], l2: List[Nat]) {
+theorem prime_decomposition_have_same_count_of_prime_helper(x: ℕ, l1: List[ℕ], l2: List[ℕ]) {
     x.is_prime and 
     all_prime(l1) and all_prime(l2) and
     product(l1) = product(l2) 
@@ -922,7 +926,7 @@ theorem prime_decomposition_have_same_count_of_prime_helper(x: Nat, l1: List[Nat
     x^(l1.count(x)) * product(l1 ∖ x) = product(l1)
     x^(l2.count(x)) * product(l2 ∖ x) = product(l2)
     if l1.count(x) < l2.count(x) {
-        let n: Nat satisfy {
+        let n: ℕ satisfy {
             l1.count(x) + n = l2.count(x) and n != 0
         }
         x^(l2.count(x)) = x^(l1.count(x)) * x^n
@@ -948,7 +952,7 @@ theorem prime_decomposition_have_same_count_of_prime_helper(x: Nat, l1: List[Nat
     }
 }
 
-theorem prime_list_same_count_prime(x: Nat, l1: List[Nat], l2: List[Nat]) {
+theorem prime_list_same_count_prime(x: ℕ, l1: List[ℕ], l2: List[ℕ]) {
     x.is_prime and 
     all_prime(l1) and all_prime(l2) and
     product(l1) = product(l2) 
@@ -958,11 +962,11 @@ theorem prime_list_same_count_prime(x: Nat, l1: List[Nat], l2: List[Nat]) {
     l2.count(x) >= l1.count(x)
 }
 
-theorem composite_not_divides_prime(a: Nat, p: Nat) {
+theorem composite_not_divides_prime(a: ℕ, p: ℕ) {
     a.is_composite and p.is_prime implies not a.divides(p)
 } by {
     if a.divides(p) {
-        let (b: Nat, c: Nat, n: Nat) satisfy { 
+        let (b: ℕ, c: ℕ, n: ℕ) satisfy { 
             a = b * c and
             (1 < b and b < a) and 
             (1 < c and c < a) and
@@ -976,7 +980,7 @@ theorem composite_not_divides_prime(a: Nat, p: Nat) {
     }
 }
 
-theorem not_prime_not_in_prime_list(n: Nat, l: List[Nat]) {
+theorem not_prime_not_in_prime_list(n: ℕ, l: List[ℕ]) {
     not n.is_prime and all_prime(l) implies l.count(n) = 0
 } by {
     if n <= 1 {
@@ -988,29 +992,29 @@ theorem not_prime_not_in_prime_list(n: Nat, l: List[Nat]) {
     }
 }
 
-theorem prime_decomposition_uniqueness(n: Nat, l1: List[Nat], l2: List[Nat]) {
+theorem prime_decomposition_uniqueness(n: ℕ, l1: List[ℕ], l2: List[ℕ]) {
     1 < n and
     all_prime(l1) and n = product(l1) and
     all_prime(l2) and n = product(l2) implies 
     l1.is_permutation(l2)
 } by {
-    forall(x: Nat) {
+    forall(x: ℕ) {
         x.is_prime implies l1.count(x) = l2.count(x)
         not x.is_prime implies l1.count(x) = l2.count(x)
     }
 }
 
-theorem non_nil_prime_list_product_gt_1(l: List[Nat]) {
-    l != List[Nat].nil and all_prime(l) implies 1 < product(l)
+theorem non_nil_prime_list_product_gt_1(l: List[ℕ]) {
+    l != List[ℕ].nil and all_prime(l) implies 1 < product(l)
 } by {
-    define f(ps: List[Nat]) -> Bool {
+    define f(ps: List[ℕ]) -> Bool {
         non_nil_prime_list_product_gt_1(ps)
     }
-    f(List[Nat].nil)
-    forall(head: Nat, tail: List[Nat]) {
+    f(List[ℕ].nil)
+    forall(head: ℕ, tail: List[ℕ]) {
         if f(tail) {
             if all_prime(List.cons(head, tail)) {
-                if tail = List[Nat].nil {
+                if tail = List[ℕ].nil {
                     product(List.cons(head, tail)) = head
                     head.is_prime
                     1 < head
@@ -1030,29 +1034,29 @@ theorem non_nil_prime_list_product_gt_1(l: List[Nat]) {
     f(l)
 }
 
-attributes Nat {
-    define have_prime_decomposition(self, l: List[Nat]) -> Bool {
+attributes ℕ {
+    define have_prime_decomposition(self, l: List[ℕ]) -> Bool {
         1 < self and all_prime(l) and self = product(l)
     }
 }
 
-theorem prime_have_singleton_prime_decomposition(x: Nat, l: List[Nat]) {
+theorem prime_have_singleton_prime_decomposition(x: ℕ, l: List[ℕ]) {
     x.is_prime and x.have_prime_decomposition(l) implies l = List.singleton(x)
 } by {
-    not x.have_prime_decomposition(List[Nat].nil)
-    prime_have_singleton_prime_decomposition(x, List[Nat].nil)
+    not x.have_prime_decomposition(List[ℕ].nil)
+    prime_have_singleton_prime_decomposition(x, List[ℕ].nil)
     
-    forall(head: Nat, tail: List[Nat]) {
+    forall(head: ℕ, tail: List[ℕ]) {
         if all_prime(List.cons(head, tail)) and 
         x.have_prime_decomposition(List.cons(head, tail)) {
-            if tail != List[Nat].nil {
+            if tail != List[ℕ].nil {
                 1 < head
                 1 < product(tail)
                 product(List.cons(head, tail)) = head * product(tail)
                 not x.is_prime
                 false
             } else {
-                tail = List[Nat].nil
+                tail = List[ℕ].nil
                 List.cons(head, tail) = List.singleton(head)
                 x = product(List.cons(head, tail))
                 x = head
@@ -1061,7 +1065,7 @@ theorem prime_have_singleton_prime_decomposition(x: Nat, l: List[Nat]) {
         }
     }
 
-    List.induction(function (xs: List[Nat]) {
+    List.induction(function (xs: List[ℕ]) {
         prime_have_singleton_prime_decomposition(x, xs)
     })
 

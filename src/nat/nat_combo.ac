@@ -1,19 +1,19 @@
-from nat.nat_divide import Nat
+from nat.nat_divide import ℕ
 
-numerals Nat
+numerals ℕ
 
-attributes Nat {
-    define factorial(self) -> Nat {
+attributes ℕ {
+    define factorial(self) -> ℕ {
         match self {
-            Nat.0 {
+            ℕ.0 {
                 1
             }
-            Nat.suc(pred) {
+            ℕ.suc(pred) {
                 self * pred.factorial
             }
         }
     }
-    let ! = Nat.factorial
+    let ! = ℕ.factorial
 }
 
 theorem factorial_zero {
@@ -37,19 +37,19 @@ theorem test_factorial {
     (3 + 1) = 4
 }
 
-theorem factorial_step(n: Nat) {
+theorem factorial_step(n: ℕ) {
     (n + 1).! = (n + 1) * n.!
 }
 
-theorem divides_factorial(k: Nat, n: Nat) {
+theorem divides_factorial(k: ℕ, n: ℕ) {
     k != 0 and k <= n implies k.divides(n.!)
 } by {
-    define f(x: Nat) -> Bool {
+    define f(x: ℕ) -> Bool {
         divides_factorial(k, x)
     }
     not k < 0
     f(0)
-    forall(x: Nat) {
+    forall(x: ℕ) {
         if f(x) {
             (x + 1).! = (x + 1) * x.!
             if k != 0 and k <= x {
@@ -68,16 +68,16 @@ theorem divides_factorial(k: Nat, n: Nat) {
     divides_factorial(k, n)
 }
 
-theorem factorial_nondecreasing(n: Nat) { n.! <= (n + 1).! } by {
+theorem factorial_nondecreasing(n: ℕ) { n.! <= (n + 1).! } by {
     n.! <= (n + 1) * n.!
 }
 
-theorem lte_one_factorial(a: Nat) { 
+theorem lte_one_factorial(a: ℕ) { 
     1 <= a.! 
 } by {
     1 <= 0.!
     lte_one_factorial(0)
-    forall(x: Nat) {
+    forall(x: ℕ) {
         if lte_one_factorial(x) {
             1 <= x.!
             x.! <= (x + 1).!

@@ -1,62 +1,62 @@
 /// Natural numbers, the soul of arithmetic.
 /// We build natural numbers from Acorn's inherent properties of inductive types.
-inductive Nat {
+inductive ℕ {
     /// Zero is a natural number, because it's much more convenient this way.
     0
 
     /// The successor of a natural number is also a natural number.
-    suc(Nat)
+    suc(ℕ)
 }
 
-attributes Nat {
-    let 1: Nat = Nat.0.suc
-    let 2: Nat = Nat.1.suc
-    let 3: Nat = Nat.2.suc
-    let 4: Nat = Nat.3.suc
-    let 5: Nat = Nat.4.suc
-    let 6: Nat = Nat.5.suc
-    let 7: Nat = Nat.6.suc
-    let 8: Nat = Nat.7.suc
-    let 9: Nat = Nat.8.suc
-    let 10: Nat = Nat.9.suc
+attributes ℕ {
+    let 1: ℕ = ℕ.0.suc
+    let 2: ℕ = ℕ.1.suc
+    let 3: ℕ = ℕ.2.suc
+    let 4: ℕ = ℕ.3.suc
+    let 5: ℕ = ℕ.4.suc
+    let 6: ℕ = ℕ.5.suc
+    let 7: ℕ = ℕ.6.suc
+    let 8: ℕ = ℕ.7.suc
+    let 9: ℕ = ℕ.8.suc
+    let 10: ℕ = ℕ.9.suc
 
     /// Addition is defined recursively.
-    define add(self, other: Nat) -> Nat {
+    define add(self, other: ℕ) -> ℕ {
         match other {
-            Nat.0 {
+            ℕ.0 {
                 self
             }
-            Nat.suc(pred) {
+            ℕ.suc(pred) {
                 (self + pred).suc
             }
         }
     }
 }
 
-numerals Nat
+numerals ℕ
 
 /// a + 0 = a is definition of `add`  
 /// 0 + a = a is from most simple form of induction
-theorem add_zero(a: Nat) { a + 0 = a and 0 + a = a } 
+theorem add_zero(a: ℕ) { a + 0 = a and 0 + a = a } 
 
 theorem one_plus_one { 1 + 1 = 2 } by {
     1 + 0.suc = 1.suc
 }
 
-theorem add_one_right(a: Nat) {
+theorem add_one_right(a: ℕ) {
     a + 1 = a.suc
 } by {
     a + 0.suc = (a + 0).suc
 }
 
-theorem add_suc(n1: Nat, n2: Nat) {
+theorem add_suc(n1: ℕ, n2: ℕ) {
     n1 + n2.suc = n1.suc + n2
 } by {
-    define f(m: Nat) -> Bool {
+    define f(m: ℕ) -> Bool {
         (n1 + m.suc) = (n1.suc + m)
     }
     f(0)
-    forall(m: Nat) {
+    forall(m: ℕ) {
         if f(m) {
             // def of `add(n1, m.suc)`
             (n1 + (m.suc).suc) = (n1 + m.suc).suc
@@ -71,7 +71,7 @@ theorem add_suc(n1: Nat, n2: Nat) {
     f(n2)
 }
 
-theorem add_one_left(a: Nat) {
+theorem add_one_left(a: ℕ) {
     1 + a = a.suc
 } by {
     add_suc(0, a)
@@ -79,12 +79,12 @@ theorem add_one_left(a: Nat) {
 }
 
 /// definition of add is commutative
-theorem add_comm(a: Nat, b: Nat) { a + b = b + a } by {
-    define f(n: Nat) -> Bool { add_comm(a, n) }
+theorem add_comm(a: ℕ, b: ℕ) { a + b = b + a } by {
+    define f(n: ℕ) -> Bool { add_comm(a, n) }
     a + 0 = 0 + a
     add_comm(a, 0)
     f(0)
-    forall(n: Nat) {
+    forall(n: ℕ) {
         if f(n) {
             add_comm(a, n)
             a + n.suc = (a + n).suc
@@ -102,14 +102,14 @@ theorem add_comm(a: Nat, b: Nat) { a + b = b + a } by {
     add_comm(a, b)
 }
 
-theorem add_assoc_one(a: Nat, b: Nat) { (a + b) + 1 = a + (b + 1) }
+theorem add_assoc_one(a: ℕ, b: ℕ) { (a + b) + 1 = a + (b + 1) }
 
-theorem add_assoc(a: Nat, b: Nat, c: Nat) { (a + b) + c = a + (b + c) } by {
-    define f(n: Nat) -> Bool {
+theorem add_assoc(a: ℕ, b: ℕ, c: ℕ) { (a + b) + c = a + (b + c) } by {
+    define f(n: ℕ) -> Bool {
         add_assoc(a, b, n) // helper
     }
     f(0)
-    forall(n: Nat){
+    forall(n: ℕ){
         if f(n) {
             f(n + 1)
         }
@@ -117,39 +117,39 @@ theorem add_assoc(a: Nat, b: Nat, c: Nat) { (a + b) + c = a + (b + c) } by {
     add_assoc(a, b, c)
 }
 
-attributes Nat {
+attributes ℕ {
     /// Multiplication is defined recursively.
-    define mul(self, b: Nat) -> Nat {
+    define mul(self, b: ℕ) -> ℕ {
         match b {
-            Nat.0 {
+            ℕ.0 {
                 0
             }
-            Nat.suc(pred) {
+            ℕ.suc(pred) {
                 (self * pred) + self
             }
         }
     }
 
     /// The number formed by appending a digit to this one in base 10.
-    define read(self, other: Nat) -> Nat {
+    define read(self, other: ℕ) -> ℕ {
         10 * self + other
     }
 }
 
-theorem mul_zero(a: Nat) { a * 0 = 0 and 0 * a = 0 } // 0 * a = 0 by easy induction
+theorem mul_zero(a: ℕ) { a * 0 = 0 and 0 * a = 0 } // 0 * a = 0 by easy induction
 
-theorem mul_suc_right(a: Nat, b: Nat) {
+theorem mul_suc_right(a: ℕ, b: ℕ) {
     a * (b + 1) = a * b + a 
 }
 
-theorem mul_suc_left(a: Nat, b: Nat) {
+theorem mul_suc_left(a: ℕ, b: ℕ) {
     (a + 1) * b = a * b + b
 } by {
-    define f(n: Nat) -> Bool {
+    define f(n: ℕ) -> Bool {
         (a + 1) * n = a * n + n
     }
     f(0)
-    forall(n: Nat) {
+    forall(n: ℕ) {
         if f(n) {
             (a + 1) * (n + 1) = (a + 1) * n + (a + 1)
             // f(n)
@@ -161,12 +161,12 @@ theorem mul_suc_left(a: Nat, b: Nat) {
     }
 }
 
-theorem mul_comm(a: Nat, b: Nat) { a * b = b * a } by {
-    define f(n: Nat) -> Bool { mul_comm(a, n) }
+theorem mul_comm(a: ℕ, b: ℕ) { a * b = b * a } by {
+    define f(n: ℕ) -> Bool { mul_comm(a, n) }
     a * 0 = 0 * a
     mul_comm(a, 0)
     f(0)
-    forall(n: Nat) {
+    forall(n: ℕ) {
         if f(n) {
             // def of mul
             a * (n + 1) = a * n + a
@@ -183,12 +183,12 @@ theorem mul_comm(a: Nat, b: Nat) { a * b = b * a } by {
 
 theorem one_mul_one { 1 * 1 = 1 } 
 
-theorem distrib_right(a: Nat, b: Nat, c: Nat) {
+theorem distrib_right(a: ℕ, b: ℕ, c: ℕ) {
     a * (b + c) = a * b + a * c 
 } by {
-    define f(x: Nat) -> Bool { distrib_right(a, b, x) }
+    define f(x: ℕ) -> Bool { distrib_right(a, b, x) }
     f(0)
-    forall(x: Nat) {
+    forall(x: ℕ) {
         if f(x) {
             distrib_right(a, b, x)
             a * (b + x) = a * b + a * x            
@@ -199,14 +199,14 @@ theorem distrib_right(a: Nat, b: Nat, c: Nat) {
     distrib_right(a, b, c)
 }
 
-theorem distrib_left(a: Nat, b: Nat, c: Nat) {
+theorem distrib_left(a: ℕ, b: ℕ, c: ℕ) {
     (a + b) * c = a * c + b * c
 } // by mul_comm
 
-theorem mul_assoc(a: Nat, b: Nat, c: Nat) { (a * b) * c = a * (b * c) } by {
-    define f(x: Nat) -> Bool { mul_assoc(a, b, x) }
+theorem mul_assoc(a: ℕ, b: ℕ, c: ℕ) { (a * b) * c = a * (b * c) } by {
+    define f(x: ℕ) -> Bool { mul_assoc(a, b, x) }
     f(0)
-    forall(x: Nat) {
+    forall(x: ℕ) {
         if f(x) {
             (a * b) * x = a * (b * x)
             mul_suc_right(a * b, x)
@@ -216,15 +216,15 @@ theorem mul_assoc(a: Nat, b: Nat, c: Nat) { (a * b) * c = a * (b * c) } by {
     mul_assoc(a, b, c)
 }
 
-theorem mul_one_right(a: Nat) { a * 1 = a } by {
+theorem mul_one_right(a: ℕ) { a * 1 = a } by {
     (a * 0) + a = a
 }
 
-theorem mul_one_left(a: Nat) { 1 * a = a }
+theorem mul_one_left(a: ℕ) { 1 * a = a }
 
-theorem suc_ne(a: Nat) { a.suc != a } by {
+theorem suc_ne(a: ℕ) { a.suc != a } by {
     suc_ne(0) // by property of inductive
-    forall(n: Nat) {
+    forall(n: ℕ) {
         if suc_ne(n) {
             n.suc != n
             n.suc.suc != n.suc // by property of inductive
@@ -234,17 +234,17 @@ theorem suc_ne(a: Nat) { a.suc != a } by {
     suc_ne(a)
 }
 
-theorem suc_cancels(a: Nat, b: Nat) { a + 1 = b + 1 implies a = b } by {
+theorem suc_cancels(a: ℕ, b: ℕ) { a + 1 = b + 1 implies a = b } by {
     if a != b {
         a.suc != b.suc // property of inductive
     }
 }
 
 /// 0 is the identity of add: 0 + n = n = n + 0
-theorem add_identity_left(a: Nat, b: Nat) { a + b = b implies a = 0 } by {
-    define f(x: Nat) -> Bool { add_identity_left(a, x) }
+theorem add_identity_left(a: ℕ, b: ℕ) { a + b = b implies a = 0 } by {
+    define f(x: ℕ) -> Bool { add_identity_left(a, x) }
     f(0)
-    forall(x: Nat) {
+    forall(x: ℕ) {
         if f(x) {
             suc_cancels(a + x, x)
             f(x + 1)
@@ -253,12 +253,12 @@ theorem add_identity_left(a: Nat, b: Nat) { a + b = b implies a = 0 } by {
     add_identity_left(a, b)
 }
 
-theorem add_identity_right(a: Nat, b: Nat) { b + a = b implies a = 0 }
+theorem add_identity_right(a: ℕ, b: ℕ) { b + a = b implies a = 0 }
 
-theorem add_cancels_right(a: Nat, b: Nat, c: Nat) { a + c = b + c implies a = b } by {
-    define f(n: Nat) -> Bool { add_cancels_right(a, b, n) }
+theorem add_cancels_right(a: ℕ, b: ℕ, c: ℕ) { a + c = b + c implies a = b } by {
+    define f(n: ℕ) -> Bool { add_cancels_right(a, b, n) }
     f(0)
-    forall(n: Nat) {
+    forall(n: ℕ) {
         if f(n) {
             add_cancels_right(a, b, n)
             suc_cancels(a + n, b + n)
@@ -268,61 +268,61 @@ theorem add_cancels_right(a: Nat, b: Nat, c: Nat) { a + c = b + c implies a = b 
     add_cancels_right(a, b, c)
 }
 
-theorem add_cancels_left(a: Nat, b: Nat, c: Nat) { c + a = c + b implies a = b }
+theorem add_cancels_left(a: ℕ, b: ℕ, c: ℕ) { c + a = c + b implies a = b }
 
-theorem suc_positive(n: Nat) {
+theorem suc_positive(n: ℕ) {
     n.suc != 0
 } // by definition of inductive, "0 is not suc of any natural number"
 
-theorem nonzero_add_to_nonzero(a: Nat, b: Nat) {
+theorem nonzero_add_to_nonzero(a: ℕ, b: ℕ) {
     (a != 0 or b != 0) implies a + b != 0
 } by {
     if a != 0 {
-        let n: Nat satisfy { a = n + 1 }
+        let n: ℕ satisfy { a = n + 1 }
         a + b = (n + b).suc
         a + b != 0
     }
 
     if b != 0 {
-        let n: Nat satisfy { b = n + 1 }
+        let n: ℕ satisfy { b = n + 1 }
         a + b = (a + n).suc
         a + b != 0
     }
 }
 
-theorem add_to_zero(a: Nat, b: Nat) {
+theorem add_to_zero(a: ℕ, b: ℕ) {
     a + b = 0 implies (a = 0 and b = 0)
 } 
 
 // Ordering
 
-attributes Nat {
+attributes ℕ {
     /// `a < b` if there's a positive natural number that can be added to `a` to get `b`.
-    define lt(self, other: Nat) -> Bool {
-        exists(n: Nat) {
+    define lt(self, other: ℕ) -> Bool {
+        exists(n: ℕ) {
             n != 0 and self + n = other
         }
     }
-    define lte(self, other: Nat) -> Bool {
-        exists(c: Nat) {
+    define lte(self, other: ℕ) -> Bool {
+        exists(c: ℕ) {
             self < other or self = other
         }
     }
-    define gt(self, other: Nat) -> Bool {
+    define gt(self, other: ℕ) -> Bool {
         other < self
     }
-    define gte(self, other: Nat) -> Bool {
+    define gte(self, other: ℕ) -> Bool {
         other <= self
     }
 }
 
-theorem non_zero_gte_one(n: Nat) {
+theorem non_zero_gte_one(n: ℕ) {
     n != 0 implies n >= 1
 }
 
-theorem lt_trans(a: Nat, b: Nat, c: Nat) { a < b and b < c implies a < c } by {
-    let n1: Nat satisfy { a + n1 = b and n1 != 0 }
-    let n2: Nat satisfy { b + n2 = c and n1 != 0 }
+theorem lt_trans(a: ℕ, b: ℕ, c: ℕ) { a < b and b < c implies a < c } by {
+    let n1: ℕ satisfy { a + n1 = b and n1 != 0 }
+    let n2: ℕ satisfy { b + n2 = c and n1 != 0 }
     a + (n1 + n2) = c
     a < c
 }
@@ -331,38 +331,38 @@ from order import Partial_Order, Linear_Order
 from util import is_transitive, is_acyclic, is_trichotomy
 
 theorem nat_is_transitive {
-    is_transitive(Nat.lt)
+    is_transitive(ℕ.lt)
 }
 
-theorem lt_and_eq_is_different_thing(a: Nat) {
+theorem lt_and_eq_is_different_thing(a: ℕ) {
     not (a < a)
 } by {
     if (a < a) {
-        let n: Nat satisfy { n != 0 and a + n = a }
+        let n: ℕ satisfy { n != 0 and a + n = a }
         not add_identity_right(a, a + n)
         false
     }
 }
 
-theorem lt_acyclic(a: Nat, b: Nat) {
+theorem lt_acyclic(a: ℕ, b: ℕ) {
     not (a < b and b < a)
 } 
 
 theorem nat_is_acyclic {
-    is_acyclic(Nat.lt)
+    is_acyclic(ℕ.lt)
 }
 
-instance Nat: Partial_Order {
-    let lt = Nat.lt
+instance ℕ: Partial_Order {
+    let lt = ℕ.lt
 }
 
-theorem only_zero_lte_zero(a: Nat) {
+theorem only_zero_lte_zero(a: ℕ) {
     a <= 0 implies a = 0
 } by {
-    exists(n: Nat) { a + n = 0 }
+    exists(n: ℕ) { a + n = 0 }
 }
 
-theorem not_lt_zero(a: Nat) {
+theorem not_lt_zero(a: ℕ) {
     not a < 0
 } by {
     if a < 0 {
@@ -371,34 +371,34 @@ theorem not_lt_zero(a: Nat) {
     }
 }
 
-theorem zero_or_suc(a: Nat) {
-    a = 0 or exists(b: Nat) { a = b + 1 }
+theorem zero_or_suc(a: ℕ) {
+    a = 0 or exists(b: ℕ) { a = b + 1 }
 }
 
-theorem lt_cancel_suc(a: Nat, b: Nat) {
+theorem lt_cancel_suc(a: ℕ, b: ℕ) {
     a + 1 < b + 1 implies a < b
 } by {
-    let n: Nat satisfy {
+    let n: ℕ satisfy {
         a + 1 + n = b + 1
     }
     suc_cancels(a + n, b)
     a + n = b
 }
 
-theorem lte_cancel_suc(a: Nat, b: Nat) { a + 1 <= b + 1 implies a <= b } 
+theorem lte_cancel_suc(a: ℕ, b: ℕ) { a + 1 <= b + 1 implies a <= b } 
 
-theorem lt_and_lte(a: Nat, b: Nat, c: Nat) { a < b and b <= c implies a < c } 
+theorem lt_and_lte(a: ℕ, b: ℕ, c: ℕ) { a < b and b <= c implies a < c } 
 
-theorem lte_and_lt(a: Nat, b: Nat, c: Nat) { a <= b and b < c implies a < c } 
+theorem lte_and_lt(a: ℕ, b: ℕ, c: ℕ) { a <= b and b < c implies a < c } 
 
-theorem lte_trans(a: Nat, b: Nat, c: Nat) { a <= b and b <= c implies a <= c } 
+theorem lte_trans(a: ℕ, b: ℕ, c: ℕ) { a <= b and b <= c implies a <= c } 
 
-theorem lt_suc_left(a: Nat, b: Nat) { 
+theorem lt_suc_left(a: ℕ, b: ℕ) { 
     a < b implies a + 1 <= b 
 } by {
     if a < b {    
-        let (n: Nat) satisfy { a + n = b and n != 0 }
-        let (m: Nat) satisfy { n = m + 1 }
+        let (n: ℕ) satisfy { a + n = b and n != 0 }
+        let (m: ℕ) satisfy { n = m + 1 }
         if m = 0 {
             a + 1 = b
         } else {
@@ -410,10 +410,10 @@ theorem lt_suc_left(a: Nat, b: Nat) {
     }
 }
 
-theorem lt_suc_right(a: Nat, b: Nat) { a < b + 1 implies a <= b } by {
+theorem lt_suc_right(a: ℕ, b: ℕ) { a < b + 1 implies a <= b } by {
     if a < b + 1 {
-        let (n: Nat) satisfy { a + n = b + 1 and n != 0 }
-        let (m: Nat) satisfy { n = m + 1 }
+        let (n: ℕ) satisfy { a + n = b + 1 and n != 0 }
+        let (m: ℕ) satisfy { n = m + 1 }
         a + m = b
         if m = 0 {
             a = b
@@ -423,18 +423,18 @@ theorem lt_suc_right(a: Nat, b: Nat) { a < b + 1 implies a <= b } by {
     } 
 }
 
-theorem lt_add_left(a: Nat, b: Nat, c: Nat) { 
+theorem lt_add_left(a: ℕ, b: ℕ, c: ℕ) { 
     a < b implies a + c < b + c 
 } by {
-    let (n: Nat) satisfy { a + n = b }
+    let (n: ℕ) satisfy { a + n = b }
     a + c + n = b + c
 }
 
-theorem trichotomy(a: Nat, b: Nat) { a < b or b < a or a = b } by {
-    define f(x: Nat) -> Bool { trichotomy(a, x) }
+theorem trichotomy(a: ℕ, b: ℕ) { a < b or b < a or a = b } by {
+    define f(x: ℕ) -> Bool { trichotomy(a, x) }
     0 = a or 0 < a
     f(0)
-    forall(x: Nat) {
+    forall(x: ℕ) {
         if f(x) {
             trichotomy(a, x)
             a < x or x < a or a = x
@@ -453,12 +453,12 @@ theorem trichotomy(a: Nat, b: Nat) { a < b or b < a or a = b } by {
 }
 
 theorem nat_is_trichotomy {
-    is_trichotomy(Nat.lt)
+    is_trichotomy(ℕ.lt)
 }
 
-instance Nat: Linear_Order
+instance ℕ: Linear_Order
 
-theorem lt_suc_left_augment(a: Nat, b: Nat) { 
+theorem lt_suc_left_augment(a: ℕ, b: ℕ) { 
     a < b iff a + 1 <= b 
 } by {
     a < b implies a + 1 <= b
@@ -470,7 +470,7 @@ theorem lt_suc_left_augment(a: Nat, b: Nat) {
     }
 }
 
-theorem lt_suc_right_augment(a: Nat, b: Nat) { 
+theorem lt_suc_right_augment(a: ℕ, b: ℕ) { 
     a < b + 1 iff a <= b 
 } by {
     a < b + 1 implies a <= b
@@ -482,81 +482,81 @@ theorem lt_suc_right_augment(a: Nat, b: Nat) {
     }
 }
 
-theorem gt_suc_left(a: Nat, b: Nat) { a + 1 > b iff a >= b } 
+theorem gt_suc_left(a: ℕ, b: ℕ) { a + 1 > b iff a >= b } 
 
-theorem gt_suc_right(a: Nat, b: Nat) { a > b implies a >= b + 1 } 
+theorem gt_suc_right(a: ℕ, b: ℕ) { a > b implies a >= b + 1 } 
 
-theorem mul_to_nonzero(a: Nat, b: Nat) { 
+theorem mul_to_nonzero(a: ℕ, b: ℕ) { 
     a != 0 and b != 0 implies a * b != 0 
 } by {
-    let b_pred: Nat satisfy { b_pred + 1 = b }
+    let b_pred: ℕ satisfy { b_pred + 1 = b }
     a * b = a * b_pred + a
 } 
 
-theorem mul_to_zero(a: Nat, b: Nat) { 
+theorem mul_to_zero(a: ℕ, b: ℕ) { 
     a * b = 0 implies a = 0 or b = 0 
 } 
 
-theorem mul_increase(a: Nat, b: Nat) {
+theorem mul_increase(a: ℕ, b: ℕ) {
     a != 0 and 1 < b implies a < a * b
 } by {
-    let (b_pred: Nat) satisfy { b_pred + 1 = b and b_pred != 0 }
+    let (b_pred: ℕ) satisfy { b_pred + 1 = b and b_pred != 0 }
     a * b = a * b_pred + a
 }
 
-theorem lt_imp_lt_suc(a: Nat, b: Nat) { 
+theorem lt_imp_lt_suc(a: ℕ, b: ℕ) { 
     a <= b implies a < b + 1 
 } by {
-    let (c: Nat) satisfy { a + c = b }
+    let (c: ℕ) satisfy { a + c = b }
     a + (c + 1) = b + 1
     c + 1 != 0
 }
 
-theorem lt_mul_both_left(a: Nat, b: Nat, c: Nat) { 
+theorem lt_mul_both_left(a: ℕ, b: ℕ, c: ℕ) { 
     a != 0 and b < c implies a * b < a * c 
 } by {
-    let (n: Nat) satisfy { b + n = c and n != 0 }
+    let (n: ℕ) satisfy { b + n = c and n != 0 }
     a * (b + n) = a * c
     a * b + a * n = a * c
     a * n != 0
     a * b < a * c
 }
 
-theorem lte_mul_both_left(a: Nat, b: Nat, c: Nat) { 
+theorem lte_mul_both_left(a: ℕ, b: ℕ, c: ℕ) { 
     b <= c implies a * b <= a * c 
 } by {
-    let (n: Nat) satisfy { b + n = c }
+    let (n: ℕ) satisfy { b + n = c }
     a * (b + n) = a * c
     a * b + a * n = a * c
     a * b <= a * c
 }
 
-theorem gt_mul_both_left(a: Nat, b: Nat, c: Nat) { 
+theorem gt_mul_both_left(a: ℕ, b: ℕ, c: ℕ) { 
     a != 0 and b > c implies a * b > a * c 
 } 
 
-theorem gte_mul_both_left(a: Nat, b: Nat, c: Nat) { 
+theorem gte_mul_both_left(a: ℕ, b: ℕ, c: ℕ) { 
     b >= c implies a * b >= a * c 
 }
 
 // helper for proof search
-theorem lt_mul_both_right(a: Nat, b: Nat, c: Nat) { 
+theorem lt_mul_both_right(a: ℕ, b: ℕ, c: ℕ) { 
     a != 0 and b < c implies b * a < c * a 
 }
 
-theorem lte_mul_both_right(a: Nat, b: Nat, c: Nat) { 
+theorem lte_mul_both_right(a: ℕ, b: ℕ, c: ℕ) { 
     b <= c implies b * a <= c * a 
 }
 
-theorem gt_mul_both_right(a: Nat, b: Nat, c: Nat) { 
+theorem gt_mul_both_right(a: ℕ, b: ℕ, c: ℕ) { 
     a != 0 and b > c implies b * a > c * a 
 }
 
-theorem gte_mul_both_right(a: Nat, b: Nat, c: Nat) { 
+theorem gte_mul_both_right(a: ℕ, b: ℕ, c: ℕ) { 
     b >= c implies b * a >= c * a 
 }
 
-theorem lt_cancel_mul(a: Nat, b: Nat, c: Nat) { 
+theorem lt_cancel_mul(a: ℕ, b: ℕ, c: ℕ) { 
     a != 0 and a * b < a * c implies b < c 
 } by {
     if b >= c {
@@ -565,7 +565,7 @@ theorem lt_cancel_mul(a: Nat, b: Nat, c: Nat) {
     }
 }
 
-theorem lte_cancel_mul(a: Nat, b: Nat, c: Nat) { 
+theorem lte_cancel_mul(a: ℕ, b: ℕ, c: ℕ) { 
     a != 0 and a * b <= a * c implies b <= c 
 } by {
     if b > c {
@@ -574,11 +574,11 @@ theorem lte_cancel_mul(a: Nat, b: Nat, c: Nat) {
     }
 }
 
-theorem mul_preserve_gt_one(a: Nat, b: Nat) {
+theorem mul_preserve_gt_one(a: ℕ, b: ℕ) {
     a > 1 and b > 1 implies a * b > 1
 }
 
-theorem mul_identity(a: Nat, b: Nat) {
+theorem mul_identity(a: ℕ, b: ℕ) {
     b != 0 and a * b = b implies a = 1
 } by {
     b = 1 * b
@@ -587,11 +587,11 @@ theorem mul_identity(a: Nat, b: Nat) {
     a = 1
 }
 
-theorem mul_cancel(a: Nat, b: Nat, c: Nat) {
+theorem mul_cancel(a: ℕ, b: ℕ, c: ℕ) {
     a != 0 and a * b = a * c implies b = c
 } 
 
-theorem mul_to_one(a: Nat, b: Nat) { 
+theorem mul_to_one(a: ℕ, b: ℕ) { 
     a * b = 1 implies a = 1 and b = 1
 } by {
     1 != 0
@@ -606,15 +606,15 @@ theorem mul_to_one(a: Nat, b: Nat) {
     b = 1
 }
 
-theorem lte_mul(a: Nat, b: Nat) { b != 0 implies a <= a * b } by {
+theorem lte_mul(a: ℕ, b: ℕ) { b != 0 implies a <= a * b } by {
     not b < 0.suc
     not (b < 1)
     1 <= b
     a * 1 <= a * b
 }
 
-theorem cross_sum_lte(a1: Nat, a2: Nat, b1: Nat, b2: Nat) { a1 + b1 = a2 + b2 and a1 <= a2 implies b2 <= b1 } by {
-    let (n: Nat) satisfy { a1 + n = a2 }
+theorem cross_sum_lte(a1: ℕ, a2: ℕ, b1: ℕ, b2: ℕ) { a1 + b1 = a2 + b2 and a1 <= a2 implies b2 <= b1 } by {
+    let (n: ℕ) satisfy { a1 + n = a2 }
     a1 + b1 = a1 + n + b2
     a1 + b1 = a1 + (n + b2)
     b1 = n + b2
@@ -622,7 +622,7 @@ theorem cross_sum_lte(a1: Nat, a2: Nat, b1: Nat, b2: Nat) { a1 + b1 = a2 + b2 an
 }
 
 // This is a "bounded" version of subtraction that returns 0 instead of negative numbers.
-let bounded_sub(a: Nat, b: Nat) -> n: Nat satisfy {
+let bounded_sub(a: ℕ, b: ℕ) -> n: ℕ satisfy {
     if a < b {
         n = 0
     } else {
@@ -633,42 +633,42 @@ let bounded_sub(a: Nat, b: Nat) -> n: Nat satisfy {
         0 = 0
     } else {
         b <= a
-        let n: Nat satisfy { n + b = a }
+        let n: ℕ satisfy { n + b = a }
     }
 }
 
-attributes Nat {
+attributes ℕ {
     /// Subtraction on natural numbers is defined oddly; it "caps out" at zero.
     /// If `self < b`, then `self - b = 0`.
     /// It would be better to define this as "not valid" on some inputs, but
     /// the language doesn't make that convenient yet.
-    define sub(self, b: Nat) -> Nat { bounded_sub(self, b) }
+    define sub(self, b: ℕ) -> ℕ { bounded_sub(self, b) }
 }
 
-theorem sub_lt(a: Nat, b: Nat) { a < b implies a - b = 0 }
+theorem sub_lt(a: ℕ, b: ℕ) { a < b implies a - b = 0 }
 
-theorem add_sub_left(a: Nat, b: Nat) {
+theorem add_sub_left(a: ℕ, b: ℕ) {
     b <= a implies (a - b) + b = a
 } 
 
-theorem add_sub_right(a: Nat, b: Nat) { 
+theorem add_sub_right(a: ℕ, b: ℕ) { 
     (a + b) - b = a 
 } by {
     b <= a + b
     ((a + b) - b) + b = a + b
 }
 
-theorem add_sub_comm_add(a: Nat, b: Nat, c: Nat) {
+theorem add_sub_comm_add(a: ℕ, b: ℕ, c: ℕ) {
     b >= c implies (a + b) - c = a + (b - c) 
 } by {
     a + (b - c) + c = a + b
 }
 
-theorem add_sub_comm_sub(a: Nat, b: Nat, c: Nat) {
+theorem add_sub_comm_sub(a: ℕ, b: ℕ, c: ℕ) {
     a >= c implies (a + b) - c = (a - c) + b 
 } 
 
-theorem sub_decrease(a: Nat, b: Nat) {
+theorem sub_decrease(a: ℕ, b: ℕ) {
     a - b <= a
 } by {
     if a < b { 
@@ -682,13 +682,13 @@ theorem sub_decrease(a: Nat, b: Nat) {
     }
 }
 
-theorem sub_self(a: Nat) { a - a = 0 }
+theorem sub_self(a: ℕ) { a - a = 0 }
 
-theorem sub_zero(a: Nat) { a - 0 = a }
+theorem sub_zero(a: ℕ) { a - 0 = a }
 
-theorem add_imp_sub(a: Nat, b: Nat, c: Nat) { a + b = c implies c - b = a }
+theorem add_imp_sub(a: ℕ, b: ℕ, c: ℕ) { a + b = c implies c - b = a }
 
-theorem sub_distrib_right(a: Nat, b: Nat, c: Nat) {
+theorem sub_distrib_right(a: ℕ, b: ℕ, c: ℕ) {
     a * (b - c) = a * b - a * c
 } by {
     if a = 0 {
@@ -713,7 +713,7 @@ theorem sub_distrib_right(a: Nat, b: Nat, c: Nat) {
     sub_distrib_right(a, b, c)
 }
 
-theorem sub_distrib_left(a: Nat, b: Nat, c: Nat) {
+theorem sub_distrib_left(a: ℕ, b: ℕ, c: ℕ) {
     (a - b) * c = a * c - b * c
 } 
 
@@ -725,40 +725,40 @@ theorem three_neq_zero {
     3 != 0
 }
 
-attributes Nat {
+attributes ℕ {
     /// Note that 0^0 = 1.
-    define pow(self, b: Nat) -> Nat {
+    define pow(self, b: ℕ) -> ℕ {
         match b {
-            Nat.0 {
+            ℕ.0 {
                 1
             }
-            Nat.suc(pred) {
+            ℕ.suc(pred) {
                 self * self.pow(pred)
             }
         }
     }
 }
 
-theorem pow_zero(a: Nat) {
+theorem pow_zero(a: ℕ) {
     a^0 = 1
 }
 
-theorem pow_one(a: Nat) {
+theorem pow_one(a: ℕ) {
     a^1 = a
 } by {
     a^1 = a * a^0
     a^0 = 1
 }
 
-theorem pow_add(a: Nat, b: Nat, c: Nat) {
+theorem pow_add(a: ℕ, b: ℕ, c: ℕ) {
     a^(b + c) = a^b * a^c
 } by {
     // Inductive step
-    let f: Nat -> Bool = function(x: Nat) {
+    let f: ℕ -> Bool = function(x: ℕ) {
         a^(b + x) = a^b * a^x
     }
     f(0)
-    forall(x: Nat) {
+    forall(x: ℕ) {
         if f(x) {
             a^(b + x) = a^b * a^x
             
@@ -772,15 +772,15 @@ theorem pow_add(a: Nat, b: Nat, c: Nat) {
     f(c)
 }
 
-theorem pow_mul(a: Nat, b: Nat, c: Nat) {
+theorem pow_mul(a: ℕ, b: ℕ, c: ℕ) {
     a^(b * c) = (a^b)^c
 } by {
     // Inductive step
-    let f: Nat -> Bool = function(x: Nat) {
+    let f: ℕ -> Bool = function(x: ℕ) {
         a^(b * x) = (a^b)^x
     }
     f(0)
-    forall(x: Nat) {
+    forall(x: ℕ) {
         if f(x) {
             a^(b * x) = (a^b)^x
             b * (x + 1) = b * x + b
@@ -793,30 +793,30 @@ theorem pow_mul(a: Nat, b: Nat, c: Nat) {
     f(c)
 }
 
-theorem zero_pow(n: Nat) {
+theorem zero_pow(n: ℕ) {
     n != 0 implies 0^n = 0
 } by {
-    let b: Nat satisfy {
+    let b: ℕ satisfy {
         n = b.suc
     } // 0^(b.suc) = 0^b * 0^1 with 0^1 = 0
 }
 
-theorem one_pow(n: Nat) {
+theorem one_pow(n: ℕ) {
     1^n = 1
 } by {
     one_pow(0)
     one_pow(n) // induction 1^n = 1^(n - 1) * 1 with 1^(n - 1) = 1
 }
 
-theorem pow_gte_one(a: Nat, b: Nat) {
+theorem pow_gte_one(a: ℕ, b: ℕ) {
     a != 0 implies 1 <= a^b
 } by {
     // Induction step
-    let f: Nat -> Bool = function(x: Nat) {
+    let f: ℕ -> Bool = function(x: ℕ) {
         1 <= a^x
     }
     f(0)
-    forall(x: Nat) {
+    forall(x: ℕ) {
         if f(x) {
             1 <= a^x
             a^x <= a^(x + 1)
@@ -827,10 +827,10 @@ theorem pow_gte_one(a: Nat, b: Nat) {
     f(b)
 }
 
-theorem pow_gt_one(a: Nat, b: Nat) {
+theorem pow_gt_one(a: ℕ, b: ℕ) {
     1 < a and b != 0 implies 1 < a^b
 } by {
-    let b_pred: Nat satisfy {
+    let b_pred: ℕ satisfy {
         b = b_pred + 1
     }
     a^b = a * a^(b_pred)
@@ -840,16 +840,16 @@ theorem pow_gt_one(a: Nat, b: Nat) {
     a^b > 1
 }
 
-theorem pow_ne_zero(a: Nat, b: Nat) {
+theorem pow_ne_zero(a: ℕ, b: ℕ) {
     a != 0 implies a^b != 0
 } by {
     1 <= a^b
 }
 
-theorem lt_imp_pow_lt(a: Nat, b1: Nat, b2: Nat) {
+theorem lt_imp_pow_lt(a: ℕ, b1: ℕ, b2: ℕ) {
     1 < a and b1 < b2 implies a^b1 < a^b2
 } by {
-    let n: Nat satisfy {
+    let n: ℕ satisfy {
         b1 + n = b2 and n != 0
     }
     a^b2 = a^b1 * a^n
@@ -859,10 +859,10 @@ theorem lt_imp_pow_lt(a: Nat, b1: Nat, b2: Nat) {
     a^b2 > a^b1
 }
 
-theorem lte_imp_pow_lte(a: Nat, b1: Nat, b2: Nat) {
+theorem lte_imp_pow_lte(a: ℕ, b1: ℕ, b2: ℕ) {
     a != 0 and b1 <= b2 implies a^b1 <= a^b2
 } by {
-    let n: Nat satisfy {
+    let n: ℕ satisfy {
         b1 + n = b2
     }
     a^b2 = a^b1 * a^n
@@ -870,27 +870,27 @@ theorem lte_imp_pow_lte(a: Nat, b1: Nat, b2: Nat) {
     a^b2 >= a^b1
 }
 
-theorem lte_pow(a: Nat, b: Nat) {
+theorem lte_pow(a: ℕ, b: ℕ) {
     a != 0 and b != 0 implies a <= a^b
 }
 
-theorem pow_lt_imp_lt(a: Nat, b1: Nat, b2: Nat) {
+theorem pow_lt_imp_lt(a: ℕ, b1: ℕ, b2: ℕ) {
     1 < a and a^b1 < a^b2
     implies
     b1 < b2
 }
 
-theorem pow_lte_imp_lte(a: Nat, b1: Nat, b2: Nat) {
+theorem pow_lte_imp_lte(a: ℕ, b1: ℕ, b2: ℕ) {
     1 < a and a^b1 <= a^b2
     implies
     b1 <= b2
 }
 
-theorem pow_eq_one_imp(a: Nat, b: Nat) {
+theorem pow_eq_one_imp(a: ℕ, b: ℕ) {
     a != 1 and a^b = 1 implies b = 0
 } by {
     if b != 0 {
-        let b_pred: Nat satisfy {
+        let b_pred: ℕ satisfy {
             b = b_pred + 1
         }
         a^b = a * a^(b_pred)
@@ -899,39 +899,39 @@ theorem pow_eq_one_imp(a: Nat, b: Nat) {
     }
 }
 
-theorem sq_eq_mul(a: Nat) {
+theorem sq_eq_mul(a: ℕ) {
     a^2 = a * a
 }
 
-define true_below(f: Nat -> Bool, n: Nat) -> Bool {
-    forall(x: Nat) { x < n implies f(x) }
+define true_below(f: ℕ -> Bool, n: ℕ) -> Bool {
+    forall(x: ℕ) { x < n implies f(x) }
 }
 
-theorem strong_induction(f: Nat -> Bool) {
-    forall(k: Nat) {
+theorem strong_induction(f: ℕ -> Bool) {
+    forall(k: ℕ) {
         true_below(f, k) implies f(k)
-    } implies forall(n: Nat) { f(n) }
+    } implies forall(n: ℕ) { f(n) }
 } by {
     // under "strong_induction" assumption: 
-    //     forall(k: Nat) {
+    //     forall(k: ℕ) {
     //       true_below(f, k) => f(k)
     //     }
     // try to prove that 
     //     true_below(f, x) => true_below(f, x.suc)
     // then by induction, we get 
-    //     forall(x: Nat) { true_below(f, x) }
+    //     forall(x: ℕ) { true_below(f, x) }
     // then obviously 
-    //     forall(n: Nat) { f(n) }
-    define g(x: Nat) -> Bool {
+    //     forall(n: ℕ) { f(n) }
+    define g(x: ℕ) -> Bool {
         true_below(f, x)
     }
     true_below(f, 0)
     g(0)
-    forall(x: Nat) {
+    forall(x: ℕ) {
         if g(x) {
             true_below(f, x)
             f(x)
-            forall(y: Nat) {
+            forall(y: ℕ) {
                 if y < x.suc {
                     if y < x {
                         f(y)
@@ -947,33 +947,33 @@ theorem strong_induction(f: Nat -> Bool) {
             g(x.suc)
         }
     }
-    forall(x: Nat) {
+    forall(x: ℕ) {
         g(x)
     }
-    forall(n: Nat) {
+    forall(n: ℕ) {
         g(n.suc)
         true_below(f, n.suc)
         f(n)
     }
 }
 
-theorem gte_each_of_three(a: Nat, b: Nat, c: Nat) {
-    exists(n: Nat) {
+theorem gte_each_of_three(a: ℕ, b: ℕ, c: ℕ) {
+    exists(n: ℕ) {
         a <= n and b <= n and c <= n
     }
 } by {
-    let n: Nat = a + b + c
+    let n: ℕ = a + b + c
     a <= n 
     b <= n
     c <= n
 }
 
-theorem gt_each_of_three(a: Nat, b: Nat, c: Nat) {
-    exists(n: Nat) {
+theorem gt_each_of_three(a: ℕ, b: ℕ, c: ℕ) {
+    exists(n: ℕ) {
         a < n and b < n and c < n
     }
 } by {
-    let n: Nat = (a + b + c) + 1
+    let n: ℕ = (a + b + c) + 1
     a < n
     b < n
     c < n
@@ -1054,8 +1054,8 @@ theorem ten_sub_one {
 
 from set import Set, is_surjective, cardinal_lt_power
 
-theorem nat_power_set_uncountable(f: Nat -> Set[Nat]) {
+theorem nat_power_set_uncountable(f: ℕ -> Set[ℕ]) {
     not is_surjective(f)
 } by {
-    cardinal_lt_power[Nat](f)
+    cardinal_lt_power[ℕ](f)
 }

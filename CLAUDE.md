@@ -36,7 +36,7 @@ Before proving a theorem, consider whether there is a lemma that could be factor
 
 Before proving a theorem, check if the theorem statement is actually true. If the user asks you to prove a false theorem, explain why you can't.
 
-Numeric literals must have a type specified. You can write `Nat.0` to indicate zero, the natural number. `Real.0` indicates zero, the real number. A `numerals Nat` statement will set the default, but don't add that if it isn't already there.
+Numeric literals must have a type specified. You can write `ℕ.0` to indicate zero, the natural number. `Real.0` indicates zero, the real number. A `numerals ℕ` statement will set the default, but don't add that if it isn't already there.
 
 Variable names must be lowercase.
 

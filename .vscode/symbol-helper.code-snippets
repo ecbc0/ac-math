@@ -46,6 +46,139 @@
 		"prefix": ["without", "set-minus"],
 		"body": "∖"
 	},
+	"ℝ": {
+		"prefix": [
+			"R",
+			"RR"
+		],
+		"body": "ℝ",
+		"description": "real"
+	},
+	"ℂ": {
+		"prefix": [
+			"C",
+			"CC"
+		],
+		"body": "ℂ",
+		"description": "complex"
+	},
+	"ℂ_\"split\"": {
+		"prefix": [
+			"C-split"
+		],
+		"body": "ℂ_\"split\"",
+		"description": "complex (split)"
+	},
+	"ℍ": {
+		"prefix": [
+			"H",
+			"HH"
+		],
+		"body": "ℍ",
+		"description": "quaternion"
+	},
+	"𝕆": {
+		"prefix": [
+			"O",
+			"OO"
+		],
+		"body": "𝕆",
+		"description": "octonion"
+	},
+	"𝕂": {
+		"prefix": [
+			"K",
+			"KK"
+		],
+		"body": "𝕂",
+		"description": "division algebra"
+	},
+	"ℕ": {
+		"prefix": [
+			"N",
+			"NN"
+		],
+		"body": "ℕ",
+		"description": "natural"
+	},
+	"ℤ": {
+		"prefix": [
+			"Z",
+			"ZZ"
+		],
+		"body": "ℤ",
+		"description": "interger"
+	},
+	"ℚ": {
+		"prefix": [
+			"Q",
+			"QQ"
+		],
+		"body": "ℚ",
+		"description": "rational"
+	},
+	"𝕊": {
+		"prefix": [
+			"S",
+			"SS"
+		],
+		"body": "𝕊",
+		"description": "sphere"
+	},
+	"𝔹": {
+		"prefix": [
+			"B",
+			"BB"
+		],
+		"body": "𝔹",
+		"description": "open ball"
+	},
+	"ℝℙ": {
+		"prefix": "RP",
+		"body": "ℝℙ",
+		"description": "real projective"
+	},
+	"ℂℙ": {
+		"prefix": "CP",
+		"body": "ℂℙ",
+	},
+	"ℍℙ": {
+		"prefix": "HP",
+		"body": "ℍℙ",
+	},
+	"𝕆ℙ": {
+		"prefix": "OP",
+		"body": "𝕆ℙ",
+	},
+	"𝕂ℙ": {
+		"prefix": "KP",
+		"body": "𝕂ℙ",
+	},
+	"ℍ𝕪": {
+		"prefix": "Hy",
+		"body": "ℍ𝕪",
+		"description": "hyperbolic"
+	},
+	"𝟙": {
+		"prefix": "bb-1",
+		"body": "𝟙"
+	},
+	"∂ diff operator": {
+		"prefix": "e",
+		"body": "∂",
+		"description": "partial diff"
+	},
+	"∇": {
+		"prefix": "nabla",
+		"body": "∇"
+	},
+	"∆": {
+		"prefix": [
+			"harmonician",
+			"Laplacian"
+		],
+		"body": "∆"
+	},
 	"set-forall": {
 		"prefix": "all",
 		"body": [

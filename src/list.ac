@@ -1,6 +1,6 @@
 /// A generic list data structure that can hold elements of any type.
 /// Lists are constructed using nil (empty list) and cons (prepending an element).  
-/// Nat is also defined inductively. In fact, List can be understood as a mapping constructed in an inductive way with Nat or a finite subset of it as the domain, by the length method 
+/// ℕ is also defined inductively. In fact, List can be understood as a mapping constructed in an inductive way with ℕ or a finite subset of it as the domain, by the length method 
 inductive List[T] {
     /// The empty list.
     nil
@@ -116,12 +116,8 @@ theorem contains_add[T](left: List[T], right: List[T], item: T) {
     item ∈ (left + right) implies item ∈ left or item ∈ right
 }
 
-define common_item[T](l1: List[T], l2: List[T], x: T) -> Bool {
-    l1.contains(x) and l2.contains(x)
-}
-
-from nat.nat_base import Nat
-numerals Nat
+from nat.nat_base import ℕ
+numerals ℕ
 
 attributes List[T] {
     /// True if this list contains every element of type T.
@@ -139,7 +135,7 @@ attributes List[T] {
     }
 
     /// Yields the number of elements in the list.
-    define length(self) -> Nat {
+    define length(self) -> ℕ {
         match self {
             List.nil {
                 0
@@ -394,7 +390,7 @@ theorem unique_implies_tail_unique[T](head: T, tail: List[T]) {
 }
 
 attributes List[T] {
-    define count(self, item: T) -> Nat {
+    define count(self, item: T) -> ℕ {
         match self {
             List.nil[T] {
                 0
@@ -568,14 +564,14 @@ attributes List[T] {
     }
 }
 
-attributes Nat {
+attributes ℕ {
     /// Creates a list of natural numbers from 0 to n-1.
-    define range(self) -> List[Nat] {
+    define range(self) -> List[ℕ] {
         match self {
             0 {
-                List.nil[Nat]
+                List.nil[ℕ]
             }
-            Nat.suc(pred) {
+            ℕ.suc(pred) {
                 pred.range.append(pred)
             }
         }
@@ -583,9 +579,9 @@ attributes Nat {
 }
 
 attributes List[T] {
-    /// Alternate name for `Nat.range`.
+    /// Alternate name for `ℕ.range`.
     /// Creates a list of natural numbers from 0 to n-1.
-    let range: Nat -> List[Nat] = Nat.range
+    let range: ℕ -> List[ℕ] = ℕ.range
 
     /// Filters the list, keeping only elements that satisfy the given predicate.
     define filter(self, f: T -> Bool) -> List[T] {
@@ -848,21 +844,21 @@ theorem remove_unique[T](list: List[T], elem: T) {
 }
 
 // Length theorems
-theorem length_range(n: Nat) {
+theorem length_range(n: ℕ) {
     n.range.length = n
 } by {
     // Induction on n
-    define f(x: Nat) -> Bool {
+    define f(x: ℕ) -> Bool {
         x.range.length = x
     }
 
     // Base case: 0.range.length = 0
-    0.range = List.nil[Nat]
-    List.nil[Nat].length = 0
+    0.range = List.nil[ℕ]
+    List.nil[ℕ].length = 0
     f(0)
 
     // Inductive step
-    forall(x: Nat) {
+    forall(x: ℕ) {
         if f(x) {
             // Induction hypothesis: x.range.length = x
             (x + 1).range = x.range.append(x)
@@ -886,7 +882,7 @@ theorem length_range(n: Nat) {
     f(n)
 }
 
-theorem suc_range_contains(n: Nat) {
+theorem suc_range_contains(n: ℕ) {
     n ∈ (n + 1).range
 } by {
     n ∈ List.singleton(n)
@@ -894,13 +890,13 @@ theorem suc_range_contains(n: Nat) {
     n ∈ (n + 1).range
 }
 
-theorem range_contains_all_leq(n: Nat) {
-    forall(x: Nat) {
+theorem range_contains_all_leq(n: ℕ) {
+    forall(x: ℕ) {
         x < n implies x ∈ n.range
     }
 } by {
-    define p(m: Nat) -> Bool {
-        forall(x: Nat) {
+    define p(m: ℕ) -> Bool {
+        forall(x: ℕ) {
             x < m implies x ∈ m.range
         }
     }
@@ -909,10 +905,10 @@ theorem range_contains_all_leq(n: Nat) {
     p(0)
 
     // Induction
-    forall(m: Nat) {
+    forall(m: ℕ) {
         if p(m) {
-            // Induction hypothesis: forall(x: Nat) { x < m implies x ∈ m.range }
-            forall(x: Nat) {
+            // Induction hypothesis: forall(x: ℕ) { x < m implies x ∈ m.range }
+            forall(x: ℕ) {
                 if x < m + 1 {
                     if x < m {
                         x ∈ m.range
@@ -934,11 +930,11 @@ theorem range_contains_all_leq(n: Nat) {
     p(n)
 }
 
-theorem range_does_not_contain_geq(m: Nat, n: Nat) {
+theorem range_does_not_contain_geq(m: ℕ, n: ℕ) {
     n >= m implies n ∉ m.range
 } by {
-    define p(x: Nat) -> Bool {
-        forall(y: Nat) {
+    define p(x: ℕ) -> Bool {
+        forall(y: ℕ) {
             y >= x implies y ∉ x.range
         }
     }
@@ -947,10 +943,10 @@ theorem range_does_not_contain_geq(m: Nat, n: Nat) {
     p(0)
 
     // Induction
-    forall(x: Nat) {
+    forall(x: ℕ) {
         (x + 1).range = x.range + List.singleton(x)
         if p(x) {
-            forall(y: Nat) {
+            forall(y: ℕ) {
                 if y >= x + 1 {
                     y > x 
                     y ∉ x.range
@@ -964,12 +960,12 @@ theorem range_does_not_contain_geq(m: Nat, n: Nat) {
     }
 }
 
-theorem range_iff_contains_all_leq(n: Nat) {
-    forall(x: Nat) {
+theorem range_iff_contains_all_leq(n: ℕ) {
+    forall(x: ℕ) {
         x < n iff x ∈ n.range
     }
 } by {
-    forall(x: Nat) {
+    forall(x: ℕ) {
         x < n implies x ∈ n.range
         
         not x < n implies x ∉ n.range
@@ -1032,7 +1028,7 @@ define sum[A: Add](items: List[A]) -> A {
 
 /// Computes the partial sum of a series up to index n.
 /// Returns the sum of f(0) + f(1) + ... + f(n-1).
-define partial[A: Add](f: Nat -> A, n: Nat) -> A {
+define partial[A: Add](f: ℕ -> A, n: ℕ) -> A {
     sum(n.range.map(f))
 }
 // todo: rearrange invariant. ⩽ n! steps. n! is the number of all rearrange (bijective)
@@ -1137,12 +1133,12 @@ attributes List[T] {
     }
 
     /// Removes the first n elements from the list.
-    define drop(self, n: Nat) -> List[T] {
+    define drop(self, n: ℕ) -> List[T] {
         match n {
             0 {
                 self
             }
-            Nat.suc(pred) {
+            ℕ.suc(pred) {
                 self.tail.drop(pred)
             }
             // drop (forward) n
@@ -1193,18 +1189,18 @@ theorem drop_cancels_add[T](a: List[T], b: List[T]) {
     }
 }
 
-theorem drop_twice[T](a: List[T], m: Nat, n: Nat) {
+theorem drop_twice[T](a: List[T], m: ℕ, n: ℕ) {
     a.drop(m).drop(n) = a.drop(m + n)
 } by {
-    define f(x: Nat) -> Bool {
-        forall(l: List[T], k: Nat) {
+    define f(x: ℕ) -> Bool {
+        forall(l: List[T], k: ℕ) {
             l.drop(x).drop(k) = l.drop(x + k)
         }
     }
 
-    Nat.induction(f)
+    ℕ.induction(f)
 
-    forall(l: List[T], k: Nat) {
+    forall(l: List[T], k: ℕ) {
         l.drop(0) = l
         drop_zero(l)
         l.drop(0).drop(k) = l.drop(k)
@@ -1213,9 +1209,9 @@ theorem drop_twice[T](a: List[T], m: Nat, n: Nat) {
     }
     f(0)
 
-    forall(x: Nat) {
+    forall(x: ℕ) {
         if f(x) {
-            forall(l: List[T], k: Nat) {
+            forall(l: List[T], k: ℕ) {
                 // Induction hypothesis: l.drop(x).drop(k) = l.drop(x + k)
                 l.drop(x + 1).drop(k) = l.tail.drop(x).drop(k)
 
@@ -1240,7 +1236,7 @@ theorem drop_twice[T](a: List[T], m: Nat, n: Nat) {
 
 attributes List[T] {
     /// Removes the last n elements from the list.
-    define drop_last(self, n: Nat) -> List[T] {
+    define drop_last(self, n: ℕ) -> List[T] {
         match self {
             List.nil {
                 List.nil[T]
@@ -1307,7 +1303,7 @@ theorem drop_last_cancels_add[T](a: List[T], b: List[T]) {
         if p(tail) {
             add_length(tail, b)
 
-            let (c: Nat) satisfy { b.length + c = (tail + b).length }
+            let (c: ℕ) satisfy { b.length + c = (tail + b).length }
 
             c = tail.length
             b.length <= (tail + b).length
@@ -1326,32 +1322,32 @@ theorem drop_last_cancels_add[T](a: List[T], b: List[T]) {
     p(a)
 }
 
-attributes Nat {
+attributes ℕ {
     /// Creates a list of natural numbers from self to n-1 (exclusive of n).
-    define until(self, n: Nat) -> List[Nat] {
+    define until(self, n: ℕ) -> List[ℕ] {
         n.range.drop(self)
     }
 
     /// Creates a list of natural numbers from self to n (inclusive).
-    define upto(self, n: Nat) -> List[Nat] {
+    define upto(self, n: ℕ) -> List[ℕ] {
         self.until(n.suc)
     }
 }
 
-theorem zero_until(n: Nat) {
+theorem zero_until(n: ℕ) {
     0.until(n) = n.range
 } by {
     drop_zero(n.range)
 }
 
-theorem until_self(n: Nat) {
-    n.until(n) = List.nil[Nat]
+theorem until_self(n: ℕ) {
+    n.until(n) = List.nil[ℕ]
 } by {
     n.range.length = n
-    drop_cancels_add(n.range, List.nil[Nat])
+    drop_cancels_add(n.range, List.nil[ℕ])
 }
 
-theorem until_suc(n: Nat) {
+theorem until_suc(n: ℕ) {
     n.until(n.suc) = List.singleton(n)
 } by {
     n.suc.range = n.range + List.singleton(n)
@@ -1359,20 +1355,20 @@ theorem until_suc(n: Nat) {
     drop_cancels_add(n.range, List.singleton(n))
 }
 
-theorem zero_upto(n: Nat) {
+theorem zero_upto(n: ℕ) {
     0.upto(n) = n.suc.range
 }
 
-theorem upto_self(n: Nat) {
+theorem upto_self(n: ℕ) {
     n.upto(n) = List.singleton(n)
 }
 
-theorem range_add_until(a: Nat, b: Nat) {
+theorem range_add_until(a: ℕ, b: ℕ) {
     a <= b implies a.range + a.until(b) = b.range
 } by {
-    let (k: Nat) satisfy { a + k = b }
+    let (k: ℕ) satisfy { a + k = b }
 
-    define f(x: Nat) -> Bool {
+    define f(x: ℕ) -> Bool {
         a.range + a.until(a + x) = (a + x).range
     }
 
@@ -1382,7 +1378,7 @@ theorem range_add_until(a: Nat, b: Nat) {
     f(0)
 
     // Inductive step
-    forall(x: Nat) {
+    forall(x: ℕ) {
         if f(x) {
             // Show a.until(a + x.suc) = a.until(a + x) + List.singleton(a + x)
             a.until(a + x.suc) = (a + x.suc).range.drop(a)
@@ -1410,7 +1406,7 @@ theorem range_add_until(a: Nat, b: Nat) {
 }
 
 theorem length_zero_imp_nil[T](list: List[T]) {
-    list.length = Nat.0 implies list = List.nil[T]
+    list.length = ℕ.0 implies list = List.nil[T]
 }
 
 theorem add_to_nil[T](a: List[T], b: List[T]) {
@@ -1421,9 +1417,9 @@ theorem append_not_nil[T](a: List[T], t: T) {
     a.append(t) != List.nil[T]
 }
 
-define max_list(list: List[Nat]) -> Nat {
+define max_list(list: List[ℕ]) -> ℕ {
     match list {
-        List[Nat].nil {
+        List[ℕ].nil {
             0
         }
         List.cons(head, tail) {
@@ -1434,25 +1430,25 @@ define max_list(list: List[Nat]) -> Nat {
 
 from order import max_imp_gte
 
-theorem list_has_max(list: List[Nat]) {
-    forall(a: Nat) {
+theorem list_has_max(list: List[ℕ]) {
+    forall(a: ℕ) {
         a ∈ list implies a <= max_list(list)
     }
 } by {
-    define f(l: List[Nat]) -> Bool {
-        forall(k: Nat) {
+    define f(l: List[ℕ]) -> Bool {
+        forall(k: ℕ) {
             k ∈ l implies k <= max_list(l)
         }
     }
 
-    forall(head: Nat, tail: List[Nat]) {
+    forall(head: ℕ, tail: List[ℕ]) {
         if f(tail) {
             let k = max_list(tail)
-            let m: Nat = head.max(k)
+            let m: ℕ = head.max(k)
             m >= max_list(List.cons(head, tail))
             max_imp_gte(head, k)
             m >= max_list(tail)
-            forall(x: Nat) {
+            forall(x: ℕ) {
                 head = x implies x <= m
                 x ∈ tail implies x <= m
 
@@ -1466,8 +1462,8 @@ theorem list_has_max(list: List[Nat]) {
     f(list)
 }
 
-theorem no_list_contains_nat(list: List[Nat]) {
-    exists(n: Nat) {
+theorem no_list_contains_nat(list: List[ℕ]) {
+    exists(n: ℕ) {
         n ∉ list
     } // max_list + 1
 }
@@ -1475,14 +1471,14 @@ theorem no_list_contains_nat(list: List[Nat]) {
 from option import Option
 
 attributes List[T] {
-    define find_first_idx(self, item: T) -> Nat {
+    define find_first_idx(self, item: T) -> ℕ {
         match self {
             List.nil{
-                Nat.0
+                ℕ.0
             }
             List.cons(head, tail) {
                 if head = item {
-                    Nat.0
+                    ℕ.0
                 } else {
                     1 + tail.find_first_idx(item)
                 }
@@ -1490,7 +1486,7 @@ attributes List[T] {
         }
     }
 
-    define get(self, i: Nat) -> Option[T] {
+    define get(self, i: ℕ) -> Option[T] {
         match self {
             List.nil {
                 Option.none
