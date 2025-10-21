@@ -1094,6 +1094,10 @@ theorem gt_is_not_lte(a: ℤ, b: ℤ) {
     }
 }
 
+theorem compare_by_zero(a: ℤ, b: ℤ) {
+    a - b > 0 iff a > b
+}
+
 theorem lte_zero_abs(a: ℤ) {
     a <= 0 implies from_nat(abs(a)) = -a
 }
@@ -1308,6 +1312,10 @@ theorem mul_nonneg_nonpos_nonpos(a: ℤ, b: ℤ) {
     a >= 0 and b <= 0 implies (a * b) <= 0
 } by {
     a * b = -(from_nat(abs(a) * abs(b)))
+}
+
+theorem mul_nonneg_nonpos_nonpos_raw(a: ℤ, b: ℤ) {
+    not a.is_negative and not b.is_positive implies not (a * b).is_positive
 }
 
 theorem mul_nonpos_nonneg_nonpos(a: ℤ, b: ℤ) {

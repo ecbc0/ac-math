@@ -42,6 +42,22 @@ attributes List[T] {
     }
 }
 
+theorem not_contains_any_imp_nil[T](list: List[T]) {
+    (forall(x: T) { x ∉ list }) implies list = List[T].nil
+} 
+
+theorem nil_imp_not_contains_any[T](list: List[T]) {
+    list = List[T].nil implies (forall(x: T) { x ∉ list })
+}
+
+theorem contains_any_imp_non_nil[T](list: List[T]) {
+    (exists(x: T) { x ∈ list }) implies list != List[T].nil
+}
+
+theorem non_nil_imp_contains_any[T](list: List[T]) {
+    list != List[T].nil implies (exists(x: T) { x ∈ list })
+}
+
 // helper
 theorem not_contains_is_not_contains[T](list: List[T], item: T) {
     (not item ∈ list) iff item ∉ list
@@ -406,8 +422,42 @@ attributes List[T] {
     }
 }
 
-theorem count_increas[T](head: T, tail: List[T], item: T) {
+theorem count_increase[T](head: T, tail: List[T], item: T) {
     List.cons(head, tail).count(item) >= tail.count(item)
+}
+
+theorem count_add[T](l1: List[T], l2: List[T], item: T) {
+    (l1 + l2).count(item) = l1.count(item) + l2.count(item)
+} by {
+    define f(l: List[T]) -> Bool {
+        count_add(l, l2, item)
+    }
+    f(List[T].nil)
+    forall(head: T, tail: List[T]) {
+        List.cons(head, tail) + l2 = List.cons(head, tail + l2)
+
+        (List.cons(head, tail) + l2).count(item) = List.cons(head, tail + l2).count(item)
+
+        if f(tail) {
+            (tail + l2).count(item) = tail.count(item) + l2.count(item)
+
+            if head = item {
+                List.cons(head, tail).count(item) = 1 + tail.count(item)
+
+                List.cons(head, tail + l2).count(item) = 1 + (tail + l2).count(item)
+
+                List.cons(head, tail + l2).count(item) = 1 + tail.count(item) + l2.count(item)
+
+                (List.cons(head, tail) + l2).count(item) = List.cons(head, tail).count(item) + l2.count(item)
+            } else {
+                head != item
+
+                (List.cons(head, tail) + l2).count(item) = List.cons(head, tail).count(item) + l2.count(item)
+            }
+            f(List.cons(head, tail))
+        }
+    }
+    f(l1)
 }
 
 theorem list_contains_implies_count_geq_one[T](list: List[T], item: T) {
@@ -459,6 +509,45 @@ theorem list_not_contains_iff_count_zero[T](list: List[T], item: T) {
         }
     }
     p(list)
+}
+
+// obvious direction 
+theorem singleton_imp_only_have_and_count_one[T](x: T, list: List[T]) {
+    list = List.singleton(x) implies forall(y: T) { y ∈ list implies y = x } and list.count(x) = 1
+} 
+
+// need induction
+theorem only_have_and_count_one_imp_singleton[T](x: T, list: List[T]) {
+    forall(y: T) { y ∈ list implies y = x } and list.count(x) = 1 implies list = List.singleton(x)
+} by {
+    define f(l: List[T]) -> Bool {
+        forall(y: T) { y ∈ l implies y = x } and l.count(x) = 1 implies l = List.singleton(x)
+    }
+
+    List[T].nil != List.singleton(x)
+    f(List[T].nil)
+
+    forall(head: T, tail: List[T]) {
+        if f(tail) {
+            if forall(y: T) { y ∈ List.cons(head, tail) implies y = x } and List.cons(head, tail).count(x) = 1 {
+                if tail != List[T].nil {
+                    let y: T satisfy { y ∈ tail }
+                    y = x
+                    head = x 
+                    List.cons(head, tail).count(x) > 1
+                    false 
+                } else {
+                    tail = List[T].nil
+                    head = x
+                    List.cons(head, tail) = List.singleton(x)
+                    f(List.cons(head, tail))
+                }
+                f(List.cons(head, tail))
+            }
+            f(List.cons(head, tail))
+        }
+    }
+    f(list)
 }
 
 theorem unique_implies_no_duplicate[T](list: List[T], item: T) {
@@ -1528,36 +1617,3 @@ attributes List[T] {
 theorem self_permutation[T](list: List[T]) {
     list.is_permutation(list)
 } 
-
-theorem remove_first_is_sublist[T](item: T, list: List[T], elem: T) {
-    item ∈ list.remove_first(elem) implies item ∈ list
-} by {
-    define f(l: List[T]) -> Bool {
-        remove_first_is_sublist(item, l, elem)
-    }
-    f(List[T].nil)
-    forall(head: T, tail: List[T]) {
-        if f(tail) {
-            if item ∈ List.cons(head, tail).remove_first(elem) {
-                if head = elem {
-                    List.cons(head, tail).remove_first(elem) = tail
-                    item ∈ List.cons(head, tail)
-                }
-                if head != elem {
-                    List.cons(head, tail).remove_first(elem) = List.cons(head, tail.remove_first(elem))
-                    if head = item {
-                        item ∈ List.cons(head, tail)
-                    } 
-                    if head != item {
-                        item ∈ tail.remove_first(elem)
-                        item ∈ tail
-                        item ∈ List.cons(head, tail)
-                    }
-                }
-                item ∈ List.cons(head, tail)
-            }
-            f(List.cons(head, tail))
-        }
-    }
-    f(list)
-}

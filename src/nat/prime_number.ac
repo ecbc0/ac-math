@@ -133,6 +133,10 @@ define all_prime(l: List[ℕ]) -> Bool {
     }
 }
 
+theorem nil_list_all_prime {
+    all_prime(List[ℕ].nil)
+}
+
 instance ℕ: Add {
     let add: (ℕ, ℕ) -> ℕ = ℕ.mul
 
@@ -142,12 +146,19 @@ instance ℕ: Add {
 let product = sum[ℕ] 
 
 theorem prime_decomposition(n: ℕ) {
-    1 < n implies exists(l: List[ℕ]) {
+    n != 0 implies exists(l: List[ℕ]) {
         all_prime(l) and n = product(l)
     }
-} by {
+} by {   
     forall(k: ℕ) {
         if true_below(prime_decomposition, k) {
+            if k = 0 { prime_decomposition(k) }
+            if k = 1 {
+                all_prime(List[ℕ].nil)
+                1 = product(List[ℕ].nil)
+
+                prime_decomposition(k)
+            }
             if k.is_prime {
                 let l = List.singleton(k)
                 product(l) = k
@@ -168,6 +179,8 @@ theorem prime_decomposition(n: ℕ) {
                 }
                 prime_decomposition(a)
                 prime_decomposition(b)
+                a != 0
+                b != 0
                 let la: List[ℕ] satisfy {
                     all_prime(la) and a = product(la)
                 }
@@ -216,18 +229,6 @@ theorem exists_infinite_primes(n: ℕ) {
     not (p <= n)
     p > n
 }
-
-// prepare for the defition of rational number
-define relative_prime(a: ℕ, b: ℕ) -> Bool {
-    forall(la: List[ℕ], lb: List[ℕ]) {
-        (all_prime(la) and product(la) = a) and
-        (all_prime(lb) and product(lb) = b) implies
-        forall(p: ℕ) {
-            not (la.contains(p) and lb.contains(p))
-        }
-    }
-}
-
 
 // we need Euclid algorithm and gcd to prove uniqueness of prime_decomposition
 
@@ -558,10 +559,6 @@ theorem gcd_is_gcd(a: ℕ, b: ℕ, d: ℕ) {
     d <= gcd(a, b)
 }
 
-theorem gcd_one_is_relative_prime(a: ℕ, b: ℕ) {
-    relative_prime(a, b) iff gcd(a, b) = 1
-}
-
 theorem gcd_nonzero_left(a: ℕ, b: ℕ) {
     a != 0 or b != 0 implies gcd(a, b) != 0
 } by {
@@ -879,8 +876,7 @@ theorem remove_product(x: ℕ, l: List[ℕ]) {
                     
                     List.cons(head, tail) ∖ x = List.cons(head, tail ∖ x)
 
-                    product(List.cons(head, tail) ∖ x) = head * product(tail ∖
-                     x)
+                    product(List.cons(head, tail) ∖ x) = head * product(tail ∖ x)
 
                     x^(tail.count(x)) * product(tail ∖ x) = product(tail)
 
@@ -917,6 +913,7 @@ theorem remove_preserve_all_prime(x: ℕ, l: List[ℕ]) {
     }
 }
 
+// half of theorem
 theorem prime_decomposition_have_same_count_of_prime_helper(x: ℕ, l1: List[ℕ], l2: List[ℕ]) {
     x.is_prime and 
     all_prime(l1) and all_prime(l2) and
@@ -1004,11 +1001,15 @@ theorem prime_decomposition_uniqueness(n: ℕ, l1: List[ℕ], l2: List[ℕ]) {
     }
 }
 
-theorem non_nil_prime_list_product_gt_1(l: List[ℕ]) {
+theorem nil_list_product_is_one {
+    product(List[ℕ].nil) = 1
+}
+
+theorem non_nil_prime_list_product_gt_one(l: List[ℕ]) {
     l != List[ℕ].nil and all_prime(l) implies 1 < product(l)
 } by {
     define f(ps: List[ℕ]) -> Bool {
-        non_nil_prime_list_product_gt_1(ps)
+        non_nil_prime_list_product_gt_one(ps)
     }
     f(List[ℕ].nil)
     forall(head: ℕ, tail: List[ℕ]) {
@@ -1034,40 +1035,357 @@ theorem non_nil_prime_list_product_gt_1(l: List[ℕ]) {
     f(l)
 }
 
+theorem prime_list_product_gte_one(l: List[ℕ]) {
+    all_prime(l) implies 1 <= product(l)
+}
+
+theorem prime_list_product_one_imp_nil(l: List[ℕ]) {
+    all_prime(l) and product(l) = 1 implies l = List[ℕ].nil
+}
+
+theorem prime_list_product_gt_one_imp_non_nil(l: List[ℕ]) {
+    all_prime(l) and product(l) > 1 implies l != List[ℕ].nil
+}
+
 attributes ℕ {
-    define have_prime_decomposition(self, l: List[ℕ]) -> Bool {
-        1 < self and all_prime(l) and self = product(l)
+    define have_prime_decomp(self, l: List[ℕ]) -> Bool {
+        all_prime(l) and self = product(l)
+    }
+}
+
+theorem zero_have_no_prime_decomp(l: List[ℕ]) {
+    not 0.have_prime_decomp(l)
+}
+
+theorem prime_list_divides_product(p: ℕ, l: List[ℕ]) {
+    all_prime(l) and p ∈ l implies p.divides(product(l))
+} by {
+    if l = List[ℕ].nil { 
+        not p ∈ l 
+        false
+    } else {
+        l != List[ℕ].nil
+        l.count(p) >= 1
+        p^(l.count(p)) * product(l ∖ p) = product(l)
+        l.count(p) - 1 + 1 = l.count(p)
+        (p * p^(l.count(p) - 1)) * product(l ∖ p) = product(l)
+        p.divides(product(l))
     }
 }
 
 theorem prime_have_singleton_prime_decomposition(x: ℕ, l: List[ℕ]) {
-    x.is_prime and x.have_prime_decomposition(l) implies l = List.singleton(x)
+    x.is_prime and x.have_prime_decomp(l) implies l = List.singleton(x)
 } by {
-    not x.have_prime_decomposition(List[ℕ].nil)
-    prime_have_singleton_prime_decomposition(x, List[ℕ].nil)
-    
-    forall(head: ℕ, tail: List[ℕ]) {
-        if all_prime(List.cons(head, tail)) and 
-        x.have_prime_decomposition(List.cons(head, tail)) {
-            if tail != List[ℕ].nil {
-                1 < head
-                1 < product(tail)
-                product(List.cons(head, tail)) = head * product(tail)
-                not x.is_prime
-                false
-            } else {
-                tail = List[ℕ].nil
-                List.cons(head, tail) = List.singleton(head)
-                x = product(List.cons(head, tail))
-                x = head
-            }
-            List.cons(head, tail) = List.singleton(x)
+    if l.count(x) > 1 {
+        x^(l.count(x)) * product(l ∖ x) = product(l)
+        product(l) = x
+        x^(l.count(x)) > x
+        false
+    } else {
+        l.count(x) != 0
+        l.count(x) = 1
+        if exists(y: ℕ) { y ∈ l and y != x } {
+            let y: ℕ satisfy { y ∈ l and y != x }
+            l.count(y) != 0
+            y.is_prime
+            y.divides(product(l))
+            y.divides(x)
+            false
+        } else {
+            forall(y: ℕ) { y ∈ l implies y = x }
+            l = List.singleton(x)
         }
     }
+}
 
-    List.induction(function (xs: List[ℕ]) {
-        prime_have_singleton_prime_decomposition(x, xs)
-    })
+// I have to use these helper, otherwise, the prover fails to search
+define have_no_common_prime_factor(a: ℕ, b: ℕ) -> Bool {
+    forall(la: List[ℕ], lb: List[ℕ], p: ℕ) {
+        a.have_prime_decomp(la) and 
+        b.have_prime_decomp(lb) implies 
+        (not (p ∈ la and p ∈ lb))
+    }
+}
 
-    l = List.singleton(x)
+theorem have_no_common_prime_factor_helper(a: ℕ, b: ℕ) {
+    forall(la: List[ℕ], lb: List[ℕ], p: ℕ) {
+        a.have_prime_decomp(la) and 
+        b.have_prime_decomp(lb) implies 
+        (not (p ∈ la and p ∈ lb))
+    } implies have_no_common_prime_factor(a, b)
+}
+
+// prepare for the defition of rational number
+define relative_prime(a: ℕ, b: ℕ) -> Bool {
+    a != 0 and b != 0 and have_no_common_prime_factor(a, b)
+}
+
+theorem relative_prime_imp_gcd_one(a: ℕ, b: ℕ) {
+    relative_prime(a, b) implies gcd(a, b) = 1 
+} by {
+    gcd(a, b) != 0
+    let (l: List[ℕ]) satisfy {
+        gcd(a,b).have_prime_decomp(l)
+    }
+    if gcd(a, b) != 1 {
+        gcd(a, b) > 1
+        l != List[ℕ].nil
+        let p: ℕ satisfy { p ∈ l and p.is_prime }
+        p.divides(gcd(a, b))
+        p.divides(a)
+        p.divides(b)
+        a != 0
+        b != 0
+        let (la: List[ℕ]) satisfy {
+            a.have_prime_decomp(la)
+        }
+        let (lb: List[ℕ]) satisfy {
+            b.have_prime_decomp(lb)
+        }
+        p ∈ la
+        p ∈ lb
+        not have_no_common_prime_factor(a, b)
+        not relative_prime(a, b)
+        false
+    }
+}
+
+theorem gcd_one_imp_relative_prime_helper(a: ℕ, b: ℕ) {
+    a != 0 and b != 0 and gcd(a, b) = 1 implies 
+    a != 0 and b != 0 and forall(la: List[ℕ], lb: List[ℕ], p: ℕ) {
+        a.have_prime_decomp(la) and 
+        b.have_prime_decomp(lb) implies 
+        (not (p ∈ la and p ∈ lb))
+    }
+} by {
+    forall(la: List[ℕ], lb: List[ℕ], p: ℕ) {
+        if a.have_prime_decomp(la) and 
+        b.have_prime_decomp(lb) {
+            if p ∈ la and p ∈ lb {
+                p.is_prime
+                p.divides(a)
+                p.divides(b)
+                p.divides(gcd(a, b))
+                p = 1
+                false
+            }
+            not (p ∈ la and p ∈ lb)
+        }
+    }
+}
+
+theorem gcd_one_imp_relative_prime(a: ℕ, b: ℕ) {
+    (a != 0 and b != 0) and gcd(a, b) = 1 implies relative_prime(a, b) 
+} by {
+    a != 0
+    b != 0
+    forall(la: List[ℕ], lb: List[ℕ], p: ℕ) {
+        (
+            a.have_prime_decomp(la) and 
+            b.have_prime_decomp(lb)
+        ) implies (not (p ∈ la and p ∈ lb))
+    }
+    have_no_common_prime_factor_helper(a, b)
+    have_no_common_prime_factor(a, b)  
+}
+
+theorem relative_prime_iff_gcd_one(a: ℕ, b: ℕ) {
+    relative_prime(a, b) iff a != 0 and b != 0 and gcd(a, b) = 1
+} by {
+    relative_prime(a, b) implies a != 0 and b != 0 and gcd(a, b) = 1
+    a != 0 and b != 0 and gcd(a, b) = 1 implies relative_prime(a, b)
+}
+
+theorem sub_prime_list_divides(l1: List[ℕ], l2: List[ℕ]) {
+    all_prime(l1) and all_prime(l2) and forall(p: ℕ) {
+        l1.count(p) <= l2.count(p)
+    } implies product(l1).divides(product(l2))
+} by {
+    define f(l: List[ℕ]) -> Bool {
+        all_prime(l) and all_prime(l2) and forall(p: ℕ) {
+            l.count(p) <= l2.count(p)
+        } implies product(l).divides(product(l2))    
+    }
+    f(List[ℕ].nil)
+    forall(head: ℕ, tail: List[ℕ]) {
+        if f(tail) {
+            if all_prime(List.cons(head, tail)) and all_prime(l2) and forall(p: ℕ) {
+                List.cons(head, tail).count(p) <= l2.count(p)
+            } {
+                let q1 = product(tail ∖ head) 
+                    
+                head^(tail.count(head)) * q1 = product(tail)
+
+                let q2 = product(l2 ∖ head) 
+
+                head^(l2.count(head)) * q2 = product(l2)
+
+                all_prime(tail)
+
+                forall(p: ℕ) {
+                    tail.count(p) <= List.cons(head, tail).count(p)
+                    tail.count(p) <= l2.count(p)
+                }
+
+                product(tail).divides(product(l2))
+
+                let q: ℕ satisfy {
+                    product(tail) * q = product(l2)
+                }
+
+                head^(tail.count(head)) * q1 * q = head^(l2.count(head)) * q2 
+
+                List.cons(head, tail).count(head) = 1 + tail.count(head)
+
+                tail.count(head) + 1 <= l2.count(head)
+
+                (head^(tail.count(head) + 1)).divides(head^(l2.count(head)))
+
+                (head^(tail.count(head) + 1)).divides(product(l2))
+
+                let n: ℕ satisfy {
+                    head^(tail.count(head) + 1) * n = product(l2)
+                }
+
+                head^(tail.count(head)) * (q1 * q) = head^(tail.count(head)) * (head * n)
+                
+                q1 * q = head * n
+
+                head.divides(q1 * q)
+
+                if head.divides(q1) {
+                    head ∈ (tail ∖ head)
+                    false
+                }
+
+                head.divides(q)
+
+                let m: ℕ satisfy { q = head * m }
+
+                head^(tail.count(head)) * q1 * (head * m) = head^(l2.count(head)) * q2
+
+                head * (head^(tail.count(head)) * q1) * m = head^(l2.count(head)) * q2
+
+                head * product(tail) * m = product(l2)
+
+                product(List.cons(head, tail)) = head * product(tail)
+
+                product(List.cons(head, tail)).divides(product(l2))
+
+                f(List.cons(head, tail))
+            }
+            f(List.cons(head, tail))
+        }
+    }
+    f(l1)
+}
+
+theorem divides_imp_sub_prime_list(l1: List[ℕ], l2: List[ℕ]) {
+    all_prime(l1) and all_prime(l2) and product(l1).divides(product(l2)) implies forall(p: ℕ) {
+        l1.count(p) <= l2.count(p)
+    }
+} by {
+    forall(p: ℕ) {
+        p^(l1.count(p)) * product(l1 ∖ p) = product(l1)
+
+        p^(l2.count(p)) * product(l2 ∖ p) = product(l2)
+
+        (p^(l1.count(p))).divides(product(l2))
+
+        if not p.is_prime {
+            l1.count(p) = 0
+            l2.count(p) = 0
+            l1.count(p) <= l2.count(p)
+        } else {
+            p.is_prime 
+            if l1.count(p) = 0 {
+                l1.count(p) <= l2.count(p)
+            } else {
+                l1.count(p) != 0 
+                l1.count(p) >= 1
+                all_prime(l2 ∖ p)
+                not p.divides(product(l2 ∖ p))
+
+                if (l1.count(p) > l2.count(p)) {
+                    let n: ℕ satisfy { 
+                        l1.count(p) = l2.count(p) + n and n != 0 
+                    }
+
+                    let q: ℕ satisfy {
+                        product(l1) * q = product(l2)
+                    }
+
+                    p^(l2.count(p)) * (p^n * product(l1 ∖ p) * q) = p^(l2.count(p)) * product(l2 ∖ p)
+
+                    p^n * product(l1 ∖ p) * q = product(l2 ∖ p)
+
+                    1 <= n
+
+                    p * (p^(n - 1) * product(l1 ∖ p) * q) = product(l2 ∖ p)
+
+                    p.divides(product(l2 ∖ p))
+
+                    false
+                }
+                l1.count(p) <= l2.count(p)
+            }            
+        }
+    }
+}
+
+theorem euclids_lemma(a: ℕ, b: ℕ, c: ℕ) {
+    gcd(a, b) = 1 and a.divides(b * c) implies a.divides(c)
+} by {
+    if a = 0 {
+        b = 1
+        b * c = 0
+        c = 0
+        a.divides(c)
+    } 
+    if b = 0 {
+        a = 1
+        a.divides(c)
+    }
+    if c = 0 {
+        a.divides(c)
+    } 
+    if a != 0 and b != 0 and c != 0 {
+        let (la: List[ℕ]) satisfy {
+            a.have_prime_decomp(la)
+        }
+        let (lb: List[ℕ]) satisfy {
+            b.have_prime_decomp(lb)
+        }
+        let (lc: List[ℕ]) satisfy {
+            c.have_prime_decomp(lc)
+        }
+        forall(p: ℕ) {
+            if p ∈ lb + lc {
+                p ∈ lb or p ∈ lc
+                all_prime(lb)
+                all_prime(lc)
+                p.is_prime
+            }
+        }
+        all_prime(lb + lc)
+        product(lb + lc) = product(lb) * product(lc)
+        product(lb + lc) = b * c
+        product(la) = a
+        product(la).divides(product(lb + lc))
+        divides_imp_sub_prime_list(la, lb + lc)
+        forall(p: ℕ) {
+            la.count(p) <= (lb + lc).count(p)
+            (lb + lc).count(p) = lb.count(p) + lc.count(p)
+            if la.count(p) = 0 {
+                la.count(p) <= lc.count(p)
+            } else {
+                la.count(p) != 0
+                p.divides(a)
+                not p.divides(b)
+                lb.count(p) = 0
+                la.count(p) <= lc.count(p)
+            }
+        }
+        a.divides(c)
+    }
 }

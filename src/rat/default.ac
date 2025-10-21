@@ -1,0 +1,544 @@
+from nat import ℕ
+from int import ℤ
+from rat.rat_base import ℚ, reduce
+from order import Linear_Order
+
+numerals ℚ
+
+// It will be convenient to have a particular function that
+// approaches zero.
+/// inverse of positive
+define iop(n: ℕ) -> ℚ {
+    1 / ℚ.from_nat(n + ℕ.1)
+}
+
+theorem iop_pos(n: ℕ) {
+    iop(n) > 0
+} by {
+    ℕ.1 <= n + ℕ.1
+    ℤ.1 <= ℤ.from_nat(n + ℕ.1)
+    1 <= ℚ.from_nat(n + ℕ.1)
+    0 < ℚ.from_nat(n + ℕ.1)
+}
+
+theorem pos_ne_zero(a: ℚ) {
+    a > 0 implies a != 0
+}
+
+theorem iop_ne_zero(n: ℕ) {
+    iop(n) != 0
+}
+
+theorem iop_recip(n: ℕ) {
+    1/iop(n) = ℚ.from_nat(n + ℕ.1)
+} by {
+    ℚ.from_nat(n + ℕ.1) > 0
+}
+
+theorem iop_mul_lt_one(n: ℕ) {
+    iop(n) * ℚ.from_nat(n) < 1
+} by {
+    iop(n) * 1/iop(n) = 1
+    iop(n) * ℚ.from_nat(n + ℕ.1) = 1
+    iop(n) * 1 + iop(n) * ℚ.from_nat(n) = 1
+    iop(n) + iop(n) * ℚ.from_nat(n) = 1
+    iop(n) * ℚ.from_nat(n) = 1 - iop(n)
+}
+
+theorem pos_lte_num(a: ℚ) {
+    a > 0 implies a <= ℚ.from_int(a.num)
+} by {
+    a.num > ℤ.0
+    a.denom > ℤ.0
+    a.denom >= ℤ.1
+    a = ℚ.from_int(a.num) / ℚ.from_int(a.denom)
+    1 <= ℚ.from_int(a.denom)
+    a <= ℚ.from_int(a.denom) * a
+}
+
+theorem lt_some_int(a: ℚ) {
+    exists(n: ℤ) {
+        a < ℚ.from_int(n)
+    }
+}
+
+theorem lt_some_nat(a: ℚ) {
+    exists(n: ℕ) {
+        a < ℚ.from_nat(n)
+    }
+} by {
+    let i: ℤ satisfy {
+        a < ℚ.from_int(i)
+    }
+    // maybe i < 0
+    let n = int.abs(i)
+    i <= ℤ.from_nat(n)
+    ℚ.from_int(i) <= ℚ.from_nat(n)
+}
+
+theorem iop_gets_lt(ε: ℚ) {
+    ε > 0 implies exists(n: ℕ) {
+        forall(i: ℕ) {
+            n <= i implies iop(i) < ε
+        }
+    }
+} by {
+    1/ε > 0
+    let n: ℕ satisfy {
+        1/ε < ℚ.from_nat(n)
+    }
+    forall(i: ℕ) {
+        if n <= i {
+            ℚ.from_nat(n) <= ℚ.from_nat(i)
+            1/ε < ℚ.from_nat(i)
+            1/ε * ε < ℚ.from_nat(i) * ε
+            1 < ℚ.from_nat(i) * ε
+            ℚ.from_nat(i) * iop(i) < 1
+            ℚ.from_nat(i) * iop(i) < ℚ.from_nat(i) * ε
+            iop(i) < ε
+        }
+    }
+}
+
+theorem three_is_positive {
+    3 > 0
+}
+
+theorem times_three(x: ℚ) {
+    3 * x = x + x + x
+} by {
+    ℤ.3 = ℤ.2 + ℤ.1
+    3 = 2 + 1
+    3 * x = (2 + 1) * x
+    3 * x = 2 * x + 1 * x
+}
+
+theorem three_thirds(x: ℚ) {
+    (x / 3) + (x / 3) + (x / 3) = x
+} by {
+    (x / 3) + (x / 3) + (x / 3) = (x + x + x) / 3
+    (x / 3) + (x / 3) + (x / 3) = (3 * x) / 3
+    (x * 3) / 3 = x
+}
+
+theorem some_mul_lt(a: ℚ, b: ℚ) {
+    0 <= a and b > 0 implies
+    exists(ε: ℚ) {
+        ε > 0 and a * ε < b
+    }
+} by {
+    if a = 0 {
+        let ε = 1
+        ε > 0
+        a * ε = 0
+        a * ε < b
+        ε > 0 and a * ε < b
+    } else {
+        a > 0
+        let c: ℚ satisfy {
+            c > 0 and c < b
+        }
+        let ε = c / a
+        ε > 0
+        a * ε = c
+        a * ε < b
+        ε > 0 and a * ε < b
+    }
+}
+
+theorem close_mul_pos(a: ℚ, b: ℚ, ε: ℚ, r: ℚ) {
+    r > 0 and (a - b).abs < ε
+    implies
+    (a * r - b * r).abs < ε * r
+} by {
+    not r < 0
+    (a - b).abs * r = (a * r - b * r).abs
+}
+
+theorem close_neg(a: ℚ, b: ℚ, ε: ℚ) {
+    (a - b).abs < ε implies (-a - -b).abs < ε
+} by {
+    (-a - -b).abs = (b - a).abs
+    (-a - -b).abs < ε
+}
+
+theorem lte_mul_nonneg(a: ℚ, b: ℚ, c: ℚ) {
+    a <= b and 0 <= c implies a * c <= b * c
+} by {
+    if c = 0 {
+        a * c = 0
+        b * c = 0
+        a * c <= b * c
+    } else {
+        c > 0
+        a * c <= b * c
+    }
+}
+
+theorem bounding_both(a: ℚ, b: ℚ) {
+    exists(c: ℚ) {
+        a < c and b < c
+    }
+} by {
+    if a < b {
+        let c: ℚ satisfy { b < c }
+        a < c and b < c
+    } else {
+        b <= a
+        let c: ℚ satisfy { a < c }
+        a < c and b < c
+    }
+}
+
+theorem finite_seq_abs_bounded(a: ℕ -> ℚ, n: ℕ) {
+    exists(bound: ℚ) {
+        forall(i: ℕ) {
+            i <= n implies a(i).abs < bound
+        }
+    }
+} by {
+    let f = finite_seq_abs_bounded(a)
+    let zero_bound: ℚ satisfy {
+        a(ℕ.0).abs < zero_bound
+    }
+    forall(i: ℕ) {
+        i <= ℕ.0 implies a(i).abs < zero_bound
+    }
+    finite_seq_abs_bounded(a, ℕ.0)
+    f(ℕ.0)
+    forall(k: ℕ) {
+        if f(k) {
+            let base_bound: ℚ satisfy {
+                forall(i: ℕ) {
+                    i <= k implies a(i).abs < base_bound
+                }
+            }
+            let extra_bound: ℚ satisfy {
+                a(k.suc).abs < extra_bound
+            }
+            let bound: ℚ satisfy {
+                base_bound < bound and extra_bound < bound
+            }
+            forall(i: ℕ) {
+                if i <= k.suc {
+                    if i <= k {
+                        a(i).abs < bound
+                    } else {
+                        i = k.suc
+                        a(i).abs < extra_bound
+                        a(i).abs < bound
+                    }
+                }
+            }
+            finite_seq_abs_bounded(a, k.suc)
+            f(k.suc)
+        }
+    }
+}
+
+theorem abs_reduce_left(a: ℤ, b: ℤ) {
+    reduce(a.abs, b).abs = reduce(a, b).abs
+} by {
+    if a < ℤ.0 {
+        a.abs = -a
+        reduce(a.abs, b).abs = reduce(a, b).abs
+    } else {
+        a.abs = a
+        reduce(a.abs, b).abs = reduce(a, b).abs
+    }
+}
+
+theorem reduce_neg_num(a: ℤ, b: ℤ) {
+    reduce(-a, b) = -reduce(a, b)
+}
+
+theorem reduce_neg_denom(a: ℤ, b: ℤ) {
+    reduce(a, -b) = -reduce(a, b)
+} 
+
+theorem abs_reduce_right(a: ℤ, b: ℤ) {
+    reduce(a, b.abs).abs = reduce(a, b).abs
+} by {
+    if b < ℤ.0 {
+        b.abs = -b
+        reduce(a, b.abs).abs = reduce(a, b).abs
+    } else {
+        b.abs = b
+        reduce(a, b.abs).abs = reduce(a, b).abs
+    }
+}
+
+theorem reduce_nonneg(a: ℤ, b: ℤ) {
+    a >= ℤ.0 and b >= ℤ.0
+    implies
+    reduce(a, b) >= 0
+} by {
+    if a = ℤ.0 {
+        reduce(a, b) >= 0
+    } else {
+        if b = ℤ.0 {
+            reduce(a, b) >= 0
+        } else {
+            a > ℤ.0
+            b > ℤ.0
+            reduce(a, b) > 0
+            reduce(a, b) >= 0
+        }
+    }
+}
+
+theorem reduce_abs(a: ℤ, b: ℤ) {
+    reduce(a.abs, b.abs) = reduce(a, b).abs
+} by {
+    not a.abs < ℤ.0
+    not b.abs < ℤ.0
+    not reduce(a.abs, b.abs) < 0
+}
+
+theorem lte_cancel_mul_pos(p: ℚ, q: ℚ, r: ℚ) {
+    r > 0 and p * r <= q * r
+    implies
+    p <= q
+} by {
+    if p * r = q * r {
+        p = q
+        p <= q
+    } else {
+        p * r < q * r
+        p < q
+        p <= q
+    }
+}
+
+theorem reduce_lte(a: ℤ, b: ℤ, c: ℤ) {
+    c >= ℤ.0 and a <= b implies
+    reduce(a, c) <= reduce(b, c)
+} by {
+    if c = ℤ.0 {
+        reduce(a, c) = reduce(b, c)
+        reduce(a, c) <= reduce(b, c)
+    } else {
+        c > ℤ.0
+        reduce(a, c) * ℚ.from_int(c) = ℚ.from_int(a)
+        reduce(b, c) * ℚ.from_int(c) = ℚ.from_int(b)
+        ℚ.from_int(a) <= ℚ.from_int(b)
+        reduce(a, c) * ℚ.from_int(c) <= reduce(b, c) * ℚ.from_int(c)
+        ℚ.from_int(c) > 0
+        reduce(a, c) <= reduce(b, c)
+    }
+}
+
+theorem triangle_ineq(a: ℚ, b: ℚ) {
+    (a + b).abs <= a.abs + b.abs
+} by {
+    let (an: ℤ, bn: ℤ, c: ℤ) satisfy {
+        a = reduce(an, c) and b = reduce(bn, c)
+    }
+    a + b = reduce(an + bn, c)
+    (a + b).abs = reduce((an + bn).abs, c.abs)
+    (an + bn).abs <= an.abs + bn.abs
+    not c.abs < ℤ.0
+    reduce((an + bn).abs, c.abs) <= reduce(an.abs + bn.abs, c.abs)
+    reduce(an.abs + bn.abs, c.abs) = reduce(an, c).abs + reduce(bn, c).abs
+    reduce(an.abs + bn.abs, c.abs) = a.abs + b.abs
+}
+
+theorem nonneg_lt_imp_pos(a: ℚ, b: ℚ) {
+    a >= 0 and a < b implies
+    b > 0
+}
+
+theorem lt_pos_mul_lt_pos(a: ℚ, b: ℚ, c: ℚ, d: ℚ) {
+    a >= 0 and c >= 0 and a < b and c < d
+    implies
+    a * c < b * d
+} by {
+    a * c <= b * c
+    b > 0
+    b * c < b * d
+}
+
+theorem abs_nonneg(a: ℚ) {
+    not a.abs < 0
+}
+
+theorem lte_mul_lte(a: ℚ, b: ℚ, c: ℚ, d: ℚ) {
+    a >= 0 and c >= 0 and a <= b and c <= d
+    implies
+    a * c <= b * d
+} by {
+    not b < 0
+    not d < 0
+    if a = b {
+        c * b <= d * b
+        a * c <= b * d
+    } else {
+        a < b
+        if c = d {
+            a * c <= b * d
+        } else {
+            c < d
+            a * c < b * d
+            a * c <= b * d
+        }
+    }
+}
+
+theorem add_div_distrib(a: ℚ, b: ℚ, c: ℚ) {
+    (a + b)/c = a/c + b/c
+}
+
+theorem sub_div_distrib(a: ℚ, b: ℚ, c: ℚ) {
+    (a - b)/c = a/c - b/c
+}
+
+theorem recip_mul(a: ℚ, b: ℚ) {
+    1/(a * b) = 1/a * 1/b
+} by {
+    if a = 0 {
+        // Degenerate but it works
+        a * b = 0
+        1/(a * b) = 0
+        1/(a * b) = 1/a * 1/b
+    } else {
+        if b = 0 {
+            a * b = 0
+            1/(a * b) = 0
+            1/(a * b) = 1/a * 1/b
+        } else {
+            1/(a * b) * (a * b) = 1
+            1/(a * b) = 1/a * 1/b
+        }
+    }
+}
+
+theorem mul_fractions(a: ℚ, b: ℚ, c: ℚ, d: ℚ) {
+    (a / b) * (c / d) = (a * c) / (b * d)
+} by {
+    (a / b) * (c / d) = (a * 1/b) * (c * 1/d)
+    (a / b) * (c / d) = (a * c) * (1/b * 1/d)
+    (1/b * 1/d) = 1/(b * d)
+    (a / b) * (c / d) = (a * c) * 1/(b * d)
+}
+
+theorem cancel_left_num_denom(a: ℚ, b: ℚ, c: ℚ) {
+    a != 0 implies
+    (a * b) / (a * c) = b / c
+} by {
+    (a / a) * (b / c) = (a * b) / (a * c)
+}
+
+theorem cancel_to_reciprocal(a: ℚ, b: ℚ) {
+    a != 0 and b != 0 implies
+    a/(a * b) = 1/b
+}
+
+theorem recip_diff(a: ℚ, b: ℚ) {
+    a != 0 and b != 0 implies
+    1/a - 1/b = (b - a) / (a * b)
+} by {
+    b / (a * b) = 1/a
+    a / (a * b) = 1/b
+    (b - a) / (a * b) = (b / (a * b)) - (a / (a * b))
+}
+theorem lt_mul_lte(a: ℚ, b: ℚ, c: ℚ, d: ℚ) {
+    a >= 0 and c > 0 and a < b and c <= d
+    implies
+    a * c < b * d
+}
+
+// This isn't ideal but this is how we have defined division.
+theorem div_zero(a: ℚ) {
+    a/0 = 0
+} by {
+    a * reduce(0.denom, ℤ.0) = 0
+    a * 1/0 = 0
+}
+
+theorem recip_recip_raw(a: ℚ) {
+    a.reciprocal.reciprocal = a
+} by {
+    if a = 0 {
+        a.reciprocal = 0
+        a.reciprocal.reciprocal = 0
+    } else {
+        a.reciprocal.reciprocal = a
+    }
+}
+
+theorem recip_recip(a: ℚ) {
+    1/(1/a) = a
+}
+
+theorem div_neg_neg(a: ℚ, b: ℚ) {
+    a < 0 and b < 0
+    implies
+    a/b > 0
+} by {
+    a < 0
+    1/b < 0
+}
+
+theorem div_negs_cancel(a: ℚ, b: ℚ) {
+    a / b = (-a) / (-b)
+} by {
+    -1 != 0
+    (-1 * a) / (-1 * b) = a / b
+    (-1 * a) / -b = a / b
+}
+
+theorem abs_reciprocal(a: ℚ) {
+    (1/a).abs = 1/a.abs
+} by {
+    if a >= 0 { 
+        a.abs = a
+        (1/a).abs = 1/a.abs 
+    } else {
+        a < 0
+        1/a < 0
+        a.abs = -a
+        (1/a).abs = 1/a.abs 
+    }
+}
+
+theorem abs_div(a: ℚ, b: ℚ) {
+    b != 0 implies
+    (a / b).abs = a.abs / b.abs
+} 
+
+theorem abs_of_div(a: ℚ, b: ℚ) {
+    (a / b).abs = a.abs / b.abs
+} 
+
+theorem lt_make_left_denom(a: ℚ, b: ℚ, c: ℚ) {
+    c > 0 and a < b * c implies a/c < b
+}
+
+theorem lt_make_right_denom(a: ℚ, b: ℚ, c: ℚ) {
+    b > 0 and a * b < c implies a < c/b
+} by {
+    1/b > 0
+    a * b * 1/b < c * 1/b
+    a * b * 1/b = a
+    a < c * 1/b
+}
+
+theorem lt_elim_left_denom(a: ℚ, b: ℚ, c: ℚ) {
+    b > 0 and a/b < c implies a < c * b
+}
+
+theorem mul_div_swap(a: ℚ, b: ℚ, c: ℚ) {
+    a * b/c = a/c * b
+}
+
+theorem zero_recip(a: ℚ) {
+    1/0 = 0
+}
+
+// The multiplicative algebraic structure.
+
+attributes ℚ {
+    let inverse = ℚ.reciprocal
+}
+
+theorem rat_total(a: ℚ, b: ℚ) { a <= b or b <= a } 

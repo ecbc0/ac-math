@@ -12,9 +12,16 @@ theorem abs_zero_imp_zero(a: ℤ) {
     abs(a) = ℕ.0 implies a = 0
 } 
 
-theorem mul_zero_imp_factor_zero(a: ℤ, b: ℤ) { a * b = 0 implies a = 0 or b = 0 } by {
+theorem mul_to_zero(a: ℤ, b: ℤ) { a * b = 0 implies a = 0 or b = 0 } by {
     abs(a) * abs(b) = ℕ.0
     abs(a) = ℕ.0 or abs(b) = ℕ.0
+}
+
+theorem mul_to_zero_imp_rev(a: ℤ, b: ℤ) { 
+    a = 0 or b = 0 implies a * b = 0  
+} by {
+    a = 0 implies a * b = 0
+    b = 0 implies a * b = 0
 }
 
 theorem mul_pos_pos(a: ℤ, b: ℤ) {
@@ -26,6 +33,21 @@ theorem mul_pos_pos(a: ℤ, b: ℤ) {
     a != 0
     b != 0
     a * b != 0
+}
+
+theorem mul_pos_pos_iff(a: ℤ, b: ℤ) {
+    a > 0 implies (b > 0 iff (a * b) > 0)
+} by {
+    if b > 0 {
+        a * b > 0
+    } else {
+        b <= 0
+        a * b <= 0
+    }
+}
+
+theorem mul_pos_pos_raw(a: ℤ, b: ℤ) {
+    a.is_positive and b.is_positive implies (a * b).is_positive
 }
 
 theorem mul_pos_neg(a: ℤ, b: ℤ) {
@@ -454,6 +476,26 @@ define unit_sign(a: ℤ) -> ℤ {
     }
 }
 
+theorem unit_sign_order_rep(a: ℤ) {
+    if a < 0 {
+        unit_sign(a) = -1
+    } else {
+        if a > 0 {
+            unit_sign(a) = 1
+        }
+    }
+} by {
+    if a < 0 {
+        let pred: ℕ satisfy { a = ℤ.neg_suc(pred) }
+        unit_sign(a) = -1
+    } else {
+        if a > 0 {
+            let pred: ℕ satisfy { a = ℤ.pos_suc(pred) }
+            unit_sign(a) = 1 
+        }
+    }
+}
+
 theorem unit_sign_is_unit(a: ℤ) { 
     a != 0 implies is_unit(unit_sign(a)) 
 } by {
@@ -833,8 +875,165 @@ define gcd(a: ℤ, b: ℤ) -> ℤ {
     from_nat(nat_gcd(abs(a), abs(b)))
 }
 
+// port from ℕ
+
 let nat_relative_prime = prime_number.relative_prime
 
 define relative_prime(a: ℤ, b: ℤ) -> Bool {
     nat_relative_prime(abs(a), abs(b))
+}
+
+theorem relative_prime_iff_gcd_one(a: ℤ, b: ℤ) {
+    relative_prime(a, b) iff a != 0 and b != 0 and gcd(a, b) = 1
+} by {
+    if relative_prime(a, b) {
+        nat_relative_prime(abs(a), abs(b)) 
+
+        abs(a) != ℕ.0 and abs(b) != ℕ.0 and nat_gcd(abs(a), abs(b)) = ℕ.1
+
+        a != 0 and b != 0 and gcd(a, b) = 1
+    }
+    
+    if a != 0 and b != 0 and gcd(a, b) = 1 {
+        abs(a) != ℕ.0 and abs(b) != ℕ.0 and nat_gcd(abs(a), abs(b)) = ℕ.1
+
+        nat_relative_prime(abs(a), abs(b))
+
+        relative_prime(a, b)
+    }
+}
+
+theorem gcd_comm(a: ℤ, b: ℤ) { gcd(a, b) = gcd(b, a) } by {
+    from_nat(nat_gcd(abs(a), abs(b))) = from_nat(nat_gcd(abs(b), abs(a)))
+}
+
+theorem gcd_one_right(n: ℤ) {
+    gcd(n, 1) = 1
+} by {
+    nat_gcd(abs(n), ℕ.1) = ℕ.1
+}
+
+theorem gcd_one_left(n: ℤ) {
+    gcd(1, n) = 1
+}
+
+theorem gcd_nonzero_left(a: ℤ, b: ℤ) {
+    a != 0 implies gcd(a, b) != 0
+} by {
+    abs(a) != ℕ.0
+    nat_gcd(abs(a), abs(b)) != ℕ.0
+    gcd(a, b) != 0
+}
+
+theorem gcd_nonzero_right(a: ℤ, b: ℤ) {
+    b != 0 implies gcd(a, b) != 0
+}
+
+theorem gcd_div_left(a: ℤ, b: ℤ) { gcd(a, b).divides(a) } by {
+    ℤ.from_nat(nat_gcd(abs(a), abs(b))).divides(a)
+}
+
+theorem gcd_div_right(a: ℤ, b: ℤ) { gcd(a, b).divides(b) }
+
+theorem gcd_mult_left(a: ℤ, b: ℤ, m: ℤ) {
+    from_nat(abs(m)) * gcd(a, b) = gcd(m * a, m * b)
+}
+
+theorem gcd_mult_right(a: ℤ, b: ℤ, m: ℤ) {
+    gcd(a, b) * from_nat(abs(m)) = gcd(a * m, b * m)
+}
+
+theorem cofactor(a: ℤ, b: ℤ, af: ℤ, bf: ℤ) {
+    (
+        gcd(a, b) != 0 and
+        af * gcd(a, b) = a and
+        bf * gcd(a, b) = b
+    ) implies gcd(af, bf) = 1
+} by {
+    nat_gcd(abs(a), abs(b)) != ℕ.0
+    abs(af) * nat_gcd(abs(a), abs(b)) = abs(a)
+    abs(bf) * nat_gcd(abs(a), abs(b)) = abs(b)
+    nat_gcd(abs(af), abs(bf)) = ℕ.1
+}
+
+attributes ℤ {
+    define is_prime(self) -> Bool {
+        abs(self).is_prime
+    }
+}
+
+from list import List
+
+theorem euclids_lemma_prime(a: ℤ, b: ℤ, c: ℤ) {
+    a.is_prime and a.divides(b * c) implies a.divides(b) or a.divides(c)
+} by {
+    abs(a).is_prime 
+    abs(a).divides(abs(b) * abs(c)) 
+    abs(a).divides(abs(b)) or abs(a).divides(abs(c))
+}
+
+theorem euclids_lemma(a: ℤ, b: ℤ, c: ℤ) {
+    gcd(a, b) = 1 and a.divides(b * c) implies a.divides(c)
+} by {
+    nat_gcd(abs(a), abs(b)) = ℕ.1
+    abs(a).divides(abs(b) * abs(c))
+    abs(a).divides(abs(c))
+}
+
+// This is just the ℕ division theorem ported up
+theorem positive_division_theorem(m: ℤ, n: ℤ) {
+    0 <= m and n.is_positive implies exists(q: ℤ, r: ℤ) {
+        0 <= r and r < n and m = q * n + r
+    }
+} by {
+    let (q: ℕ, r: ℕ) satisfy {
+        r < abs(n) and abs(m) = q * abs(n) + r
+    }
+    0 <= from_nat(r)
+    from_nat(r) < n
+    from_nat(abs(m)) = from_nat(q * abs(n) + r)
+    m = from_nat(q * abs(n) + r)
+    m = from_nat(q) * from_nat(abs(n)) + from_nat(r)
+}
+
+// Dividing negative numbers is awkward, sometimes you're off by one
+theorem negative_division_theorem(m: ℤ, n: ℤ) {
+    m.is_negative and n.is_positive implies exists(q: ℤ, r: ℤ) {
+        0 <= r and r < n and m = q * n + r
+    }
+} by {
+    0 <= -m
+    let (qn: ℤ, rn: ℤ) satisfy {
+        0 <= rn and rn < n and -m = qn * n + rn
+    }
+    m = (-qn) * n + -rn
+    if rn = 0 {
+        negative_division_theorem(m, n)
+    } else {
+        rn > 0
+        (-qn + -1) * n = (-qn) * n + -n
+        (-qn) * n = (-qn + -1) * n + n
+        m = (-qn) * n + -rn
+        m = (-qn + -1) * n + (n + -rn)
+        rn < n
+        0 < n + -rn
+        0 <= n + -rn
+        -rn < 0
+        n + -rn < n
+        negative_division_theorem(m, n)
+    }
+}
+
+// The entire division theorem is combining the two cases
+theorem division_theorem(m: ℤ, n: ℤ) {
+    n.is_positive implies exists(q: ℤ, r: ℤ) {
+        0 <= r and r < n and m = q * n + r
+    }
+} by {
+    if m.is_negative {
+        division_theorem(m, n)
+    } else {
+        0 <= m
+        division_theorem(m, n)
+    }
 }

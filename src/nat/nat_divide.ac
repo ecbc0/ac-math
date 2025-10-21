@@ -362,3 +362,32 @@ theorem mul_divides_left(a: ℕ, b: ℕ, m: ℕ) {
 theorem mul_divides_right(a: ℕ, b: ℕ, m: ℕ) {
     a.divides(b) implies (a * m).divides(b * m)
 }
+
+theorem power_lt_divides(a: ℕ, p1: ℕ, p2: ℕ) {
+    p1 <= p2 implies (a^p1).divides(a^p2)
+} by {
+    a^(p1) * a^(p2 - p1) = a^(p2)
+}
+
+theorem divides_power_lt(a: ℕ, p1: ℕ, p2: ℕ) {
+    a > 1 and (a^p1).divides(a^p2) implies p1 <= p2
+} by {
+    let q: ℕ satisfy { a^p1 * q = a^p2 }
+    q != 0
+    if p1 > p2 {
+        a^p1 > a^p2
+        a^p1 * q >= a^p1
+        a^p1 * q > a^p2
+        false
+    }
+}
+
+theorem not_divides_power_gt(a: ℕ, p1: ℕ, p2: ℕ) {
+    a > 1 and not (a^p1).divides(a^p2) implies p1 > p2
+} by {
+    p1 <= p2 implies (a^p1).divides(a^p2)
+}
+
+theorem power_gt_preserve_not_divides(a: ℕ, p1: ℕ, p2: ℕ, b: ℕ) {
+    not (a^(p1)).divides(b) and p2 >= p1 implies not (a^(p2)).divides(b)
+}

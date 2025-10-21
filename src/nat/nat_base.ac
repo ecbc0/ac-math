@@ -497,6 +497,10 @@ theorem mul_to_zero(a: ℕ, b: ℕ) {
     a * b = 0 implies a = 0 or b = 0 
 } 
 
+theorem mul_to_zero_imp_rev(a: ℕ, b: ℕ) { 
+    a = 0 or b = 0 implies a * b = 0  
+}
+
 theorem mul_increase(a: ℕ, b: ℕ) {
     a != 0 and 1 < b implies a < a * b
 } by {
