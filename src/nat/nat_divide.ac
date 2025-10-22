@@ -6,12 +6,12 @@ numerals ℕ
 /// according to the concept of successive substraction, r, q is obviously unique
 theorem division_theorem(m: ℕ, n: ℕ) {
     0 < n implies exists(q: ℕ, r: ℕ) {
-        r < n and m = q * n + r
+        r < n and m = q ⋅ n + r
     }
 } by {
     define f(x: ℕ) -> Bool { division_theorem(x, n) }
     if 0 < n {
-        0 = 0 * n + 0
+        0 = 0 ⋅ n + 0
     }
     division_theorem(0, n)
     f(0)
@@ -19,17 +19,17 @@ theorem division_theorem(m: ℕ, n: ℕ) {
         if f(x) {
             division_theorem(x, n)
             let (q: ℕ, r: ℕ) satisfy {
-                r < n and x = q * n + r
+                r < n and x = q ⋅ n + r
             }
             if r + 1 = n {
-                x + 1 = (q * n + r) + 1
-                x + 1 = q * n + (r + 1)
-                x + 1 = q * n + n
-                x + 1 = (q + 1) * n + 0
+                x + 1 = (q ⋅ n + r) + 1
+                x + 1 = q ⋅ n + (r + 1)
+                x + 1 = q ⋅ n + n
+                x + 1 = (q + 1) ⋅ n + 0
                 division_theorem(x + 1, n)
             } else {
                 r + 1 < n
-                x + 1 = q * n + r + 1
+                x + 1 = q ⋅ n + r + 1
                 division_theorem(x + 1, n)
             }
             division_theorem(x + 1, n)
@@ -41,19 +41,19 @@ theorem division_theorem(m: ℕ, n: ℕ) {
 // swap 1,2 to get dual and then get all
 theorem division_theorem_uniqueness_helper(m: ℕ, n: ℕ, q1: ℕ, q2: ℕ, r1: ℕ, r2: ℕ) {
     (0 < n) and
-    (r1 < n and m = q1 * n + r1) and
-    (r2 < n and m = q2 * n + r2) implies
+    (r1 < n and m = q1 ⋅ n + r1) and
+    (r2 < n and m = q2 ⋅ n + r2) implies
     (q1 >= q2) 
 } by {
-    q1 * n + r1 = q2 * n + r2
+    q1 ⋅ n + r1 = q2 ⋅ n + r2
     if q1 < q2 {
-        q2 * n > q1 * n
-        r1 = (q2 * n + r2) - q1 * n
-        (q2 * n + r2) - q1 * n = (q2 * n - q1 * n) + r2
-        r1 = (q2 * n - q1 * n) + r2
-        r1 = (q2 - q1) * n + r2
+        q2 ⋅ n > q1 ⋅ n
+        r1 = (q2 ⋅ n + r2) - q1 ⋅ n
+        (q2 ⋅ n + r2) - q1 ⋅ n = (q2 ⋅ n - q1 ⋅ n) + r2
+        r1 = (q2 ⋅ n - q1 ⋅ n) + r2
+        r1 = (q2 - q1) ⋅ n + r2
         q2 - q1 >= 1
-        (q2 - q1) * n >= n
+        (q2 - q1) ⋅ n >= n
         r1 >= n
         false 
     }
@@ -61,26 +61,26 @@ theorem division_theorem_uniqueness_helper(m: ℕ, n: ℕ, q1: ℕ, q2: ℕ, r1:
 
 theorem division_theorem_uniqueness(m: ℕ, n: ℕ, q1: ℕ, q2: ℕ, r1: ℕ, r2: ℕ) {
     (0 < n) and
-    (r1 < n and m = q1 * n + r1) and
-    (r2 < n and m = q2 * n + r2) implies
+    (r1 < n and m = q1 ⋅ n + r1) and
+    (r2 < n and m = q2 ⋅ n + r2) implies
     (r1 = r2) and (q1 = q2)
 } by {
     q1 >= q2
     q2 >= q1
     q1 = q2
-    q1 * n = q2 * n
+    q1 ⋅ n = q2 ⋅ n
     r1 = r2
 }
 
 attributes ℕ {
     define divides(self, a: ℕ) -> Bool {
-        exists(b: ℕ) { self * b = a }
+        exists(b: ℕ) { self ⋅ b = a }
     }
 
     define proper_divides(self, a: ℕ) -> Bool {
         a != 0 and exists(b: ℕ) { 
             (1 < self and self < a) and
-            self * b = a 
+            self ⋅ b = a 
         }
     }
 }
@@ -94,14 +94,14 @@ theorem zero_divides(n: ℕ) {
 }
 
 theorem factor_lte(a: ℕ, b: ℕ, n: ℕ) {
-    (n != 0 and a * b = n) implies a <= n
+    (n != 0 and a ⋅ b = n) implies a <= n
 } by {
-    if (n != 0 and a * b = n) {
+    if (n != 0 and a ⋅ b = n) {
         a != 0
         b != 0
         if b = 1 { a = n }
         if b > 1 { 
-            a < a * b 
+            a < a ⋅ b 
             a < n
         }
         a <= n
@@ -115,7 +115,7 @@ theorem divides_lte(a: ℕ, n: ℕ) {
 theorem divides_self(a: ℕ) { a.divides(a) }
 
 theorem another_also_proper_divides(n: ℕ, a: ℕ, b: ℕ) {
-    a.proper_divides(n) and n = a * b implies b.proper_divides(n) 
+    a.proper_divides(n) and n = a ⋅ b implies b.proper_divides(n) 
 } by {
     // just need to prove 1 < b < n. proved by contradiction
     if b = 0 { 
@@ -129,9 +129,9 @@ theorem another_also_proper_divides(n: ℕ, a: ℕ, b: ℕ) {
     if b >= n {
         1 < a
         let m: ℕ satisfy { a = 1 + m and m != 0 }
-        a * b = b + m * b
-        m * b != 0
-        a * b > n 
+        a ⋅ b = b + m ⋅ b
+        m ⋅ b != 0
+        a ⋅ b > n 
         false
     }
     1 < b and b < n
@@ -144,26 +144,26 @@ theorem proper_divides_gt_one(a: ℕ, b: ℕ) {
 theorem divides_trans(a1: ℕ, a2: ℕ, a3: ℕ) {
     a1.divides(a2) and a2.divides(a3) implies a1.divides(a3)
 } by {
-    let (b1: ℕ) satisfy { a1 * b1 = a2 }
-    let (b2: ℕ) satisfy { a2 * b2 = a3 }
-    a1 * (b1 * b2) = a3
+    let (b1: ℕ) satisfy { a1 ⋅ b1 = a2 }
+    let (b2: ℕ) satisfy { a2 ⋅ b2 = a3 }
+    a1 ⋅ (b1 ⋅ b2) = a3
 }
 
 theorem divides_mul(a1: ℕ, a2: ℕ, a3: ℕ) {
-    a1.divides(a2) implies a1.divides(a2 * a3)
+    a1.divides(a2) implies a1.divides(a2 ⋅ a3)
 } 
 
 theorem divides_suc(a: ℕ, b: ℕ) { a.divides(b) and a.divides(b + 1) implies a = 1 } by {
-    let (c: ℕ) satisfy { a * c = b }
-    let (d: ℕ) satisfy { a * d = b + 1 }
+    let (c: ℕ) satisfy { a ⋅ c = b }
+    let (d: ℕ) satisfy { a ⋅ d = b + 1 }
     a != 0
-    a * c < a * d
+    a ⋅ c < a ⋅ d
     c <= d
     let (e: ℕ) satisfy { c + e = d }
-    a * (c + e) = b + 1
-    a * c + a * e = b + 1
-    b + a * e = b + 1
-    a * e = 1
+    a ⋅ (c + e) = b + 1
+    a ⋅ c + a ⋅ e = b + 1
+    b + a ⋅ e = b + 1
+    a ⋅ e = 1
     a = 1
 }
 
@@ -172,11 +172,11 @@ theorem divides_suc(a: ℕ, b: ℕ) { a.divides(b) and a.divides(b + 1) implies 
 theorem divides_add(a: ℕ, b: ℕ, d: ℕ) {
     d.divides(a) and d.divides(b) implies d.divides(a + b)
 } by {
-    let (qa: ℕ) satisfy { qa * d = a }
-    let (qb: ℕ) satisfy { qb * d = b }
-    (qa + qb) * d = qa * d + b
-    (qa + qb) * d = a + b
-    d.divides((qa + qb) * d)
+    let (qa: ℕ) satisfy { qa ⋅ d = a }
+    let (qb: ℕ) satisfy { qb ⋅ d = b }
+    (qa + qb) ⋅ d = qa ⋅ d + b
+    (qa + qb) ⋅ d = a + b
+    d.divides((qa + qb) ⋅ d)
 }
 
 theorem divides_symm(a: ℕ, b: ℕ) { 
@@ -195,7 +195,7 @@ theorem divides_symm(a: ℕ, b: ℕ) {
 
 let mod(a: ℕ, m: ℕ) -> r: ℕ satisfy {
     if m != 0 {
-        r < m and exists(q: ℕ) { q * m + r = a }
+        r < m and exists(q: ℕ) { q ⋅ m + r = a }
     } else {
         // It doesn't really matter how we define "mod 0".
         // We pick a mod 0 = a.
@@ -204,7 +204,7 @@ let mod(a: ℕ, m: ℕ) -> r: ℕ satisfy {
 } by {
     if m != 0 {
         0 < m
-        let (q: ℕ, r: ℕ) satisfy { r < m and q * m + r = a }
+        let (q: ℕ, r: ℕ) satisfy { r < m and q ⋅ m + r = a }
         // should add uniqueness? or unimportant, so quotient ... or, because it's `let`, so it just select one of them that satisfy the condition
     } else {
         a = a
@@ -216,15 +216,15 @@ attributes ℕ {
 }
 
 theorem add_mod(a: ℕ, m: ℕ) {
-    exists(q: ℕ) { q * m + a.mod(m) = a }
+    exists(q: ℕ) { q ⋅ m + a.mod(m) = a }
 } by {
     if m = 0 {
         a.mod(0) = a
-        0 * 0 = 0
-        0 * 0 + a.mod(0) = a
-        let (q: ℕ) satisfy { q * m + a.mod(m) = a }
+        0 ⋅ 0 = 0
+        0 ⋅ 0 + a.mod(0) = a
+        let (q: ℕ) satisfy { q ⋅ m + a.mod(m) = a }
     } else {
-        let (q: ℕ) satisfy { q * m + a.mod(m) = a }
+        let (q: ℕ) satisfy { q ⋅ m + a.mod(m) = a }
     }
 }
 
@@ -246,37 +246,37 @@ theorem mod_lte(a: ℕ, m: ℕ) {
     if m = 0 {
         a.mod(m) <= a
     } else {
-        let q: ℕ satisfy { q * m + a.mod(m) = a }
-        a.mod(m) + q * m = a
+        let q: ℕ satisfy { q ⋅ m + a.mod(m) = a }
+        a.mod(m) + q ⋅ m = a
         a.mod(m) <= a
     }
 }
 
 theorem div_sub_mod(a: ℕ, m: ℕ) { m.divides(a - a.mod(m)) } by {
-    let (q: ℕ) satisfy { q * m + a.mod(m) = a }
-    a - a.mod(m) = q * m
-    m.divides(q * m)
+    let (q: ℕ) satisfy { q ⋅ m + a.mod(m) = a }
+    a - a.mod(m) = q ⋅ m
+    m.divides(q ⋅ m)
 }
 
 theorem divides_sub(a: ℕ, b: ℕ, d: ℕ) {
     d.divides(a) and d.divides(b) implies d.divides(a - b)
 } by {
-    let qa: ℕ satisfy { qa * d = a }
-    let qb: ℕ satisfy { qb * d = b }
-    a - b = qa * d - qb * d
-    a - b = (qa - qb) * d
-    d.divides((qa - qb) * d)
+    let qa: ℕ satisfy { qa ⋅ d = a }
+    let qb: ℕ satisfy { qb ⋅ d = b }
+    a - b = qa ⋅ d - qb ⋅ d
+    a - b = (qa - qb) ⋅ d
+    d.divides((qa - qb) ⋅ d)
     d.divides(a - b)
 }
 
 theorem divides_mod(a: ℕ, m: ℕ, d: ℕ) {
     d.divides(a) and d.divides(m) implies d.divides(a.mod(m))
 } by {
-    let (q: ℕ) satisfy { q * m + a.mod(m) = a }
-    a.mod(m) + q * m = a
-    a.mod(m) = a - q * m
-    d.divides(q * m)
-    d.divides(a - q * m)
+    let (q: ℕ) satisfy { q ⋅ m + a.mod(m) = a }
+    a.mod(m) + q ⋅ m = a
+    a.mod(m) = a - q ⋅ m
+    d.divides(q ⋅ m)
+    d.divides(a - q ⋅ m)
     d.divides(a.mod(m))
 }
 
@@ -296,15 +296,15 @@ theorem div_imp_mod(a: ℕ, m: ℕ) { m.divides(a) implies a.mod(m) = 0 } by {
 }
 
 theorem small_mod(a: ℕ, m: ℕ) { a < m implies a.mod(m) = a } by {
-    let (q: ℕ) satisfy { q * m + a.mod(m) = a }
+    let (q: ℕ) satisfy { q ⋅ m + a.mod(m) = a }
     if q = 0 {
         0 + a.mod(m) = a
         a.mod(m) = a
     } else {
         m != 0
-        q * m != 0
-        m.divides(q * m)
-        m <= q * m
+        q ⋅ m != 0
+        m.divides(q ⋅ m)
+        m <= q ⋅ m
         m <= a
         false
     }
@@ -322,62 +322,62 @@ theorem mod_mod(a: ℕ, m: ℕ) { a.mod(m).mod(m) = a.mod(m) } by {
     }
 }
 
-theorem mod_mul(m: ℕ, q: ℕ) { (q * m).mod(m) = 0 } by {
-    m.divides(q * m)
+theorem mod_mul(m: ℕ, q: ℕ) { (q ⋅ m).mod(m) = 0 } by {
+    m.divides(q ⋅ m)
 }
 
 theorem divides_unmod(d: ℕ, a: ℕ, m: ℕ) {
     d.divides(m) and d.divides(a.mod(m)) implies d.divides(a)
 } by {
-    let (q: ℕ) satisfy { q * m + a.mod(m) = a }
-    m.divides(q * m)
-    d.divides(q * m)
-    d.divides(q * m + a.mod(m))
+    let (q: ℕ) satisfy { q ⋅ m + a.mod(m) = a }
+    m.divides(q ⋅ m)
+    d.divides(q ⋅ m)
+    d.divides(q ⋅ m + a.mod(m))
     d.divides(a)
 }
 
 theorem divides_cancel_left(a: ℕ, b: ℕ, c: ℕ) {
-    a != 0 and (a * b).divides(a * c) implies b.divides(c)
+    a != 0 and (a ⋅ b).divides(a ⋅ c) implies b.divides(c)
 } by {
     let d: ℕ satisfy {
-        a * b * d = a * c
+        a ⋅ b ⋅ d = a ⋅ c
     }
-    a * (b * d) = a * c
-    b * d = c
+    a ⋅ (b ⋅ d) = a ⋅ c
+    b ⋅ d = c
 }
 
 theorem divides_cancel_right(a: ℕ, b: ℕ, c: ℕ) {
-    a != 0 and (b * a).divides(c * a) implies b.divides(c)
+    a != 0 and (b ⋅ a).divides(c ⋅ a) implies b.divides(c)
 }
 
 theorem mul_divides_left(a: ℕ, b: ℕ, m: ℕ) {
-    a.divides(b) implies (m * a).divides(m * b)
+    a.divides(b) implies (m ⋅ a).divides(m ⋅ b)
 } by {
     let d: ℕ satisfy {
-        a * d = b
+        a ⋅ d = b
     }
-    m * a * d = m * b
+    m ⋅ a ⋅ d = m ⋅ b
 }
 
 theorem mul_divides_right(a: ℕ, b: ℕ, m: ℕ) {
-    a.divides(b) implies (a * m).divides(b * m)
+    a.divides(b) implies (a ⋅ m).divides(b ⋅ m)
 }
 
 theorem power_lt_divides(a: ℕ, p1: ℕ, p2: ℕ) {
     p1 <= p2 implies (a^p1).divides(a^p2)
 } by {
-    a^(p1) * a^(p2 - p1) = a^(p2)
+    a^(p1) ⋅ a^(p2 - p1) = a^(p2)
 }
 
 theorem divides_power_lt(a: ℕ, p1: ℕ, p2: ℕ) {
     a > 1 and (a^p1).divides(a^p2) implies p1 <= p2
 } by {
-    let q: ℕ satisfy { a^p1 * q = a^p2 }
+    let q: ℕ satisfy { a^p1 ⋅ q = a^p2 }
     q != 0
     if p1 > p2 {
         a^p1 > a^p2
-        a^p1 * q >= a^p1
-        a^p1 * q > a^p2
+        a^p1 ⋅ q >= a^p1
+        a^p1 ⋅ q > a^p2
         false
     }
 }

@@ -71,19 +71,19 @@ theorem from_int_denom(n: ℤ) {
 /// True if two fractions a/b and c/d are equal using cross multiplication.
 /// Requires non-zero denominators to avoid the 0/0 edge case.
 define cross_equals(a: ℤ, b: ℤ, c: ℤ, d: ℤ) -> Bool {
-    b != ℤ.0 and d != ℤ.0 and a * d = c * b
+    b != ℤ.0 and d != ℤ.0 and a ⋅ d = c ⋅ b
 }
 
 theorem cross_equals_trans(a: ℤ, b: ℤ, c: ℤ, d: ℤ, e: ℤ, f: ℤ) {
     cross_equals(a, b, c, d) and cross_equals(c, d, e, f) implies cross_equals(a, b, e, f)
 } by {
-    a * d = b * c
-    c * f = d * e
-    a * d * f = b * c * f
-    a * d * f = b * d * e
-    a * f * d = b * e * d
+    a ⋅ d = b ⋅ c
+    c ⋅ f = d ⋅ e
+    a ⋅ d ⋅ f = b ⋅ c ⋅ f
+    a ⋅ d ⋅ f = b ⋅ d ⋅ e
+    a ⋅ f ⋅ d = b ⋅ e ⋅ d
     d != ℤ.0
-    a * f = b * e
+    a ⋅ f = b ⋅ e
 }
 
 /// Reduces a fraction a/b to its simplest form as a ℚ.
@@ -101,16 +101,16 @@ let reduce(a: ℤ, b: ℤ) -> r: ℚ satisfy {
         // Factor out the gcd
         gcd(a, b) != ℤ.0
         let a1: ℤ satisfy {
-            a1 * gcd(a, b) = a
+            a1 ⋅ gcd(a, b) = a
         }
         let b1: ℤ satisfy {
-            b1 * gcd(a, b) = b
+            b1 ⋅ gcd(a, b) = b
         }
         b1 != ℤ.0
-        a * b = a * b1 * gcd(a, b)
-        a * b = b * a1 * gcd(a, b)
-        a * b1 * gcd(a, b) = b * a1 * gcd(a, b)
-        a * b1 = b * a1
+        a ⋅ b = a ⋅ b1 ⋅ gcd(a, b)
+        a ⋅ b = b ⋅ a1 ⋅ gcd(a, b)
+        a ⋅ b1 ⋅ gcd(a, b) = b ⋅ a1 ⋅ gcd(a, b)
+        a ⋅ b1 = b ⋅ a1
         cross_equals(a1, b1, a, b)
         gcd(a1, b1) = ℤ.1
 
@@ -126,7 +126,7 @@ let reduce(a: ℤ, b: ℤ) -> r: ℚ satisfy {
             let r = ℚ.new(-a1, -b1)
             r.num = -a1
             r.denom = -b1
-            a * -b1 = -a1 * b
+            a ⋅ -b1 = -a1 ⋅ b
             cross_equals(-a1, -b1, a, b)
             cross_equals(r.num, r.denom, a, b)
         }
@@ -138,13 +138,13 @@ theorem cross_eq_imp_eq(r1: ℚ, r2: ℚ) {
 } by {
     // The r1 fields divide into the r2 ones
     gcd(r1.num, r1.denom) = ℤ.1
-    r1.denom.divides(r1.num * r2.denom)
+    r1.denom.divides(r1.num ⋅ r2.denom)
     r1.denom.divides(r2.denom)
     int.abs(r1.denom).divides(int.abs(r2.denom))
 
     // The r2 fields divide into the r1 ones
     gcd(r2.num, r2.denom) = ℤ.1
-    r2.denom.divides(r2.num * r1.denom)
+    r2.denom.divides(r2.num ⋅ r1.denom)
     r2.denom.divides(r1.denom)
     int.abs(r2.denom).divides(int.abs(r1.denom))
 
@@ -155,8 +155,8 @@ theorem cross_eq_imp_eq(r1: ℚ, r2: ℚ) {
     r1.denom = r2.denom
 
     // Divide out the denominators
-    r1.num * r2.denom = r2.num * r1.denom
-    r1.num * r2.denom = r2.num * r2.denom
+    r1.num ⋅ r2.denom = r2.num ⋅ r1.denom
+    r1.num ⋅ r2.denom = r2.num ⋅ r2.denom
     r2.denom != ℤ.0
     r1.num = r2.num
 }
@@ -201,16 +201,16 @@ attributes ℚ {
     /// The sum of two rational numbers.
     define add(self, other: ℚ) -> ℚ {
         reduce(
-            self.num * other.denom + other.num * self.denom,
-            self.denom * other.denom
+            self.num ⋅ other.denom + other.num ⋅ self.denom,
+            self.denom ⋅ other.denom
         )
     }
 
     /// The product of two rational numbers.
     define mul(self, other: ℚ) -> ℚ {
         reduce(
-            self.num * other.num, 
-            self.denom * other.denom
+            self.num ⋅ other.num, 
+            self.denom ⋅ other.denom
         )
     }
 
@@ -223,11 +223,11 @@ attributes ℚ {
     /// The quotient of two rational numbers.
     /// Division by zero is defined to yield zero.
     define div(self, other: ℚ) -> ℚ {
-        self * other.reciprocal
+        self ⋅ other.reciprocal
     }
 
     /// The rational formed by appending a digit to this rational in base 10.
-    define read(self, other: ℚ) -> ℚ { ℚ.10 * self + other }
+    define read(self, other: ℚ) -> ℚ { ℚ.10 ⋅ self + other }
 }
 
 theorem reduce_idempotent(r: ℚ) {
@@ -252,7 +252,7 @@ theorem neg_denom(r: ℚ) {
 theorem add_zero_right(a: ℚ) {
     a + ℚ.0 = a
 } by {
-    a + ℚ.0 = reduce(a.num * ℤ.1 + ℤ.0 * a.denom, a.denom * ℤ.1)
+    a + ℚ.0 = reduce(a.num ⋅ ℤ.1 + ℤ.0 ⋅ a.denom, a.denom ⋅ ℤ.1)
     a + ℚ.0 = reduce(a.num, a.denom)
 }
 
@@ -269,7 +269,7 @@ theorem from_int_cancel(a: ℤ, b: ℤ) {
 }
 
 theorem mul_comm(a: ℚ, b: ℚ) {
-    a * b = b * a
+    a ⋅ b = b ⋅ a
 }
 
 theorem rat_neg_one {
@@ -280,23 +280,23 @@ theorem rat_neg_one {
 }
 
 theorem mul_neg_one_right(r: ℚ) {
-    r * -ℚ.1 = -r
+    r ⋅ -ℚ.1 = -r
 } by {
-    r * ℚ.from_int(-ℤ.1) = -r
+    r ⋅ ℚ.from_int(-ℤ.1) = -r
 }
 
 theorem mul_neg_one_left(r: ℚ) {
-    -ℚ.1 * r = -r
+    -ℚ.1 ⋅ r = -r
 }
 
 theorem mul_one_right(r: ℚ) {
-    r * ℚ.1 = r
+    r ⋅ ℚ.1 = r
 } by {
-    r * ℚ.from_int(ℤ.1) = r
+    r ⋅ ℚ.from_int(ℤ.1) = r
 }
 
 theorem mul_one_left(r: ℚ) {
-    ℚ.1 * r = r
+    ℚ.1 ⋅ r = r
 }
 
 theorem reciprocal_by_div(a: ℚ) {
@@ -304,48 +304,48 @@ theorem reciprocal_by_div(a: ℚ) {
 } 
 
 theorem div_by_reciprocal(p: ℚ, q: ℚ) {
-    p/q = p * ℚ.1 / q
+    p/q = p ⋅ ℚ.1 / q
 }
 
 theorem mul_int_eq_int_mul(a: ℤ, b: ℤ) {
-    ℚ.from_int(a) * ℚ.from_int(b) = ℚ.from_int(a * b)
+    ℚ.from_int(a) ⋅ ℚ.from_int(b) = ℚ.from_int(a ⋅ b)
 }
 
 theorem unreduce_right(a: ℤ, b: ℤ) {
     b != ℤ.0 implies exists(d: ℤ) {
-        reduce(a, b).num * d = a and reduce(a, b).denom * d = b
+        reduce(a, b).num ⋅ d = a and reduce(a, b).denom ⋅ d = b
     }
 } by {
     let r = reduce(a, b)
     cross_equals(r.num, r.denom, a, b)
-    r.num * b = a * r.denom
+    r.num ⋅ b = a ⋅ r.denom
     int.gcd(r.num, r.denom) = ℤ.1
-    r.denom.divides(r.num * b)
+    r.denom.divides(r.num ⋅ b)
     r.denom.divides(b)
     let d: ℤ satisfy {
-        r.denom * d = b
+        r.denom ⋅ d = b
     }
-    r.num * b * d = a * r.denom * d
-    r.num * d * b = a * b
-    r.num * d = a
+    r.num ⋅ b ⋅ d = a ⋅ r.denom ⋅ d
+    r.num ⋅ d ⋅ b = a ⋅ b
+    r.num ⋅ d = a
 }
 
 theorem unreduce_left(a: ℤ, b: ℤ) {
     b != ℤ.0 implies exists(d: ℤ) {
-        d * reduce(a, b).num = a and d * reduce(a, b).denom = b
+        d ⋅ reduce(a, b).num = a and d ⋅ reduce(a, b).denom = b
     }
 } by {
     let d: ℤ satisfy {
-        reduce(a, b).num * d = a and reduce(a, b).denom * d = b
+        reduce(a, b).num ⋅ d = a and reduce(a, b).denom ⋅ d = b
     }
 }
 
 theorem mul_int_right(r: ℚ, n: ℤ) {
-    r * ℚ.from_int(n) = reduce(r.num * n, r.denom)
+    r ⋅ ℚ.from_int(n) = reduce(r.num ⋅ n, r.denom)
 }
 
 theorem mul_int_left(n: ℤ, r: ℚ) {
-    ℚ.from_int(n) * r = reduce(n * r.num, r.denom)
+    ℚ.from_int(n) ⋅ r = reduce(n ⋅ r.num, r.denom)
 }
 
 theorem cross_eq_imp_reduce_eq(a: ℤ, b: ℤ, c: ℤ, d: ℤ) {
@@ -385,31 +385,31 @@ theorem reduce_change_neg(a: ℤ, b: ℤ) {
     reduce(a, -b) = reduce(-a, b)
 } by {
     if b = ℤ.0 { reduce(a, -b) = reduce(-a, b) } else {
-        a * b = -b * -a
+        a ⋅ b = -b ⋅ -a
         cross_equals(a, -b, -a, b)
     }
 }
 
 theorem mul_reduced_int_right(a: ℤ, b: ℤ, c: ℤ) {
-    reduce(a, b) * ℚ.from_int(c) = reduce(a * c, b)
+    reduce(a, b) ⋅ ℚ.from_int(c) = reduce(a ⋅ c, b)
 } by {
     if b = ℤ.0 {
         reduce(a, b) = ℚ.0
-        reduce(a * c, b) = ℚ.0
-        reduce(a, b) * ℚ.from_int(c) = reduce(a * c, b)
+        reduce(a ⋅ c, b) = ℚ.0
+        reduce(a, b) ⋅ ℚ.from_int(c) = reduce(a ⋅ c, b)
     } else {
         let r = reduce(a, b)
-        r * ℚ.from_int(c) = reduce(r.num * c, r.denom)
+        r ⋅ ℚ.from_int(c) = reduce(r.num ⋅ c, r.denom)
         cross_equals(r.num, r.denom, a, b)
-        r.num * b = r.denom * a
-        r.num * c * b = r.denom * (a * c)
-        reduce(r.num * c, r.denom) = reduce(a * c, b)
-        reduce(a, b) * ℚ.from_int(c) = reduce(a * c, b)
+        r.num ⋅ b = r.denom ⋅ a
+        r.num ⋅ c ⋅ b = r.denom ⋅ (a ⋅ c)
+        reduce(r.num ⋅ c, r.denom) = reduce(a ⋅ c, b)
+        reduce(a, b) ⋅ ℚ.from_int(c) = reduce(a ⋅ c, b)
     }
 }
 
 theorem mul_reduced_int_left(a: ℤ, b: ℤ, c: ℤ) {
-    ℚ.from_int(c) * reduce(a, b) = reduce(c * a, b)
+    ℚ.from_int(c) ⋅ reduce(a, b) = reduce(c ⋅ a, b)
 }
 
 theorem neg_by_div(a: ℚ) {
@@ -422,59 +422,59 @@ theorem neg_by_div(a: ℚ) {
 }
 
 theorem mul_int_right_cancel(r1: ℚ, r2: ℚ, n: ℤ) {
-    n != ℤ.0 and r1 * ℚ.from_int(n) = r2 * ℚ.from_int(n) implies r1 = r2
+    n != ℤ.0 and r1 ⋅ ℚ.from_int(n) = r2 ⋅ ℚ.from_int(n) implies r1 = r2
 } by {
-    r1 * ℚ.from_int(n) = reduce(r1.num * n, r1.denom)
-    r2 * ℚ.from_int(n) = reduce(r2.num * n, r2.denom)
-    reduce(r1.num * n, r1.denom) = reduce(r2.num * n, r2.denom)
-    r1.num * n * r2.denom = r1.denom * r2.num * n
-    r1.num * r2.denom = r1.denom * r2.num
+    r1 ⋅ ℚ.from_int(n) = reduce(r1.num ⋅ n, r1.denom)
+    r2 ⋅ ℚ.from_int(n) = reduce(r2.num ⋅ n, r2.denom)
+    reduce(r1.num ⋅ n, r1.denom) = reduce(r2.num ⋅ n, r2.denom)
+    r1.num ⋅ n ⋅ r2.denom = r1.denom ⋅ r2.num ⋅ n
+    r1.num ⋅ r2.denom = r1.denom ⋅ r2.num
     r1 = r2
 }
 
 theorem mul_int_left_cancel(r1: ℚ, r2: ℚ, n: ℤ) {
-    n != ℤ.0 and ℚ.from_int(n) * r1 = ℚ.from_int(n) * r2 implies r1 = r2
+    n != ℤ.0 and ℚ.from_int(n) ⋅ r1 = ℚ.from_int(n) ⋅ r2 implies r1 = r2
 }
 
 theorem mul_reduced_nondegenerate(a: ℤ, b: ℤ, c: ℤ, d: ℤ) {
     b != ℤ.0 and d != ℤ.0 implies
-        reduce(a, b) * reduce(c, d) = reduce(a * c, b * d)
+        reduce(a, b) ⋅ reduce(c, d) = reduce(a ⋅ c, b ⋅ d)
 } by {
     let e: ℤ satisfy {
-        reduce(a, b).num * e = a and reduce(a, b).denom * e = b
+        reduce(a, b).num ⋅ e = a and reduce(a, b).denom ⋅ e = b
     }
     e != ℤ.0
     let f: ℤ satisfy {
-        reduce(c, d).num * f = c and reduce(c, d).denom * f = d
+        reduce(c, d).num ⋅ f = c and reduce(c, d).denom ⋅ f = d
     }
     f != ℤ.0
 
     // Simplify numerator
-    let nums = reduce(a, b).num * reduce(c, d).num
-    (reduce(a, b).num * e) * (reduce(c, d).num * f) = a * c
-    reduce(a, b).num * e * reduce(c, d).num * f = a * c
-    (reduce(a, b).num * reduce(c, d).num) * e * f = a * c
-    (reduce(a, b).num * reduce(c, d).num) * (e * f) = a * c
-    nums * (e * f) = a * c
+    let nums = reduce(a, b).num ⋅ reduce(c, d).num
+    (reduce(a, b).num ⋅ e) ⋅ (reduce(c, d).num ⋅ f) = a ⋅ c
+    reduce(a, b).num ⋅ e ⋅ reduce(c, d).num ⋅ f = a ⋅ c
+    (reduce(a, b).num ⋅ reduce(c, d).num) ⋅ e ⋅ f = a ⋅ c
+    (reduce(a, b).num ⋅ reduce(c, d).num) ⋅ (e ⋅ f) = a ⋅ c
+    nums ⋅ (e ⋅ f) = a ⋅ c
 
     // Simplify denominator
-    let denoms: ℤ = reduce(a, b).denom * reduce(c, d).denom
-    (reduce(a, b).denom * e) * (reduce(c, d).denom * f) = b * d
-    (reduce(a, b).denom * reduce(c, d).denom) * e * f = b * d
-    (reduce(a, b).denom * reduce(c, d).denom) * (e * f) = b * d
-    denoms * (e * f) = b * d
+    let denoms: ℤ = reduce(a, b).denom ⋅ reduce(c, d).denom
+    (reduce(a, b).denom ⋅ e) ⋅ (reduce(c, d).denom ⋅ f) = b ⋅ d
+    (reduce(a, b).denom ⋅ reduce(c, d).denom) ⋅ e ⋅ f = b ⋅ d
+    (reduce(a, b).denom ⋅ reduce(c, d).denom) ⋅ (e ⋅ f) = b ⋅ d
+    denoms ⋅ (e ⋅ f) = b ⋅ d
 
     // Combining
-    nums * (b * d) = denoms * (a * c)
-    reduce(a, b).denom * reduce(c, d).denom != ℤ.0
+    nums ⋅ (b ⋅ d) = denoms ⋅ (a ⋅ c)
+    reduce(a, b).denom ⋅ reduce(c, d).denom != ℤ.0
     denoms != ℤ.0
-    cross_equals(nums, denoms, a * c, b * d)
+    cross_equals(nums, denoms, a ⋅ c, b ⋅ d)
     cross_equals(
-        reduce(a, b).num * reduce(c, d).num
+        reduce(a, b).num ⋅ reduce(c, d).num
         ,
-        reduce(a, b).denom * reduce(c, d).denom,
-        a * c, 
-        b * d
+        reduce(a, b).denom ⋅ reduce(c, d).denom,
+        a ⋅ c, 
+        b ⋅ d
     )
 }
 
@@ -492,44 +492,44 @@ theorem reduce_zero_num(a: ℤ) {
 }
 
 theorem mul_zero_right(r: ℚ) {
-    r * ℚ.0 = ℚ.0
+    r ⋅ ℚ.0 = ℚ.0
 } by {
-    r * ℚ.0 = reduce(r.num * ℤ.0, r.denom)
-    r * ℚ.0 = reduce(ℤ.0, r.denom)
+    r ⋅ ℚ.0 = reduce(r.num ⋅ ℤ.0, r.denom)
+    r ⋅ ℚ.0 = reduce(ℤ.0, r.denom)
 }
 
 theorem mul_reduced_degenerate(a: ℤ, b: ℤ, c: ℤ) {
-    reduce(a, b) * reduce(c, ℤ.0) = reduce(a * c, b * ℤ.0)
+    reduce(a, b) ⋅ reduce(c, ℤ.0) = reduce(a ⋅ c, b ⋅ ℤ.0)
 } by {
     reduce(c, ℤ.0) = ℚ.0
-    reduce(a, b) * ℚ.0 = ℚ.0
-    reduce(a * c, b * ℤ.0) = ℚ.0
+    reduce(a, b) ⋅ ℚ.0 = ℚ.0
+    reduce(a ⋅ c, b ⋅ ℤ.0) = ℚ.0
 }
 
 theorem mul_reduced(a: ℤ, b: ℤ, c: ℤ, d: ℤ) {
-    reduce(a, b) * reduce(c, d) = reduce(a * c, b * d)
+    reduce(a, b) ⋅ reduce(c, d) = reduce(a ⋅ c, b ⋅ d)
 } by {
     if b = ℤ.0 or d = ℤ.0 {
         // Degenerate cases
         if b = ℤ.0 {
-            reduce(a, ℤ.0) * reduce(c, d) = reduce(a * c, ℤ.0 * d)
-            reduce(a, b) * reduce(c, d) = reduce(a * c, b * d)
+            reduce(a, ℤ.0) ⋅ reduce(c, d) = reduce(a ⋅ c, ℤ.0 ⋅ d)
+            reduce(a, b) ⋅ reduce(c, d) = reduce(a ⋅ c, b ⋅ d)
         } else {
             d = ℤ.0
-            reduce(a, b) * reduce(c, ℤ.0) = reduce(a * c, b * ℤ.0)
-            reduce(a, b) * reduce(c, d) = reduce(a * c, b * d)
+            reduce(a, b) ⋅ reduce(c, ℤ.0) = reduce(a ⋅ c, b ⋅ ℤ.0)
+            reduce(a, b) ⋅ reduce(c, d) = reduce(a ⋅ c, b ⋅ d)
         }
     } else {
         // Non-degenerate case
-        reduce(a, b) * reduce(c, d) = reduce(a * c, b * d)
+        reduce(a, b) ⋅ reduce(c, d) = reduce(a ⋅ c, b ⋅ d)
     }
 }
 
 theorem mul_assoc(a: ℚ, b: ℚ, c: ℚ) {
-    (a * b) * c = a * (b * c)
+    (a ⋅ b) ⋅ c = a ⋅ (b ⋅ c)
 } by {
-    (a * b) * c = reduce(a.num * b.num * c.num, a.denom * b.denom * c.denom)
-    a * (b * c) = reduce(a.num * (b.num * c.num), a.denom * (b.denom * c.denom))
+    (a ⋅ b) ⋅ c = reduce(a.num ⋅ b.num ⋅ c.num, a.denom ⋅ b.denom ⋅ c.denom)
+    a ⋅ (b ⋅ c) = reduce(a.num ⋅ (b.num ⋅ c.num), a.denom ⋅ (b.denom ⋅ c.denom))
 }
 
 theorem add_int_eq_int_add(a: ℤ, b: ℤ) {
@@ -537,85 +537,85 @@ theorem add_int_eq_int_add(a: ℤ, b: ℤ) {
 }
 
 theorem reduce_cancels_right(a: ℤ, b: ℤ, c: ℤ) {
-    c != ℤ.0 implies reduce(a, b) = reduce(a * c, b * c)
+    c != ℤ.0 implies reduce(a, b) = reduce(a ⋅ c, b ⋅ c)
 } by {
     if b = ℤ.0 {
-        b * c = ℤ.0
-        reduce(a, b) = reduce(a * c, b * c)
+        b ⋅ c = ℤ.0
+        reduce(a, b) = reduce(a ⋅ c, b ⋅ c)
     } else {
-        cross_equals(a, b, a * c, b * c)
-        reduce(a, b) = reduce(a * c, b * c)
+        cross_equals(a, b, a ⋅ c, b ⋅ c)
+        reduce(a, b) = reduce(a ⋅ c, b ⋅ c)
     }
 }
 
 theorem reduce_cancels_left(a: ℤ, b: ℤ, c: ℤ) {
-    c != ℤ.0 implies reduce(a, b) = reduce(c * a, c * b)
+    c != ℤ.0 implies reduce(a, b) = reduce(c ⋅ a, c ⋅ b)
 }
 
 theorem add_reduce_right(r: ℚ, a: ℤ, b: ℤ) {
-    b != ℤ.0 implies r + reduce(a, b) = reduce(r.num * b + a * r.denom, r.denom * b)
+    b != ℤ.0 implies r + reduce(a, b) = reduce(r.num ⋅ b + a ⋅ r.denom, r.denom ⋅ b)
 } by {
     let c: ℤ satisfy {
-        reduce(a, b).num * c = a and reduce(a, b).denom * c = b
+        reduce(a, b).num ⋅ c = a and reduce(a, b).denom ⋅ c = b
     }
 
     c != ℤ.0
 
     r + reduce(a, b) = reduce(
-        r.num * reduce(a, b).denom + r.denom * reduce(a, b).num,
-        reduce(a, b).denom * r.denom
+        r.num ⋅ reduce(a, b).denom + r.denom ⋅ reduce(a, b).num,
+        reduce(a, b).denom ⋅ r.denom
     )
 
-    forall(x0: ℤ, x1: ℤ) { reduce(x0 * c, x1 * c) = reduce(x0, x1) }
+    forall(x0: ℤ, x1: ℤ) { reduce(x0 ⋅ c, x1 ⋅ c) = reduce(x0, x1) }
 
     r + reduce(a, b) = reduce(
-        (r.num * reduce(a, b).denom + r.denom * reduce(a, b).num) * c,
-        reduce(a, b).denom * r.denom * c
-    )
-
-    r + reduce(a, b) = reduce(
-        r.num * reduce(a, b).denom * c + r.denom * reduce(a, b).num * c,
-        r.denom * reduce(a, b).denom * c
+        (r.num ⋅ reduce(a, b).denom + r.denom ⋅ reduce(a, b).num) ⋅ c,
+        reduce(a, b).denom ⋅ r.denom ⋅ c
     )
 
     r + reduce(a, b) = reduce(
-        r.num * b + a * r.denom, 
-        r.denom * b
+        r.num ⋅ reduce(a, b).denom ⋅ c + r.denom ⋅ reduce(a, b).num ⋅ c,
+        r.denom ⋅ reduce(a, b).denom ⋅ c
+    )
+
+    r + reduce(a, b) = reduce(
+        r.num ⋅ b + a ⋅ r.denom, 
+        r.denom ⋅ b
     )
 }
 
 theorem add_reduced(a: ℤ, b: ℤ, c: ℤ, d: ℤ) {
-    b != ℤ.0 and d != ℤ.0 implies reduce(a, b) + reduce(c, d) = reduce(a * d + b * c, b * d)
+    b != ℤ.0 and d != ℤ.0 implies reduce(a, b) + reduce(c, d) = reduce(a ⋅ d + b ⋅ c, b ⋅ d)
 } by {
     reduce(a, b) + reduce(c, d) = reduce(
-        reduce(a, b).num * d + c * reduce(a, b).denom,
-        reduce(a, b).denom * d
+        reduce(a, b).num ⋅ d + c ⋅ reduce(a, b).denom,
+        reduce(a, b).denom ⋅ d
     )
     let e: ℤ satisfy {
-        reduce(a, b).num * e = a and reduce(a, b).denom * e = b
+        reduce(a, b).num ⋅ e = a and reduce(a, b).denom ⋅ e = b
     }
     e != ℤ.0
     reduce(
-        reduce(a, b).num * d + c * reduce(a, b).denom, 
-        reduce(a, b).denom * d
+        reduce(a, b).num ⋅ d + c ⋅ reduce(a, b).denom, 
+        reduce(a, b).denom ⋅ d
     ) = reduce(
-        (reduce(a, b).num * d + c * reduce(a, b).denom) * e, 
-        reduce(a, b).denom * d * e
+        (reduce(a, b).num ⋅ d + c ⋅ reduce(a, b).denom) ⋅ e, 
+        reduce(a, b).denom ⋅ d ⋅ e
     )
     reduce(a, b) + reduce(c, d) = reduce(
-        (reduce(a, b).num * d + c * reduce(a, b).denom) * e,
-        reduce(a, b).denom * d * e
+        (reduce(a, b).num ⋅ d + c ⋅ reduce(a, b).denom) ⋅ e,
+        reduce(a, b).denom ⋅ d ⋅ e
     )
     reduce(a, b) + reduce(c, d) = reduce(
-        reduce(a, b).num * d * e + c * reduce(a, b).denom * e,
-        reduce(a, b).denom * d * e
+        reduce(a, b).num ⋅ d ⋅ e + c ⋅ reduce(a, b).denom ⋅ e,
+        reduce(a, b).denom ⋅ d ⋅ e
     )
     reduce(a, b) + reduce(c, d) = reduce(
-        reduce(a, b).num * e * d + reduce(a, b).denom * e * c,
-        reduce(a, b).denom * e * d
+        reduce(a, b).num ⋅ e ⋅ d + reduce(a, b).denom ⋅ e ⋅ c,
+        reduce(a, b).denom ⋅ e ⋅ d
     )
-    reduce(a, b).num * e = a
-    reduce(a, b).denom * e = b
+    reduce(a, b).num ⋅ e = a
+    reduce(a, b).denom ⋅ e = b
 }
 
 theorem add_reduced_same_denom(a: ℤ, b: ℤ, c: ℤ) {
@@ -624,7 +624,7 @@ theorem add_reduced_same_denom(a: ℤ, b: ℤ, c: ℤ) {
     if c = ℤ.0 {
         reduce(a, c) + reduce(b, c) = reduce(a + b, c)
     } else {
-        reduce(a, c) + reduce(b, c) = reduce(a * c + b * c, c * c)
+        reduce(a, c) + reduce(b, c) = reduce(a ⋅ c + b ⋅ c, c ⋅ c)
         reduce(a, c) + reduce(b, c) = reduce(a + b, c)
     }
 }
@@ -632,23 +632,23 @@ theorem add_reduced_same_denom(a: ℤ, b: ℤ, c: ℤ) {
 theorem add_assoc(a: ℚ, b: ℚ, c: ℚ) {
     (a + b) + c = a + (b + c)
 } by {
-    let d: ℤ = a.denom * b.denom * c.denom
-    let an: ℤ = a.num * (b.denom * c.denom)
+    let d: ℤ = a.denom ⋅ b.denom ⋅ c.denom
+    let an: ℤ = a.num ⋅ (b.denom ⋅ c.denom)
     a = reduce(a.num, a.denom)
-    b.denom * c.denom != ℤ.0
-    a = reduce(a.num * (b.denom * c.denom), a.denom * (b.denom * c.denom))
+    b.denom ⋅ c.denom != ℤ.0
+    a = reduce(a.num ⋅ (b.denom ⋅ c.denom), a.denom ⋅ (b.denom ⋅ c.denom))
     a = reduce(an, d)
 
-    let bn: ℤ = b.num * (a.denom * c.denom)
+    let bn: ℤ = b.num ⋅ (a.denom ⋅ c.denom)
     b = reduce(b.num, b.denom)
-    a.denom * c.denom != ℤ.0
-    b = reduce(b.num * (a.denom * c.denom), b.denom * (a.denom * c.denom))
+    a.denom ⋅ c.denom != ℤ.0
+    b = reduce(b.num ⋅ (a.denom ⋅ c.denom), b.denom ⋅ (a.denom ⋅ c.denom))
     b = reduce(bn, d)
 
-    let cn: ℤ = c.num * (a.denom * b.denom)
+    let cn: ℤ = c.num ⋅ (a.denom ⋅ b.denom)
     c = reduce(c.num, c.denom)
-    a.denom * b.denom != ℤ.0
-    c = reduce(c.num * (a.denom * b.denom), c.denom * (a.denom * b.denom))
+    a.denom ⋅ b.denom != ℤ.0
+    c = reduce(c.num ⋅ (a.denom ⋅ b.denom), c.denom ⋅ (a.denom ⋅ b.denom))
     c = reduce(cn, d)
 
     a + b + c = reduce(an, d) + reduce(bn, d) + reduce(cn, d)
@@ -663,18 +663,18 @@ theorem common_denom(r1: ℚ, r2: ℚ) {
         r1 = reduce(n1, d) and r2 = reduce(n2, d)
     }
 } by {
-    let d: ℤ = r1.denom * r2.denom
+    let d: ℤ = r1.denom ⋅ r2.denom
     d != ℤ.0
-    let n1: ℤ = r1.num * r2.denom
-    r1 = reduce(r1.num * r2.denom, r1.denom * r2.denom)
+    let n1: ℤ = r1.num ⋅ r2.denom
+    r1 = reduce(r1.num ⋅ r2.denom, r1.denom ⋅ r2.denom)
     r1 = reduce(n1, d)
-    let n2: ℤ = r2.num * r1.denom
-    r2 = reduce(r2.num * r1.denom, r2.denom * r1.denom)
+    let n2: ℤ = r2.num ⋅ r1.denom
+    r2 = reduce(r2.num ⋅ r1.denom, r2.denom ⋅ r1.denom)
     r2 = reduce(n2, d)
 }
 
 theorem distrib_left(r1: ℚ, r2: ℚ, r3: ℚ) {
-    r1 * (r2 + r3) = r1 * r2 + r1 * r3
+    r1 ⋅ (r2 + r3) = r1 ⋅ r2 + r1 ⋅ r3
 } by {
     let (a: ℤ, b: ℤ, c: ℤ) satisfy {
         r2 = reduce(a, c) and r3 = reduce(b, c)
@@ -682,18 +682,18 @@ theorem distrib_left(r1: ℚ, r2: ℚ, r3: ℚ) {
 
     // Simplify the left side
     r2 + r3 = reduce(a + b, c)
-    r1 * (r2 + r3) = r1 * reduce(a + b, c)
-    r1 * (r2 + r3) = reduce(r1.num * (a + b), r1.denom * c)
-    r1 * (r2 + r3) = reduce(r1.num * a + r1.num * b, r1.denom * c)
+    r1 ⋅ (r2 + r3) = r1 ⋅ reduce(a + b, c)
+    r1 ⋅ (r2 + r3) = reduce(r1.num ⋅ (a + b), r1.denom ⋅ c)
+    r1 ⋅ (r2 + r3) = reduce(r1.num ⋅ a + r1.num ⋅ b, r1.denom ⋅ c)
 
     // Simplify the right side
-    r1 * r2 = reduce(r1.num * a, r1.denom * c)
-    r1 * r3 = reduce(r1.num * b, r1.denom * c)
-    r1 * r2 + r1 * r3 = reduce(r1.num * a + r1.num * b, r1.denom * c)
+    r1 ⋅ r2 = reduce(r1.num ⋅ a, r1.denom ⋅ c)
+    r1 ⋅ r3 = reduce(r1.num ⋅ b, r1.denom ⋅ c)
+    r1 ⋅ r2 + r1 ⋅ r3 = reduce(r1.num ⋅ a + r1.num ⋅ b, r1.denom ⋅ c)
 }
 
 theorem distrib_right(r1: ℚ, r2: ℚ, r3: ℚ) {
-    (r1 + r2) * r3 = r1 * r3 + r2 * r3
+    (r1 + r2) ⋅ r3 = r1 ⋅ r3 + r2 ⋅ r3
 }
 
 theorem add_inv_cancels_right(a: ℚ, b: ℚ) {
@@ -733,34 +733,34 @@ theorem reduce_self(n: ℤ) {
 numerals ℚ
 
 theorem mul_inv_cancels_right_raw(a: ℚ) {
-    a != ℚ.0 implies a * a.reciprocal = ℚ.1
+    a != ℚ.0 implies a ⋅ a.reciprocal = ℚ.1
 } by {
-    a * a.reciprocal = reduce(a.num * a.denom, a.denom * a.num)
-    a * a.reciprocal = reduce(a.num * a.denom, a.num * a.denom)
-    a.num * a.denom != ℤ.0
-    a * a.reciprocal = ℚ.1
+    a ⋅ a.reciprocal = reduce(a.num ⋅ a.denom, a.denom ⋅ a.num)
+    a ⋅ a.reciprocal = reduce(a.num ⋅ a.denom, a.num ⋅ a.denom)
+    a.num ⋅ a.denom != ℤ.0
+    a ⋅ a.reciprocal = ℚ.1
 }
 
 theorem mul_inv_cancels_left_raw(a: ℚ) {
-    a != 0 implies a.reciprocal * a = 1
+    a != 0 implies a.reciprocal ⋅ a = 1
 }
 
 theorem mul_inv_cancels_right(a: ℚ) {
-    a != 0 implies a * 1/a = 1
+    a != 0 implies a ⋅ 1/a = 1
 } 
 
 theorem mul_inv_cancels_left(a: ℚ) {
-    a != 0 implies 1/a * a = 1
+    a != 0 implies 1/a ⋅ a = 1
 }
 
 theorem reciprocal_inverts_raw(a: ℚ) {
     a != 0 implies a.reciprocal.reciprocal = a
 } by {
-    a * a.reciprocal = 1
-    ℚ.new(a.reciprocal.num, a.reciprocal.denom) / a * a = ℚ.new(a.reciprocal.num, a.reciprocal.denom)
+    a ⋅ a.reciprocal = 1
+    ℚ.new(a.reciprocal.num, a.reciprocal.denom) / a ⋅ a = ℚ.new(a.reciprocal.num, a.reciprocal.denom)
     a.reciprocal != 0
-    (a * a.reciprocal) / a.reciprocal = a
-    1 * a.reciprocal.reciprocal = a
+    (a ⋅ a.reciprocal) / a.reciprocal = a
+    1 ⋅ a.reciprocal.reciprocal = a
 }
 
 theorem reciprocal_inverts(a: ℚ) {
@@ -805,7 +805,7 @@ theorem reduce_pos_pos(a: ℤ, b: ℤ) {
 } by {
     b != ℤ.0
     let d: ℤ satisfy {
-        reduce(a, b).num * d = a and reduce(a, b).denom * d = b
+        reduce(a, b).num ⋅ d = a and reduce(a, b).denom ⋅ d = b
     }
     reduce(a, b).denom > ℤ.0
     d > ℤ.0
@@ -817,21 +817,21 @@ theorem add_pos_pos(a: ℚ, b: ℚ) {
     a > 0 and b > 0 implies (a + b) > 0
 } by {
     a + b = reduce(
-        a.num * b.denom + b.num * a.denom, 
-        a.denom * b.denom
+        a.num ⋅ b.denom + b.num ⋅ a.denom, 
+        a.denom ⋅ b.denom
     )
-    (a.num * b.denom) > ℤ.0
-    (b.num * a.denom) > ℤ.0
-    (a.num * b.denom + b.num * a.denom) > ℤ.0
-    (a.denom * b.denom) > ℤ.0
+    (a.num ⋅ b.denom) > ℤ.0
+    (b.num ⋅ a.denom) > ℤ.0
+    (a.num ⋅ b.denom + b.num ⋅ a.denom) > ℤ.0
+    (a.denom ⋅ b.denom) > ℤ.0
 }
 
 theorem mul_pos_pos(a: ℚ, b: ℚ) {
-    a > 0 and b > 0 implies (a * b) > 0
+    a > 0 and b > 0 implies (a ⋅ b) > 0
 } by {
-    a * b = reduce(a.num * b.num, a.denom * b.denom)
-    (a.num * b.num) > ℤ.0
-    (a.denom * b.denom) > ℤ.0
+    a ⋅ b = reduce(a.num ⋅ b.num, a.denom ⋅ b.denom)
+    (a.num ⋅ b.num) > ℤ.0
+    (a.denom ⋅ b.denom) > ℤ.0
 }
 
 theorem pos_reciprocal(a: ℚ) {
@@ -886,12 +886,12 @@ theorem zero_minus(a: ℚ) {
 }
 
 theorem mul_cancels_div(a: ℚ, b: ℚ) {
-    b != ℚ.0 implies (a / b) * b = a
+    b != ℚ.0 implies (a / b) ⋅ b = a
 } by {
-    (a / b) * b = a * b.reciprocal * b
-    (a / b) * b = a * (b.reciprocal * b)
-    (a / b) * b = a * ℚ.1
-    (a / b) * b = a
+    (a / b) ⋅ b = a ⋅ b.reciprocal ⋅ b
+    (a / b) ⋅ b = a ⋅ (b.reciprocal ⋅ b)
+    (a / b) ⋅ b = a ⋅ ℚ.1
+    (a / b) ⋅ b = a
 }
 
 from util import is_transitive, is_acyclic
@@ -983,56 +983,56 @@ theorem two_neq_zero {
 }
 
 theorem times_two(r: ℚ) {
-    2 * r = r + r
+    2 ⋅ r = r + r
 } by {
     // Simplify left
-    2 * r = reduce(ℤ.2 * r.num, ℤ.1 * r.denom)
-    2 * r = reduce(r.num + r.num, r.denom)
+    2 ⋅ r = reduce(ℤ.2 ⋅ r.num, ℤ.1 ⋅ r.denom)
+    2 ⋅ r = reduce(r.num + r.num, r.denom)
 
     // Simplify right
     r + r = reduce(r.num + r.num, r.denom)
 }
 
 theorem mul_cancels_right(a: ℚ, b: ℚ, c: ℚ) {
-    c != ℚ.0 and a * c = b * c implies a = b
+    c != ℚ.0 and a ⋅ c = b ⋅ c implies a = b
 } by {
-    a * c * c.reciprocal = b * c * c.reciprocal
-    a * (c * c.reciprocal) = b * (c * c.reciprocal)
-    a * 1 = b * 1
+    a ⋅ c ⋅ c.reciprocal = b ⋅ c ⋅ c.reciprocal
+    a ⋅ (c ⋅ c.reciprocal) = b ⋅ (c ⋅ c.reciprocal)
+    a ⋅ 1 = b ⋅ 1
     a = b
 }
 
 theorem mul_cancels_left(a: ℚ, b: ℚ, c: ℚ) {
-    c != ℚ.0 and c * a = c * b implies a = b
+    c != ℚ.0 and c ⋅ a = c ⋅ b implies a = b
 } 
 
 theorem half_plus_half(r: ℚ) {
     (r / 2) + (r / 2) = r
 } by {
-    (r / 2) * 2 = r
+    (r / 2) ⋅ 2 = r
 }
 
 theorem neg_mul(a: ℚ, b: ℚ) {
-    (-a) * b = -(a * b)
+    (-a) ⋅ b = -(a ⋅ b)
 }
 
 theorem mul_neg_pos(a: ℚ, b: ℚ) {
-    a < 0 and b > 0 implies (a * b) < 0
+    a < 0 and b > 0 implies (a ⋅ b) < 0
 } by {
     (-a) > 0
-    (-a * b) > 0
-    (a * b) < 0
+    (-a ⋅ b) > 0
+    (a ⋅ b) < 0
 }
 
 theorem mul_pos_neg(a: ℚ, b: ℚ) {
-    a > 0 and b < 0 implies (a * b) < 0
+    a > 0 and b < 0 implies (a ⋅ b) < 0
 }
 
 theorem mul_neg_neg(a: ℚ, b: ℚ) {
-    a < 0 and b < 0 implies (a * b) > 0
+    a < 0 and b < 0 implies (a ⋅ b) > 0
 } by {
     (-a) > 0
-    (-a * b) < 0
+    (-a ⋅ b) < 0
 }
 
 theorem one_is_pos {
@@ -1218,23 +1218,23 @@ theorem gte_from_int(a: ℤ, b: ℤ) {
 }
 
 theorem lt_mul_pos(a: ℚ, b: ℚ, c: ℚ) {
-    a < b and c > 0 implies a * c < b * c
+    a < b and c > 0 implies a ⋅ c < b ⋅ c
 } by {
     b - a > 0
     c > 0
-    (b - a) * c > 0
-    b * c - a * c > 0
+    (b - a) ⋅ c > 0
+    b ⋅ c - a ⋅ c > 0
 }
 
 theorem lte_mul_pos(a: ℚ, b: ℚ, c: ℚ) {
-    a <= b and c > 0 implies a * c <= b * c
+    a <= b and c > 0 implies a ⋅ c <= b ⋅ c
 } 
 
 theorem lt_div_pos(a: ℚ, b: ℚ, c: ℚ) {
     c > 0 and a < b implies a/c < b/c
 } by {
     1/c > 0
-    a * 1/c < b * 1/c
+    a ⋅ 1/c < b ⋅ 1/c
 }
 
 theorem lte_div_pos(a: ℚ, b: ℚ, c: ℚ) {
@@ -1242,36 +1242,36 @@ theorem lte_div_pos(a: ℚ, b: ℚ, c: ℚ) {
 } 
 
 theorem mul_div_cancels(a: ℚ, b: ℚ) {
-    b != 0 implies (a * b) / b = a
+    b != 0 implies (a ⋅ b) / b = a
 } by {
-    (a * b) / b = a * (b / b)
-    (a * b) / b = a * 1
+    (a ⋅ b) / b = a ⋅ (b / b)
+    (a ⋅ b) / b = a ⋅ 1
 }
 
 theorem div_from_int(a: ℚ) {
     ℚ.from_int(a.num) / ℚ.from_int(a.denom) = a
 } by {
-    ℚ.from_int(a.num) / ℚ.from_int(a.denom) = reduce(a.num, ℤ.1) * reduce(ℤ.1, a.denom)
+    ℚ.from_int(a.num) / ℚ.from_int(a.denom) = reduce(a.num, ℤ.1) ⋅ reduce(ℤ.1, a.denom)
 }
 
 theorem lt_from_int_mul_denom(a: ℚ, n: ℤ) {
-    a.num < n * a.denom implies a < ℚ.from_int(n)
+    a.num < n ⋅ a.denom implies a < ℚ.from_int(n)
 } by {
-    ℚ.from_int(a.num) < ℚ.from_int(n * a.denom)
-    ℚ.from_int(a.num) < ℚ.from_int(n) * ℚ.from_int(a.denom)
+    ℚ.from_int(a.num) < ℚ.from_int(n ⋅ a.denom)
+    ℚ.from_int(a.num) < ℚ.from_int(n) ⋅ ℚ.from_int(a.denom)
     ℚ.from_int(a.denom) > 0
-    ℚ.from_int(a.num) / ℚ.from_int(a.denom) < (ℚ.from_int(n) * ℚ.from_int(a.denom)) / ℚ.from_int(a.denom)
-    (ℚ.from_int(n) * ℚ.from_int(a.denom)) / ℚ.from_int(a.denom) = ℚ.from_int(n)
+    ℚ.from_int(a.num) / ℚ.from_int(a.denom) < (ℚ.from_int(n) ⋅ ℚ.from_int(a.denom)) / ℚ.from_int(a.denom)
+    (ℚ.from_int(n) ⋅ ℚ.from_int(a.denom)) / ℚ.from_int(a.denom) = ℚ.from_int(n)
     ℚ.from_int(a.num) / ℚ.from_int(a.denom) < ℚ.from_int(n)
 }
 
 theorem lte_from_int_mul_denom(a: ℚ, n: ℤ) {
-    a.num <= n * a.denom implies a <= ℚ.from_int(n)
+    a.num <= n ⋅ a.denom implies a <= ℚ.from_int(n)
 } by {
-    if a.num = n * a.denom {
+    if a.num = n ⋅ a.denom {
         a = ℚ.from_int(n)
     } else {
-        a.num < n * a.denom
+        a.num < n ⋅ a.denom
         a < ℚ.from_int(n)
     }
 }
@@ -1283,29 +1283,29 @@ theorem floor_exists(a: ℚ) {
 } by {
     a.denom > ℤ.0
     let (q: ℤ, r: ℤ) satisfy {
-        ℤ.0 <= r and r < a.denom and a.num = q * a.denom + r
+        ℤ.0 <= r and r < a.denom and a.num = q ⋅ a.denom + r
     }
 
     // Left bound
-    ℚ.from_int(a.num) = ℚ.from_int(q * a.denom + r)
-    ℚ.from_int(a.num) = ℚ.from_int(q * a.denom) + ℚ.from_int(r)
+    ℚ.from_int(a.num) = ℚ.from_int(q ⋅ a.denom + r)
+    ℚ.from_int(a.num) = ℚ.from_int(q ⋅ a.denom) + ℚ.from_int(r)
     ℚ.from_int(r) >= ℚ.from_int(ℤ.0)
     forall(x0: ℤ) { x0 + r >= x0 + ℤ.0 }
-    ℚ.from_int(q * a.denom) + ℚ.from_int(r) >= ℚ.from_int(q * a.denom) + ℚ.from_int(ℤ.0)
-    ℚ.from_int(a.num) >= ℚ.from_int(q * a.denom)
-    ℚ.from_int(a.num) >= ℚ.from_int(q) * ℚ.from_int(a.denom)
+    ℚ.from_int(q ⋅ a.denom) + ℚ.from_int(r) >= ℚ.from_int(q ⋅ a.denom) + ℚ.from_int(ℤ.0)
+    ℚ.from_int(a.num) >= ℚ.from_int(q ⋅ a.denom)
+    ℚ.from_int(a.num) >= ℚ.from_int(q) ⋅ ℚ.from_int(a.denom)
     ℚ.from_int(a.denom) > 0
     1/ℚ.from_int(a.denom) > 0
-    lte_mul_pos(ℚ.from_int(q) * ℚ.from_int(a.denom), ℚ.from_int(a.num), 1/ℚ.from_int(a.denom))
-    ℚ.from_int(q) * ℚ.from_int(a.denom) * 1/ℚ.from_int(a.denom) <= ℚ.from_int(a.num) * 1/ℚ.from_int(a.denom)
-    ℚ.from_int(q) * ℚ.from_int(a.denom) * 1/ℚ.from_int(a.denom) = ℚ.from_int(q)
+    lte_mul_pos(ℚ.from_int(q) ⋅ ℚ.from_int(a.denom), ℚ.from_int(a.num), 1/ℚ.from_int(a.denom))
+    ℚ.from_int(q) ⋅ ℚ.from_int(a.denom) ⋅ 1/ℚ.from_int(a.denom) <= ℚ.from_int(a.num) ⋅ 1/ℚ.from_int(a.denom)
+    ℚ.from_int(q) ⋅ ℚ.from_int(a.denom) ⋅ 1/ℚ.from_int(a.denom) = ℚ.from_int(q)
     ℚ.from_int(q) <= ℚ.from_int(a.num) / ℚ.from_int(a.denom)
     ℚ.from_int(q) <= a
 
     // Right bound
-    q * a.denom + r < q * a.denom + a.denom
-    q * a.denom + a.denom = (q + ℤ.1) * a.denom
-    a.num < (q + ℤ.1) * a.denom
+    q ⋅ a.denom + r < q ⋅ a.denom + a.denom
+    q ⋅ a.denom + a.denom = (q + ℤ.1) ⋅ a.denom
+    a.num < (q + ℤ.1) ⋅ a.denom
     a < ℚ.from_int(q + ℤ.1)
 }
 
@@ -1314,19 +1314,19 @@ let floor(a: ℚ) -> q: ℤ satisfy {
 }
 
 theorem mul_lt_lt(a: ℚ, b: ℚ, c: ℚ, d: ℚ) {
-    a > 0 and c > 0 and a < b and c < d implies a * c < b * d
+    a > 0 and c > 0 and a < b and c < d implies a ⋅ c < b ⋅ d
 } by {
-    a * c < b * c
+    a ⋅ c < b ⋅ c
     b > 0
-    b * c < b * d
+    b ⋅ c < b ⋅ d
 }
 
 theorem mul_lt_lte(a: ℚ, b: ℚ, c: ℚ, d: ℚ) {
-    a > 0 and c > 0 and a < b and c <= d implies a * c < b * d
+    a > 0 and c > 0 and a < b and c <= d implies a ⋅ c < b ⋅ d
 } by {
-    a * c < b * c
+    a ⋅ c < b ⋅ c
     b > 0
-    b * c <= b * d
+    b ⋅ c <= b ⋅ d
 }
 
 theorem pos_lte(a: ℚ, b: ℚ) {
@@ -1334,11 +1334,11 @@ theorem pos_lte(a: ℚ, b: ℚ) {
 } 
 
 theorem mul_lte_lt(a: ℚ, b: ℚ, c: ℚ, d: ℚ) {
-    a > 0 and c > 0 and a <= b and c < d implies a * c < b * d
+    a > 0 and c > 0 and a <= b and c < d implies a ⋅ c < b ⋅ d
 } by {
-    a * c <= b * c
+    a ⋅ c <= b ⋅ c
     b > 0
-    b * c < b * d
+    b ⋅ c < b ⋅ d
 }
 
 theorem lt_pos_reciprocal(a: ℚ, b: ℚ) {
@@ -1346,10 +1346,10 @@ theorem lt_pos_reciprocal(a: ℚ, b: ℚ) {
 } by {
     1/a > 0
     1/b > 0
-    a * 1/a * 1/b < b * 1/a * 1/b
-    a * 1/a * 1/b = 1/b
-    (b * 1/a) * 1/b = b * (1/a * 1/b)
-    b * 1/a * 1/b = 1/a
+    a ⋅ 1/a ⋅ 1/b < b ⋅ 1/a ⋅ 1/b
+    a ⋅ 1/a ⋅ 1/b = 1/b
+    (b ⋅ 1/a) ⋅ 1/b = b ⋅ (1/a ⋅ 1/b)
+    b ⋅ 1/a ⋅ 1/b = 1/a
     1/b < 1/a
 }
 
@@ -1378,11 +1378,11 @@ theorem gte_some_int(a: ℚ) {
 }
 
 theorem mul_denom(r: ℚ) {
-    r * ℚ.from_int(r.denom) = ℚ.from_int(r.num)
+    r ⋅ ℚ.from_int(r.denom) = ℚ.from_int(r.num)
 } by {
     r.denom != ℤ.0
     ℚ.from_int(r.denom) != ℚ.0
-    ℚ.from_int(r.num) / ℚ.from_int(r.denom) * ℚ.from_int(r.denom) = ℚ.from_int(r.num)
+    ℚ.from_int(r.num) / ℚ.from_int(r.denom) ⋅ ℚ.from_int(r.denom) = ℚ.from_int(r.num)
 }
 
 theorem half_pos(r: ℚ) {
@@ -1434,37 +1434,37 @@ theorem gt_imp_rat_between(a: ℚ, b: ℚ) {
 }
 
 theorem lt_cancel_pos_mul_right(a: ℚ, b: ℚ, c: ℚ) {
-    c > 0 and a * c < b * c implies a < b
+    c > 0 and a ⋅ c < b ⋅ c implies a < b
 } by {
     if a >= b {
-        a * c >= b * c
-        not (a * c < b * c)
+        a ⋅ c >= b ⋅ c
+        not (a ⋅ c < b ⋅ c)
         false
     }
 }
 
 theorem lt_cancel_pos_mul_left(a: ℚ, b: ℚ, c: ℚ) {
-    c > 0 and c * a < c * b implies a < b
+    c > 0 and c ⋅ a < c ⋅ b implies a < b
 }
 
 theorem gt_cancel_pos_mul_right(a: ℚ, b: ℚ, c: ℚ) {
-    c > 0 and a * c > b * c implies a > b
+    c > 0 and a ⋅ c > b ⋅ c implies a > b
 } 
 
 theorem gt_cancel_pos_mul_left(a: ℚ, b: ℚ, c: ℚ) {
-    c > 0 and c * a > c * b implies a > b
+    c > 0 and c ⋅ a > c ⋅ b implies a > b
 } 
 
 theorem cancel_positivity_left(a: ℚ, b: ℚ) {
-    a > 0 and (a * b) > 0 implies b > 0
+    a > 0 and (a ⋅ b) > 0 implies b > 0
 } 
 
 theorem cancel_positivity_right(a: ℚ, b: ℚ) {
-    b > 0 and (a * b) > 0 implies a > 0
+    b > 0 and (a ⋅ b) > 0 implies a > 0
 }
 
 theorem mul_cancels_div_left(a: ℚ, b: ℚ) {
-    b != ℚ.0 implies b * (a / b) = a
+    b != ℚ.0 implies b ⋅ (a / b) = a
 }
 
 theorem neg_abs(a: ℚ) {
@@ -1496,46 +1496,46 @@ theorem abs_non_neg(a: ℚ) {
 }
 
 theorem mul_neg_abs(a: ℚ, b: ℚ) {
-    (a * b).abs = (a * -b).abs
+    (a ⋅ b).abs = (a ⋅ -b).abs
 }
 
 theorem abs_mul_abs_right(a: ℚ, b: ℚ) {
-    (a * b).abs = (a * b.abs).abs
+    (a ⋅ b).abs = (a ⋅ b.abs).abs
 } 
 
 theorem abs_mul_abs_left(a: ℚ, b: ℚ) {
-    (a * b).abs = (a.abs * b).abs
+    (a ⋅ b).abs = (a.abs ⋅ b).abs
 } 
 
 theorem mul_to_zero(a: ℚ, b: ℚ) { 
-    a * b = 0 implies a = 0 or b = 0 
+    a ⋅ b = 0 implies a = 0 or b = 0 
 } 
 
 theorem mul_to_zero_imp_rev(a: ℚ, b: ℚ) { 
-    a = 0 or b = 0 implies a * b = 0  
+    a = 0 or b = 0 implies a ⋅ b = 0  
 } by {
-    a = 0 implies a * b = 0
-    b = 0 implies a * b = 0
+    a = 0 implies a ⋅ b = 0
+    b = 0 implies a ⋅ b = 0
 }
 
 theorem mul_non_neg(a: ℚ, b: ℚ) {
-    a >= 0 and b >= 0 implies (a * b) >= 0
+    a >= 0 and b >= 0 implies (a ⋅ b) >= 0
 } by {
     if a = 0 or b = 0 {
-        a * b = 0
+        a ⋅ b = 0
     } else {
-        a * b > 0
+        a ⋅ b > 0
     }
 }
 
 theorem mul_two_abs(a: ℚ, b: ℚ) {
-    a.abs * b.abs = (a * b).abs
+    a.abs ⋅ b.abs = (a ⋅ b).abs
 } by {
-    (a * b).abs = (a.abs * b.abs).abs
+    (a ⋅ b).abs = (a.abs ⋅ b.abs).abs
     not a.abs < 0
     not b.abs < 0
-    not (a.abs * b.abs) < 0
-    (a.abs * b.abs).abs = a.abs * b.abs
+    not (a.abs ⋅ b.abs) < 0
+    (a.abs ⋅ b.abs).abs = a.abs ⋅ b.abs
 }
 
 theorem abs_zero_imp_zero(a: ℚ) {
@@ -1557,7 +1557,7 @@ theorem pos_inverses_lt(p: ℚ, q: ℚ, r: ℚ) {
     implies
     p > q
 } by {
-    r * 1/p < r * 1/q
+    r ⋅ 1/p < r ⋅ 1/q
     1/p < 1/q
     1/(1/q) < 1/(1/p)
     1/(1/q) = q
@@ -1577,9 +1577,9 @@ theorem inverses_eq(p: ℚ, q: ℚ, r: ℚ) {
     implies
     p = q
 } by {
-    r/p = r * 1/p
-    r/q = r * 1/q
-    r * 1/p = r * 1/q
+    r/p = r ⋅ 1/p
+    r/q = r ⋅ 1/q
+    r ⋅ 1/p = r ⋅ 1/q
     1/p = 1/q
 }
 
@@ -1629,11 +1629,11 @@ theorem lt_cancel_add_right(p: ℚ, q: ℚ, r: ℚ) {
 }
 
 theorem sub_distrib(p: ℚ, q: ℚ, r: ℚ) {
-    p * (q - r) = p * q - p * r
+    p ⋅ (q - r) = p ⋅ q - p ⋅ r
 } by {
-    p * (q - r) = p * (q + -r)
-    p * (q - r) = p * q + p * -r
-    p * (q - r) = p * q - p * r
+    p ⋅ (q - r) = p ⋅ (q + -r)
+    p ⋅ (q - r) = p ⋅ q + p ⋅ -r
+    p ⋅ (q - r) = p ⋅ q - p ⋅ r
 }
 
 theorem half_lt_one {
@@ -1647,32 +1647,32 @@ theorem lower_squared(a: ℚ) {
     a > 0
     implies
     exists(ε: ℚ) {
-        ε > 0 and ε * ε < a
+        ε > 0 and ε ⋅ ε < a
     }
 } by {
     if 1 <= a {
         let ε: ℚ = 1/2
         ε > 0
         ε < 1
-        ε * ε < 1
-        ε > 0 and ε * ε < a
+        ε ⋅ ε < 1
+        ε > 0 and ε ⋅ ε < a
     } else {
         a < 1
         let ε: ℚ = a
         ε > 0
-        ε > 0 and ε * ε < a
+        ε > 0 and ε ⋅ ε < a
     }
 }
 
 theorem square_lt_imp_lt(a: ℚ, b: ℚ) {
-    a > 0 and b > 0 and a * a < b * b
+    a > 0 and b > 0 and a ⋅ a < b ⋅ b
     implies
     a < b
 } by {
     if a >= b {
-        a * a >= b * a
-        b * a >= b * b
-        a * a >= b * b
+        a ⋅ a >= b ⋅ a
+        b ⋅ a >= b ⋅ b
+        a ⋅ a >= b ⋅ b
         false
     }
 }
@@ -1704,10 +1704,10 @@ theorem lt_both_pos(a: ℚ, b: ℚ) {
 }
 
 theorem lt_rhs_div_pos(a: ℚ, b: ℚ, c: ℚ) {
-    c > 0 and a < b/c implies a * c < b
+    c > 0 and a < b/c implies a ⋅ c < b
 } by {
-    a * c < b/c * c
-    b/c * c = b
+    a ⋅ c < b/c ⋅ c
+    b/c ⋅ c = b
 }
 
 theorem lte_abs(q: ℚ) {

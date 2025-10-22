@@ -109,6 +109,10 @@
 		"body": "ℚ",
 		"description": "rational"
 	},
+	"⋅": {
+		"prefix": "dot",
+		"body": "⋅"
+	},
 	"set-forall": {
 		"prefix": "all",
 		"body": [

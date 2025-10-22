@@ -5,129 +5,129 @@ from int.int_base import ℤ, from_nat, abs, abs_neg, abs_zero, neg_neg, neg_sub
 numerals ℤ
 
 theorem mul_from_nat(j: ℕ, k: ℕ) { 
-    from_nat(j) * from_nat(k) = from_nat(j * k)
+    from_nat(j) ⋅ from_nat(k) = from_nat(j ⋅ k)
 }
 
 theorem abs_zero_imp_zero(a: ℤ) {
     abs(a) = ℕ.0 implies a = 0
 } 
 
-theorem mul_to_zero(a: ℤ, b: ℤ) { a * b = 0 implies a = 0 or b = 0 } by {
-    abs(a) * abs(b) = ℕ.0
+theorem mul_to_zero(a: ℤ, b: ℤ) { a ⋅ b = 0 implies a = 0 or b = 0 } by {
+    abs(a) ⋅ abs(b) = ℕ.0
     abs(a) = ℕ.0 or abs(b) = ℕ.0
 }
 
 theorem mul_to_zero_imp_rev(a: ℤ, b: ℤ) { 
-    a = 0 or b = 0 implies a * b = 0  
+    a = 0 or b = 0 implies a ⋅ b = 0  
 } by {
-    a = 0 implies a * b = 0
-    b = 0 implies a * b = 0
+    a = 0 implies a ⋅ b = 0
+    b = 0 implies a ⋅ b = 0
 }
 
 theorem mul_pos_pos(a: ℤ, b: ℤ) {
-    a > 0 and b > 0 implies (a * b) > 0
+    a > 0 and b > 0 implies (a ⋅ b) > 0
 } by {
     a >= 0
     b >= 0
-    (a * b) >= 0
+    (a ⋅ b) >= 0
     a != 0
     b != 0
-    a * b != 0
+    a ⋅ b != 0
 }
 
 theorem mul_pos_pos_iff(a: ℤ, b: ℤ) {
-    a > 0 implies (b > 0 iff (a * b) > 0)
+    a > 0 implies (b > 0 iff (a ⋅ b) > 0)
 } by {
     if b > 0 {
-        a * b > 0
+        a ⋅ b > 0
     } else {
         b <= 0
-        a * b <= 0
+        a ⋅ b <= 0
     }
 }
 
 theorem mul_pos_pos_raw(a: ℤ, b: ℤ) {
-    a.is_positive and b.is_positive implies (a * b).is_positive
+    a.is_positive and b.is_positive implies (a ⋅ b).is_positive
 }
 
 theorem mul_pos_neg(a: ℤ, b: ℤ) {
-    a > 0 and b < 0 implies (a * b) < 0
+    a > 0 and b < 0 implies (a ⋅ b) < 0
 } by {
     a != 0
     b != 0
-    a * b != 0
+    a ⋅ b != 0
 }
 
 theorem mul_neg_pos(a: ℤ, b: ℤ) {
-    a < 0 and b > 0 implies (a * b) < 0
+    a < 0 and b > 0 implies (a ⋅ b) < 0
 }
 
 theorem mul_neg_neg(a: ℤ, b: ℤ) {
-    a < 0 and b < 0 implies (a * b) > 0
+    a < 0 and b < 0 implies (a ⋅ b) > 0
 } by {
     a != 0
     b != 0
-    a * b != 0
+    a ⋅ b != 0
 }
 
 theorem int_mul_nat_mul(a: ℤ, j: ℕ, k: ℕ) { 
-    a.mul_nat(j * k) = a * from_nat(j) * from_nat(k)
+    a.mul_nat(j ⋅ k) = a ⋅ from_nat(j) ⋅ from_nat(k)
 } by {
     if a > 0 {
-        a.mul_nat(j * k) = from_nat(abs(a) * j * k)
-        a.mul_nat(j * k) = from_nat(abs(a)) * from_nat(j) * from_nat(k)
+        a.mul_nat(j ⋅ k) = from_nat(abs(a) ⋅ j ⋅ k)
+        a.mul_nat(j ⋅ k) = from_nat(abs(a)) ⋅ from_nat(j) ⋅ from_nat(k)
         from_nat(abs(a)) = a
 
-        a.mul_nat(j * k) = a * from_nat(j) * from_nat(k)
+        a.mul_nat(j ⋅ k) = a ⋅ from_nat(j) ⋅ from_nat(k)
     } else {
-        a.mul_nat(j * k) = -(from_nat(abs(a) * j * k))
-        a.mul_nat(j * k) = -(from_nat(abs(a)) * from_nat(j) * from_nat(k))
+        a.mul_nat(j ⋅ k) = -(from_nat(abs(a) ⋅ j ⋅ k))
+        a.mul_nat(j ⋅ k) = -(from_nat(abs(a)) ⋅ from_nat(j) ⋅ from_nat(k))
         from_nat(abs(a)) = -a
 
 
-        a.mul_nat(j * k) = a * from_nat(j) * from_nat(k)
+        a.mul_nat(j ⋅ k) = a ⋅ from_nat(j) ⋅ from_nat(k)
     }
 }
 
 theorem mul_int_nat_nat_assoc(a: ℤ, j: ℕ, k: ℕ) { 
-    a.mul_nat(j * k) = (a.mul_nat(j)).mul_nat(k) 
+    a.mul_nat(j ⋅ k) = (a.mul_nat(j)).mul_nat(k) 
 } by {
-    a.mul_nat(j * k) = a * from_nat(j) * from_nat(k)
+    a.mul_nat(j ⋅ k) = a ⋅ from_nat(j) ⋅ from_nat(k)
 }
 
 theorem mul_int_int_nat_assoc(a: ℤ, b: ℤ, n: ℕ) { 
-    (a * b).mul_nat(n) = a * (b.mul_nat(n)) 
+    (a ⋅ b).mul_nat(n) = a ⋅ (b.mul_nat(n)) 
 } by {
     if b >= 0 {
-        (a * b).mul_nat(n) = (a * from_nat(abs(b))) * from_nat(n)
-        (a * b).mul_nat(n) = a * (from_nat(abs(b)) * from_nat(n))
-        (a * b).mul_nat(n) = a * (b.mul_nat(n))
+        (a ⋅ b).mul_nat(n) = (a ⋅ from_nat(abs(b))) ⋅ from_nat(n)
+        (a ⋅ b).mul_nat(n) = a ⋅ (from_nat(abs(b)) ⋅ from_nat(n))
+        (a ⋅ b).mul_nat(n) = a ⋅ (b.mul_nat(n))
     } else {
         (-b) > 0
-        (a * b).mul_nat(n) = -(a * -b) * from_nat(n)
-        (a * b).mul_nat(n) = -(a * from_nat(abs(-b))) * from_nat(n)
-        (a * b).mul_nat(n) = -(a * (from_nat(abs(-b)) * from_nat(n)))
-        (a * b).mul_nat(n) = -(a * (-b).mul_nat(n))
-        (a * b).mul_nat(n) = a * (b.mul_nat(n))
+        (a ⋅ b).mul_nat(n) = -(a ⋅ -b) ⋅ from_nat(n)
+        (a ⋅ b).mul_nat(n) = -(a ⋅ from_nat(abs(-b))) ⋅ from_nat(n)
+        (a ⋅ b).mul_nat(n) = -(a ⋅ (from_nat(abs(-b)) ⋅ from_nat(n)))
+        (a ⋅ b).mul_nat(n) = -(a ⋅ (-b).mul_nat(n))
+        (a ⋅ b).mul_nat(n) = a ⋅ (b.mul_nat(n))
     }
 }
 
 theorem mul_assoc(a: ℤ, b: ℤ, c: ℤ) { 
-    a * b * c = a * (b * c) 
+    a ⋅ b ⋅ c = a ⋅ (b ⋅ c) 
 } by {
     if c >= 0 {
-        a * b * c = a * b * (from_nat(abs(c)))
-        a * b * c = a * (b * from_nat(abs(c)))
+        a ⋅ b ⋅ c = a ⋅ b ⋅ (from_nat(abs(c)))
+        a ⋅ b ⋅ c = a ⋅ (b ⋅ from_nat(abs(c)))
 
-        a * b * c = a * (b * c) 
+        a ⋅ b ⋅ c = a ⋅ (b ⋅ c) 
 
     } else {
         (-c) > 0
 
-        a * b * -c = a * b * (from_nat(abs(-c)))
-        a * b * -c = a * (b * from_nat(abs(-c)))
+        a ⋅ b ⋅ -c = a ⋅ b ⋅ (from_nat(abs(-c)))
+        a ⋅ b ⋅ -c = a ⋅ (b ⋅ from_nat(abs(-c)))
 
-        a * b * c = a * (b * c) 
+        a ⋅ b ⋅ c = a ⋅ (b ⋅ c) 
     }
 }
 
@@ -365,20 +365,20 @@ theorem triangle_ineq_sub(a: ℤ, b: ℤ) {
 }
 
 theorem lt_mul_pos(a: ℤ, b: ℤ, c: ℤ) { 
-    a < b and c > 0 implies a * c < b * c 
+    a < b and c > 0 implies a ⋅ c < b ⋅ c 
 } by {
-    b * c - a * c = (b - a) * c
+    b ⋅ c - a ⋅ c = (b - a) ⋅ c
     (b - a) > 0
-    (b * c - a * c) > 0
+    (b ⋅ c - a ⋅ c) > 0
 }
 
 theorem lt_mul_neg(a: ℤ, b: ℤ, c: ℤ) { 
-    a < b and c < 0 implies b * c < a * c 
+    a < b and c < 0 implies b ⋅ c < a ⋅ c 
 } by {
-    a * c - b * c = c * (a - b)
+    a ⋅ c - b ⋅ c = c ⋅ (a - b)
     (a - b) < 0
-    (c * (a - b)) > 0
-    (a * c - b * c) > 0
+    (c ⋅ (a - b)) > 0
+    (a ⋅ c - b ⋅ c) > 0
 }
 
 theorem lte_trans(a: ℤ, b: ℤ, c: ℤ) { 
@@ -444,22 +444,22 @@ theorem two_units(u: ℤ) {
 }
 
 theorem unit_squared(u: ℤ) { 
-    is_unit(u) implies u * u = 1 
+    is_unit(u) implies u ⋅ u = 1 
 } by {
     if u = 1 {
-        u * u = 1
+        u ⋅ u = 1
     } else {
-        u * u = 1
+        u ⋅ u = 1
     }
 }
 
 theorem mul_units(u: ℤ, v: ℤ) { 
-    is_unit(u) and is_unit(v) implies is_unit(u * v) 
+    is_unit(u) and is_unit(v) implies is_unit(u ⋅ v) 
 } by {
-    abs(u * v) = abs(u) * abs(v)
+    abs(u ⋅ v) = abs(u) ⋅ abs(v)
     abs(u) = ℕ.1
     abs(v) = ℕ.1
-    abs(u * v) = ℕ.1
+    abs(u ⋅ v) = ℕ.1
 }
 
 define unit_sign(a: ℤ) -> ℤ {
@@ -511,70 +511,70 @@ theorem unit_sign_is_unit(a: ℤ) {
 }
 
 theorem abs_decomp(a: ℤ) { 
-    unit_sign(a) * from_nat(abs(a)) = a 
+    unit_sign(a) ⋅ from_nat(abs(a)) = a 
 } by {
     if a = 0 {
         unit_sign(a) = 0
-        unit_sign(a) * from_nat(abs(a)) = a 
+        unit_sign(a) ⋅ from_nat(abs(a)) = a 
     }
     if a < 0 {
         unit_sign(a) = -(1)
-        unit_sign(a) * from_nat(abs(a)) = a
+        unit_sign(a) ⋅ from_nat(abs(a)) = a
     } 
     if a > 0 {
         unit_sign(a) = 1
-        unit_sign(a) * from_nat(abs(a)) = a
+        unit_sign(a) ⋅ from_nat(abs(a)) = a
     }
 }
 
 theorem abs_alt_decomp(a: ℤ) {
-    unit_sign(a) * a = from_nat(abs(a)) 
+    unit_sign(a) ⋅ a = from_nat(abs(a)) 
 } by {
     if a = 0 {
-        unit_sign(a) * a = from_nat(abs(a))
+        unit_sign(a) ⋅ a = from_nat(abs(a))
     } else {
-        unit_sign(a) * a = unit_sign(a) * (unit_sign(a) * from_nat(abs(a)))
-        unit_sign(a) * unit_sign(a) = 1
-        unit_sign(a) * a = 1 * from_nat(abs(a))
+        unit_sign(a) ⋅ a = unit_sign(a) ⋅ (unit_sign(a) ⋅ from_nat(abs(a)))
+        unit_sign(a) ⋅ unit_sign(a) = 1
+        unit_sign(a) ⋅ a = 1 ⋅ from_nat(abs(a))
     }
 }
 
 attributes ℤ {
     define divides(self, other: ℤ) -> Bool {
-        exists(d: ℤ) { d * self = other }
+        exists(d: ℤ) { d ⋅ self = other }
     }
 }
 
 theorem div_trans(a: ℤ, b: ℤ, c: ℤ) {
     a.divides(b) and b.divides(c) implies a.divides(c)
 } by {
-    let (d: ℤ) satisfy { d * a = b }
-    let (e: ℤ) satisfy { e * b = c }
-    e * (d * a) = c
-    e * d * a = c
+    let (d: ℤ) satisfy { d ⋅ a = b }
+    let (e: ℤ) satisfy { e ⋅ b = c }
+    e ⋅ (d ⋅ a) = c
+    e ⋅ d ⋅ a = c
     a.divides(c)
 }
 
 theorem div_imp_div_abs(a: ℤ, b: ℤ) {
     a.divides(b) implies abs(a).divides(abs(b))
 } by {
-    let (d: ℤ) satisfy { d * a = b }
-    abs(d) * abs(a) = abs(b)
+    let (d: ℤ) satisfy { d ⋅ a = b }
+    abs(d) ⋅ abs(a) = abs(b)
     abs(a).divides(abs(b))
 }
 
 theorem div_from_nat(j: ℕ, k: ℕ) {
     j.divides(k) implies from_nat(j).divides(from_nat(k))
 } by {
-    let (n: ℕ) satisfy { n * j = k }
-    from_nat(n) * from_nat(j) = from_nat(k)
+    let (n: ℕ) satisfy { n ⋅ j = k }
+    from_nat(n) ⋅ from_nat(j) = from_nat(k)
     from_nat(j).divides(from_nat(k))
 }
 
 theorem div_abs(a: ℤ) {
     a.divides(from_nat(abs(a)))
 } by {
-    from_nat(abs(a)) = a * unit_sign(a)
+    from_nat(abs(a)) = a ⋅ unit_sign(a)
 }
 
 theorem div_abs_imp_div(a: ℤ, b: ℤ) { 
@@ -586,19 +586,19 @@ theorem div_abs_imp_div(a: ℤ, b: ℤ) {
 }
 
 theorem abs_eq_imp_unit(a: ℤ, b: ℤ) {
-    a != 0 and b != 0 and abs(a) = abs(b) implies exists(u: ℤ) { is_unit(u) and u * a = b }
+    a != 0 and b != 0 and abs(a) = abs(b) implies exists(u: ℤ) { is_unit(u) and u ⋅ a = b }
 } by {
-    a = unit_sign(a) * from_nat(abs(a))
-    b = unit_sign(b) * from_nat(abs(b))
-    let u = unit_sign(a) * unit_sign(b)
+    a = unit_sign(a) ⋅ from_nat(abs(a))
+    b = unit_sign(b) ⋅ from_nat(abs(b))
+    let u = unit_sign(a) ⋅ unit_sign(b)
     is_unit(u)
-    u * a = b
+    u ⋅ a = b
 }
 
 theorem abs_eq_imp_div(a: ℤ, b: ℤ) { 
     a != 0 and b != 0 and abs(a) = abs(b) implies a.divides(b) 
 } by {
-    exists(u: ℤ) { is_unit(u) and u * a = b }
+    exists(u: ℤ) { is_unit(u) and u ⋅ a = b }
 }
 
 theorem div_pos_imp_lte(a: ℤ, b: ℤ) { a.divides(b) and b > 0 implies a <= b } by {
@@ -610,88 +610,88 @@ theorem div_pos_imp_lte(a: ℤ, b: ℤ) { a.divides(b) and b > 0 implies a <= b 
 }
 
 theorem lt_mul_both(a: ℤ, b: ℤ, c: ℤ) {
-    a > 0 and b < c implies a * b < a * c
+    a > 0 and b < c implies a ⋅ b < a ⋅ c
 }
 
 theorem lte_mul_both(a: ℤ, b: ℤ, c: ℤ) {
-    a > 0 and b <= c implies a * b <= a * c
+    a > 0 and b <= c implies a ⋅ b <= a ⋅ c
 }
 
 theorem lt_mul_both_neg(a: ℤ, b: ℤ, c: ℤ) {
-    a < 0 and b < c implies a * b > a * c
+    a < 0 and b < c implies a ⋅ b > a ⋅ c
 } by {
-    a * c < b * a
+    a ⋅ c < b ⋅ a
 }
 
 theorem lte_mul_both_neg(a: ℤ, b: ℤ, c: ℤ) {
-    a < 0 and b <= c implies a * b >= a * c
+    a < 0 and b <= c implies a ⋅ b >= a ⋅ c
 }
 
 theorem lt_cancel_mul(a: ℤ, b: ℤ, c: ℤ) {
-    a > 0 and a * b < a * c implies b < c
+    a > 0 and a ⋅ b < a ⋅ c implies b < c
 } 
 
 theorem lte_cancel_mul(a: ℤ, b: ℤ, c: ℤ) {
-    a > 0 and a * b <= a * c implies b <= c
+    a > 0 and a ⋅ b <= a ⋅ c implies b <= c
 } 
 
 theorem lt_cancel_mul_neg(a: ℤ, b: ℤ, c: ℤ) {
-    a < 0 and a * b < a * c implies b > c
+    a < 0 and a ⋅ b < a ⋅ c implies b > c
 } 
 
 theorem lte_cancel_mul_neg(a: ℤ, b: ℤ, c: ℤ) {
-    a < 0 and a * b <= a * c implies b >= c
+    a < 0 and a ⋅ b <= a ⋅ c implies b >= c
 }
 
 theorem mul_pos_cancel_left(a: ℤ, b: ℤ, c: ℤ) {
-    a > 0 and a * b = a * c implies b = c
+    a > 0 and a ⋅ b = a ⋅ c implies b = c
 } 
 
 theorem mul_pos_cancel_right(a: ℤ, b: ℤ, c: ℤ) {
-    a > 0 and b * a = c * a implies b = c
+    a > 0 and b ⋅ a = c ⋅ a implies b = c
 }
 
 theorem mul_neg_cancel_left(a: ℤ, b: ℤ, c: ℤ) {
-    a < 0 and a * b = a * c implies b = c
+    a < 0 and a ⋅ b = a ⋅ c implies b = c
 } 
 
 theorem mul_neg_cancel_right(a: ℤ, b: ℤ, c: ℤ) {
-    a < 0 and b * a = c * a implies b = c
+    a < 0 and b ⋅ a = c ⋅ a implies b = c
 }
 
 theorem mul_cancel_left(a: ℤ, b: ℤ, c: ℤ) {
-    a != 0 and a * b = a * c implies b = c
+    a != 0 and a ⋅ b = a ⋅ c implies b = c
 } 
 
 theorem mul_cancel_right(a: ℤ, b: ℤ, c: ℤ) {
-    a != 0 and b * a = c * a implies b = c
+    a != 0 and b ⋅ a = c ⋅ a implies b = c
 }
 
 theorem divides_cancel_left(a: ℤ, b: ℤ, c: ℤ) {
-    a != 0 and (a * b).divides(a * c) implies b.divides(c)
+    a != 0 and (a ⋅ b).divides(a ⋅ c) implies b.divides(c)
 } by {
     let d: ℤ satisfy {
-        a * b * d = a * c
+        a ⋅ b ⋅ d = a ⋅ c
     }
-    a * (b * d) = a * c
-    b * d = c
+    a ⋅ (b ⋅ d) = a ⋅ c
+    b ⋅ d = c
 }
 
 theorem divides_cancel_right(a: ℤ, b: ℤ, c: ℤ) {
-    a != 0 and (b * a).divides(c * a) implies b.divides(c)
+    a != 0 and (b ⋅ a).divides(c ⋅ a) implies b.divides(c)
 }
 
 theorem divides_mul_left(a: ℤ, b: ℤ, m: ℤ) {
-    a.divides(b) implies (m * a).divides(m * b)
+    a.divides(b) implies (m ⋅ a).divides(m ⋅ b)
 } by {
     let d: ℤ satisfy {
-        d * a = b
+        d ⋅ a = b
     }
-    m * d * a = m * b
+    m ⋅ d ⋅ a = m ⋅ b
 }
 
 theorem divides_mul_right(a: ℤ, b: ℤ, m: ℤ) {
-    a.divides(b) implies (a * m).divides(b * m)
+    a.divides(b) implies (a ⋅ m).divides(b ⋅ m)
 }
 
 theorem one_plus_one {
@@ -701,11 +701,11 @@ theorem one_plus_one {
 }
 
 theorem times_two(a: ℤ) {
-    2 * a = a + a
+    2 ⋅ a = a + a
 } by {
     2 = 1 + 1
-    2 * a = (1 + 1) * a
-    2 * a = 1 * a + 1 * a
+    2 ⋅ a = (1 + 1) ⋅ a
+    2 ⋅ a = 1 ⋅ a + 1 ⋅ a
 }
 
 theorem add_lte(a: ℤ, b: ℤ, c: ℤ, d: ℤ) {
@@ -737,7 +737,7 @@ attributes ℤ {
                 1
             }
             ℕ.suc(pred) {
-                self * self.pow(pred)
+                self ⋅ self.pow(pred)
             }
         }
     }
@@ -746,7 +746,7 @@ attributes ℤ {
 theorem pow_one(a: ℤ) {
     a^(ℕ.1) = a
 } by {
-    a * a^(ℕ.0) = a
+    a ⋅ a^(ℕ.0) = a
     a^(ℕ.0.suc) = a
 }
 
@@ -755,17 +755,17 @@ theorem pow_zero(a: ℤ) {
 }
 
 theorem pow_add(a: ℤ, b: ℕ, c: ℕ) {
-    a^(b + c) = a^b * a^c
+    a^(b + c) = a^b ⋅ a^c
 } by {
     // Inductive step
     let f = function(x: ℕ) {
-        a^(b + x) = a^b * a^x
+        a^(b + x) = a^b ⋅ a^x
     }
     f(ℕ.0)
     forall(x: ℕ) {
         if f(x) {
-            a^(b + x) = a^b * a^x
-            a^(b + x.suc) = a^b * a^(x.suc)
+            a^(b + x) = a^b ⋅ a^x
+            a^(b + x.suc) = a^b ⋅ a^(x.suc)
             f(x.suc)
         }
     }
@@ -773,17 +773,17 @@ theorem pow_add(a: ℤ, b: ℕ, c: ℕ) {
 }
 
 theorem pow_mul(a: ℤ, b: ℕ, c: ℕ) {
-    a^(b * c) = (a^b)^c
+    a^(b ⋅ c) = (a^b)^c
 } by {
     // Inductive step
     let f = function(x: ℕ) {
-        a^(b * x) = (a^b)^x
+        a^(b ⋅ x) = (a^b)^x
     }
     f(ℕ.0)
     forall(x: ℕ) {
         if f(x) {
-            a^(b * x) = (a^b)^x
-            a^(b * x.suc) = (a^b)^(x.suc)
+            a^(b ⋅ x) = (a^b)^x
+            a^(b ⋅ x.suc) = (a^b)^(x.suc)
             f(x.suc)
         }
     }
@@ -816,7 +816,7 @@ theorem pos_pow(a: ℤ, n: ℕ) {
 }
 
 theorem sq_eq_mul(a: ℤ) {
-    a * a = a^(ℕ.2)
+    a ⋅ a = a^(ℕ.2)
 }
 
 theorem sq_pos(a: ℤ) {
@@ -936,23 +936,23 @@ theorem gcd_div_left(a: ℤ, b: ℤ) { gcd(a, b).divides(a) } by {
 theorem gcd_div_right(a: ℤ, b: ℤ) { gcd(a, b).divides(b) }
 
 theorem gcd_mult_left(a: ℤ, b: ℤ, m: ℤ) {
-    from_nat(abs(m)) * gcd(a, b) = gcd(m * a, m * b)
+    from_nat(abs(m)) ⋅ gcd(a, b) = gcd(m ⋅ a, m ⋅ b)
 }
 
 theorem gcd_mult_right(a: ℤ, b: ℤ, m: ℤ) {
-    gcd(a, b) * from_nat(abs(m)) = gcd(a * m, b * m)
+    gcd(a, b) ⋅ from_nat(abs(m)) = gcd(a ⋅ m, b ⋅ m)
 }
 
 theorem cofactor(a: ℤ, b: ℤ, af: ℤ, bf: ℤ) {
     (
         gcd(a, b) != 0 and
-        af * gcd(a, b) = a and
-        bf * gcd(a, b) = b
+        af ⋅ gcd(a, b) = a and
+        bf ⋅ gcd(a, b) = b
     ) implies gcd(af, bf) = 1
 } by {
     nat_gcd(abs(a), abs(b)) != ℕ.0
-    abs(af) * nat_gcd(abs(a), abs(b)) = abs(a)
-    abs(bf) * nat_gcd(abs(a), abs(b)) = abs(b)
+    abs(af) ⋅ nat_gcd(abs(a), abs(b)) = abs(a)
+    abs(bf) ⋅ nat_gcd(abs(a), abs(b)) = abs(b)
     nat_gcd(abs(af), abs(bf)) = ℕ.1
 }
 
@@ -965,56 +965,56 @@ attributes ℤ {
 from list import List
 
 theorem euclids_lemma_prime(a: ℤ, b: ℤ, c: ℤ) {
-    a.is_prime and a.divides(b * c) implies a.divides(b) or a.divides(c)
+    a.is_prime and a.divides(b ⋅ c) implies a.divides(b) or a.divides(c)
 } by {
     abs(a).is_prime 
-    abs(a).divides(abs(b) * abs(c)) 
+    abs(a).divides(abs(b) ⋅ abs(c)) 
     abs(a).divides(abs(b)) or abs(a).divides(abs(c))
 }
 
 theorem euclids_lemma(a: ℤ, b: ℤ, c: ℤ) {
-    gcd(a, b) = 1 and a.divides(b * c) implies a.divides(c)
+    gcd(a, b) = 1 and a.divides(b ⋅ c) implies a.divides(c)
 } by {
     nat_gcd(abs(a), abs(b)) = ℕ.1
-    abs(a).divides(abs(b) * abs(c))
+    abs(a).divides(abs(b) ⋅ abs(c))
     abs(a).divides(abs(c))
 }
 
 // This is just the ℕ division theorem ported up
 theorem positive_division_theorem(m: ℤ, n: ℤ) {
     0 <= m and n.is_positive implies exists(q: ℤ, r: ℤ) {
-        0 <= r and r < n and m = q * n + r
+        0 <= r and r < n and m = q ⋅ n + r
     }
 } by {
     let (q: ℕ, r: ℕ) satisfy {
-        r < abs(n) and abs(m) = q * abs(n) + r
+        r < abs(n) and abs(m) = q ⋅ abs(n) + r
     }
     0 <= from_nat(r)
     from_nat(r) < n
-    from_nat(abs(m)) = from_nat(q * abs(n) + r)
-    m = from_nat(q * abs(n) + r)
-    m = from_nat(q) * from_nat(abs(n)) + from_nat(r)
+    from_nat(abs(m)) = from_nat(q ⋅ abs(n) + r)
+    m = from_nat(q ⋅ abs(n) + r)
+    m = from_nat(q) ⋅ from_nat(abs(n)) + from_nat(r)
 }
 
 // Dividing negative numbers is awkward, sometimes you're off by one
 theorem negative_division_theorem(m: ℤ, n: ℤ) {
     m.is_negative and n.is_positive implies exists(q: ℤ, r: ℤ) {
-        0 <= r and r < n and m = q * n + r
+        0 <= r and r < n and m = q ⋅ n + r
     }
 } by {
     0 <= -m
     let (qn: ℤ, rn: ℤ) satisfy {
-        0 <= rn and rn < n and -m = qn * n + rn
+        0 <= rn and rn < n and -m = qn ⋅ n + rn
     }
-    m = (-qn) * n + -rn
+    m = (-qn) ⋅ n + -rn
     if rn = 0 {
         negative_division_theorem(m, n)
     } else {
         rn > 0
-        (-qn + -1) * n = (-qn) * n + -n
-        (-qn) * n = (-qn + -1) * n + n
-        m = (-qn) * n + -rn
-        m = (-qn + -1) * n + (n + -rn)
+        (-qn + -1) ⋅ n = (-qn) ⋅ n + -n
+        (-qn) ⋅ n = (-qn + -1) ⋅ n + n
+        m = (-qn) ⋅ n + -rn
+        m = (-qn + -1) ⋅ n + (n + -rn)
         rn < n
         0 < n + -rn
         0 <= n + -rn
@@ -1027,7 +1027,7 @@ theorem negative_division_theorem(m: ℤ, n: ℤ) {
 // The entire division theorem is combining the two cases
 theorem division_theorem(m: ℤ, n: ℤ) {
     n.is_positive implies exists(q: ℤ, r: ℤ) {
-        0 <= r and r < n and m = q * n + r
+        0 <= r and r < n and m = q ⋅ n + r
     }
 } by {
     if m.is_negative {
