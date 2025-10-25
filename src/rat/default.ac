@@ -71,9 +71,9 @@ theorem lt_some_nat(a: ℚ) {
         a < ℚ.from_int(i)
     }
     // maybe i < 0
-    let n = int.abs(i)
-    i <= ℤ.from_nat(n)
-    ℚ.from_int(i) <= ℚ.from_nat(n)
+    let n = i.abs
+    i <= n
+    ℚ.from_int(i) <= ℚ.from_int(n)
 }
 
 theorem iop_gets_lt(ε: ℚ) {

@@ -1,4 +1,4 @@
-from nat.nat_divide import ℕ, divides_suc
+from nat.nat_divide import ℕ, divides_suc, divides_trans
 from nat.nat_base import true_below, strong_induction
 // from list import List
 numerals ℕ
@@ -582,7 +582,7 @@ theorem gcd_zero_left(a: ℕ) { gcd(0, a) = a } by {
     gcd(a, 0).divides(a)
     gcd(a, 0).divides(gcd(0, a))
     a.divides(gcd(a, 0))
-    nat_divide.divides_trans(a, gcd(a, 0), gcd(0, a))
+    divides_trans(a, gcd(a, 0), gcd(0, a))
     a.divides(gcd(0, a))
     gcd(0, a).divides(a)
 }
@@ -1389,3 +1389,7 @@ theorem euclids_lemma(a: ℕ, b: ℕ, c: ℕ) {
         a.divides(c)
     }
 }
+
+let nat_gcd = gcd
+
+let nat_relative_prime = relative_prime

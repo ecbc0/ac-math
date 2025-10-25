@@ -1,5 +1,4 @@
-import nat.nat_base
-from nat.prime_number import ℕ, mod_maintains
+from nat.prime_number import ℕ, mod_maintains, nat_gcd, nat_relative_prime
 from int.int_base import ℤ, from_nat, abs, abs_neg, abs_zero, neg_neg, neg_sub, nonzero_pos_or_neg, sub_eq_zero, sub_nat, lt_trans, neg_lt_zero
 
 numerals ℤ
@@ -869,15 +868,11 @@ theorem member_triangle(a: ℤ, b: ℤ) {
     abs(a + b) <= abs(a) + abs(b)
 }
 
-let nat_gcd = prime_number.gcd
-
 define gcd(a: ℤ, b: ℤ) -> ℤ {
     from_nat(nat_gcd(abs(a), abs(b)))
 }
 
 // port from ℕ
-
-let nat_relative_prime = prime_number.relative_prime
 
 define relative_prime(a: ℤ, b: ℤ) -> Bool {
     nat_relative_prime(abs(a), abs(b))

@@ -1,6 +1,5 @@
-import nat.nat_base
 from nat import ℕ
-from int import ℤ, gcd
+from int import ℤ, gcd, abs, mul_pos_pos_iff
 
 /// True if a fraction a/b is in reduced form (lowest terms).
 /// The denominator must be positive and gcd(a,b) must be 1.  
@@ -140,16 +139,16 @@ theorem cross_eq_imp_eq(r1: ℚ, r2: ℚ) {
     gcd(r1.num, r1.denom) = ℤ.1
     r1.denom.divides(r1.num ⋅ r2.denom)
     r1.denom.divides(r2.denom)
-    int.abs(r1.denom).divides(int.abs(r2.denom))
+    abs(r1.denom).divides(abs(r2.denom))
 
     // The r2 fields divide into the r1 ones
     gcd(r2.num, r2.denom) = ℤ.1
     r2.denom.divides(r2.num ⋅ r1.denom)
     r2.denom.divides(r1.denom)
-    int.abs(r2.denom).divides(int.abs(r1.denom))
+    abs(r2.denom).divides(abs(r1.denom))
 
     // Prove int equality from nat equality
-    int.abs(r1.denom) = int.abs(r2.denom)
+    abs(r1.denom) = abs(r2.denom)
     r1.denom.is_positive
     r2.denom.is_positive
     r1.denom = r2.denom
@@ -319,7 +318,7 @@ theorem unreduce_right(a: ℤ, b: ℤ) {
     let r = reduce(a, b)
     cross_equals(r.num, r.denom, a, b)
     r.num ⋅ b = a ⋅ r.denom
-    int.gcd(r.num, r.denom) = ℤ.1
+    gcd(r.num, r.denom) = ℤ.1
     r.denom.divides(r.num ⋅ b)
     r.denom.divides(b)
     let d: ℤ satisfy {
@@ -809,7 +808,7 @@ theorem reduce_pos_pos(a: ℤ, b: ℤ) {
     }
     reduce(a, b).denom > ℤ.0
     d > ℤ.0
-    int.mul_pos_pos_iff(d, reduce(a, b).num)
+    mul_pos_pos_iff(d, reduce(a, b).num)
     reduce(a, b).num > ℤ.0
 }
 
@@ -1069,6 +1068,8 @@ theorem lt_add_pos(a: ℚ, b: ℚ) {
     (a + b) - a = b
     b > 0
 }
+
+let int_abs = abs
 
 attributes ℚ {
     /// The absolute value of a rational number.
