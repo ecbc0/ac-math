@@ -20,8 +20,8 @@
 {"goal":"1 <= ℚ.from_int(a.denom)","proof":["not ℤ.1 <= a.denom or ℚ.from_int(ℤ.1) <= ℚ.from_int(a.denom)","a.denom >= ℤ.1 = ℤ.1 <= a.denom","ℤ.1 <= a.denom","ℚ.from_int(ℤ.1) <= ℚ.from_int(a.denom)","not ℚ.from_int(ℤ.1) <= ℚ.from_int(a.denom)"]}
 {"goal":"a <= ℚ.from_int(a.denom) ⋅ a","proof":["not a > 0 or not 1 <= ℚ.from_int(a.denom) or 1 ⋅ a <= ℚ.from_int(a.denom) ⋅ a","1 ⋅ a = a","not 1 ⋅ a <= ℚ.from_int(a.denom) ⋅ a"]}
 {"goal":"pos_lte_num","proof":["a ⋅ ℚ.from_int(a.denom) = ℚ.from_int(a.num)","a ⋅ ℚ.from_int(a.denom) = ℚ.from_int(a.denom) ⋅ a"]}
-{"goal":"lt_some_int","proof":["not a < ℚ.from_int(lib(rat.rat_base).floor(a) + ℤ.1)","a < ℚ.from_int(lib(rat.rat_base).floor(a) + ℤ.1)"]}
-{"goal":"exists(k0: ℤ) { a < ℚ.from_int(k0) }","proof":["not a < ℚ.from_int(lib(rat.rat_base).floor(a) + ℤ.1)","a < ℚ.from_int(lib(rat.rat_base).floor(a) + ℤ.1)"]}
+{"goal":"lt_some_int","proof":["not a < ℚ.from_int(lib(rat.rat_base).floor_impl(a) + ℤ.1)","a < ℚ.from_int(lib(rat.rat_base).floor_impl(a) + ℤ.1)"]}
+{"goal":"exists(k0: ℤ) { a < ℚ.from_int(k0) }","proof":["not a < ℚ.from_int(lib(rat.rat_base).floor_impl(a) + ℤ.1)","a < ℚ.from_int(lib(rat.rat_base).floor_impl(a) + ℤ.1)"]}
 {"goal":"i <= n","proof":["not i <= i.abs","ℤ.from_nat(lib(int.int_base).abs(i)) = i.abs","i <= ℤ.from_nat(lib(int.int_base).abs(i))"]}
 {"goal":"ℚ.from_int(i) <= ℚ.from_int(n)","proof":["not i <= n or ℚ.from_int(i) <= ℚ.from_int(n)"]}
 {"goal":"lt_some_nat","proof":["not a < ℚ.from_nat(lib(int.int_base).abs(i))","not ℚ.from_int(i) <= ℚ.from_nat(lib(int.int_base).abs(i)) or not a < ℚ.from_int(i) or a < ℚ.from_nat(lib(int.int_base).abs(i))","ℚ.from_int(ℤ.from_nat(lib(int.int_base).abs(i))) = ℚ.from_nat(lib(int.int_base).abs(i))","ℤ.from_nat(lib(int.int_base).abs(i)) = i.abs","not ℚ.from_int(i) <= ℚ.from_nat(lib(int.int_base).abs(i)) or not a < ℚ.from_int(i)","not ℚ.from_int(i) <= ℚ.from_nat(lib(int.int_base).abs(i))","ℚ.from_int(i) <= ℚ.from_int(i.abs)","ℚ.from_int(i) <= ℚ.from_int(ℤ.from_nat(lib(int.int_base).abs(i)))"]}

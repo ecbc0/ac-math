@@ -35,7 +35,7 @@
 {"goal":"zero_divides","proof":["let s0: (ℕ, ℕ) -> ℕ satisfy { forall(x0: ℕ, x1: ℕ) { not x0.divides(x1) or x0 ⋅ s0(x0, x1) = x1 } and forall(x2: ℕ, x3: ℕ, x4: ℕ) { x2 ⋅ x3 != x4 or x2.divides(x4) } }","not 0.divides(n) or 0 ⋅ s0(0, n) = n","0 ⋅ s0(0, n) = 0","0 ⋅ s0(0, n) != n"]}
 {"goal":"a != 0","proof":["0 != a or a ⋅ b = 0","a ⋅ b = 0"]}
 {"goal":"b != 0","proof":["b != 0 or a ⋅ b = 0","a ⋅ b = 0"]}
-{"goal":"a = n","proof":["a - 0 = nat_base.bounded_sub(a, 0)","b ⋅ a = a ⋅ b","a^1 = a","a^1 - 0 = a^1","1 ⋅ nat_base.bounded_sub(a, 0) = nat_base.bounded_sub(a, 0)"]}
+{"goal":"a = n","proof":["a - 0 = lib(nat.nat_base).bounded_sub(a, 0)","b ⋅ a = a ⋅ b","a^1 = a","a^1 - 0 = a^1","1 ⋅ lib(nat.nat_base).bounded_sub(a, 0) = lib(nat.nat_base).bounded_sub(a, 0)"]}
 {"goal":"a < a ⋅ b","proof":["not 1 < b or a < a ⋅ b or 0 = a","not 1 < b","b > 1 = 1 < b"]}
 {"goal":"a < n","proof":["not a < a * b"]}
 {"goal":"a <= n","proof":["not a <= a ⋅ b","a <= a ⋅ b or b = 0"]}
@@ -44,7 +44,7 @@
 {"goal":"divides_self","proof":["a ⋅ 1 != a or a.divides(a)","a ⋅ 1 != a","a ⋅ 1 = a"]}
 {"goal":"n = 0","proof":["a ⋅ b != 0","a ⋅ 0 != 0","0 != 0 or a ⋅ 0 = 0"]}
 {"goal":"false","proof":["not a.proper_divides(n) or 0 != n"]}
-{"goal":"a = n","proof":["a - 0 = nat_base.bounded_sub(a, 0)","b ⋅ a = a ⋅ b","a^1 = a","a^1 - 0 = a^1","1 ⋅ nat_base.bounded_sub(a, 0) = nat_base.bounded_sub(a, 0)"]}
+{"goal":"a = n","proof":["a - 0 = lib(nat.nat_base).bounded_sub(a, 0)","b ⋅ a = a ⋅ b","a^1 = a","a^1 - 0 = a^1","1 ⋅ lib(nat.nat_base).bounded_sub(a, 0) = lib(nat.nat_base).bounded_sub(a, 0)"]}
 {"goal":"false","proof":["a.proper_divides(a)","not a.proper_divides(a) or a < a","not a < a"]}
 {"goal":"1 < a","proof":["not a.proper_divides(n) or 1 < a"]}
 {"goal":"exists(k0: ℕ) { a = 1 + k0 and k0 != 0 }","proof":["let s0: (ℕ, ℕ) -> ℕ satisfy { forall(x0: ℕ, x1: ℕ) { not x0 < x1 or 0 != s0(x0, x1) } and forall(x2: ℕ, x3: ℕ) { not x2 < x3 or x2 + s0(x2, x3) = x3 } and forall(x4: ℕ, x5: ℕ, x6: ℕ) { x4 + x5 != x6 or x4 < x6 or 0 = x5 } }","1 + s0(1, a) != a or s0(1, a) = 0","not 1 < a or 1 + s0(1, a) = a","not 1 < a or s0(1, a) != 0","s0(1, a) != 0","1 + s0(1, a) = a","1 + s0(1, a) != a"]}
@@ -86,7 +86,7 @@
 {"goal":"a >= b","proof":["not b.divides(a) or b <= a or 0 = a","a >= b = b <= a","b <= a","not b <= a"]}
 {"goal":"a = b","proof":["not a <= b or a < b or b = a","not b <= a or b < a or b = a","a < b","not a < b or not b < a","a >= b = b <= a","b <= a","not b < a","b < a"]}
 {"goal":"divides_symm","proof":["0 = a","0 != b"]}
-{"goal":"0 < m","proof":["nat_base.bounded_sub(0, m) + m = 0 or 0 < m","nat_base.bounded_sub(0, m) + m != 0 or 0 = m","nat_base.bounded_sub(0, m) + m = 0"]}
+{"goal":"0 < m","proof":["lib(nat.nat_base).bounded_sub(0, m) + m = 0 or 0 < m","lib(nat.nat_base).bounded_sub(0, m) + m != 0 or 0 = m","lib(nat.nat_base).bounded_sub(0, m) + m = 0"]}
 {"goal":"exists(k0: ℕ, k1: ℕ) { k1 < m and k0 ⋅ m + k1 = a }","proof":["let (s0: (ℕ, ℕ) -> ℕ, s1: (ℕ, ℕ) -> ℕ) satisfy { forall(x0: ℕ, x1: ℕ) { not 0 < x0 or s1(x1, x0) < x0 } and forall(x2: ℕ, x3: ℕ) { not 0 < x2 or s0(x3, x2) ⋅ x2 + s1(x3, x2) = x3 } }","s0(a, m) ⋅ m + s1(a, m) != a or not s1(a, m) < m","not 0 < m or s0(a, m) ⋅ m + s1(a, m) = a","not 0 < m or s1(a, m) < m","s1(a, m) < m","s0(a, m) ⋅ m + s1(a, m) = a"]}
 {"goal":"a = a","proof":[]}
 {"goal":"exists(k0: ℕ) { if m != 0 { k0 < m and exists(k1: ℕ) { k1 ⋅ m + k0 = a } } else { k0 = a } }","proof":["let (s0: ℕ, s1: ℕ) satisfy { s1 < m or 0 = m and (s0 ⋅ m + s1 = a or 0 = m) }","s0 ⋅ m + s1 != a or not s1 < m or 0 = m","0 != m or a != a","0 != m"]}

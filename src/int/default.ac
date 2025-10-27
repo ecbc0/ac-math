@@ -1,4 +1,4 @@
-from nat.prime_number import ℕ, mod_maintains, nat_gcd, nat_relative_prime
+from nat.prime_number import ℕ, mod_maintains, gcd as nat_gcd, relative_prime as nat_relative_prime
 from int.int_base import ℤ, from_nat, abs, abs_neg, abs_zero, neg_neg, neg_sub, nonzero_pos_or_neg, sub_eq_zero, sub_nat, lt_trans, neg_lt_zero
 
 numerals ℤ

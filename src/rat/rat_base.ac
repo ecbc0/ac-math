@@ -631,6 +631,8 @@ theorem add_reduced_same_denom(a: ℤ, b: ℤ, c: ℤ) {
 theorem add_assoc(a: ℚ, b: ℚ, c: ℚ) {
     (a + b) + c = a + (b + c)
 } by {
+    // to make the proof easy, use common_denom a.denom ⋅ b.denom ⋅ c.denom for add
+    // then use add_assoc of ℤ on num
     let d: ℤ = a.denom ⋅ b.denom ⋅ c.denom
     let an: ℤ = a.num ⋅ (b.denom ⋅ c.denom)
     a = reduce(a.num, a.denom)
@@ -872,6 +874,18 @@ theorem sub_cancels_add(a: ℚ, b: ℚ) {
     a + b + -b = a
 }
 
+theorem sub_moves_sides(a: ℚ, b: ℚ, c: ℚ) {
+    a + b = c implies a = c - b
+}
+
+theorem add_cancel_right(a: ℚ, b: ℚ, c: ℚ) {
+    a + c = b + c implies a = b
+} 
+
+theorem add_cancel_left(a: ℚ, b: ℚ, c: ℚ) {
+    c + a = c + b implies a = b
+}
+
 theorem neg_neg_is_pos(a: ℚ) {
     a < 0 iff (-a) > 0
 }
@@ -944,8 +958,14 @@ theorem neg_sub(a: ℚ, b: ℚ) {
     -(a - b) = b + -a
 }
 
-theorem compare_by_zero(a: ℚ, b: ℚ) {
+theorem compare_by_gt_zero(a: ℚ, b: ℚ) {
     a - b > 0 iff a > b
+} 
+
+theorem compare_by_gte_zero(a: ℚ, b: ℚ) {
+    a - b >= 0 iff a >= b
+} by {
+    a - b >= 0 implies a >= b
 }
 
 theorem lt_acyclic_zero(a: ℚ) {
@@ -1069,8 +1089,6 @@ theorem lt_add_pos(a: ℚ, b: ℚ) {
     b > 0
 }
 
-let int_abs = abs
-
 attributes ℚ {
     /// The absolute value of a rational number.
     define abs(self) -> ℚ {
@@ -1156,6 +1174,18 @@ theorem lt_add_right(a: ℚ, b: ℚ, c: ℚ) {
     (b + c) - (a + c) = b + (c + -c) + -a
     (b + c) - (a + c) = b + -a
     ((b + c) - (a + c)) > 0
+}
+
+theorem lt_add_left(a: ℚ, b: ℚ, c: ℚ) {
+    a < b implies c + a < c + b
+}
+
+theorem lte_add_right(a: ℚ, b: ℚ, c: ℚ) {
+    a <= b implies a + c <= b + c
+}
+
+theorem lte_add_left(a: ℚ, b: ℚ, c: ℚ) {
+    a <= b implies c + a <= c + b
 }
 
 theorem add_neg_lt(a: ℚ, b: ℚ) {
@@ -1310,9 +1340,36 @@ theorem floor_exists(a: ℚ) {
     a < ℚ.from_int(q + ℤ.1)
 }
 
-let floor(a: ℚ) -> q: ℤ satisfy {
+let floor_impl(a: ℚ) -> q: ℤ satisfy {
     ℚ.from_int(q) <= a and a < ℚ.from_int(q + ℤ.1)
 }
+
+attributes ℚ {
+    /// The floor of a rational number (the greatest integer less than or equal to it).
+    define floor(self) -> ℤ {
+        floor_impl(self)
+    }
+}
+
+theorem gt_some_int(a: ℚ) {
+    exists(n: ℤ) {
+        a > ℚ.from_int(n)
+    }
+} by {
+    a >= ℚ.from_int(a.floor)
+
+    ℚ.from_int(a.floor) > ℚ.from_int(a.floor) + -ℚ.from_int(ℤ.1)
+
+    a > ℚ.from_int(a.floor) + -ℚ.from_int(ℤ.1)
+    
+    a > ℚ.from_int(a.floor - ℤ.1)
+}
+
+theorem lt_some_int(a: ℚ) {
+    exists(n: ℤ) {
+        a < ℚ.from_int(n)
+    }
+} 
 
 theorem mul_lt_lt(a: ℚ, b: ℚ, c: ℚ, d: ℚ) {
     a > 0 and c > 0 and a < b and c < d implies a ⋅ c < b ⋅ d
@@ -1375,7 +1432,7 @@ theorem gte_some_int(a: ℚ) {
         a >= ℚ.from_int(n)
     }
 } by {
-    a >= ℚ.from_int(floor(a))
+    a >= ℚ.from_int(a.floor)
 }
 
 theorem mul_denom(r: ℚ) {
@@ -1397,13 +1454,17 @@ theorem add_half_half(r: ℚ) {
 } 
 
 theorem lt_neg(p: ℚ, q: ℚ) {
-    p < q implies -q < -p
+    p < q implies -p > -q
 } by {
-    0 < (q - p)
-    -q < (q - p) + -q
+    (q - p) > 0
+    (q - p) + -q > -q
     (q - p) + -q = (q + -q) - p
-    -q < -p
+    -p > -q
 }
+
+theorem lte_neg(p: ℚ, q: ℚ) {
+    p <= q implies -p >= -q
+} 
 
 theorem lt_lte_trans(a: ℚ, b: ℚ, c: ℚ) {
     a < b and b <= c implies a < c

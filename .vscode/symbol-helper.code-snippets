@@ -34,13 +34,21 @@
 		"prefix": "not-in",
 		"body": "∉"
 	},
-	"⊂": {
+	"⊆": {
 		"prefix": "subset",
 		"body": "⊆"
 	},
-	"⊃": {
+	"⊇": {
 		"prefix": "superset",
 		"body": "⊇"
+	},
+	"⊊": {
+		"prefix": "subset-not-eq",
+		"body": "⊊"
+	},
+	"⊋": {
+		"prefix": "superset-not-eq",
+		"body": "⊋"
 	},
 	"∖": {
 		"prefix": ["without", "set-minus"],

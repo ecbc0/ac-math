@@ -1,2 +1,1990 @@
 from rat import ℚ
+from int import ℤ, abs
+from nat import ℕ
+
 numerals ℚ
+
+// An intuitive way to recover ℝ from ℚ: 
+//     x: ℝ <-> ℝ ∖ x is a one-to-one correspondence. 
+// So there might be x: ℝ <-> (ℝ ∖ x) ∩ ℚ is a one-to-one correspondence. It can also be represented by two semi-infinite intervals ℚ_(< x) + ℚ_(> x). It can be represented by only one side, the other side comes directly from the complement in ℚ.
+// 1. Although using both sides together is more symmetrical, to reduce the amount of code written, we use the infinite interval on the side of < x
+// 2. But we also need to exclude the case of the entire interval ℚ, it needs to be divided into two non-empty sets
+// 3. We use < instead of <=. So there is no greatest element
+
+/// True if a set is downward-closed (contains all smaller elements).
+define is_lower(contains: ℚ -> Bool) -> Bool {
+    forall(x: ℚ, y: ℚ) {
+        contains(y) and x < y implies contains(x)
+    }
+}
+
+/// True if a function on rationals partitions them into two non-empty sets.
+define is_cut(contains: ℚ -> Bool) -> Bool {
+    exists(x: ℚ) {
+        contains(x)
+    } and 
+    exists(x: ℚ) {
+        not contains(x)
+    }
+}
+
+/// True if x is the greatest element in the set defined by f.
+define is_greatest(contains: ℚ -> Bool, x: ℚ) -> Bool {
+    contains(x) and forall(y: ℚ) {
+        contains(y) implies y <= x
+    }
+}
+
+/// True if the set defined by f has a greatest element.
+define has_greatest(contains: ℚ -> Bool) -> Bool {
+    exists(x: ℚ) {
+        is_greatest(contains, x)
+    }
+}
+
+/// True if a function represents a valid Dedekind cut defining a ℝ number.
+define is_dedekind_cut(contains: ℚ -> Bool) -> Bool {
+    is_cut(contains) and is_lower(contains) and not has_greatest(contains)
+}
+
+// structure with constraint needs to have a proof of existence. We can use ℚ embedded in ℝ. Note that although we need ℚ_(< r), due to the syntax of method calls, we should use r.gt here
+
+// "All numbers y such that x is greater then y" is the cut that embeds x.
+
+theorem gt_is_cut(r: ℚ) {
+    is_cut(r.gt)
+} by {
+    r - (r - 1) = 1
+    r > (r - 1)
+    r.gt(r - 1)
+    not r > r
+    not r.gt(r)
+}
+
+theorem gt_is_lower(r: ℚ) {
+    is_lower(r.gt)
+} by {
+    forall(x: ℚ, y: ℚ) {
+        if r.gt(y) and y.gt(x) {
+            r > y
+            y > x
+            r > x
+            r.gt(x)
+        }
+    }
+}
+
+theorem gt_has_no_greatest(r: ℚ) {
+    not has_greatest(r.gt)
+} by {
+    if has_greatest(r.gt) {
+        let q: ℚ satisfy {
+            is_greatest(r.gt, q)
+        }
+        // by def of r.gt 
+        r > q
+        let diff = r - q
+        diff > 0
+        q + diff = r
+
+        // construct r > z and z > q, hence contradiction
+        let z = q + diff/2
+        (diff/2) > 0
+        z > q
+        z + diff/2 = r
+        r > z
+        not is_greatest(r.gt, q)
+        false
+    }
+}
+
+theorem gt_is_dedekind_cut(r: ℚ) {
+    is_dedekind_cut(r.gt)
+} by {
+    gt_is_cut(r)
+    gt_is_lower(r)
+    gt_has_no_greatest(r)
+}
+
+/// ℝ numbers are defined by a Dedekind cut. Specifically, using the `gt_rat` function which
+/// specifies which rationals they are greater than.  
+// Concerned about the need for extra dot syntax a: ℝ, a.gt_rat when using real numbers? The solution is that we will make all operations on real numbers performed on a, and a.gt_rat only appears in the definitions of these operations on a. Or, if Acorn will implement subtypes in the future, then use a subtype of ℚ -> Bool, with constraints, and name it ℝ, at this time the operation on gt_rat is an operation on elements of ℝ
+structure ℝ {
+    /// True if this ℝ number is greater than the given rational number.
+    gt_rat: ℚ -> Bool
+} constraint {
+    is_dedekind_cut(gt_rat)
+}
+
+attributes ℝ {
+    /// Converts a rational number to a ℝ number.
+    let from_rat = function(r: ℚ) {
+        ℝ.new(r.gt)
+    }
+
+    let 0: ℝ = ℝ.from_rat(ℚ.0)
+
+    /// True if this ℝ number is positive (greater than zero).
+    define is_positive(self) -> Bool {
+        self.gt_rat(ℚ.0)
+    }
+
+    /// True if this ℝ number is negative (less than zero).
+    define is_negative(self) -> Bool {
+        self != ℝ.0 and not self.is_positive
+    }
+
+    /// The less-than-or-equal-to relation for ℝ numbers.
+    /// x <= y <==> ℚ_(< x) ⊆ ℚ_(< y)
+    define lte(self, other: ℝ) -> Bool {
+        forall(r: ℚ) {
+            self.gt_rat(r) implies other.gt_rat(r)
+        }
+    }
+
+    /// x < y <==> ℚ_(< x) ⊊ ℚ_(< y)
+    define lt(self, other: ℝ) -> Bool {
+        self <= other and self != other
+    }
+
+    define gte(self, other: ℝ) -> Bool {
+        other <= self
+    }
+
+    define gt(self, other: ℝ) -> Bool {
+        other < self
+    }
+}
+
+theorem lte_trans(a: ℝ, b: ℝ, c: ℝ) {
+    a <= b and b <= c implies a <= c
+}
+
+theorem lt_is_not_self(a: ℝ) {
+    not a < a
+}
+
+theorem lte_self(r: ℝ) {
+    r <= r
+}
+
+/// r1 < z <= r2 ==> r1 <= r2
+theorem gt_rat_sorts(z: ℝ, r1: ℚ, r2: ℚ) {
+    z.gt_rat(r1) and not z.gt_rat(r2) implies r1 <= r2
+} by {
+    if r2 < r1 {
+        is_lower(z.gt_rat)
+        z.gt_rat(r2)
+        false
+    }
+    if r2 = r1 {
+        z.gt_rat(r2)
+        false
+    }
+}
+
+theorem lte_or_gte(a: ℝ, b: ℝ) {
+    a <= b or b <= a
+} by {
+    if not a <= b {
+        let r1: ℚ satisfy {
+            a.gt_rat(r1) and not b.gt_rat(r1)
+        }
+        forall(r2: ℚ) {
+            if b.gt_rat(r2) {
+                r2 < r1
+                a.gt_rat(r2)
+            }
+        }
+        b <= a
+    }
+}
+
+theorem lte_both_ways_imp_eq(a: ℝ, b: ℝ) {
+    a <= b and b <= a implies a = b
+} by {
+    forall(r: ℚ) {
+        if a.gt_rat(r) {
+            b.gt_rat(r)
+            a.gt_rat(r) = b.gt_rat(r)
+        } else {
+            not a.gt_rat(r)
+            not b.gt_rat(r)
+            a.gt_rat(r) = b.gt_rat(r)
+        }
+    }
+    a.gt_rat = b.gt_rat
+    a = b
+}
+
+// The ℝ numbers form a total order.
+
+from util import is_reflexive, is_transitive, is_antisymmetric, is_acyclic, is_nonreflexive
+
+theorem real_is_reflexive {
+    is_reflexive(ℝ.lte)
+}
+
+theorem real_lte_is_transitive {
+    is_transitive(ℝ.lte)
+}
+
+theorem real_is_antisymmetric {
+    is_antisymmetric(ℝ.lte)
+}
+
+theorem real_is_nonreflexive {
+    is_nonreflexive(ℝ.lt)
+}
+
+from order import lte_from, lte_trans_imp_lt_trans
+
+theorem lte_is_lte_from_lt {
+    ℝ.lte = lte_from(ℝ.lt)
+} by {
+    forall(x: ℝ, y: ℝ) {
+        if x = y { 
+            ℝ.lte(x, y)
+            lte_from(ℝ.lt)(x, y)
+            ℝ.lte(x, y) = lte_from(ℝ.lt)(x, y)
+        } else {
+            x != y
+            if ℝ.lte(x, y) {
+                ℝ.lt(x, y)
+                lte_from(ℝ.lt)(x, y)
+            }
+            if lte_from(ℝ.lt)(x, y) {
+                ℝ.lte(x, y)
+            }
+            ℝ.lte(x, y) = lte_from(ℝ.lt)(x, y)
+        }
+    }
+}
+
+theorem real_is_acyclic {
+    is_acyclic(ℝ.lt)
+}
+
+theorem real_is_transitive {
+    is_transitive(ℝ.lt)
+} by {
+    is_nonreflexive(ℝ.lt)
+    is_acyclic(ℝ.lt)
+    is_transitive(lte_from(ℝ.lt))
+    lte_trans_imp_lt_trans(ℝ.lt)
+}
+
+from order import Partial_Order, Linear_Order
+
+instance ℝ: Partial_Order {
+    let lt = ℝ.lt
+}
+
+instance ℝ: Linear_Order
+
+theorem gt_iff_from_rat_gt(r1: ℚ, r2: ℚ) {
+    r1 > r2 iff ℝ.from_rat(r1).gt_rat(r2)
+}
+
+theorem not_gt_rat_self(r: ℚ) {
+    not ℝ.from_rat(r).gt_rat(r)
+} by {
+    if ℝ.from_rat(r).gt_rat(r) {
+        r > r
+        false
+    }
+}
+
+numerals ℝ
+
+theorem zero_not_positive {
+    not 0.is_positive
+} by {
+    not ℚ.0 > ℚ.0
+    not ℝ.from_rat(ℚ.0).gt_rat(ℚ.0)
+    not ℝ.from_rat(ℚ.0).is_positive
+    0 = ℝ.from_rat(ℚ.0)
+}
+
+theorem gte_self(r: ℝ) {
+    r >= r
+}
+
+theorem gt_rat_imp_gt_from_rat(a: ℝ, r: ℚ) {
+    a.gt_rat(r) implies a > ℝ.from_rat(r)
+} by {
+    forall(q: ℚ) {
+        if ℝ.from_rat(r).gt_rat(q) {
+            q < r
+            a.gt_rat(q)
+        }
+    }
+    ℝ.from_rat(r) <= a
+
+    if ℝ.from_rat(r) = a {
+        ℝ.from_rat(r).gt_rat(r)
+        false
+    }
+
+    ℝ.from_rat(r) != a
+}
+
+theorem gt_from_rat_imp_gt_rat(a: ℝ, r: ℚ) {
+    a > ℝ.from_rat(r) implies a.gt_rat(r)
+} by {
+    not a <= ℝ.from_rat(r)
+    // see def of ℝ.lt
+    // r <= r2 < a
+    let r2: ℚ satisfy {
+        a.gt_rat(r2) and not ℝ.from_rat(r).gt_rat(r2)
+    }
+    not r > r2
+    r <= r2
+    is_lower(a.gt_rat)
+    a.gt_rat(r)
+}
+
+theorem rat_gt_iff_from_rat_gt(a: ℚ, b: ℚ) {
+    a > b iff ℝ.from_rat(a) > ℝ.from_rat(b)
+} by {
+    a > b implies ℝ.from_rat(a) > ℝ.from_rat(b)
+}
+
+theorem rat_lte_iff_from_rat_lte(a: ℚ, b: ℚ) {
+    a <= b iff ℝ.from_rat(a) <= ℝ.from_rat(b)
+} by {
+    a <= b implies ℝ.from_rat(a) <= ℝ.from_rat(b)
+}
+
+theorem from_rat_eq(q1: ℚ, q2: ℚ) {
+    ℝ.from_rat(q1) = ℝ.from_rat(q2) implies q1 = q2
+} by {
+    ℝ.from_rat(q1) <= ℝ.from_rat(q2)
+    ℝ.from_rat(q2) >= ℝ.from_rat(q1)
+    q1 <= q2
+    q2 >= q1
+}
+
+theorem pos_gt_zero(a: ℝ) {
+    a.is_positive implies a > 0
+} by {
+    a.is_positive
+    a.gt_rat(ℚ.0)
+    a > ℝ.from_rat(ℚ.0)
+}
+
+theorem gt_zero_imp_pos(a: ℝ) {
+    a > 0 implies a.is_positive
+} by {
+    a > 0
+    a > ℝ.from_rat(ℚ.0)
+    a.gt_rat(ℚ.0)
+    a.is_positive
+}
+
+theorem neg_lt_zero(a: ℝ) {
+    a.is_negative implies a < 0
+} by {
+    if not a < 0 {
+        0 <= a
+        if a = 0 {
+            false
+        } else {
+            a > 0
+            a.is_positive
+            false
+        }
+    }
+}
+
+theorem lt_zero_imp_neg(a: ℝ) {
+    a < 0 implies a.is_negative
+} by {
+    if not a.is_negative {
+        a.is_positive
+        a > 0
+        not is_acyclic(ℝ.lt)
+        false
+    }
+}
+
+theorem lte_zero_iff_non_pos(a: ℝ) {
+    a <= 0 iff not a.is_positive
+} by {
+    a <= 0 implies not a.is_positive
+}
+
+theorem gte_zero_iff_non_neg(a: ℝ) {
+    a >= 0 iff not a.is_negative
+} by {
+    a >= 0 implies not a.is_negative
+}
+
+/// Informally, z1 + z2 > r.  
+/// add_gt(z1, z2) is the "addition of two interval" or "contains all addition of elements from two interval", { r1 + r2 ∈ ℚ : r1 ∈ ℚ_(< z1), r2 ∈ ℚ_(< z2) } 
+define add_gt(z1: ℝ, z2: ℝ, r: ℚ) -> Bool {
+    exists(r1: ℚ, r2: ℚ) {
+        z1.gt_rat(r1) and z2.gt_rat(r2) and r = r1 + r2
+    }
+}
+
+theorem add_gt_symm(z1: ℝ, z2: ℝ, r: ℚ) {
+    add_gt(z1, z2, r) implies add_gt(z2, z1, r)
+} by {
+    let (r1: ℚ, r2: ℚ) satisfy {
+        z1.gt_rat(r1) and z2.gt_rat(r2) and r = r1 + r2
+    }
+    add_gt(z2, z1, r2 + r1)
+}
+
+theorem exists_lesser_rat(z: ℝ) {
+    exists(r: ℚ) {
+        z.gt_rat(r)
+    }
+} by {
+    is_cut(z.gt_rat)
+}
+
+theorem exists_gte_rat(z: ℝ) {
+    exists(r: ℚ) {
+        not z.gt_rat(r)
+    }
+} by {
+    is_cut(z.gt_rat)
+}
+
+theorem add_gt_is_cut(z1: ℝ, z2: ℝ) {
+    is_cut(add_gt(z1, z2))
+} by {
+    // Prove there's something lower
+    let lower1: ℚ satisfy {
+        z1.gt_rat(lower1)
+    }
+    let lower2: ℚ satisfy {
+        z2.gt_rat(lower2)
+    }
+    add_gt(z1, z2, lower1 + lower2)
+
+    // Prove there's something higher
+    let upper1: ℚ satisfy {
+        not z1.gt_rat(upper1)
+    }
+    let upper2: ℚ satisfy {
+        not z2.gt_rat(upper2)
+    }
+    if add_gt(z1, z2, upper1 + upper2) {
+        let (f1: ℚ, f2: ℚ) satisfy {
+            z1.gt_rat(f1) and z2.gt_rat(f2) and upper1 + upper2 = f1 + f2
+        }
+        f1 < upper1
+        f2 < upper2
+        f1 + f2 < upper1 + upper2
+        false
+    }
+}
+
+theorem add_gt_is_lower(z1: ℝ, z2: ℝ) {
+    is_lower(add_gt(z1, z2))
+} by {
+    forall(x: ℚ, y: ℚ) {
+        if add_gt(z1, z2, y) and x < y {
+            let (y1: ℚ, y2: ℚ) satisfy {
+                z1.gt_rat(y1) and z2.gt_rat(y2) and y = y1 + y2
+            }
+            let x1 = y1 - (y - x)/ℚ.2
+            let x2 = y2 - (y - x)/ℚ.2
+            x1 + x2 = (y1 + -(y - x)/ℚ.2) + (y2 + -(y - x)/ℚ.2)
+            x1 + x2 = y1 + y2 + (-(y - x)/ℚ.2 + -(y - x)/ℚ.2)
+            x1 + x2 = y + -(y - x)
+            x1 + x2 = x
+            (y - x)/ℚ.2 > ℚ.0
+            y1 > x1
+            y2 > x2
+            z1.gt_rat(x1)
+            z2.gt_rat(x2)
+            add_gt(z1, z2, x)
+        }
+    }
+}
+
+theorem add_gt_has_no_greatest(z1: ℝ, z2: ℝ) {
+    not has_greatest(add_gt(z1, z2))
+} by {
+    if has_greatest(add_gt(z1, z2)) {
+        let q: ℚ satisfy {
+            is_greatest(add_gt(z1, z2), q)
+        }
+        // is_greatest ==> contains q
+        add_gt(z1, z2, q)
+        let (f1: ℚ, f2: ℚ) satisfy {
+            z1.gt_rat(f1) and z2.gt_rat(f2) and q = f1 + f2
+        }
+        not is_greatest(z1.gt_rat, f1)
+        let g1: ℚ satisfy {
+            z1.gt_rat(g1) and not g1 <= f1
+        }
+        f1 < g1
+        f1 + f2 < g1 + f2
+        add_gt(z1, z2, g1 + f2)
+        q < g1 + f2
+        not g1 + f2 <= q
+        not is_greatest(add_gt(z1, z2), q)
+        false
+    }
+}
+
+theorem add_gt_is_dedekind_cut(z1: ℝ, z2: ℝ) {
+    is_dedekind_cut(add_gt(z1, z2))
+}
+
+attributes ℝ {
+    /// The sum of two ℝ numbers.
+    define add(self, other: ℝ) -> ℝ {
+        ℝ.new(add_gt(self, other))
+    }
+
+}
+
+theorem add_gt_rat(z1: ℝ, z2: ℝ, r1: ℚ, r2: ℚ) {
+    z1.gt_rat(r1) and z2.gt_rat(r2) implies (z1 + z2).gt_rat(r1 + r2)
+}
+
+theorem add_comm(a: ℝ, b: ℝ) {
+    a + b = b + a
+} by {
+    forall(r: ℚ) {
+        if add_gt(a, b, r) {
+            add_gt(b, a, r)
+            add_gt(a, b, r) = add_gt(b, a, r)
+        } else {
+            not add_gt(b, a, r)
+            add_gt(a, b, r) = add_gt(b, a, r)
+        }
+        add_gt(a, b, r) = add_gt(b, a, r)
+    }
+    add_gt(a, b) = add_gt(b, a)
+}
+
+theorem gt_rat_adding_three(z1: ℝ, z2: ℝ, z3: ℝ, q: ℚ) {
+    (z1 + z2 + z3).gt_rat(q) implies exists(r1: ℚ, r2: ℚ, r3: ℚ) {
+        z1.gt_rat(r1) and z2.gt_rat(r2) and z3.gt_rat(r3) and q = r1 + r2 + r3
+    }
+} by {
+    add_gt(z1 + z2, z3, q)
+    let (r12: ℚ, r3: ℚ) satisfy {
+        (z1 + z2).gt_rat(r12) and z3.gt_rat(r3) and q = r12 + r3
+    }
+    add_gt(z1, z2, r12)
+    let (r1: ℚ, r2: ℚ) satisfy {
+        z1.gt_rat(r1) and z2.gt_rat(r2) and r12 = r1 + r2
+    }
+}
+
+theorem gt_rat_adding_three_converse(z1: ℝ, z2: ℝ, z3: ℝ, q: ℚ) {
+    exists(r1: ℚ, r2: ℚ, r3: ℚ) {
+        z1.gt_rat(r1) and z2.gt_rat(r2) and z3.gt_rat(r3) and q = r1 + r2 + r3
+    } implies (z1 + z2 + z3).gt_rat(q)
+} by {
+    let (r1: ℚ, r2: ℚ, r3: ℚ) satisfy {
+        z1.gt_rat(r1) and z2.gt_rat(r2) and z3.gt_rat(r3) and q = r1 + r2 + r3
+    }
+    add_gt(z1, z2 + z3, r1 + r2 + r3)
+}
+
+theorem add_assoc(a: ℝ, b: ℝ, c: ℝ) {
+    a + b + c = a + (b + c)
+} by {
+    forall(r: ℚ) {
+        if (a + b + c).gt_rat(r) {
+            let (ra: ℚ, rb: ℚ, rc: ℚ) satisfy {
+                a.gt_rat(ra) and b.gt_rat(rb) and c.gt_rat(rc) and r = ra + rb + rc
+            }
+            (b + c).gt_rat(rb + rc)
+            // (ra + rb) + rc = ra + (rb + rc)
+            (a + (b + c)).gt_rat(r)
+            (a + b + c).gt_rat(r) = (a + (b + c)).gt_rat(r)
+        } else {
+            if (a + (b + c)).gt_rat(r) {
+                add_gt(a, b + c, r)
+                let (ra: ℚ, rbc: ℚ) satisfy {
+                    a.gt_rat(ra) and (b + c).gt_rat(rbc) and r = ra + rbc
+                }
+                add_gt(b, c, rbc)
+                let (rb: ℚ, rc: ℚ) satisfy {
+                    b.gt_rat(rb) and c.gt_rat(rc) and rbc = rb + rc
+                }
+                r = ra + rb + rc
+                false
+            }
+            (a + b + c).gt_rat(r) = (a + (b + c)).gt_rat(r)
+        }
+    }
+    (a + b + c).gt_rat = (a + (b + c)).gt_rat
+}
+
+theorem gt_imp_not_lte(a: ℝ, b: ℝ) {
+    a > b implies not a <= b
+}
+
+theorem not_lte_imp_gt(a: ℝ, b: ℝ) {
+    not a <= b implies a > b
+}
+
+theorem gte_imp_not_lt(a: ℝ, b: ℝ) {
+    a >= b implies not a < b
+}
+
+theorem not_lt_imp_gte(a: ℝ, b: ℝ) {
+    not a < b implies a >= b
+}
+
+theorem rat_separating(a: ℝ, b: ℝ) {
+    a < b implies exists(r: ℚ) {
+        b.gt_rat(r) and not a.gt_rat(r)
+    }
+} by {
+    a != b
+    a.gt_rat != b.gt_rat
+    let r: ℚ satisfy {
+        a.gt_rat(r) != b.gt_rat(r)
+    }
+    if a.gt_rat(r) {
+        not b.gt_rat(r)
+        false
+    }
+    not a.gt_rat(r)
+    b.gt_rat(r)
+}
+
+theorem rat_between_rat_and_ℝ(z: ℝ, r1: ℚ) {
+    z.gt_rat(r1) implies exists(r2: ℚ) {
+        z.gt_rat(r2) and r1 < r2
+    }
+} by {
+    not is_greatest(z.gt_rat, r1)
+    exists(r2: ℚ) {
+        z.gt_rat(r2) and not r2 <= r1
+    }
+}
+
+// Strict version of rat_separating.
+theorem rat_between_reals(a: ℝ, b: ℝ) {
+    a < b implies exists(r: ℚ) {
+        a < ℝ.from_rat(r) and ℝ.from_rat(r) < b
+    }
+} by {
+    // r1 is less than b, but it might be equal to a.
+    // We need to use the "no greatest" property of b.gt_rat.
+    let r1: ℚ satisfy {
+        b.gt_rat(r1) and not a.gt_rat(r1)
+    }
+    not (a > ℝ.from_rat(r1))
+    a <= ℝ.from_rat(r1)
+    let r2: ℚ satisfy {
+        b.gt_rat(r2) and r1 < r2
+    }
+    a < ℝ.from_rat(r2)
+    ℝ.from_rat(r2) < b
+}
+
+theorem rat_between_reals_gt(a: ℝ, b: ℝ) {
+    a > b implies
+    exists(r: ℚ) {
+        a > ℝ.from_rat(r) and ℝ.from_rat(r) > b
+    }
+} by {
+    b < a
+    let r: ℚ satisfy {
+        b < ℝ.from_rat(r) and ℝ.from_rat(r) < a
+    }
+}
+
+theorem add_gt_trans(z1: ℝ, z2: ℝ, r1: ℚ, r2: ℚ) {
+    add_gt(z1, z2, r1) and r1 > r2 implies add_gt(z1, z2, r2)
+}
+
+theorem add_gt_imp_gt_from_rat(z1: ℝ, z2: ℝ, r: ℚ) {
+    add_gt(z1, z2, r) implies z1 + z2 > ℝ.from_rat(r)
+} by {
+    ℝ.new(add_gt(z1, z2)).gt_rat(r)
+    ℝ.new(add_gt(z1, z2)) > ℝ.from_rat(r)
+}
+
+theorem gt_from_rat_imp_add_gt(z1: ℝ, z2: ℝ, r: ℚ) {
+    z1 + z2 > ℝ.from_rat(r) implies add_gt(z1, z2, r)
+} by {
+    ℝ.new(add_gt(z1, z2)) > ℝ.from_rat(r)
+    ℝ.new(add_gt(z1, z2)).gt_rat(r)
+}
+
+theorem lt_lte_trans(a: ℝ, b: ℝ, c: ℝ) {
+    a < b and b <= c implies a < c
+} by {
+    not b <= a
+    not c <= a
+}
+
+theorem lte_lt_trans(a: ℝ, b: ℝ, c: ℝ) {
+    a <= b and b < c implies a < c
+} by {
+    not b < a
+    not c < a
+}
+
+theorem lt_trans(a: ℝ, b: ℝ, c: ℝ) {
+    a < b and b < c implies a < c
+} 
+
+theorem add_gt_from_rat_imp_rat_add_gt(p: ℚ, q: ℚ, r: ℚ) {
+    add_gt(ℝ.from_rat(p), ℝ.from_rat(q), r) implies p + q > r
+} by {
+    let (rp: ℚ, rq: ℚ) satisfy {
+        ℝ.from_rat(p).gt_rat(rp) and ℝ.from_rat(q).gt_rat(rq) and r = rp + rq
+    }
+    p > rp
+    q > rq
+    p + q > rp + rq
+    p + q > r
+}
+
+theorem rat_add_gt_imp_add_gt_from_rat(p: ℚ, q: ℚ, r: ℚ) {
+    p + q > r implies add_gt(ℝ.from_rat(p), ℝ.from_rat(q), r)
+} by {
+    let d = p + q - r
+    d > ℚ.0
+    let rp = p - d/ℚ.2
+    (d/ℚ.2) > ℚ.0
+    rp < p
+    ℝ.from_rat(p).gt_rat(rp)
+    let rq = q - d / ℚ.2
+    rq < q
+    ℝ.from_rat(q).gt_rat(rq)
+    rp + rq = (p - d/ℚ.2) + (q - d/ℚ.2)
+    rp + rq = (p + -d/ℚ.2) + (q + -d/ℚ.2)
+    rp + rq = p + q + (-d/ℚ.2 + -d/ℚ.2)
+    rp + rq = p + q - d
+    p + q = r + d
+    p + q - d = r
+}
+
+theorem add_from_rat(p: ℚ, q: ℚ) {
+    ℝ.from_rat(p) + ℝ.from_rat(q) = ℝ.from_rat(p + q)
+} by {
+    forall(r: ℚ) {
+        if add_gt(ℝ.from_rat(p), ℝ.from_rat(q), r) {
+            ℝ.from_rat(p + q).gt_rat(r)
+
+            (ℝ.from_rat(p) + ℝ.from_rat(q)).gt_rat(r) = ℝ.from_rat(p + q).gt_rat(r)
+        } else {
+            not add_gt(ℝ.from_rat(p), ℝ.from_rat(q), r)
+
+            not ℝ.from_rat(p + q).gt_rat(r)
+            
+            (ℝ.from_rat(p) + ℝ.from_rat(q)).gt_rat(r) = ℝ.from_rat(p + q).gt_rat(r)
+        }
+    }
+    (ℝ.from_rat(p) + ℝ.from_rat(q)).gt_rat = ℝ.from_rat(p + q).gt_rat
+}
+
+theorem lte_add_right(a: ℝ, b: ℝ, c: ℝ) {
+    a <= b implies a + c <= b + c
+} by {
+    forall(r: ℚ) {
+        if (a + c).gt_rat(r) {
+            add_gt(a, c, r)
+            let (ra: ℚ, rc: ℚ) satisfy {
+                a.gt_rat(ra) and c.gt_rat(rc) and r = ra + rc
+            }
+            b.gt_rat(ra)
+            (b + c).gt_rat(r)
+        }
+    }
+}
+
+theorem lte_add_left(a: ℝ, b: ℝ, c: ℝ) {
+    a <= b implies c + a <= c + b
+}
+
+theorem lt_add_converse(a: ℝ, b: ℝ, c: ℝ) {
+    a + c < b + c implies a < b
+}
+
+theorem gte_add_right(a: ℝ, b: ℝ, c: ℝ) {
+    a >= b implies a + c >= b + c
+}
+
+theorem gte_add_left(a: ℝ, b: ℝ, c: ℝ) {
+    a >= b implies c + a >= c + b
+}
+
+theorem gt_add_converse(a: ℝ, b: ℝ, c: ℝ) {
+    a + c > b + c implies a > b
+}
+
+theorem add_lte_lte(a: ℝ, b: ℝ, c: ℝ, d: ℝ) {
+    a <= b and c <= d implies a + c <= b + d
+} 
+
+theorem add_gte_gte(a: ℝ, b: ℝ, c: ℝ, d: ℝ) {
+    a >= b and c >= d implies a + c >= b + d
+} 
+
+theorem add_from_rat_zero(r: ℚ) {
+    ℝ.from_rat(r) + 0 = ℝ.from_rat(r)
+}
+
+theorem add_zero_right(a: ℝ) {
+    a + 0 = a
+} by {
+    forall(r: ℚ) {
+        if add_gt(a, 0, r) {
+            let (ra: ℚ, r0: ℚ) satisfy {
+                a.gt_rat(ra) and 0.gt_rat(r0) and r = ra + r0
+            }
+            r0 < ℚ.0
+            r <= ra
+            is_lower(a.gt_rat)
+            a.gt_rat(r)
+
+            (a + 0).gt_rat(r) = a.gt_rat(r)
+        } else {
+            if a.gt_rat(r) {
+                let ra: ℚ satisfy { 
+                    r < ra and a.gt_rat(ra)
+                }
+                let r0 = r - ra
+                r0 < ℚ.0
+                r = ra + r0
+                add_gt(a, 0, r)
+                false
+            }
+            (a + 0).gt_rat(r) = a.gt_rat(r)
+        }
+        (a + 0).gt_rat(r) = a.gt_rat(r)
+    }
+    (a + 0).gt_rat = a.gt_rat
+}
+
+theorem add_zero_left(a: ℝ) {
+    0 + a = a
+}
+
+/// Whether -a > r. Which is just a < -r.  
+/// Neg send ℚ_(< a) + ℚ_(> a) to ℚ_(< -a) + ℚ_(> -a)  
+/// Or, ℚ_(< a) send to another half ℚ_(> a) and then send by neg to ℚ_(< -a), which is r < -a, or -a > r  
+/// Since -a is not yet defined for a: ℝ, we use a < -r
+define neg_gt(a: ℝ, r: ℚ) -> Bool {
+    a < ℝ.from_rat(-r)
+}
+
+theorem neg_gt_is_lower(a: ℝ) {
+    is_lower(neg_gt(a))
+} by {
+    forall(r1: ℚ, r2: ℚ) {
+        if neg_gt(a, r2) and r1 < r2 {
+            a < ℝ.from_rat(-r2)
+            -r2 < -r1
+            ℝ.from_rat(-r2) < ℝ.from_rat(-r1)
+            neg_gt(a, r1)
+        }
+    }
+}
+
+theorem lte_some_rat(a: ℝ) {
+    exists(r: ℚ) {
+        a <= ℝ.from_rat(r)
+    }
+} by {
+    let r: ℚ satisfy {
+        not a.gt_rat(r)
+    }
+}
+
+theorem lt_some_rat(a: ℝ) {
+    exists(r: ℚ) {
+        a < ℝ.from_rat(r)
+    }
+} by {
+    let r1: ℚ satisfy {
+        a <= ℝ.from_rat(r1)
+    }
+    r1 < r1 + ℚ.1
+    ℝ.from_rat(r1) < ℝ.from_rat(r1 + ℚ.1)
+    a < ℝ.from_rat(r1 + ℚ.1)
+}
+
+theorem gt_some_rat(a: ℝ) {
+    exists(r: ℚ) {
+        a > ℝ.from_rat(r)
+    }
+}
+
+theorem gte_some_rat(a: ℝ) {
+    exists(r: ℚ) {
+        a >= ℝ.from_rat(r)
+    }
+}
+
+theorem lte_some_ℝ(a: ℝ) {
+    exists(r: ℝ) {
+        a <= r
+    }
+}
+
+theorem lt_some_ℝ(a: ℝ) {
+    exists(r: ℝ) {
+        a < r
+    }
+}
+
+theorem gt_some_ℝ(a: ℝ) {
+    exists(r: ℝ) {
+        a > r
+    }
+}
+
+theorem gte_some_ℝ(a: ℝ) {
+    exists(r: ℝ) {
+        a >= r
+    }
+}
+
+theorem neg_gt_is_cut(a: ℝ) {
+    is_cut(neg_gt(a))
+} by {
+    // Something not in the cut
+    let r1: ℚ satisfy {
+        ℝ.from_rat(r1) < a
+    }
+    not a < ℝ.from_rat(r1)
+    not a < ℝ.from_rat(--r1)
+    not neg_gt(a, -r1)
+
+    // Something in the cut
+    let r2: ℚ satisfy {
+        a < ℝ.from_rat(r2)
+    }
+    a < ℝ.from_rat(--r2)
+    neg_gt(a, -r2)
+}
+
+theorem neg_gt_has_no_greatest(a: ℝ) {
+    not has_greatest(neg_gt(a))
+} by {
+    forall(r: ℚ) {
+        if neg_gt(a, r) {
+            a < ℝ.from_rat(-r)
+            let q: ℚ satisfy { 
+                a < ℝ.from_rat(q) and ℝ.from_rat(q) < ℝ.from_rat(-r) 
+            }
+            neg_gt(a, -q)
+            q < -r
+            r < -q
+            not is_greatest(neg_gt(a), r)
+        }
+    }
+}
+
+theorem neg_gt_is_dedekind_cut(a: ℝ) {
+    is_dedekind_cut(neg_gt(a))
+}
+
+attributes ℝ {
+    /// The negative of this ℝ number.
+    define neg(self) -> ℝ {
+        ℝ.new(neg_gt(self))
+    }
+}
+theorem neg_gt_imp_not_gt_neg(a: ℝ, r: ℚ) {
+    neg_gt(a, r) implies not a.gt_rat(-r)
+}
+
+theorem lte_swap_neg(a: ℝ, b: ℝ) {
+    a <= b implies -b <= -a
+} by {
+    forall(r: ℚ) {
+        if (-b).gt_rat(r) {
+            b < ℝ.from_rat(-r)
+            a < ℝ.from_rat(-r)
+            (-a).gt_rat(r)
+        }
+    }
+}
+
+theorem from_neg_rat(q: ℚ) {
+    ℝ.from_rat(-q) = -ℝ.from_rat(q)
+} by {
+    forall(r: ℚ) {
+        -q > r iff q < -r
+        if ℝ.from_rat(-q).gt_rat(r) {
+            -q > r
+            q < -r
+            ℝ.from_rat(q) < ℝ.from_rat(-r)
+            (-ℝ.from_rat(q)).gt_rat(r)
+        }
+        if (-ℝ.from_rat(q)).gt_rat(r) {
+            ℝ.from_rat(q) < ℝ.from_rat(-r)
+            q < -r
+            -q > r
+            ℝ.from_rat(-q).gt_rat(r)
+        }
+        ℝ.from_rat(-q).gt_rat(r) = (-ℝ.from_rat(q)).gt_rat(r)
+    }
+    ℝ.from_rat(-q).gt_rat = (-ℝ.from_rat(q)).gt_rat
+}
+
+theorem neg_neg_rat(q: ℚ) {
+    -(-ℝ.from_rat(q)) = ℝ.from_rat(q)
+}
+
+theorem neg_from_rat_eq(q1: ℚ, q2: ℚ) {
+    -ℝ.from_rat(q1) = -ℝ.from_rat(q2) implies q1 = q2
+}
+
+attributes ℝ {
+    define is_rational(self) -> Bool {
+        exists(q: ℚ) { self = ℝ.from_rat(q) }
+    }
+
+    define is_irrational(self) -> Bool {
+        not self.is_rational
+    }
+}
+
+define is_least_of_coml(contains: ℚ -> Bool, x: ℚ) -> Bool {
+    not contains(x) and forall(y: ℚ) {
+        not contains(y) implies y >= x
+    }
+}
+
+define coml_has_least(contains: ℚ -> Bool) -> Bool {
+    exists(x: ℚ) {
+        is_least_of_coml(contains, x)
+    }
+}
+
+theorem rational_imp_coml_have_least(a: ℝ) {
+    a.is_rational implies coml_has_least(a.gt_rat)
+} by {
+    let q: ℚ satisfy { a = ℝ.from_rat(q) }
+    not ℝ.from_rat(q).gt_rat(q)
+    forall(r: ℚ) {
+        if not ℝ.from_rat(q).gt_rat(r) {
+            ℝ.from_rat(r) >= ℝ.from_rat(q)
+            r >= q
+        }
+    }
+    is_least_of_coml(a.gt_rat, q)
+}
+
+theorem coml_have_least_imp_rational(a: ℝ) {
+    coml_has_least(a.gt_rat) implies a.is_rational
+} by {
+    let q: ℚ satisfy { is_least_of_coml(a.gt_rat, q) }
+    a <= ℝ.from_rat(q)
+    forall(r: ℚ) {
+        if r < q {
+            a.gt_rat(r)
+            ℝ.from_rat(q).gt_rat(r)
+            a.gt_rat(r) = ℝ.from_rat(q).gt_rat(r)
+        } else {
+            q <= r
+            not a.gt_rat(r)
+            not ℝ.from_rat(q).gt_rat(r)
+            a.gt_rat(r) = ℝ.from_rat(q).gt_rat(r)
+        }
+    }
+    a.gt_rat = ℝ.from_rat(q).gt_rat
+}
+
+theorem neg_preserve_rational(a: ℝ) {
+    a.is_rational implies (-a).is_rational
+}
+
+theorem neg_rational(a: ℝ) {
+    (-a).is_rational implies a.is_rational
+} by {
+    let q: ℚ satisfy { -a = ℝ.from_rat(q) } 
+
+    // prove -q not in a, or a <= -q
+    if a.gt_rat(-q) {
+        let x: ℚ satisfy {
+            -q < x and a.gt_rat(x)
+        }
+        a >= ℝ.from_rat(x)
+        -a <= -ℝ.from_rat(x)
+        ℝ.from_rat(q) <= ℝ.from_rat(-x)
+        q <= -x
+        -q >= x
+        false
+    } 
+
+    not a.gt_rat(-q)
+
+    forall(r: ℚ) {
+        if not a.gt_rat(r) {
+            a <= ℝ.from_rat(r)
+            -a >= -ℝ.from_rat(r)
+            q >= -r
+            -r <= q
+            r >= -q  
+        }
+    }
+
+    is_least_of_coml(a.gt_rat, -q)
+}
+
+theorem irrational_iff_neg_irrational(a: ℝ) {
+    a.is_irrational iff (-a).is_irrational
+} by {
+    a.is_irrational implies (-a).is_irrational
+}
+
+theorem neg_eq(a: ℝ, b: ℝ) {
+    -a = -b implies a = b
+} by {
+    if a.is_rational {
+        b.is_rational
+        a = b
+    } else {
+        a.is_irrational
+        b.is_irrational
+        forall(r: ℚ) {
+            if (-a).gt_rat(-r) {
+                (-b).gt_rat(-r) 
+                a < ℝ.from_rat(r)
+                b < ℝ.from_rat(r)
+                not a.gt_rat(r)
+                not b.gt_rat(r)
+                a.gt_rat(r) = b.gt_rat(r)
+            } else {
+                not (-a).gt_rat(-r)
+                not (-b).gt_rat(-r)
+                not a < ℝ.from_rat(r)
+                not b < ℝ.from_rat(r)
+                a > ℝ.from_rat(r)
+                b > ℝ.from_rat(r)
+                a.gt_rat(r)
+                b.gt_rat(r)
+                a.gt_rat(r) = b.gt_rat(r)
+            }
+        }
+        a.gt_rat = b.gt_rat
+        a = b
+    }
+}
+
+theorem lt_swap_neg(a: ℝ, b: ℝ) {
+    a < b implies -b < -a
+}
+
+theorem neg_neg(a: ℝ) {
+    -(-a) = a
+} by {
+    forall(r: ℚ) {
+        if a.gt_rat(r) {
+            a > ℝ.from_rat(r)
+            -(-a) > ℝ.from_rat(r)
+            (-(-a)).gt_rat(r)
+            (-(-a)).gt_rat(r) = a.gt_rat(r)
+        } else {
+            not a.gt_rat(r)
+            a <= ℝ.from_rat(r)
+            -(-a) <= ℝ.from_rat(r)
+            not (-(-a)).gt_rat(r)
+            (-(-a)).gt_rat(r) = a.gt_rat(r)
+        }
+    }
+    (-(-a)).gt_rat = a.gt_rat
+}
+
+theorem neg_zero {
+    -0 = 0
+}
+
+theorem lt_add_pos_rat(a: ℝ, r: ℚ) {
+    r > ℚ.0 implies a < a + ℝ.from_rat(r)
+} by {
+    let ub: ℚ satisfy { a < ℝ.from_rat(ub) }
+    let q: ℚ satisfy { a.gt_rat(q) }
+    let m: ℕ satisfy { ub - q < ℚ.from_nat(m) ⋅ r }
+    ub < ℚ.from_nat(m) ⋅ r + q
+
+    a <= a + ℝ.from_rat(r)
+    if a = a + ℝ.from_rat(r) {
+        define f(n: ℕ) -> Bool {
+            a = a + ℝ.from_rat(ℚ.from_nat(n) ⋅ r)
+        }
+        f(ℕ.0)
+        forall(n: ℕ) {
+            if f(n) {
+                a = a + ℝ.from_rat(ℚ.from_nat(n) ⋅ r)
+                a = a + ℝ.from_rat(r)
+                a = a + (ℝ.from_rat(ℚ.from_nat(n) ⋅ r) + ℝ.from_rat(r))
+                a = a + ℝ.from_rat(ℚ.from_nat(n + ℕ.1) ⋅ r)
+                f(n + ℕ.1)
+            }
+        }
+        f(m + ℕ.1)
+        a = a + ℝ.from_rat(ℚ.from_nat(m + ℕ.1) ⋅ r)
+        ℚ.from_nat(m + ℕ.1) > ℚ.from_nat(m)
+        ℚ.from_nat(m + ℕ.1) ⋅ r > ℚ.from_nat(m) ⋅ r
+        ℝ.from_rat(ℚ.from_nat(m + ℕ.1) ⋅ r).gt_rat(ℚ.from_nat(m) ⋅ r)
+        add_gt(a, ℝ.from_rat(ℚ.from_nat(m + ℕ.1) ⋅ r), q + ℚ.from_nat(m) ⋅ r)
+        a.gt_rat(q + ℚ.from_nat(m) ⋅ r)
+        a.gt_rat(ub)
+        false
+    }
+}
+
+theorem rat_window(a: ℝ, ε: ℚ) {
+    ε > ℚ.0 implies exists(r: ℚ) {
+        ℝ.from_rat(r) < a and a < ℝ.from_rat(r + ε)
+    }
+} by {
+    ℝ.from_rat(ε) > 0
+    a < a + ℝ.from_rat(ε)
+    let top: ℚ satisfy {
+        a < ℝ.from_rat(top) and ℝ.from_rat(top) < a + ℝ.from_rat(ε)
+    }
+    let r = top + -ε
+    r + ε = top
+    ℝ.from_rat(r + ε) < a + ℝ.from_rat(ε)
+    ℝ.from_rat(r) < a
+    a < ℝ.from_rat(top)
+}
+
+theorem add_neg_gte_zero(a: ℝ) {
+    a + -a >= 0
+} by {
+    if a + -a < 0 {
+        let r: ℚ satisfy {
+            a + -a < ℝ.from_rat(r) and ℝ.from_rat(r) < 0
+        }
+        ℝ.from_rat(-r) > 0
+        (-r) > ℚ.0
+        let b: ℚ satisfy {
+            ℝ.from_rat(b) < a and a < ℝ.from_rat(b + -r)
+        }
+        a > ℝ.from_rat(b)
+        -a > -ℝ.from_rat(b + -r)
+        add_gt(a, -a, b + -(b + -r))
+        a + -a > ℝ.from_rat(b) + -ℝ.from_rat(b + -r)
+        a + -a > ℝ.from_rat(b) + ℝ.from_rat(-b + r)
+        a + -a > ℝ.from_rat(b + -b + r)
+        a + -a > ℝ.from_rat(r)
+        false
+    }
+}
+
+theorem add_neg_lte_zero(a: ℝ) {
+    a + -a <= 0
+} by {
+    forall(r: ℚ) {
+        if (a + -a).gt_rat(r) {
+            add_gt(a, -a, r)
+            let (r1: ℚ, r2: ℚ) satisfy {
+                a.gt_rat(r1) and (-a).gt_rat(r2) and 
+                r = r1 + r2
+            }
+            not a.gt_rat(-r2)
+            r1 < -r2
+            r1 + r2 < ℚ.0
+            0.gt_rat(r)
+            (a + -a).gt_rat(r) = 0.gt_rat(r)
+        }
+    }
+}
+
+theorem add_neg_eq_zero(a: ℝ) {
+    a + -a = 0
+} 
+
+attributes ℝ {
+    let 1 = ℝ.from_rat(ℚ.1)
+
+    define sub(self, other: ℝ) -> ℝ {
+        self + -other
+    }
+    /// The absolute value of this ℝ number.
+    define abs(self) -> ℝ {
+        if self.is_negative {
+            -self
+        } else {
+            self
+        }
+    }
+
+    /// The sign of this ℝ number as a unit value (`-1` for negative, `1` for non-negative).
+    define unit_sign(self) -> ℝ {
+        if self.is_negative {
+            -1
+        } else {
+            1
+        }
+    }
+}
+
+theorem sub_cancels(a: ℝ, b: ℝ) {
+    a + b - b = a
+} by {
+    a + (b + -b) = a
+    a + b + -b = a
+}
+
+theorem sub_moves_sides(a: ℝ, b: ℝ, c: ℝ) {
+    a + b = c implies a = c - b
+}
+
+theorem add_cancel_right(a: ℝ, b: ℝ, c: ℝ) {
+    a + c = b + c implies a = b
+} 
+
+theorem add_cancel_left(a: ℝ, b: ℝ, c: ℝ) {
+    c + a = c + b implies a = b
+}
+
+theorem lt_add_right(a: ℝ, b: ℝ, c: ℝ) {
+    a < b implies a + c < b + c
+} 
+
+theorem lt_add_left(a: ℝ, b: ℝ, c: ℝ) {
+    a < b implies c + a < c + b
+}
+
+theorem lt_add_cancel_left(a: ℝ, b: ℝ, c: ℝ) {
+    c < a + b implies c - b < a
+} by {
+    c + -b < a + b + -b
+}
+
+theorem lt_add_cancel_right(a: ℝ, b: ℝ, c: ℝ) {
+    a + b < c implies a < c - b
+} by {
+    a + b + -b < c + -b
+}
+
+theorem lt_sub_cancel_left(a: ℝ, b: ℝ, c: ℝ) {
+    c < a - b implies c + b < a
+} 
+
+theorem lte_add_cancel_left(a: ℝ, b: ℝ, c: ℝ) {
+    c <= a + b implies c - b <= a
+} 
+
+theorem lte_add_cancel_right(a: ℝ, b: ℝ, c: ℝ) {
+    a + b <= c implies a <= c - b
+} 
+
+theorem add_lt_lt(a: ℝ, b: ℝ, c: ℝ, d: ℝ) {
+    a < b and c < d implies a + c < b + d
+} 
+
+theorem add_lt_lte(a: ℝ, b: ℝ, c: ℝ, d: ℝ) {
+    a < b and c <= d implies a + c < b + d
+} 
+
+theorem add_lte_lt(a: ℝ, b: ℝ, c: ℝ, d: ℝ) {
+    a <= b and c < d implies a + c < b + d
+} 
+
+theorem neg_distrib(a: ℝ, b: ℝ) {
+    -(a + b) = -a + -b
+} by {
+    a + b + -(a + b) = 0
+    -(a + b) + b + a = 0
+    -(a + b) = -a + -b
+}
+
+theorem neg_distrib_sub(a: ℝ, b: ℝ) {
+    -(a - b) = b - a
+}
+
+attributes ℝ {
+    /// Converts an integer to a ℝ number.
+    let from_int = function(n: ℤ) {
+        ℝ.from_rat(ℚ.from_int(n))
+    }
+}
+
+theorem gt_some_int(a: ℝ) {
+    exists(n: ℤ) {
+        a > ℝ.from_int(n)
+    }
+} by {
+    let r: ℚ satisfy {
+        a > ℝ.from_rat(r)
+    }
+    let n: ℤ satisfy {
+        r > ℚ.from_int(n)
+    }
+    ℝ.from_rat(r) > ℝ.from_rat(ℚ.from_int(n))
+    ℝ.from_rat(r) > ℝ.from_int(n)
+    a > ℝ.from_int(n)
+}
+
+theorem lt_some_int(a: ℝ) {
+    exists(n: ℤ) {
+        a < ℝ.from_int(n)
+    }
+} by {
+    let r: ℚ satisfy {
+        a < ℝ.from_rat(r)
+    }
+    let n: ℤ satisfy {
+        r < ℚ.from_int(n)
+    }
+    ℝ.from_rat(r) < ℝ.from_rat(ℚ.from_int(n))
+    ℝ.from_rat(r) < ℝ.from_int(n)
+    a < ℝ.from_int(n)
+}
+
+theorem real_neg_imp_rat_neg(r: ℚ) {
+    ℝ.from_rat(r) < 0 implies r < ℚ.0
+} 
+
+theorem lt_some_int_cancel(m: ℤ, n: ℤ) {
+    ℝ.from_int(m) < ℝ.from_int(n) implies m < n
+} by {
+    ℝ.from_rat(ℚ.from_int(m)) < ℝ.from_rat(ℚ.from_int(n))
+    ℚ.from_int(m) < ℚ.from_int(n)
+}
+
+theorem floor_exists(a: ℝ) {
+    exists(n: ℤ) {
+        ℝ.from_int(n) <= a and a < ℝ.from_int(n + ℤ.1)
+    }
+} by {
+    if not floor_exists(a) {
+        // We will show by induction that a is greater than all integers. 
+        // We already do similar things in lt_some_rat
+        // First let's find a base case.
+        let m: ℤ satisfy {
+            a > ℝ.from_int(m)
+        }
+        ℝ.from_int(m) <= a
+
+        // Now we define the function to induct on.
+        let f = function(k: ℕ) {
+            ℝ.from_int(m + ℤ.from_nat(k)) <= a
+        }
+        f(ℕ.0)
+
+        // Inductive step
+        forall(x: ℕ) {
+            if f(x) {
+                ℝ.from_int(m + ℤ.from_nat(x)) <= a
+                ℝ.from_int(m + ℤ.from_nat(x) + ℤ.1) <= a
+                ℝ.from_int(m + ℤ.from_nat(x.suc)) <= a
+                f(x.suc)
+            }
+        }
+
+        // By induction we have:
+        forall(x: ℕ) {
+            f(x)
+        }
+
+        // But m plus some really big number has to be greater than a.
+        let big: ℤ satisfy {
+            a < ℝ.from_int(big)
+        }
+
+        f(abs(m) + abs(big))
+        
+        ℝ.from_int(m + ℤ.from_nat(abs(m) + abs(big))) <= a
+        
+        ℝ.from_int(m + ℤ.from_nat(abs(m) + abs(big))) < ℝ.from_int(big)
+        
+        m + ℤ.from_nat(abs(m) + abs(big)) < big
+        
+        m + ℤ.from_nat(abs(m)) + ℤ.from_nat(abs(big)) < big
+
+        m + ℤ.from_nat(abs(m)) + (ℤ.from_nat(abs(big)) + -big) < ℤ.0
+        
+        m + ℤ.from_nat(abs(m)) >= ℤ.0
+        
+        ℤ.from_nat(abs(big)) + -big >= ℤ.0
+
+        false
+    }
+}
+
+let floor_impl(a: ℝ) -> n: ℤ satisfy {
+    ℝ.from_int(n) <= a and a < ℝ.from_int(n + ℤ.1)
+}
+
+attributes ℝ {
+    define floor(self) -> ℤ {
+        floor_impl(self)
+    }
+}
+
+theorem add_from_int(m: ℤ, n: ℤ) {
+    ℝ.from_int(m) + ℝ.from_int(n) = ℝ.from_int(m + n)
+} 
+
+theorem lt_add_one(a: ℝ) {
+    a < a + 1
+} 
+
+theorem lt_add_pos_int(a: ℝ, n: ℤ) {
+    n > ℤ.0 implies a < a + ℝ.from_int(n)
+} by {
+    ℝ.from_int(n) > 0
+}
+
+theorem lt_add_pos(a: ℝ, b: ℝ) {
+    b > 0 implies a < a + b
+} 
+
+theorem add_rat_ε_between(a: ℝ, b: ℝ) {
+    a < b implies exists(ε: ℚ) {
+        ε > ℚ.0 and a + ℝ.from_rat(ε) < b
+    }
+} by {
+    0 < b - a
+
+    let r: ℚ satisfy {
+        0 < ℝ.from_rat(r) and ℝ.from_rat(r) < b - a
+    }
+
+    r > ℚ.0
+
+    rat_window(0, r)
+
+    let q: ℚ satisfy {
+        ℝ.from_rat(q) < 0 and 0 < ℝ.from_rat(r + q)
+    }
+
+    let ε = -q
+
+    ε > ℚ.0
+    0 < ℝ.from_rat(r) + ℝ.from_rat(-ε)
+
+    ℝ.from_rat(r) + ℝ.from_rat(-ε) < (b - a) + ℝ.from_rat(-ε)
+
+    0 < (b - a) + ℝ.from_rat(-ε)
+
+    0 < b + -(a + ℝ.from_rat(ε))
+
+    a + ℝ.from_rat(ε) < b
+}
+
+theorem lt_neg_swap_neg(a: ℝ, b: ℝ) {
+    a < -b implies b < -a
+} 
+
+theorem neg_lt_neg_swap_neg(a: ℝ, b: ℝ) {
+    -a < -b implies b < a
+} 
+
+theorem neg_pos_is_neg(a: ℝ) {
+    a > 0 implies (-a) < 0
+}
+
+theorem neg_neg_is_pos(a: ℝ) {
+    (-a) < 0 implies a > 0
+}
+
+theorem gt_add_neg(a: ℝ, b: ℝ) {
+    b < 0 implies a > a + b
+}
+
+theorem pos_imp_eq_abs(a: ℝ) {
+    a > 0 implies a = a.abs
+}
+
+theorem lte_abs(a: ℝ) {
+    a <= a.abs
+} by {
+    if a < 0 {
+        a <= 0
+        0 <= a.abs
+        a <= a.abs
+    } else {
+        a = a.abs
+        a <= a.abs
+    }
+}
+
+theorem abs_neg(a: ℝ) {
+    (-a).abs = a.abs
+} by {
+    if a < 0 {
+        a.abs = -a
+        -a > 0
+        (-a).abs = -a
+        (-a).abs = a.abs
+    } else {
+        if a = 0 {
+            (-a).abs = a.abs
+        } else {
+            (-a) < 0
+            (-a).abs = a
+            a > 0
+            a.abs = a
+            (-a).abs = a.abs
+        }
+    }
+}
+
+theorem neg_lte_abs(a: ℝ) {
+    -a <= a.abs
+} 
+
+theorem gte_neg_abs(a: ℝ) {
+    a >= -a.abs
+}
+
+theorem neg_gte_neg_abs(a: ℝ) {
+    -a >= -a.abs
+}
+
+theorem abs_not_neg(a: ℝ) {
+    a.abs >= 0
+} by {
+    if a < 0 {
+        a.abs >= 0
+    } else {
+        a.abs >= 0
+    }
+}
+
+theorem min_pos_pos(a: ℝ, b: ℝ) {
+    a > 0 and b > 0
+    implies
+    a.min(b) > 0
+} by {
+    if a < b {
+        a > 0
+        a.min(b) > 0
+    } else {
+        b > 0
+        a.min(b) > 0
+    }
+}
+
+theorem max_pos_pos(a: ℝ, b: ℝ) {
+    a > 0 and b > 0
+    implies
+    a.max(b) > 0
+} by {
+    if a > b {
+        a > 0
+        a.max(b) > 0
+    } else {
+        b > 0
+        a.max(b) > 0
+    }
+}
+
+theorem min_lte_left(a: ℝ, b: ℝ) {
+    a.min(b) <= a
+} 
+
+theorem max_gte_left(a: ℝ, b: ℝ) {
+    a.max(b) >= a
+} 
+
+theorem min_lte_right(a: ℝ, b: ℝ) {
+    a.min(b) <= b
+} 
+
+theorem max_gte_right(a: ℝ, b: ℝ) {
+    a.max(b) >= b
+} 
+
+theorem lt_both_imp_lt_min(a: ℝ, b: ℝ, c: ℝ) {
+    a < b and a < c implies a < b.min(c)
+} 
+
+theorem lt_min_imp_lt_left(a: ℝ, b: ℝ, c: ℝ) {
+    a < b.min(c) implies a < b
+} 
+
+theorem lt_min_imp_lt_right(a: ℝ, b: ℝ, c: ℝ) {
+    a < b.min(c) implies a < c
+} 
+
+theorem gt_both_imp_gt_max(a: ℝ, b: ℝ, c: ℝ) {
+    a > b and a > c implies a > b.max(c)
+} 
+
+theorem gt_max_imp_gt_left(a: ℝ, b: ℝ, c: ℝ) {
+    a > b.max(c) implies a > b
+} 
+
+theorem gt_max_imp_gt_right(a: ℝ, b: ℝ, c: ℝ) {
+    a > b.max(c) implies a > c
+} 
+
+theorem rat_dual_upper_bound(a: ℝ, b: ℝ) {
+    exists(r: ℚ) {
+        a < ℝ.from_rat(r) and b < ℝ.from_rat(r)
+    }
+} by {
+    let r: ℚ satisfy {
+        a.max(b) < ℝ.from_rat(r)
+    }
+    a < ℝ.from_rat(r)
+    b < ℝ.from_rat(r)
+}
+
+theorem abs_from_rat(p: ℚ) {
+    ℝ.from_rat(p).abs = ℝ.from_rat(p.abs)
+} by {
+    if ℝ.from_rat(p) < 0 {
+        p < ℚ.0
+        p.abs = -p
+        ℝ.from_rat(p).abs = -ℝ.from_rat(p)
+        ℝ.from_rat(p.abs) = -ℝ.from_rat(p)
+        ℝ.from_rat(p).abs = ℝ.from_rat(p.abs)
+    } else {
+        p >= ℚ.0
+        p.abs = p
+        ℝ.from_rat(p).abs = ℝ.from_rat(p)
+        ℝ.from_rat(p.abs) = ℝ.from_rat(p)
+        ℝ.from_rat(p).abs = ℝ.from_rat(p.abs)
+    }
+}
+
+theorem close_imp_ε_pos(a: ℝ, b: ℝ, ε: ℝ) {
+    (a - b).abs < ε implies ε > 0
+} by {
+    0 <= (a - b).abs
+    0 < ε
+}
+
+theorem close_comm(a: ℝ, b: ℝ, ε: ℝ) {
+    (a - b).abs < ε implies (b - a).abs < ε
+} by {
+    (a - b).abs = (b - a).abs
+}
+
+theorem close_imp_bounds(a: ℝ, b: ℝ, ε: ℝ) {
+    (a - b).abs < ε implies 
+    b - ε < a and 
+    a < b + ε and 
+    b > a - ε and 
+    b < a + ε
+} by {
+    // Left ineq
+    (a - b).abs < ε
+    a - b <= (a - b).abs
+    a - b < ε
+    a < b + ε
+
+    b > a - ε
+
+    // Right ineq
+    (b - a).abs < ε
+    b - a <= (b - a).abs
+    b - a < ε
+    b < a + ε
+
+    b - ε < a
+}
+
+theorem bounds_imp_close(a: ℝ, b: ℝ, ε: ℝ) {
+    b - ε < a and a < b + ε implies (a - b).abs < ε
+} by {
+    if (a - b) < 0 {
+        (a - b).abs = b - a
+        (a - b).abs < ε
+    } else {
+        (a - b).abs = a - b
+        (a - b).abs < ε
+    }
+}
+
+theorem sum_bounds_imp_close(a: ℝ, b: ℝ, ε: ℝ) {
+    b < a + ε and a < b + ε implies (a - b).abs < ε
+} by {
+    b - ε < a
+}
+
+theorem self_close(a: ℝ, ε: ℝ) {
+    ε > 0 implies (a - a).abs < ε
+}
+
+theorem abs_lte(a: ℝ, b: ℝ) {
+    b >= 0 and a <= b and a >= -b implies a.abs <= b
+} by {
+    if a >= 0 {
+        a.abs = a
+        a.abs <= b
+    } else {
+        a < 0
+        a.abs = -a
+        -a <= b
+        a.abs <= b
+    }
+}
+
+theorem triangle_ineq(a: ℝ, b: ℝ) {
+    (a + b).abs <= a.abs + b.abs
+} by {
+    a + b <= a.abs + b.abs
+    a + b >= -a.abs + -b.abs
+    a.abs + b.abs >= 0
+    (a + b).abs <= a.abs + b.abs
+}
+
+// port from int. indeed it should be inherited from "normed space"
+theorem triangle_ineq_sub(a: ℝ, b: ℝ) { 
+    (a).abs - (b).abs <= (a - b).abs
+} by {
+    // prove |a| <= |(a - b) + b| => |a| - |b| <= |a - b|
+    (a).abs = ((a - b) + b).abs
+    (a).abs <= (a - b).abs + (b).abs
+
+    (a).abs <= (a - b).abs + (b).abs
+    
+    (a).abs - (b).abs <= (a - b).abs
+
+    // prove |b| <= |(a - b) + a| => |b| - |a| <= |a - b|
+    (b).abs = ((b - a) + a).abs
+    (b).abs <= (b - a).abs + (a).abs
+
+    (b).abs <= (b - a).abs + (a).abs
+    
+    (b).abs - (a).abs <= (b - a).abs
+}
+
+// Closeness is preserved in the ℝ <-> rat conversion.
+theorem close_rats_imp_close_reals(q: ℚ, r: ℚ, ε: ℚ) {
+    (q - r).abs < ε implies (ℝ.from_rat(r) - ℝ.from_rat(q)).abs < ℝ.from_rat(ε)
+} by {
+    (q - r).abs < ε
+    ℝ.from_rat((q - r).abs) < ℝ.from_rat(ε)
+    (ℝ.from_rat(q) - ℝ.from_rat(r)).abs < ℝ.from_rat(ε)
+}
+
+theorem close_reals_imp_close_rats(q: ℚ, r: ℚ, ε: ℚ) {
+    (ℝ.from_rat(q) - ℝ.from_rat(r)).abs < ℝ.from_rat(ε)
+    implies (q - r).abs < ε
+} by {
+    (ℝ.from_rat(q) - ℝ.from_rat(r)).abs < ℝ.from_rat(ε)
+    ℝ.from_rat((q - r).abs) < ℝ.from_rat(ε)
+    (q - r).abs < ε
+}
+
+// Every ℝ can be approximated by a rational.
+theorem rat_approx_exists(x: ℝ, ε: ℚ) {
+    ε > ℚ.0 implies exists(r: ℚ) {
+        (x - ℝ.from_rat(r)).abs < ℝ.from_rat(ε)
+    }
+} by {
+    let r: ℚ satisfy {
+        ℝ.from_rat(r) < x and x < ℝ.from_rat(r + ε)
+    }
+    r - ε < r
+    ℝ.from_rat(r - ε) < ℝ.from_rat(r)
+    ℝ.from_rat(r) - ℝ.from_rat(ε) < ℝ.from_rat(r)
+    ℝ.from_rat(r) - ℝ.from_rat(ε) < x
+}
+
+// Every ℝ has a rational that is a distant upper bound.
+theorem rat_upper(x: ℝ, ε: ℚ) {
+    ε > ℚ.0 implies exists(r: ℚ) {
+        (x - ℝ.from_rat(r)).abs >= ℝ.from_rat(ε) and x < ℝ.from_rat(r)
+    }
+} by {
+    let r1: ℚ satisfy {
+        x < ℝ.from_rat(r1)
+    }
+    let r = r1 + ε
+    x + ℝ.from_rat(ε) < ℝ.from_rat(r1) + ℝ.from_rat(ε)
+    x + ℝ.from_rat(ε) < ℝ.from_rat(r)
+    ℝ.from_rat(ε) < ℝ.from_rat(r) - x
+    ℝ.from_rat(ε) < (ℝ.from_rat(r) - x).abs
+    ℝ.from_rat(ε) < (x - ℝ.from_rat(r)).abs
+    x < ℝ.from_rat(r)
+}
+
+// Every ℝ has a rational that is a distant lower bound.
+theorem rat_lower(x: ℝ, ε: ℚ) {
+    ε > ℚ.0 implies exists(r: ℚ) {
+        (x - ℝ.from_rat(r)).abs >= ℝ.from_rat(ε) and ℝ.from_rat(r) < x
+    }
+} by {
+    let r1: ℚ satisfy {
+        ℝ.from_rat(r1) < x
+    }
+    let r = r1 - ε
+    ℝ.from_rat(r1) - ℝ.from_rat(ε) < x - ℝ.from_rat(ε)
+    ℝ.from_rat(r) < x - ℝ.from_rat(ε)
+    ℝ.from_rat(ε) < x - ℝ.from_rat(r)
+    ℝ.from_rat(ε) < (x - ℝ.from_rat(r)).abs
+    ℝ.from_rat(r) < x
+}
+
+// essentially this mean, choose r closed enough to a, will remain contain in finite numbers of open interval that contain a (here, interval center at c1, c2, with radius r1, r2). according to triangle inequality, choose b that |a - b| <= min(r1 - (a - c1).abs, r2 - (a - c2).abs)
+theorem rat_intersect_lemma(a: ℝ, c: ℝ, r: ℝ, ε: ℚ, q: ℚ) {
+    (a - c).abs < r and 
+    ε > ℚ.0 and
+    ℝ.from_rat(ε) < r - (a - c).abs and 
+    (a - ℝ.from_rat(q)).abs < ℝ.from_rat(ε) implies 
+    (ℝ.from_rat(q) - c).abs < r
+} by {
+    ℝ.from_rat(q) - c = ℝ.from_rat(q) - c + -a + a
+    ℝ.from_rat(q) - c = (ℝ.from_rat(q) - a) + (a - c)
+
+    (ℝ.from_rat(q) - c).abs <= (ℝ.from_rat(q) - a).abs + (a - c).abs
+
+    (ℝ.from_rat(q) - a).abs + (a - c).abs < ℝ.from_rat(ε) + (a - c).abs
+
+    (ℝ.from_rat(q) - c).abs < ℝ.from_rat(ε) + (a - c).abs
+
+    ℝ.from_rat(ε) < r - (a - c).abs
+
+    ℝ.from_rat(ε) + (a - c).abs < r - (a - c).abs + (a - c).abs
+
+    ℝ.from_rat(ε) + (a - c).abs < r
+
+    (ℝ.from_rat(q) - c).abs < r
+}
+
+// Every intersecting pair of intervals has a rational number in it.
+theorem rat_intersect(a: ℝ, c1: ℝ, r1: ℝ, c2: ℝ, r2: ℝ) {
+    (a - c1).abs < r1 and (a - c2).abs < r2
+    implies
+    exists(q: ℚ) {
+        (ℝ.from_rat(q) - c1).abs < r1 and (ℝ.from_rat(q) - c2).abs < r2
+    }
+} by {
+    r1 - (a - c1).abs > 0
+    r2 - (a - c2).abs > 0
+
+    let d = (r1 - (a - c1).abs).min(r2 - (a - c2).abs)
+
+    d > 0
+
+    let ε: ℚ satisfy {
+        0 < ℝ.from_rat(ε) and ℝ.from_rat(ε) < d
+    }
+    ε > ℚ.0
+    ℝ.from_rat(ε) < r1 - (a - c1).abs
+    ℝ.from_rat(ε) < r2 - (a - c2).abs
+
+    let q: ℚ satisfy {
+        (a - ℝ.from_rat(q)).abs < ℝ.from_rat(ε)
+    } 
+
+    (ℝ.from_rat(q) - c1).abs < r1
+    (ℝ.from_rat(q) - c2).abs < r2
+}
+
+theorem swap_minus_plus(a: ℝ, b: ℝ, c: ℝ) {
+    a + b - c = a - c + b
+}
+
+// Multiplication not preserve order. We will first use ℚ_(0, a) + ℚ_(a, ∞), or just ℚ_(0, a), and define ℚ_(0, a) ⋅ ℚ_(0, b) = ℚ_(0, a ⋅ b). Then use neg to define mul in cases other than a > 0 and b > 0
+define pos_mul_gt(a: ℝ, b: ℝ, r: ℚ) -> Bool {
+    exists(ra: ℚ, rb: ℚ) {
+        ra > ℚ.0 and a.gt_rat(ra) and
+        rb > ℚ.0 and b.gt_rat(rb) and
+        r = ra ⋅ rb
+    }
+}

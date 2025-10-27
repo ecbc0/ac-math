@@ -1,9 +1,9 @@
-from util import is_acyclic, is_transitive
+from util import is_acyclic, is_transitive, is_reflexive, is_antisymmetric, is_nonreflexive
 
 /// A partial order is a relation that is reflexive, transitive, and antisymmetric.
 /// Not all elements need to be comparable.
 typeclass P: Partial_Order {
-    /// The less-than-or-equal-to relation defining the partial order.
+    /// The less-than relation defining the partial order.
     lt: (P, P) -> Bool
 
     /// The order relation must be acyclic: cannot have ring.
@@ -33,6 +33,110 @@ attributes P: Partial_Order {
         other <= self
     }
 }
+
+// equivalent representation of Partial_Order
+
+theorem lt_and_eq_is_different_thing[P: Partial_Order](a: P) {
+    not (a < a)
+} 
+
+theorem acyclic_and_transitive_imp_not_self[T](lt: (T, T) -> Bool) {
+    is_acyclic(lt) and is_transitive(lt) implies is_nonreflexive(lt)
+}
+
+define lte_from[T](lt: (T, T) -> Bool, x: T, y: T) -> Bool {
+    lt(x, y) or x = y    
+}
+
+theorem lte_is_reflexive[T](lt: (T, T) -> Bool) {
+    is_reflexive(lte_from(lt))
+} by {
+    forall(x: T) {
+        x = x
+        lte_from(lt)(x, x)
+    }
+}
+
+theorem lt_trans_imp_lte_trans[T](lt: (T, T) -> Bool) {
+    is_transitive(lt) implies is_transitive(lte_from(lt))
+} by {
+    forall(x: T, y: T, z: T) {
+        if (lte_from(lt)(x, y) and lte_from(lt)(y, z)) {
+            if x = y {
+                lte_from(lt)(x, z)
+            } else {
+                if y = z {
+                    lte_from(lt)(x, z)
+                } else {
+                    x != y
+                    y != z
+                    lt(x, y)
+                    lt(y, z)
+                    lt(x, z)
+                    lte_from(lt)(x, z)
+                }
+            }
+        }
+    }
+}
+
+theorem lte_trans_imp_lt_trans[T](lt: (T, T) -> Bool) {
+    is_nonreflexive(lt) and is_acyclic(lt) implies (is_transitive(lte_from(lt)) implies is_transitive(lt))
+} by {
+    if is_transitive(lte_from(lt)) {
+        forall(x: T, y: T, z: T) {
+            if lt(x, y) and lt(y, z) {
+                lte_from(lt)(x, y)
+                lte_from(lt)(y, z)
+                lte_from(lt)(x, z)
+                x != y
+                y != z
+                if x = z {
+                    not is_acyclic(lt)
+                    false
+                }
+                lt(x, z)
+            }
+        }   
+    }
+}
+
+theorem acyclic_imp_antisymmetric[T](lt: (T, T) -> Bool) {
+    is_acyclic(lt) implies is_antisymmetric(lte_from(lt))
+} by {
+    forall(x: T, y: T) {
+        if lte_from(lt)(x, y) and lte_from(lt)(y, x) {
+            lt(x, y) or x = y
+            lt(y, x) or y = x
+            x = y
+        }
+    }
+    is_antisymmetric(lte_from(lt))    
+}
+
+theorem antisymmetric_imp_acyclic[T](lt: (T, T) -> Bool) {
+    is_nonreflexive(lt) and is_antisymmetric(lte_from(lt)) implies is_acyclic(lt)
+} by {
+    forall(x: T, y: T) {
+        if lt(x, y) and lt(y, x) {
+            lte_from(lt)(x, y) and lte_from(lt)(y, x)
+            x = y
+            lt(x, x)
+            not is_nonreflexive(lt)
+            false
+        }
+        not (lt(x, y) and lt(y, x))
+    }
+    is_acyclic(lt)
+}
+
+// equivalent representation of Partial_Order
+theorem equivalent_representation_of_partial_order[T](lt: (T, T) -> Bool) {
+    is_nonreflexive(lt) implies (
+        is_acyclic(lt) and is_transitive(lt) iff 
+        is_reflexive(lte_from(lt)) and is_transitive(lte_from(lt)) and is_antisymmetric(lte_from(lt))
+    )
+} 
 
 /// A linear order (total order) is a partial order where all elements are comparable.
 typeclass L: Linear_Order extends Partial_Order {
@@ -164,3 +268,70 @@ theorem max_symm[L: Linear_Order](a: L, b: L) {
         b.max(a) = a.max(b)
     }
 }
+
+theorem min_lte_left[L: Linear_Order](a: L, b: L) {
+    a.min(b) <= a
+} 
+
+theorem max_gte_left[L: Linear_Order](a: L, b: L) {
+    a.max(b) >= a
+} 
+
+theorem min_lte_right[L: Linear_Order](a: L, b: L) {
+    a.min(b) <= b
+} 
+
+theorem max_gte_right[L: Linear_Order](a: L, b: L) {
+    a.max(b) >= b
+} 
+
+theorem lt_both_imp_lt_min[L: Linear_Order](a: L, b: L, c: L) {
+    a < b and a < c implies a < b.min(c)
+} by {
+    if b <= c {
+        b.min(c) = b
+        a < b.min(c)
+    } else {
+        b > c
+        b.min(c) = c
+        a < b.min(c)
+    }
+}
+
+theorem lt_min_imp_lt_left[L: Linear_Order](a: L, b: L, c: L) {
+    a < b.min(c) implies a < b
+} 
+
+theorem lt_min_imp_lt_right[L: Linear_Order](a: L, b: L, c: L) {
+    a < b.min(c) implies a < c
+} 
+
+theorem gt_both_imp_gt_max[L: Linear_Order](a: L, b: L, c: L) {
+    a > b and a > c implies a > b.max(c)
+} by {
+    if b <= c {
+        b.max(c) = c
+        a > b.max(c)
+    } else {
+        b > c
+        b.max(c) = b
+        a > b.max(c)
+    }
+}
+
+theorem gt_max_imp_gt_left[L: Linear_Order](a: L, b: L, c: L) {
+    a > b.max(c) implies a > b
+} by {
+    if b <= c {
+        b.max(c) = c
+        a > b
+    } else {
+        b > c
+        b.max(c) = b
+        a > b
+    }
+}
+
+theorem gt_max_imp_gt_right[L: Linear_Order](a: L, b: L, c: L) {
+    a > b.max(c) implies a > c
+} 

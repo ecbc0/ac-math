@@ -40,8 +40,14 @@ theorem is_constant_imp_eq_constant[T, U](f: T -> U) {
 }
 
 define is_reflexive[T](f: (T, T) -> Bool) -> Bool {
-    forall(t: T) {
-        f(t, t)
+    forall(x: T) {
+        f(x, x)
+    }
+}
+
+define is_nonreflexive[T](lt: (T, T) -> Bool) -> Bool {
+    forall(x: T) {
+        not lt(x, x)
     }
 }
 

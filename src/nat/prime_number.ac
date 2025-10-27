@@ -1,6 +1,5 @@
 from nat.nat_divide import ℕ, divides_suc, divides_trans
 from nat.nat_base import true_below, strong_induction
-// from list import List
 numerals ℕ
 
 attributes ℕ {
@@ -230,7 +229,11 @@ theorem exists_infinite_primes(n: ℕ) {
     p > n
 }
 
-// we need Euclid algorithm and gcd to prove uniqueness of prime_decomposition
+// We need Euclid algorithm and gcd to prove uniqueness of prime_decomposition. More explicitly, to prove
+// theorem euclids_lemma_prime(a: ℕ, b: ℕ, c: ℕ) {
+//     a.is_prime and a.divides(b ⋅ c) implies a.divides(b) or a.divides(c)
+// }
+// Anyway we need induction to prove this, and Euclid algorithm is one way to implement the inductive proof.
 
 structure Pair[T1, T2] {
     first: T1
@@ -1389,7 +1392,3 @@ theorem euclids_lemma(a: ℕ, b: ℕ, c: ℕ) {
         a.divides(c)
     }
 }
-
-let nat_gcd = gcd
-
-let nat_relative_prime = relative_prime
