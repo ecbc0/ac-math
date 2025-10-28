@@ -121,6 +121,10 @@
 		"prefix": "dot",
 		"body": "⋅"
 	},
+	"∞":{
+	  "prefix": ["infinity", "oo"],
+	  "body": "∞"
+	},
 	"set-forall": {
 		"prefix": "all",
 		"body": [

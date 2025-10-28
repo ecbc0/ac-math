@@ -12,7 +12,7 @@ numerals ℚ
 // 3. We use < instead of <=. So there is no greatest element
 
 /// True if a set is downward-closed (contains all smaller elements).
-define is_lower(contains: ℚ -> Bool) -> Bool {
+define is_lower_interval(contains: ℚ -> Bool) -> Bool {
     forall(x: ℚ, y: ℚ) {
         contains(y) and x < y implies contains(x)
     }
@@ -44,7 +44,9 @@ define has_greatest(contains: ℚ -> Bool) -> Bool {
 
 /// True if a function represents a valid Dedekind cut defining a ℝ number.
 define is_dedekind_cut(contains: ℚ -> Bool) -> Bool {
-    is_cut(contains) and is_lower(contains) and not has_greatest(contains)
+    is_cut(contains) and 
+    is_lower_interval(contains) and 
+    not has_greatest(contains)
 }
 
 // structure with constraint needs to have a proof of existence. We can use ℚ embedded in ℝ. Note that although we need ℚ_(< r), due to the syntax of method calls, we should use r.gt here
@@ -61,8 +63,8 @@ theorem gt_is_cut(r: ℚ) {
     not r.gt(r)
 }
 
-theorem gt_is_lower(r: ℚ) {
-    is_lower(r.gt)
+theorem gt_is_lower_interval(r: ℚ) {
+    is_lower_interval(r.gt)
 } by {
     forall(x: ℚ, y: ℚ) {
         if r.gt(y) and y.gt(x) {
@@ -102,7 +104,7 @@ theorem gt_is_dedekind_cut(r: ℚ) {
     is_dedekind_cut(r.gt)
 } by {
     gt_is_cut(r)
-    gt_is_lower(r)
+    gt_is_lower_interval(r)
     gt_has_no_greatest(r)
 }
 
@@ -173,7 +175,7 @@ theorem gt_rat_sorts(z: ℝ, r1: ℚ, r2: ℚ) {
     z.gt_rat(r1) and not z.gt_rat(r2) implies r1 <= r2
 } by {
     if r2 < r1 {
-        is_lower(z.gt_rat)
+        is_lower_interval(z.gt_rat)
         z.gt_rat(r2)
         false
     }
@@ -340,7 +342,7 @@ theorem gt_from_rat_imp_gt_rat(a: ℝ, r: ℚ) {
     }
     not r > r2
     r <= r2
-    is_lower(a.gt_rat)
+    is_lower_interval(a.gt_rat)
     a.gt_rat(r)
 }
 
@@ -483,8 +485,8 @@ theorem add_gt_is_cut(z1: ℝ, z2: ℝ) {
     }
 }
 
-theorem add_gt_is_lower(z1: ℝ, z2: ℝ) {
-    is_lower(add_gt(z1, z2))
+theorem add_gt_is_lower_interval(z1: ℝ, z2: ℝ) {
+    is_lower_interval(add_gt(z1, z2))
 } by {
     forall(x: ℚ, y: ℚ) {
         if add_gt(z1, z2, y) and x < y {
@@ -843,7 +845,7 @@ theorem add_zero_right(a: ℝ) {
             }
             r0 < ℚ.0
             r <= ra
-            is_lower(a.gt_rat)
+            is_lower_interval(a.gt_rat)
             a.gt_rat(r)
 
             (a + 0).gt_rat(r) = a.gt_rat(r)
@@ -877,8 +879,8 @@ define neg_gt(a: ℝ, r: ℚ) -> Bool {
     a < ℝ.from_rat(-r)
 }
 
-theorem neg_gt_is_lower(a: ℝ) {
-    is_lower(neg_gt(a))
+theorem neg_gt_is_lower_interval(a: ℝ) {
+    is_lower_interval(neg_gt(a))
 } by {
     forall(r1: ℚ, r2: ℚ) {
         if neg_gt(a, r2) and r1 < r2 {
@@ -1980,11 +1982,312 @@ theorem swap_minus_plus(a: ℝ, b: ℝ, c: ℝ) {
     a + b - c = a - c + b
 }
 
-// Multiplication not preserve order. We will first use ℚ_(0, a) + ℚ_(a, ∞), or just ℚ_(0, a), and define ℚ_(0, a) ⋅ ℚ_(0, b) = ℚ_(0, a ⋅ b). Then use neg to define mul in cases other than a > 0 and b > 0
-define pos_mul_gt(a: ℝ, b: ℝ, r: ℚ) -> Bool {
+// Multiplication not preserve order. We will first use ℚ_(0, a) + ℚ_(a, ∞), truncated from ℚ_(< a) + ℚ_(> a), or just ℚ_(0, a), and define ℚ_(0, a) ⋅ ℚ_(0, b) = ℚ_(0, a ⋅ b). Then use neg to define mul in cases other than a > 0 and b > 0
+define pos_mul_truncated_gt(a: ℝ, b: ℝ, r: ℚ) -> Bool {
     exists(ra: ℚ, rb: ℚ) {
         ra > ℚ.0 and a.gt_rat(ra) and
         rb > ℚ.0 and b.gt_rat(rb) and
         r = ra ⋅ rb
     }
 }
+
+define pos_mul_gt(a: ℝ, b: ℝ, r: ℚ) -> Bool {
+    a > 0 and b > 0 and 
+    (pos_mul_truncated_gt(a, b, r) or r <= ℚ.0)
+}
+
+define is_lower_interval_truncated(contains: ℚ -> Bool) -> Bool {
+    forall(x: ℚ, y: ℚ) {
+        contains(y) and ℚ.0 < x and x < y implies contains(x)
+    }    
+}
+
+theorem pos_mul_truncated_is_lower_interval(a: ℝ, b: ℝ) {
+    a > 0 and b > 0 implies is_lower_interval_truncated(pos_mul_truncated_gt(a, b))
+} by {
+    forall(x: ℚ, y: ℚ) {
+        if pos_mul_truncated_gt(a, b, y) and 
+        ℚ.0 < x and x < y {
+            let (ray: ℚ, rby: ℚ) satisfy {
+                ray > ℚ.0 and a.gt_rat(ray) and 
+                rby > ℚ.0 and b.gt_rat(rby) and
+                y = ray ⋅ rby
+            }
+            // no square root now, so how to make it symmetrical?
+            let rax = x/y ⋅ ray
+            let rbx = rby
+            y > ℚ.0
+            x/y > ℚ.0
+            x/y < ℚ.1
+            ray > ℚ.0
+            x/y ⋅ ray < ray
+            rax < ray
+            a.gt_rat(rax)
+            b.gt_rat(rbx)
+            rax ⋅ rbx = x/y ⋅ (ray ⋅ rby)
+            rax ⋅ rbx = x
+            ℝ.new(a.gt_rat).gt_rat(rax)
+            ℝ.new(b.gt_rat).gt_rat(rbx)
+            pos_mul_truncated_gt(ℝ.new(a.gt_rat), ℝ.new(b.gt_rat), rax ⋅ rbx)
+            pos_mul_truncated_gt(a, b, x)
+        }
+    }
+}
+
+theorem pos_mul_is_lower_interval(a: ℝ, b: ℝ) {
+    a > 0 and b > 0 implies is_lower_interval(pos_mul_gt(a, b))
+} by {
+    forall(x: ℚ, y: ℚ) {
+        if pos_mul_gt(a, b, y) and x < y {
+            if x <= ℚ.0 {
+                pos_mul_gt(a, b, x)
+            } else {
+                x > ℚ.0
+                pos_mul_truncated_gt(a, b, y)
+                pos_mul_truncated_gt(a, b, x)
+                pos_mul_gt(a, b, x)
+            }
+        }
+    }
+}
+
+define is_cut_truncated(contains: ℚ -> Bool) -> Bool {
+    exists(x: ℚ) {
+        x > ℚ.0 and contains(x)
+    } and 
+    exists(x: ℚ) {
+        x > ℚ.0 and not contains(x)
+    }
+}
+
+theorem pos_mul_truncated_is_cut(a: ℝ, b: ℝ) {
+    a > 0 and b > 0 implies is_cut_truncated(pos_mul_truncated_gt(a, b)) 
+} by {
+    let ra: ℚ satisfy {
+        0 < ℝ.from_rat(ra) and ℝ.from_rat(ra) < a
+    }
+    let rb: ℚ satisfy {
+        0 < ℝ.from_rat(rb) and ℝ.from_rat(rb) < b
+    }
+    a.gt_rat(ra)
+    b.gt_rat(rb)
+    let r = ra ⋅ rb
+    ra > ℚ.0
+    rb > ℚ.0
+    r > ℚ.0
+    ℝ.new(a.gt_rat).gt_rat(ra)
+    ℝ.new(b.gt_rat).gt_rat(rb)
+    pos_mul_truncated_gt(ℝ.new(a.gt_rat), ℝ.new(b.gt_rat), ra ⋅ rb)
+    pos_mul_truncated_gt(a, b, r)
+
+    let qa: ℚ satisfy {
+        a < ℝ.from_rat(qa)
+    }
+    let qb: ℚ satisfy {
+        b < ℝ.from_rat(qb)
+    }
+    let q = qa ⋅ qb
+    forall(za: ℚ, zb: ℚ) {
+        if za > ℚ.0 and a.gt_rat(za) and zb > ℚ.0 and b.gt_rat(zb) {
+            ℝ.from_rat(za) < a
+            ℝ.from_rat(zb) < b
+            ℝ.from_rat(za) < ℝ.from_rat(qa)
+            ℝ.from_rat(zb) < ℝ.from_rat(qb)
+            za < qa
+            zb < qb
+            za ⋅ zb < qa ⋅ qb
+            za ⋅ zb < q
+            za ⋅ zb != q
+        }
+    }
+    ℝ.from_rat(qa) > 0
+    ℝ.from_rat(qb) > 0
+    qa > ℚ.0
+    qb > ℚ.0
+    qa ⋅ qb > ℚ.0
+    q > ℚ.0
+    not pos_mul_truncated_gt(a, b, q)
+}
+
+theorem pos_mul_is_cut(a: ℝ, b: ℝ) {
+    a > 0 and b > 0 implies exists(x: ℚ) {
+        pos_mul_gt(a, b, x)
+    } and exists(x: ℚ) {
+        not pos_mul_gt(a, b, x)
+    }
+} by {
+    is_cut_truncated(pos_mul_truncated_gt(a, b))
+
+    let r: ℚ satisfy { 
+        r > ℚ.0 and pos_mul_truncated_gt(a, b, r) 
+    }
+
+    let q: ℚ satisfy { 
+        q > ℚ.0 and not pos_mul_truncated_gt(a, b, q) 
+    }
+
+    pos_mul_gt(a, b, r) 
+    not pos_mul_gt(a, b, q)
+}
+
+define has_greatest_truncated(contains: ℚ -> Bool) -> Bool {
+    exists(x: ℚ) {
+        x > ℚ.0 and contains(x) and forall(y: ℚ) {
+            y > ℚ.0 and contains(y) implies y <= x 
+        }
+    }    
+}
+
+theorem pos_mul_truncated_has_no_greatest(a: ℝ, b: ℝ) {
+    a > 0 and b > 0 implies not has_greatest_truncated(pos_mul_truncated_gt(a, b))
+} by {
+    if has_greatest_truncated(pos_mul_truncated_gt(a, b)) {
+        let x: ℚ satisfy {
+            x > ℚ.0 and pos_mul_truncated_gt(a, b, x) and forall(y: ℚ) {
+                y > ℚ.0 and pos_mul_truncated_gt(a, b, y) implies y <= x
+            }
+        }
+        let (xa: ℚ, xb: ℚ) satisfy {
+            xa > ℚ.0 and a.gt_rat(xa) and 
+            xb > ℚ.0 and b.gt_rat(xb) and
+            x = xa ⋅ xb
+        }
+        ℝ.from_rat(xa) < a
+        ℝ.from_rat(xb) < b
+        let qa: ℚ satisfy {
+            ℝ.from_rat(xa) < ℝ.from_rat(qa) and ℝ.from_rat(qa) < a
+        }
+        let qb: ℚ satisfy {
+            ℝ.from_rat(xb) < ℝ.from_rat(qb) and ℝ.from_rat(qb) < b
+        } 
+        qa > xa
+        qb > xb
+        qb > ℚ.0
+        qa > ℚ.0
+        a.gt_rat(qa)
+        b.gt_rat(qb)
+        let q = qa ⋅ qb
+        qa ⋅ qb > xa ⋅ xb
+        q > x
+        q > ℚ.0
+        ℝ.new(a.gt_rat).gt_rat(qa)
+        ℝ.new(b.gt_rat).gt_rat(qb)
+        pos_mul_truncated_gt(ℝ.new(a.gt_rat), ℝ.new(b.gt_rat), qa ⋅ qb)
+        pos_mul_truncated_gt(a, b, q)
+        false
+    }
+}
+
+theorem pos_mul_has_no_greatest(a: ℝ, b: ℝ) {
+    a > 0 and b > 0 implies not has_greatest(pos_mul_gt(a, b))
+} by {
+    is_cut_truncated(pos_mul_truncated_gt(a, b))
+    forall(x: ℚ) {
+        if x <= ℚ.0 {
+            let r: ℚ satisfy {
+                r > ℚ.0 and pos_mul_truncated_gt(a, b, r)
+            }
+            pos_mul_gt(a, b, r)
+            r > x
+            not is_greatest(pos_mul_gt(a, b), x)
+        } else {
+            x > ℚ.0
+            if is_greatest(pos_mul_gt(a, b), x) {
+                pos_mul_gt(a, b, x)
+                pos_mul_truncated_gt(a, b, x)
+                forall(y: ℚ) {
+                    if y > ℚ.0 and pos_mul_truncated_gt(a, b, y) {
+                        pos_mul_gt(a, b, y)
+                        y <= x
+                    }
+                }
+                has_greatest_truncated(pos_mul_truncated_gt(a, b))
+                false
+            }
+            not is_greatest(pos_mul_gt(a, b), x)
+        }
+    }
+    not has_greatest(pos_mul_gt(a, b))
+}
+
+theorem pos_mul_is_dedekind_cut(a: ℝ, b: ℝ) {
+    a > 0 and b > 0 implies is_dedekind_cut(pos_mul_gt(a, b))
+} by {
+    is_lower_interval(pos_mul_gt(a, b))
+    is_cut(pos_mul_gt(a, b))
+    not has_greatest(pos_mul_gt(a, b))
+}
+
+// attributes ℝ {
+//     define mul(self, other: ℝ) -> ℝ {
+//         if self = 0 or other = 0 {
+//             0
+//         } else {
+//             if self > 0 {
+//                 if other > 0 {
+//                     ℝ.new(pos_mul_gt(self, other))
+//                 } else {
+//                     -ℝ.new(pos_mul_gt(self, -other))
+//                 }
+//             } else {
+//                 if other > 0 {
+//                     -ℝ.new(pos_mul_gt(-self, other))
+//                 } else {
+//                     ℝ.new(pos_mul_gt(-self, -other))
+//                 }
+//             }
+//         }
+//     }
+// }
+
+// theorem mul_zero_left(a: ℝ) {
+//     0 ⋅ a = 0
+// } 
+
+// theorem mul_zero_right(a: ℝ) {
+//     a ⋅ 0 = 0
+// } 
+
+// theorem pos_mul_gt_imp_swap(a: ℝ, b: ℝ, r: ℚ) {
+//     pos_mul_gt(a, b, r) implies pos_mul_gt(b, a, r)
+// } by {
+//     let (ra: ℚ, rb: ℚ) satisfy {
+//         ra > ℚ.0 and ℝ.from_rat(ra) < a and
+//         rb > ℚ.0 and ℝ.from_rat(rb) < b and
+//         r = ra ⋅ rb
+//     }
+//     pos_mul_gt(b, a, r)
+// }
+
+// theorem pos_mul_gt_comm(a: ℝ, b: ℝ) {
+//     pos_mul_gt(a, b) = pos_mul_gt(b, a)
+// } by {
+//     forall(r: ℚ) {
+//         if pos_mul_gt(a, b, r) {
+//             pos_mul_gt(b, a, r)
+//             pos_mul_gt(a, b, r) = pos_mul_gt(b, a, r)
+//         } else {
+//             not pos_mul_gt(a, b, r)
+//             not pos_mul_gt(b, a, r)
+//             pos_mul_gt(a, b, r) = pos_mul_gt(b, a, r)
+//         }
+//     }
+// }
+
+// theorem mul_comm(a: ℝ, b: ℝ) {
+//     a ⋅ b = b ⋅ a
+// } by {
+//     if a < 0 {
+//         if b < 0 {
+//             a ⋅ b = b ⋅ a
+//         } else {
+//             a ⋅ b = b ⋅ a
+//         }
+//     } else {
+//         if b < 0 {
+//             a ⋅ b = b ⋅ a
+//         } else {
+//             a ⋅ b = b ⋅ a
+//         }
+//     }
+// }
