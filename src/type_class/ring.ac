@@ -1,0 +1,37 @@
+from type_class.add import Add
+from type_class.mul import Mul
+
+/// A ring is like a ring but without additive inverses.
+/// It has two operations, addition, multiplication
+/// and multiplication distributes over addition.
+typeclass R: Ring extends Add, Mul {
+    /// Multiplication distributes over addition from the left: `a ⋅ (b + c) = (a ⋅ b) + (a ⋅ c)`.
+    distrib_left(a: R, b: R, c: R) {
+        a ⋅ (b + c) = (a ⋅ b) + (a ⋅ c)
+    }
+
+    /// Multiplication distributes over addition from the right: `(a + b) ⋅ c = (a ⋅ c) + (b ⋅ c)`.
+    distrib_right(a: R, b: R, c: R) {
+        (a + b) ⋅ c = (a ⋅ c) + (b ⋅ c)
+    }
+
+    /// Multiplying by the additive identity yields the additive identity.
+    mul_zero_left(a: R) {
+        a ⋅ R.0 = R.0
+    }
+
+    /// Multiplying the additive identity by anything yields the additive identity.
+    mul_zero_right(a: R) {
+        R.0 ⋅ a = R.0
+    }
+}
+
+theorem trivial_semiring[R: Ring] {
+    R.0 = R.1 implies forall(r: R) { r = R.0 }
+}
+
+from nat.nat_base import ℕ
+
+theorem pow_zero[R: Ring](n: ℕ) {
+    n != ℕ.0 implies R.0.pow(n) = R.0
+}

@@ -1105,6 +1105,25 @@ theorem gte_zero_abs(a: ℤ) {
     a >= 0 implies from_nat(abs(a)) = a
 }
 
+theorem from_nat_preserve_lt(n: ℕ, m: ℕ) {
+    from_nat(n) < from_nat(m) iff n < m
+} by {
+    from_nat(m) - from_nat(n) = sub_nat(m, n)
+    if from_nat(n) < from_nat(m) {
+        0 < (from_nat(m) - from_nat(n))
+        sub_nat(m, n) > 0
+        n <= m
+        m - n != ℕ.0
+        n < m
+    }
+}
+
+theorem from_nat_preserve_lte(n: ℕ, m: ℕ) {
+    from_nat(n) <= from_nat(m) iff n <= m
+} by {
+    from_nat(n) <= from_nat(m) implies n <= m
+}
+
 // Integer-natural multiplication
 
 attributes ℤ {

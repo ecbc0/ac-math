@@ -124,7 +124,7 @@ theorem has_prime_divisor(n: ℕ) {
     has_prime_divisor(n)
 }
 
-from list import List, Add, sum
+from list.list_mul import List, Mul, product
 
 define all_prime(l: List[ℕ]) -> Bool {
     forall(n: ℕ) {
@@ -136,13 +136,11 @@ theorem nil_list_all_prime {
     all_prime(List[ℕ].nil)
 }
 
-instance ℕ: Add {
-    let add: (ℕ, ℕ) -> ℕ = ℕ.mul
+instance ℕ: Mul {
+    let mul: (ℕ, ℕ) -> ℕ = ℕ.mul
 
-    let 0 = ℕ.1
+    let 1 = ℕ.1
 }
-
-let product = sum[ℕ] 
 
 theorem prime_decomposition(n: ℕ) {
     n != 0 implies exists(l: List[ℕ]) {

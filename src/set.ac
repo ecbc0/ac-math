@@ -1,6 +1,7 @@
 /// Sets with elements of type `K` are defined as Boolean functions over `K`, in the form of named wrapper structure
 structure Set[K] {
-    /// ∈
+    /// ∈  
+    /// True if the set has no elements.
     contains: K -> Bool
 }
 
@@ -60,6 +61,7 @@ attributes Set[K] {
         Set[K].new(self.not_contains)
     }
 
+    /// True if the set contains exactly one element.
     define is_singleton(self) -> Bool {
         exists(x: K) {
             self = Set[K].singleton(x)
@@ -508,6 +510,7 @@ theorem union_intersection_index_compl_dual[I, K](f: I -> Set[K]) {
 // Proving indexed union and intersection definitions are consistent
 // with index definitions
 
+/// A type with exactly two values.
 inductive Two {
     first
     second

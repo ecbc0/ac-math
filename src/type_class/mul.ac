@@ -1,0 +1,102 @@
+/// also called "commutative monoid".  
+/// also apply to mul ⋅
+typeclass A: Mul {
+    /// The binary addition operation that combines two elements
+    mul: (A, A) -> A
+
+    /// The additive identity element
+    1: A
+
+    /// The identity element must satisfy the identity property
+    mul_identity(a: A) {
+        a ⋅ A.1 = a
+    }
+
+    /// The operation must be commutative: `a ⋅ b = b ⋅ a`
+    mul_commutative(a: A, b: A) {
+        a ⋅ b = b ⋅ a
+    }
+
+    /// The operation must be associative: `(a ⋅ b) ⋅ c = a ⋅ (b ⋅ c)`
+    mul_associative(a: A, b: A, c: A) {
+        a ⋅ (b ⋅ c) = (a ⋅ b) ⋅ c
+    }
+}
+
+from nat.nat_base import ℕ
+
+attributes M: Mul {
+    /// Raises a monoid element to a natural number power using repeated multiplication.
+    define pow(self, b: ℕ) -> M {
+        match b {
+            ℕ.0 {
+                M.1
+            }
+            ℕ.suc(pred) {
+                self ⋅ self.pow(pred)
+            }
+        }
+    }
+}
+
+// Proof that a^n ⋅ a^m = a^(n+m)
+theorem pow_add[M: Mul](a: M, b: ℕ, c: ℕ) {
+    a^(b + c) = a^b ⋅ a^c
+} by {
+    // Inductive step
+    let f = function(x: ℕ) {
+        a^(b + x) = a^b ⋅ a^x
+    }
+    f(ℕ.0)
+    forall(x: ℕ) {
+        if f(x) {
+            a^(b + x) = a^b ⋅ a^x
+            a^(b + x.suc) = a^b ⋅ a^(x.suc)
+            f(x.suc)
+        }
+    }
+    f(c)
+}
+
+// Proof that a^1 = a
+theorem pow_one[M: Mul](a: M) {
+    a^(ℕ.1) = a
+} by {
+    a^(ℕ.1) = a^(ℕ.0.suc) // by definition of ℕ.1
+    a^(ℕ.0.suc) = a ⋅ a^(ℕ.0) // by definition of pow
+    a ⋅ a^(ℕ.0) = a ⋅ M.1 // by definition of pow (base case)
+    a ⋅ M.1 = a // by mul_identity_right
+    a^(ℕ.1) = a // transitivity
+}
+
+// Proof that (a^n)^m = a ^ (n ⋅ m)
+theorem pow_mul[M: Mul](a: M, b: ℕ, c: ℕ) {
+    a^(b ⋅ c) = (a^b)^c
+} by {
+    // Inductive step
+    let f = function(x: ℕ) {
+        a^(b ⋅ x) = (a^b)^x
+    }
+    f(ℕ.0)
+    forall(x: ℕ) {
+        if f(x) {
+            a^(b ⋅ x) = (a^b)^x
+            a^(b ⋅ x.suc) = (a^b)^(x.suc)
+            f(x.suc)
+        }
+    }
+    f(c)
+}
+
+// Proof that 1^n = 1
+theorem one_pow[M: Mul](n: ℕ) {
+    (M.1)^n = M.1
+} by {
+    one_pow[M](ℕ.0)
+    one_pow[M](n)
+}
+
+/// Scalar multiplication of a function: multiplies a constant by the result of a function.
+define mul_fn[T, S: Mul](c: S, f: T -> S, t: T) -> S {
+    c ⋅ f(t)
+}

@@ -1,0 +1,82 @@
+/// also called "commutative monoid".  
+/// also apply to mul ⋅
+typeclass A: Add {
+    /// The binary addition operation that combines two elements
+    add: (A, A) -> A
+
+    /// The additive identity element
+    0: A
+
+    /// The identity element must satisfy the identity property
+    add_identity(a: A) {
+        a + A.0 = a
+    }
+
+    /// The operation must be commutative: `a + b = b + a`
+    add_commutative(a: A, b: A) {
+        a + b = b + a
+    }
+
+    /// The operation must be associative: `(a + b) + c = a + (b + c)`
+    add_associative(a: A, b: A, c: A) {
+        a + (b + c) = (a + b) + c
+    }
+
+    /// The additive inverse of an element.
+    neg: A -> A
+
+    /// This is what "additive inverse" means.
+    add_inverse(a: A) {
+        a + -a = A.0
+    }
+}
+
+attributes A: Add {
+    /// Subtracts one element from another using additive inverse.
+    define sub(self, other: A) -> A {
+        self + -other
+    }
+}
+
+// This direction is proven rather than assumed
+theorem inverse_left[A: Add](a: A) {
+    -a + a = A.0
+} by {
+    (-a + a) + -a = -a
+    (-a + a) + -a + --a = -a + --a
+    (-a + a) + (-a + --a) = -a + --a
+    (-a + a) + A.0 = A.0
+}
+
+theorem inverse_inverse[A: Add](a: A) {
+    --a = a
+} by {
+    a + -a = A.0
+    a + -a + --a = --a
+}
+
+theorem left_cancel[A: Add](a: A, b: A, c: A) {
+    a + b = a + c implies b = c
+} by {
+    -a + (a + b) = -a + (a + c)
+}
+
+theorem right_cancel[A: Add](a: A, b: A, c: A) {
+    b + a = c + a implies b = c
+} by {
+    (b + a) + -a = (c + a) + -a
+}
+
+theorem inverse_add[A: Add](a: A, b: A) {
+    -(a + b) = -b + -a
+} by {
+    -(a + b) + (a + b) = A.0
+    -(a + b) + a = -b
+}
+
+/// Pointwise addition of two functions.
+define add_fn[T, A: Add](f: T -> A, g: T -> A, t: T) -> A {
+    f(t) + g(t)
+}
+
+// instance[T, A: Add] (T -> A): Add

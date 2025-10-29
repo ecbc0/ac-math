@@ -727,27 +727,30 @@ theorem plus_abs_gte_zero(n: ℤ) {
     }
 }
 
-attributes ℤ {
-    /// Note that 0^0 = 1.
-    /// TODO: we should be able to inherit `pow` from some underlying algebraic structure.
-    define pow(self, b: ℕ) -> ℤ {
-        match b {
-            ℕ.0 {
-                1
-            }
-            ℕ.suc(pred) {
-                self ⋅ self.pow(pred)
-            }
-        }
-    }
+from type_class.add import Add
+from type_class.mul import Mul
+from type_class.ring import Ring
+
+instance ℤ: Add {
+    let add = ℤ.add
+   
+    let 0 = ℤ.0
+
+    let neg = ℤ.neg
 }
 
+instance ℤ: Mul {
+    let mul = ℤ.mul
+
+    let 1 = ℤ.1
+}
+
+instance ℤ: Ring 
+
+// for definition of ^, see mul.ac
 theorem pow_one(a: ℤ) {
     a^(ℕ.1) = a
-} by {
-    a ⋅ a^(ℕ.0) = a
-    a^(ℕ.0.suc) = a
-}
+} 
 
 theorem pow_zero(a: ℤ) {
     a^(ℕ.0) = 1
@@ -755,54 +758,19 @@ theorem pow_zero(a: ℤ) {
 
 theorem pow_add(a: ℤ, b: ℕ, c: ℕ) {
     a^(b + c) = a^b ⋅ a^c
-} by {
-    // Inductive step
-    let f = function(x: ℕ) {
-        a^(b + x) = a^b ⋅ a^x
-    }
-    f(ℕ.0)
-    forall(x: ℕ) {
-        if f(x) {
-            a^(b + x) = a^b ⋅ a^x
-            a^(b + x.suc) = a^b ⋅ a^(x.suc)
-            f(x.suc)
-        }
-    }
-    f(c)
-}
+} 
 
 theorem pow_mul(a: ℤ, b: ℕ, c: ℕ) {
     a^(b ⋅ c) = (a^b)^c
-} by {
-    // Inductive step
-    let f = function(x: ℕ) {
-        a^(b ⋅ x) = (a^b)^x
-    }
-    f(ℕ.0)
-    forall(x: ℕ) {
-        if f(x) {
-            a^(b ⋅ x) = (a^b)^x
-            a^(b ⋅ x.suc) = (a^b)^(x.suc)
-            f(x.suc)
-        }
-    }
-    f(c)
-}
+} 
 
 theorem zero_pow(n: ℕ) {
     n != ℕ.0 implies 0^n = 0
-} by {
-    let b: ℕ satisfy {
-        n = b.suc
-    }
-}
+} 
 
 theorem one_pow(n: ℕ) {
     1^n = 1
-} by {
-    one_pow(ℕ.0)
-    one_pow(n)
-}
+} 
 
 theorem pos_pow(a: ℤ, n: ℕ) {
     a > 0 implies a^n > 0

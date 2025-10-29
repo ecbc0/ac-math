@@ -729,6 +729,7 @@ theorem three_neq_zero {
     3 != 0
 }
 
+// Now in Acorn, if you import Mul, you will get circluar import, because pow define in mul.ac use ℕ
 attributes ℕ {
     /// Note that 0^0 = 1.
     define pow(self, b: ℕ) -> ℕ {
@@ -754,6 +755,7 @@ theorem pow_one(a: ℕ) {
     a^0 = 1
 }
 
+// ℕ is not a ring. But I now do not want to define a new typeclass for it
 theorem pow_add(a: ℕ, b: ℕ, c: ℕ) {
     a^(b + c) = a^b ⋅ a^c
 } by {

@@ -1,0 +1,83 @@
+from list.list_base import List
+from type_class.mul import Mul
+from nat import ℕ
+numerals ℕ
+
+/// Computes the product of all elements in a list (requires elements to form an additive commutative monoid).  
+/// also aplly to mul ⋅
+define product[A: Mul](items: List[A]) -> A {
+    match items {
+        List.nil {
+            A.1
+        }
+        List.cons(head, tail) {
+            head ⋅ product(tail)
+        }
+    }
+}
+
+/// Computes the partial product of a series up to index n.
+/// Returns the product of f(0) ⋅ f(1) ⋅ ... ⋅ f(n-1).
+define partial_product[A: Mul](f: ℕ -> A, n: ℕ) -> A {
+    product(n.range.map(f))
+}
+// todo: rearrange invariant. ⩽ n! steps. n! is the number of all rearrange (bijective)
+
+theorem product_add[A: Mul](left: List[A], right: List[A]) {
+    product(left + right) = product(left) ⋅ product(right)
+} by {
+    define p(x: List[A]) -> Bool {
+        product(x + right) = product(x) ⋅ product(right)
+    }
+
+    // Base case: product(nil + right) = product(nil) + product(right)
+    product(List.nil[A] + right) = product(right)
+    product(List.nil[A]) = A.1
+    A.1 ⋅ product(right) = product(right)
+    p(List.nil)
+
+    // Inductive step
+    forall(head: A, tail: List[A]) {
+        if p(tail) {
+            // Induction hypothesis: product(tail + right) = product(tail) + product(right)
+
+            // Left side: product(List.cons(head, tail) + right)
+            // use def of add 
+            //     List.cons(head, tail) + right = List.cons(head, tail + right)
+            product(List.cons(head, tail) + right) = product(List.cons(head, tail + right))
+
+            product(List.cons(head, tail + right)) = head ⋅ product(tail + right)
+
+            // Use induction hypothesis
+            head ⋅ product(tail + right) = head ⋅ (product(tail) ⋅ product(right))
+
+            // Right side: product(List.cons(head, tail)) + product(right)
+            product(List.cons(head, tail)) = head ⋅ product(tail)
+
+            product(List.cons(head, tail)) ⋅ product(right) = (head ⋅ product(tail)) ⋅ product(right)
+
+            // Use associativity
+            (head ⋅ product(tail)) ⋅ product(right) = head ⋅ (product(tail) ⋅ product(right))
+
+            // Therefore
+            product(List.cons(head, tail) + right) = product(List.cons(head, tail)) ⋅ product(right)
+            p(List.cons(head, tail))
+        }
+    }
+}
+
+theorem product_append[A: Mul](initial: List[A], last: A) {
+    product(initial.append(last)) = product(initial) ⋅ last
+}
+
+theorem product_singleton[A: Mul](x: A) {
+    product(List.singleton(x)) = x
+}
+
+theorem partial_one[A: Mul](f: ℕ -> A) {
+    partial_product(f, 1) = f(0)
+} by {
+    partial_product(f, 1) = product(1.range.map(f))
+    1.range = List.singleton(0)
+    List.singleton(0).map(f) = List.singleton(f(0))
+}
