@@ -296,27 +296,15 @@
 {"goal":"n + from_nat(abs(n)) = n + n","proof":["from_nat(abs(n)) != n","from_nat(abs(n)) = n or n.is_negative","n.is_negative","n < 0 = n.is_negative"]}
 {"goal":"n + from_nat(abs(n)) >= 0","proof":["not (n + n).is_negative or n.is_negative or n.is_negative","n + from_nat(abs(n)) >= 0 = 0 <= n + from_nat(abs(n))","not 0 <= n + from_nat(abs(n))","not 0 <= n + n","0 <= n + n != (n + n).is_negative","n < 0 = n.is_negative","not n.is_negative","0 <= n + n or (n + n).is_negative","(n + n).is_negative"]}
 {"goal":"plus_abs_gte_zero","proof":["n + from_nat(abs(n)) >= 0 = 0 <= n + from_nat(abs(n))","not 0 <= n + from_nat(abs(n))","n + from_nat(abs(n)) != 0 or 0 <= n + from_nat(abs(n))"]}
-{"goal":"a ⋅ a^ℕ.0 = a","proof":["ℕ.0 != ℕ.0 or a^ℕ.0 = 1","a ⋅ 1 = a","a ⋅ a^ℕ.0 != a ⋅ 1","a^ℕ.0 != 1"]}
-{"goal":"a^ℕ.0.suc = a","proof":["ℕ.0.suc != ℕ.0.suc or a ⋅ a^ℕ.0 = a^ℕ.0.suc","a ⋅ a^ℕ.0 != a^ℕ.0.suc"]}
-{"goal":"pow_one","proof":["ℕ.0 + ℕ.1 = ℕ.0.suc","ℕ.0 + ℕ.1 = ℕ.1"]}
+{"goal":"forall(x0: ℤ, x1: ℤ, x2: ℤ) { x0 + (x1 + x2) = x0 + x1 + x2 } and forall(x3: ℤ, x4: ℤ) { x3 + x4 = x4 + x3 } and forall(x5: ℤ) { x5 + 0 = x5 } and forall(x6: ℤ) { x6 + -x6 = 0 }","proof":["let (s0: ℤ, s1: ℤ, s2: ℤ, s3: ℤ, s4: ℤ, s5: ℤ, s6: ℤ) satisfy { s0 + (s1 + s2) != s0 + s1 + s2 or s6 + -s6 != 0 or s4 + s3 != s3 + s4 or s5 + 0 != s5 }","s0 + (s1 + s2) = s0 + s1 + s2","0 - s5 != -s5 or 0 + s5 = s5","s4 + s3 = s3 + s4","s5 + 0 = 0 + s5","0 - s5 = -s5","s6 + -s6 = 0","s5 + 0 != s5","0 + s5 != s5"]}
+{"goal":"forall(x0: ℤ, x1: ℤ, x2: ℤ) { x0 ⋅ (x1 ⋅ x2) = x0 ⋅ x1 ⋅ x2 } and forall(x3: ℤ, x4: ℤ) { x3 ⋅ x4 = x4 ⋅ x3 } and forall(x5: ℤ) { x5 ⋅ 1 = x5 }","proof":["let (s0: ℤ, s1: ℤ, s2: ℤ, s3: ℤ, s4: ℤ, s5: ℤ) satisfy { s0 ⋅ (s1 ⋅ s2) != s0 ⋅ s1 ⋅ s2 or s4 ⋅ s3 != s3 ⋅ s4 or s5 ⋅ 1 != s5 }","s0 ⋅ (s1 ⋅ s2) = s0 ⋅ s1 ⋅ s2","s4 ⋅ s3 = s3 ⋅ s4","s5 ⋅ 1 = 1 ⋅ s5","s5 ⋅ 1 != s5","1 ⋅ s5 != s5","1 ⋅ s5 = s5"]}
+{"goal":"forall(x0: ℤ, x1: ℤ, x2: ℤ) { Mul.mul[ℤ](x0, Add.add[ℤ](x1, x2)) = Add.add[ℤ](Mul.mul[ℤ](x0, x1), Mul.mul[ℤ](x0, x2)) } and forall(x3: ℤ, x4: ℤ, x5: ℤ) { Mul.mul[ℤ](Add.add[ℤ](x3, x4), x5) = Add.add[ℤ](Mul.mul[ℤ](x3, x5), Mul.mul[ℤ](x4, x5)) } and forall(x6: ℤ) { Mul.mul[ℤ](x6, lib(type_class.add).Add.0[ℤ]) = lib(type_class.add).Add.0[ℤ] } and forall(x7: ℤ) { Mul.mul[ℤ](lib(type_class.add).Add.0[ℤ], x7) = lib(type_class.add).Add.0[ℤ] }","proof":["let (s0: ℤ, s1: ℤ, s2: ℤ, s3: ℤ, s4: ℤ, s5: ℤ, s6: ℤ, s7: ℤ) satisfy { s3 ⋅ s5 + s4 ⋅ s5 != (s3 + s4) ⋅ s5 or s0 ⋅ s1 + s0 ⋅ s2 != s0 ⋅ (s1 + s2) or 0 ⋅ s7 != 0 or s6 ⋅ 0 != 0 }","s0 ⋅ s1 + s0 ⋅ s2 = s0 ⋅ (s1 + s2)","s3 ⋅ s5 + s4 ⋅ s5 = (s3 + s4) ⋅ s5","0 != 0 or s6 ⋅ 0 = 0","0 ⋅ s7 = 0","s6 ⋅ 0 != 0"]}
+{"goal":"pow_one","proof":["a^ℕ.1 = a"]}
 {"goal":"pow_zero","proof":["ℕ.0 != ℕ.0 or a^ℕ.0 = 1"]}
-{"goal":"f(ℕ.0)","proof":["a^b ⋅ a^ℕ.0 != a^(b + ℕ.0) or f(ℕ.0)","a^ℕ.0 = 1","a^b ⋅ 1 = a^b","b + ℕ.0 = b","a^b ⋅ a^ℕ.0 != a^(b + ℕ.0)"]}
-{"goal":"a^(b + x) = a^b ⋅ a^x","proof":["not f(x) or a^b ⋅ a^x = a^(b + x)"]}
-{"goal":"a^(b + x.suc) = a^b ⋅ a^x.suc","proof":["(b + x).suc != (b + x).suc or a ⋅ a^(b + x) = a^(b + x).suc","x.suc != x.suc or a ⋅ a^x = a^x.suc","a ⋅ (a^x ⋅ a^b) = a ⋅ a^x ⋅ a^b","x.suc != x.suc or b + x.suc = (b + x).suc","a^b ⋅ a^x.suc = a^x.suc ⋅ a^b","a^x ⋅ a^b = a^b ⋅ a^x","b + x.suc = (b + x).suc","a ⋅ a^(b + x) = a^(b + x).suc","a ⋅ a^x = a^x.suc"]}
-{"goal":"f(x.suc)","proof":["a^b ⋅ a^x.suc != a^(b + x.suc) or f(x.suc)"]}
-{"goal":"f(c)","proof":["let s0: ℕ -> Bool -> ℕ satisfy { forall(x0: ℕ -> Bool, x1: ℕ) { not x0(ℕ.0) or x0(s0(x0)) or x0(x1) } and forall(x2: ℕ -> Bool, x3: ℕ) { not x2(s0(x2).suc) or not x2(ℕ.0) or x2(x3) } }","not f(s0(f)) or f(s0(f).suc)","not f(s0(f).suc) or not f(ℕ.0) or f(c)","not f(s0(f).suc)","not f(ℕ.0) or f(s0(f)) or f(c)","not f(s0(f))","f(s0(f))"]}
-{"goal":"pow_add","proof":["not f(c) or a^b ⋅ a^c = a^(b + c)"]}
-{"goal":"f(ℕ.0)","proof":["a^b^ℕ.0 != a^(b ⋅ ℕ.0) or f(ℕ.0)","b ⋅ ℕ.0 != ℕ.0 or a^(b ⋅ ℕ.0) = 1","a^b^ℕ.0 = 1","b ⋅ ℕ.0 = ℕ.0","a^b^ℕ.0 != a^(b ⋅ ℕ.0)","a^(b ⋅ ℕ.0) != 1"]}
-{"goal":"a^(b ⋅ x) = a^b^x","proof":["not f(x) or a^b^x = a^(b ⋅ x)"]}
-{"goal":"a^(b ⋅ x.suc) = a^b^x.suc","proof":["a^(b ⋅ x) ⋅ a^b = a^(b ⋅ x + b)","a^b^x ⋅ a^b^ℕ.1 = a^b^(x + ℕ.1)","x.suc != x.suc or b ⋅ x + b = b ⋅ x.suc","x + ℕ.1 = x.suc","a^b^ℕ.1 = a^b","b ⋅ x + b = b ⋅ x.suc"]}
-{"goal":"f(x.suc)","proof":["a^b^x.suc != a^(b ⋅ x.suc) or f(x.suc)"]}
-{"goal":"f(c)","proof":["let s0: ℕ -> Bool -> ℕ satisfy { forall(x0: ℕ -> Bool, x1: ℕ) { not x0(ℕ.0) or x0(s0(x0)) or x0(x1) } and forall(x2: ℕ -> Bool, x3: ℕ) { not x2(s0(x2).suc) or not x2(ℕ.0) or x2(x3) } }","not f(s0(f)) or f(s0(f).suc)","not f(s0(f).suc) or not f(ℕ.0) or f(c)","not f(s0(f).suc)","not f(ℕ.0) or f(s0(f)) or f(c)","not f(s0(f))","f(s0(f))"]}
-{"goal":"pow_mul","proof":["not f(c) or a^b^c = a^(b ⋅ c)"]}
-{"goal":"exists(k0: ℕ) { n = k0.suc }","proof":["let s0: ℕ -> ℕ satisfy { forall(x0: ℕ) { s0(x0).suc = x0 or ℕ.0 = x0 } }","s0(n).suc != n","s0(n).suc = n or ℕ.0 = n"]}
-{"goal":"zero_pow","proof":["b.suc != b.suc or 0 ⋅ 0^b = 0^b.suc","0^b.suc != 0","0 ⋅ 0^b = 0","0 ⋅ 0^b = 0^b.suc"]}
-{"goal":"one_pow(ℕ.0)","proof":["1^ℕ.0 != 1 or one_pow(ℕ.0)","1^ℕ.0 != 1","ℕ.0 != ℕ.0 or 1^ℕ.0 = 1"]}
-{"goal":"one_pow(n)","proof":["let s0: ℕ -> Bool -> ℕ satisfy { forall(x0: ℕ -> Bool, x1: ℕ) { not x0(ℕ.0) or x0(s0(x0)) or x0(x1) } and forall(x2: ℕ -> Bool, x3: ℕ) { not x2(s0(x2).suc) or not x2(ℕ.0) or x2(x3) } }","1^s0(one_pow).suc != 1 or one_pow(s0(one_pow).suc)","not one_pow(s0(one_pow)) or 1^s0(one_pow) = 1","s0(one_pow).suc != s0(one_pow).suc or 1 ⋅ 1^s0(one_pow) = 1^s0(one_pow).suc","not one_pow(s0(one_pow).suc) or not one_pow(ℕ.0) or one_pow(n)","not one_pow(s0(one_pow).suc)","not one_pow(ℕ.0) or one_pow(s0(one_pow)) or one_pow(n)","one_pow(s0(one_pow))","1 ⋅ 1 = 1","1 ⋅ 1^s0(one_pow) = 1^s0(one_pow).suc","1^s0(one_pow) = 1","1^s0(one_pow).suc != 1"]}
-{"goal":"one_pow","proof":["not one_pow(n) or 1^n = 1"]}
+{"goal":"pow_add","proof":["a^b ⋅ a^c = a^(b + c)"]}
+{"goal":"pow_mul","proof":["a^b^c = a^(b ⋅ c)"]}
+{"goal":"zero_pow","proof":["0^n = 0 or ℕ.0 = n"]}
+{"goal":"one_pow","proof":["1^n = 1"]}
 {"goal":"f(ℕ.0)","proof":["a^ℕ.0 > 0 = f(ℕ.0)","not a^ℕ.0 > 0","1 > 0 = 0 < 1","0 < 1 = 1.is_positive","a^ℕ.0 = 1","not 1 > 0","not 0 < 1","not 1.is_positive"]}
 {"goal":"f(n)","proof":["let s0: ℕ -> Bool -> ℕ satisfy { forall(x0: ℕ -> Bool, x1: ℕ) { not x0(ℕ.0) or x0(s0(x0)) or x0(x1) } and forall(x2: ℕ -> Bool, x3: ℕ) { not x2(s0(x2).suc) or not x2(ℕ.0) or x2(x3) } }","a^s0(f) > 0 = f(s0(f))","a^s0(f).suc > 0 = f(s0(f).suc)","s0(f).suc != s0(f).suc or a ⋅ a^s0(f) = a^s0(f).suc","not a > 0 or a ⋅ a^s0(f) > 0 = a^s0(f) > 0","not f(s0(f).suc) or not f(ℕ.0) or f(n)","not f(s0(f).suc)","not f(ℕ.0) or f(s0(f)) or f(n)","f(s0(f))","a ⋅ a^s0(f) = a^s0(f).suc","a ⋅ a^s0(f) > 0 = a^s0(f) > 0"]}
 {"goal":"pos_pow","proof":["a^n > 0 = f(n)"]}

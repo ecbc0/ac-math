@@ -1,0 +1,2 @@
+{"goal":"trivial_semiring","proof":["let s0: R satisfy { s0 != R.0 }","s0 ⋅ R.0 = R.0","s0 ⋅ R.1 = s0","s0 ⋅ R.1 != R.0"]}
+{"goal":"pow_zero","proof":["let s0: ℕ -> ℕ satisfy { forall(x0: ℕ) { s0(x0).suc = x0 or ℕ.0 = x0 } }","s0(n).suc != n or R.0 ⋅ R.0^s0(n) = R.0^n","s0(n).suc = n or ℕ.0 = n","R.0 ⋅ R.0^s0(n) = R.0","R.0 ⋅ R.0^s0(n) != R.0^n","s0(n).suc = n","s0(n).suc != n"]}

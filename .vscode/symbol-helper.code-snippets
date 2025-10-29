@@ -141,4 +141,16 @@
 			"}"
 		]
 	},
+	"List.cons(head, tail)":{
+	  "prefix": "List.cons(head, tail)",
+	  "body": "List.cons(head, tail)"
+	},
+	"List[T].nil":{
+	  "prefix": "List[T].nil",
+	  "body": "List[${1:T}].nil"
+	},
+	"head: T, tail: List[T]":{
+	  "prefix": "head: T, tail: List[T]",
+	  "body": "head: ${1:T}, tail: List[${1:T}]"
+	},
 }

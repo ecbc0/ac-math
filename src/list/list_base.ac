@@ -585,6 +585,14 @@ theorem unique_implies_no_duplicate[T](list: List[T], item: T) {
     p(list)
 }
 
+theorem unique_contains_count_one[T](list: List[T], item: T) {
+    item ∈ list implies list.unique.count(item) = 1
+} by {
+    item ∈ list.unique
+    list.unique.count(item) >= 1
+    list.unique.count(item) <= 1
+}
+
 attributes List[T] {
     define no_duplicate(self) -> Bool {
         forall(item: T) { 
@@ -772,19 +780,101 @@ theorem remove_elem_does_remove[T](list: List[T], elem: T) {
     p(list)
 }
 
-theorem remove_decrease_or_nothing[T](list: List[T], elem: T) {
-    (
-        elem ∈ list iff (list ∖ elem).length < list.length
-    ) and (
-        elem ∉ list iff list ∖ elem = list
-    )
+theorem count_lte_lenght[T](list: List[T], item: T) {
+    list.count(item) <= list.length
 } by {
     define p(l: List[T]) -> Bool {
-        (
-            elem ∈ l iff (l ∖ elem).length < l.length
-        ) and (
-            elem ∉ l iff l ∖ elem = l
-        )   
+        l.count(item) <= l.length
+    }
+    p(List[T].nil)
+    forall(head: T, tail: List[T]) {
+        List.cons(head, tail).length = 1 + tail.length
+        if p(tail) {
+            tail.count(item) <= tail.length
+            if head = item {
+                List.cons(head, tail).count(item) = 1 + tail.count(item)
+                1 + tail.count(item) <= 1 + tail.length
+                List.cons(head, tail).count(item) <= List.cons(head, tail).length
+                p(List.cons(head, tail))
+            } else {
+                head != item
+                List.cons(head, tail).count(item) = tail.count(item)
+                tail.count(item) <= 1 + tail.length
+                List.cons(head, tail).count(item) <= List.cons(head, tail).length
+                p(List.cons(head, tail))
+            }
+            p(List.cons(head, tail))
+        }
+    }
+    p(list)
+}
+
+theorem remove_length[T](list: List[T], elem: T) {
+    (list ∖ elem).length = list.length - list.count(elem)
+    // this is nat sub
+} by {
+    define p(l: List[T]) -> Bool {
+        (l ∖ elem).length = l.length - l.count(elem) 
+    }
+
+    // Base case: empty list
+    p(List.nil[T])
+
+    // Induction
+    forall(head: T, tail: List[T]) {
+        List.cons(head, tail).length = tail.length + 1
+        if p(tail) {   
+            if head = elem {
+                List.cons(head, tail).count(elem) = tail.count(elem) + 1
+
+                List.cons(head, tail) ∖ elem = tail ∖ elem
+
+                // p(tail)
+                (tail ∖ elem).length = tail.length - tail.count(elem)
+                
+                List.cons(head, tail).count(elem) <= List.cons(head, tail).length
+                
+                tail.count(elem) + 1 <= tail.length + 1
+                                
+                tail.length - tail.count(elem) = (tail.length + 1) - (tail.count(elem) + 1)
+                                
+                (List.cons(head, tail) ∖ elem).length = List.cons(head, tail).length - List.cons(head, tail).count(elem)
+
+                p(List.cons(head, tail))
+            }
+            if head != elem {
+                List.cons(head, tail).count(elem) = tail.count(elem)
+
+                List.cons(head, tail) ∖ elem = List.cons(head, tail ∖ elem)
+
+                (List.cons(head, tail) ∖ elem).length = (tail ∖ elem).length + 1
+
+                // p(tail)
+                (tail ∖ elem).length = tail.length - tail.count(elem)
+
+                tail.count(elem) + 1 <= tail.length + 1
+
+                tail.length - tail.count(elem) = (tail.length + 1) - (tail.count(elem) + 1)
+
+                (List.cons(head, tail) ∖ elem).length = List.cons(head, tail).length - List.cons(head, tail).count(elem)
+
+                p(List.cons(head, tail))
+            }
+            p(List.cons(head, tail))
+        }
+    }
+    p(list)
+}
+
+theorem remove_contains_length_lt[T](list: List[T], elem: T) {
+    elem ∈ list implies (list ∖ elem).length < list.length
+} 
+
+theorem remove_not_contains_do_nothing[T](list: List[T], item: T) {
+    item ∉ list iff list ∖ item = list
+} by {
+    define p(l: List[T]) -> Bool {
+        item ∉ l iff l ∖ item = l
     }
 
     // Base case: empty list
@@ -793,36 +883,18 @@ theorem remove_decrease_or_nothing[T](list: List[T], elem: T) {
     // Induction
     forall(head: T, tail: List[T]) {
         if p(tail) {   
-            if head = elem {
-                List.cons(head, tail) ∖ elem = tail ∖ elem
-                // p(tail)
-                (tail ∖ elem).length <= tail.length
-
-                (List.cons(head, tail) ∖ elem).length < List.cons(head, tail).length
-
+            if item ∈ List.cons(head, tail) {
+                List.cons(head, tail).count(item) != 0
+                (List.cons(head, tail) ∖ item).length = List.cons(head, tail).length - List.cons(head, tail).count(item)
+                (List.cons(head, tail) ∖ item).length < List.cons(head, tail).length
+                List.cons(head, tail) != List.cons(head, tail) ∖ item
                 p(List.cons(head, tail))
-            }
-            if head != elem {
-                List.cons(head, tail) ∖ elem = List.cons(head, tail ∖ elem)
-
-                if elem ∈ List.cons(head, tail) {
-                    elem ∈ tail 
-                    // p(tail)
-                    (tail ∖ elem).length < tail.length
-
-                    (List.cons(head, tail) ∖ elem).length < List.cons(head, tail).length
-
-                    p(List.cons(head, tail))
-                }
-                if elem ∉ List.cons(head, tail) {
-                    elem ∉ tail 
-                    // p(tail)
-                    tail ∖ elem = tail
-
-                    List.cons(head, tail) ∖ elem = List.cons(head, tail)
-                    
-                    p(List.cons(head, tail))
-                }
+            } else {
+                item ∉ List.cons(head, tail)
+                item != head
+                item ∉ tail
+                tail = tail ∖ item
+                List.cons(head, tail) ∖ item = List.cons(head, tail) 
                 p(List.cons(head, tail))
             }
             p(List.cons(head, tail))
@@ -866,6 +938,80 @@ theorem remove_preserve_not_conatins[T](list: List[T], item: T, elem: T) {
                 
                 p(List.cons(head, tail))
             }
+        }
+    }
+    p(list)
+}
+
+theorem remove_count[T](list: List[T], item: T, elem: T) {
+    item != elem implies list.count(item) = (list ∖ elem).count(item) 
+    // although maybe list != list ∖ elem
+    // reverse is false. example: item = elem but both not in list
+    // if item = elem, then (list ∖ elem).count(item) = 0
+} by {
+    define p(l: List[T]) -> Bool {
+        item != elem implies l.count(item) = (l ∖ elem).count(item)
+    }
+
+    // Base case: empty list
+    p(List.nil[T])
+
+    // Induction
+    forall(head: T, tail: List[T]) {
+        if p(tail) {   
+            if item ∉ List.cons(head, tail) {
+                List.cons(head, tail).count(item) = 0
+
+                item ∉ List.cons(head, tail) ∖ elem
+                
+                (List.cons(head, tail) ∖ elem).count(item) = 0
+                
+                p(List.cons(head, tail))
+            } else {
+                item ∈ List.cons(head, tail)
+                if item = head {
+                    elem != head
+                    
+                    List.cons(head, tail) ∖ elem = List.cons(head, tail ∖ elem)
+                
+                    List.cons(head, tail).count(item) = 1 + tail.count(item)
+
+                    List.cons(head, tail ∖ elem).count(item) = 1 + (tail ∖ elem).count(item)
+
+                    // p(tail)
+                    tail.count(item) = (tail ∖ elem).count(item)
+
+                    List.cons(head, tail).count(item) = List.cons(head, tail ∖ elem).count(item)
+
+                    p(List.cons(head, tail))
+                } else {
+                    item != head
+
+                    List.cons(head, tail).count(item) = tail.count(item)
+                    
+                    if elem = head {
+                        List.cons(head, tail) ∖ elem = tail ∖ elem
+
+                        (List.cons(head, tail) ∖ elem).count(item) = (tail ∖ elem).count(item)
+
+                        // p(tail)
+                        tail.count(item) = (tail ∖ elem).count(item)
+
+                        p(List.cons(head, tail))
+                    } else {
+                        elem != head
+
+                        List.cons(head, tail) ∖ elem = List.cons(head, tail ∖ elem)
+
+                        List.cons(head, tail ∖ elem).count(item) = (tail ∖ elem).count(item)
+
+                        p(List.cons(head, tail))
+                    }
+                    p(List.cons(head, tail))
+                }
+                p(List.cons(head, tail))
+            }
+            p(List.cons(head, tail))
         }
     }
     p(list)
@@ -1063,116 +1209,6 @@ theorem range_iff_contains_all_leq(n: ℕ) {
     }
 }
 
-/// Applies a function to each element of a list, creating a new list of results.
-attributes List[T] {
-    define map[U](self, f: T -> U) -> List[U] {
-        match self {
-            List.nil {
-                List.nil[U]
-            }
-            List.cons(head, tail) {
-                List.cons(f(head), tail.map(f))
-            }
-        }
-    }
-}
-
-/// also called "commutative monoid".  
-/// also apply to mul ⋅
-typeclass A: Add {
-    /// The binary addition operation that combines two elements
-    add: (A, A) -> A
-
-    /// The additive identity element
-    0: A
-
-    /// The identity element must satisfy the identity property
-    add_identity(a: A) {
-        a + A.0 = a
-    }
-
-    /// The addition operation must be commutative: `a + b = b + a`
-    commutative(a: A, b: A) {
-        a + b = b + a
-    }
-
-    /// The addition operation must be associative: `(a + b) + c = a + (b + c)`
-    add_associative(a: A, b: A, c: A) {
-        a + (b + c) = (a + b) + c
-    }
-}
-
-/// Computes the sum of all elements in a list (requires elements to form an additive commutative monoid).  
-/// also aplly to mul ⋅
-define sum[A: Add](items: List[A]) -> A {
-    match items {
-        List.nil {
-            A.0
-        }
-        List.cons(head, tail) {
-            head + sum(tail)
-        }
-    }
-}
-
-/// Computes the partial sum of a series up to index n.
-/// Returns the sum of f(0) + f(1) + ... + f(n-1).
-define partial[A: Add](f: ℕ -> A, n: ℕ) -> A {
-    sum(n.range.map(f))
-}
-// todo: rearrange invariant. ⩽ n! steps. n! is the number of all rearrange (bijective)
-
-theorem sum_add[A: Add](left: List[A], right: List[A]) {
-    sum(left + right) = sum(left) + sum(right)
-} by {
-    define p(x: List[A]) -> Bool {
-        sum(x + right) = sum(x) + sum(right)
-    }
-
-    // Base case: sum(nil + right) = sum(nil) + sum(right)
-    sum(List.nil[A] + right) = sum(right)
-    sum(List.nil[A]) = A.0
-    A.0 + sum(right) = sum(right)
-    p(List.nil)
-
-    // Inductive step
-    forall(head: A, tail: List[A]) {
-        if p(tail) {
-            // Induction hypothesis: sum(tail + right) = sum(tail) + sum(right)
-
-            // Left side: sum(List.cons(head, tail) + right)
-            // use def of add 
-            //     List.cons(head, tail) + right = List.cons(head, tail + right)
-            sum(List.cons(head, tail) + right) = sum(List.cons(head, tail + right))
-
-            sum(List.cons(head, tail + right)) = head + sum(tail + right)
-
-            // Use induction hypothesis
-            head + sum(tail + right) = head + (sum(tail) + sum(right))
-
-            // Right side: sum(List.cons(head, tail)) + sum(right)
-            sum(List.cons(head, tail)) = head + sum(tail)
-
-            sum(List.cons(head, tail)) + sum(right) = (head + sum(tail)) + sum(right)
-
-            // Use associativity
-            (head + sum(tail)) + sum(right) = head + (sum(tail) + sum(right))
-
-            // Therefore
-            sum(List.cons(head, tail) + right) = sum(List.cons(head, tail)) + sum(right)
-            p(List.cons(head, tail))
-        }
-    }
-}
-
-theorem sum_append[A: Add](initial: List[A], last: A) {
-    sum(initial.append(last)) = sum(initial) + last
-}
-
-theorem sum_singleton[A: Add](x: A) {
-    sum(List.singleton(x)) = x
-}
-
 theorem add_assoc[T](a: List[T], b: List[T], c: List[T]) {
     (a + b) + c = a + (b + c)
 } by {
@@ -1206,6 +1242,7 @@ theorem add_assoc[T](a: List[T], b: List[T], c: List[T]) {
         }
     }
 }
+
 
 attributes List[T] {
     /// Yields the list without its first element.
@@ -1617,3 +1654,202 @@ attributes List[T] {
 theorem self_permutation[T](list: List[T]) {
     list.is_permutation(list)
 } 
+
+theorem permutation_comm[T](l1: List[T], l2: List[T]) {
+    l1.is_permutation(l2) implies l2.is_permutation(l1)
+}
+
+theorem nil_permutation[T](list: List[T]) {
+    (List[T].nil).is_permutation(list) iff list = List[T].nil 
+} by {
+    (List[T].nil).is_permutation(list) implies list = List[T].nil 
+    // all count = 0 <==> nil
+}
+
+theorem remove_preserve_permutation[T](l1: List[T], l2: List[T], item: T) {
+    l1.is_permutation(l2) implies (l1 ∖ item).is_permutation(l2 ∖ item)
+} by {
+    l1.count(item) = l2.count(item)
+    forall(x: T) {
+        if x != item {
+            (l1 ∖ item).count(x) = l1.count(x)
+            (l2 ∖ item).count(x) = l2.count(x)
+
+            (l1 ∖ item).count(x) = (l2 ∖ item).count(x)
+        } else {
+            (l1 ∖ item).count(x) = 0
+            (l2 ∖ item).count(x) = 0
+
+            (l1 ∖ item).count(x) = (l2 ∖ item).count(x)
+        }
+        (l1 ∖ item).count(x) = (l2 ∖ item).count(x)
+    }
+}
+
+from nat.nat_base import true_below, strong_induction
+
+theorem permutation_length[T](list_1: List[T], list_2: List[T]) {
+    list_1.is_permutation(list_2) implies list_1.length = list_2.length
+} by {
+    define f(n: ℕ) -> Bool {
+        forall(l1: List[T], l2: List[T]) {
+            l1.length = n and l1.is_permutation(l2) implies l1.length = l2.length
+        }
+    }
+    f(0)
+    forall(k: ℕ) {
+        if true_below(f, k) {
+            if k = 0 {
+                f(k)
+            } else {
+                k != 0
+                forall(l1: List[T], l2: List[T]) {
+                    if l1.length = k and l1.is_permutation(l2) {
+                        let item: T satisfy { item ∈ l1 }
+
+                        l1.count(item) = l2.count(item)
+
+                        (l1 ∖ item).length = l1.length - l1.count(item)
+
+                        (l2 ∖ item).length = l2.length - l2.count(item)
+
+                        l1.length = (l1 ∖ item).length + l1.count(item)
+
+                        l2.length = (l2 ∖ item).length + l2.count(item)
+
+                        (l1 ∖ item).is_permutation(l2 ∖ item)
+
+                        (l1 ∖ item).length < k
+
+                        // true_below
+                        f((l1 ∖ item).length)
+
+                        (l1 ∖ item).length = (l2 ∖ item).length
+
+                        l1.length = l2.length
+                    }
+                }
+                f(k)
+            }
+            f(k)
+        }
+    }
+    f(list_1.length)
+}
+
+theorem permutation_unique_permutation[T](l1: List[T], l2: List[T]) {
+    l1.is_permutation(l2) implies l1.unique.is_permutation(l2.unique)
+} by {
+    forall(item: T) {
+        if item ∈ l1 {
+            item ∈ l2
+            l1.unique.count(item) = 1
+            l2.unique.count(item) = 1
+            l1.unique.count(item) = l2.unique.count(item)
+        } else {
+            item ∉ l1
+            item ∉ l2
+            l1.unique.count(item) = 0
+            l2.unique.count(item) = 0
+            l1.unique.count(item) = l2.unique.count(item)            
+        }
+        l1.unique.count(item) = l2.unique.count(item)   
+    }
+}
+
+/// Applies a function to each element of a list, creating a new list of results.
+attributes List[T] {
+    define map[U](self, f: T -> U) -> List[U] {
+        match self {
+            List.nil {
+                List.nil[U]
+            }
+            List.cons(head, tail) {
+                List.cons(f(head), tail.map(f))
+            }
+        }
+    }
+}
+
+theorem map_singleton[T, U](f: T -> U, x: T) {
+    List.singleton(x).map(f) = List.singleton(f(x))
+}
+
+theorem map_add[T, U](left: List[T], right: List[T], f: T -> U) {
+    (left + right).map(f) = left.map(f) + right.map(f)
+} by {
+    define p(x: List[T]) -> Bool {
+        (x + right).map(f) = x.map(f) + right.map(f)
+    }
+
+    // Base case: (nil + right).map(f) = nil.map(f) + right.map(f)
+    (List.nil[T] + right).map(f) = right.map(f)
+    List.nil[T].map(f) = List.nil[U]
+    List.nil[U] + right.map(f) = right.map(f)
+    p(List.nil)
+
+    // Inductive step
+
+    forall(head: T, tail: List[T]) {
+        if p(tail) {
+            // Induction hypothesis: (tail + right).map(f) = tail.map(f) + right.map(f)
+
+            // Left side: (List.cons(head, tail) + right).map(f)
+            (List.cons(head, tail) + right).map(f) = List.cons(head, tail + right).map(f)
+            List.cons(head, tail + right).map(f) = List.cons(f(head), (tail + right).map(f))
+
+            // Use induction hypothesis
+            List.cons(f(head), (tail + right).map(f)) = List.cons(f(head), tail.map(f) + right.map(f))
+
+            // Right side: List.cons(head, tail).map(f) + right.map(f)
+            List.cons(head, tail).map(f) = List.cons(f(head), tail.map(f))
+            List.cons(head, tail).map(f) + right.map(f) = List.cons(f(head), tail.map(f)) + right.map(f)
+            // Definition of add
+            List.cons(f(head), tail.map(f)) + right.map(f) = List.cons(f(head), tail.map(f) + right.map(f))
+
+            // Therefore
+            (List.cons(head, tail) + right).map(f) = List.cons(head, tail).map(f) + right.map(f)
+            p(List.cons(head, tail))
+        }
+    }
+}
+
+theorem map_append[T, U](initial: List[T], last: T, f: T -> U) {
+    (initial.append(last)).map(f) = initial.map(f).append(f(last))
+}
+
+from util import compose
+
+theorem map_map[T, U, V](items: List[T], f: T -> U, g: U -> V) {
+    (items.map(f)).map(g) = items.map(compose(g, f))
+} by {
+    define p(x: List[T]) -> Bool {
+        (x.map(f)).map(g) = x.map(compose(g, f))
+    }
+
+    // Base case
+    List.nil[T].map(f).map(g) = (List.nil[U]).map(g)
+    List.nil[U].map(g) = List.nil[V]
+    List.nil[T].map(compose(g, f)) = List.nil[V]
+    p(List.nil)
+
+    // Inductive step
+    forall(head: T, tail: List[T]) {
+        if p(tail) {
+            // Left side
+            List.cons(head, tail).map(f).map(g) = List.cons(f(head), tail.map(f)).map(g)
+            List.cons(f(head), tail.map(f)).map(g) = List.cons(g(f(head)), tail.map(f).map(g))
+
+            // Use induction hypothesis
+            tail.map(f).map(g) = tail.map(compose(g, f))
+
+            // Right side
+            List.cons(head, tail).map(compose(g, f)) = List.cons(compose(g, f)(head), tail.map(compose(g, f)))
+            List.cons(compose(g, f)(head), tail.map(compose(g, f))) = List.cons(g(f(head)), tail.map(compose(g, f)))
+
+            // Therefore
+            List.cons(head, tail).map(f).map(g) = List.cons(head, tail).map(compose(g, f))
+            p(List.cons(head, tail))
+        }
+    }
+}

@@ -2218,6 +2218,8 @@ theorem pos_mul_is_dedekind_cut(a: ℝ, b: ℝ) {
     not has_greatest(pos_mul_gt(a, b))
 }
 
+// version 1
+
 // attributes ℝ {
 //     define mul(self, other: ℝ) -> ℝ {
 //         if self = 0 or other = 0 {
@@ -2237,6 +2239,52 @@ theorem pos_mul_is_dedekind_cut(a: ℝ, b: ℝ) {
 //                 }
 //             }
 //         }
+//     }
+// }
+
+// version 2 (inspired from definition of add on ℤ)
+
+// // truncated mul. when a <= 0 or b <= 0, it reture 0, or ℚ_(< 0)
+// define pos_mul(a: ℝ, b: ℝ) -> ℝ {
+//     if not (a > 0 and b > 0) {
+//         0
+//     } else {
+//         ℝ.new(pos_mul_gt(a, b))
+//     }
+// }
+
+// attributes ℝ {
+//     /// The positive part of this real.
+//     define pos_part(self) -> ℝ {
+//         if self > 0 {
+//             self.abs
+//         } else {
+//             0
+//         }
+//     }
+
+//     /// The negative part of this real.
+//     define neg_part(self) -> ℝ {
+//         if self > 0 {
+//             0
+//         } else {
+//             self.abs
+//         }
+//     }
+// }
+
+// theorem pos_neg_decomposition(a: ℝ) {
+//     a = a.pos_part + a.neg_part
+// }
+
+// attributes ℝ {
+//     define mul(self, other: ℝ) -> ℝ {
+//         (
+//             pos_mul(self.pos_part, other.pos_part) 
+//             - pos_mul(self.pos_part, other.neg_part) 
+//             - pos_mul(self.neg_part, other.pos_part) 
+//             + pos_mul(self.neg_part, other.neg_part)
+//         )
 //     }
 // }
 
