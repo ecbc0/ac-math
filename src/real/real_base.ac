@@ -2220,27 +2220,27 @@ theorem pos_mul_is_dedekind_cut(a: ℝ, b: ℝ) {
 
 // version 1
 
-// attributes ℝ {
-//     define mul(self, other: ℝ) -> ℝ {
-//         if self = 0 or other = 0 {
-//             0
-//         } else {
-//             if self > 0 {
-//                 if other > 0 {
-//                     ℝ.new(pos_mul_gt(self, other))
-//                 } else {
-//                     -ℝ.new(pos_mul_gt(self, -other))
-//                 }
-//             } else {
-//                 if other > 0 {
-//                     -ℝ.new(pos_mul_gt(-self, other))
-//                 } else {
-//                     ℝ.new(pos_mul_gt(-self, -other))
-//                 }
-//             }
-//         }
-//     }
-// }
+attributes ℝ {
+    define mul(self, other: ℝ) -> ℝ {
+        if self = 0 or other = 0 {
+            0
+        } else {
+            if self > 0 {
+                if other > 0 {
+                    ℝ.new(pos_mul_gt(self, other))
+                } else {
+                    -ℝ.new(pos_mul_gt(self, -other))
+                }
+            } else {
+                if other > 0 {
+                    -ℝ.new(pos_mul_gt(-self, other))
+                } else {
+                    ℝ.new(pos_mul_gt(-self, -other))
+                }
+            }
+        }
+    }
+}
 
 // version 2 (inspired from definition of add on ℤ)
 

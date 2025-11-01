@@ -138,11 +138,17 @@ theorem equivalent_representation_of_partial_order[T](lt: (T, T) -> Bool) {
     )
 } 
 
+attributes P: Partial_Order {
+    let comparable = function(a: P, b: P) {
+        (a < b) or (b < a) or (a = b)
+    }
+}
+
 /// A linear order (total order) is a partial order where all elements are comparable.
 typeclass L: Linear_Order extends Partial_Order {
     /// All elements are comparable: for any two elements `a` and `b`, either `a < b` or `b < a` or `a = b`.
     trichotomy(a: L, b: L) {
-        (a < b) or (b < a) or (a = b)
+        Partial_Order.comparable(a, b)
     }
 }
 

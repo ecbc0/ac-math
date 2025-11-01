@@ -257,6 +257,10 @@ theorem in_intersection[K](a1: Set[K], a2: Set[K], x: K) {
     x ∈ (a1 ∩ a2) implies (x ∈ a1 and x ∈ a2)
 }
 
+theorem compl_separate[K](a: Set[K]) {
+    a ∩ a.c = empty[K]
+}
+
 theorem difference_is_intersection_with_compl[K](a: Set[K], b: Set[K]) {
     (a ∖ b) = (a ∩ b.c)
 } by {
@@ -358,6 +362,20 @@ theorem sym_difference_another_rep[K](a: Set[K], b: Set[K]) {
     (a ∪ b) ∖ (a ∩ b) ⊆ (a ∖ b) ∪ (b ∖ a)
 }
 
+theorem union_preserve_subset[K](a1: Set[K], a2: Set[K], b1: Set[K], b2: Set[K]) {
+    a1 ⊆ b1 and a2 ⊆ b2 implies a1 ∪ a2 ⊆ b1 ∪ b2
+}
+
+theorem intersect_preserve_subset[K](a1: Set[K], a2: Set[K], b1: Set[K], b2: Set[K]) {
+    a1 ⊆ b1 and a2 ⊆ b2 implies a1 ∩ a2 ⊆ b1 ∩ b2
+}
+
+theorem not_subset_iff_contains_compl[K](a: Set[K], b: Set[K]) {
+    not a ⊆ b iff a ∩ b.c != empty[K] 
+} by {
+    not a ⊆ b implies a ∩ b.c != empty[K] 
+}
+
 theorem union_associative[K](a1: Set[K], a2: Set[K], a3: Set[K]) {
     (a1 ∪ a2) ∪ a3 = a1 ∪ (a2 ∪ a3)
     // by assoc if logic `or`
@@ -415,6 +433,14 @@ theorem intersection_universal_is_self[K](a: Set[K]) {
 
 theorem intersection_empty_is_empty[K](s: Set[K]) {
     s ∩ empty[K] = empty[K]
+}
+
+theorem decomposition_of_universe[K](a: Set[K], b: Set[K]) {
+    a ∩ b = empty[K] and a ∪ b = universe[K] implies a = b.c
+}
+
+theorem decomposition_of_universe_imp_rev[K](a: Set[K], b: Set[K]) {
+    a ∪ a.c = universe[K]
 }
 
 theorem bool_distributive(x1: Bool, x2: Bool, y: Bool) {
@@ -683,6 +709,26 @@ define sum_index[I, K](f: I -> Set[K]) -> Set[Product[I, K]] {
     Set[Product[I, K]].new(elem_in_sum_index(f))
 }
 
+define elem_in_union_collection_of_subset[K](c: Set[Set[K]], x: K) -> Bool {
+    exists(s: Set[K]) {
+        s ∈ c and x ∈ s
+    }
+}
+
+define union[K](c: Set[Set[K]]) -> Set[K] {
+    Set[K].new(elem_in_union_collection_of_subset(c))
+}
+
+define elem_in_intersection_collection_of_subset[K](c: Set[Set[K]], x: K) -> Bool {
+    forall(s: Set[K]) {
+        s ∈ c and x ∈ s
+    }
+}
+
+define intersection[K](c: Set[Set[K]]) -> Set[K] {
+    Set[K].new(elem_in_intersection_collection_of_subset(c))
+}
+
 // todo: (product/sum)_index_of_two
 structure Map[K, L] {
     in_space: Set[K]
@@ -832,3 +878,159 @@ theorem cardinal_lt_power[K](f: K -> Set[K]) {
         }
     }
 }
+
+define elem_in_image_of_function[K, L](a: Set[K], f: K -> L, y: L) -> Bool {
+    exists(x: K) {
+        x ∈ a and y = f(x)
+    }
+}
+
+define elem_in_inv_image_of_function[K, L](b: Set[L], f: K -> L, x: K) -> Bool {
+    exists(y: L) {
+        y ∈ b and y = f(x)
+    }
+}
+
+attributes Set[K] {
+    define image[L](self, f: K -> L) -> Set[L] {
+        Set[L].new(elem_in_image_of_function(self, f))
+    }
+
+    define inv_image[L](self, f: L -> K) -> Set[L] {
+        Set[L].new(elem_in_inv_image_of_function(self, f))
+    }
+}
+
+theorem point_image_is_image[K, L](a: Set[K], f: K -> L) {
+    forall(x: K) {
+        x ∈ a implies f(x) ∈ a.image(f)
+    }
+}
+
+theorem point_description_of_image_subset_imp[K, L](a: Set[K], f: K -> L, b: Set[L]) {
+    a.image(f) ⊆ b implies forall(x: K) {
+        x ∈ a implies f(x) ∈ b
+    }
+} by {
+    if a.image(f) ⊆ b {
+        forall(x: K) {
+            if x ∈ a {
+                f(x) ∈ a.image(f)
+                f(x) ∈ b
+            }
+        }
+    }
+}
+
+theorem point_description_of_image_subset_imp_rev[K, L](a: Set[K], f: K -> L, b: Set[L]) {
+    forall(x: K) {
+        x ∈ a implies f(x) ∈ b
+    } implies a.image(f) ⊆ b
+} by {
+    if forall(x: K) {
+        x ∈ a implies f(x) ∈ b
+    } {
+        forall(y: L) {
+            if y ∈ a.image(f) {
+                let x: K satisfy { x ∈ a and y = f(x) }
+                f(x) ∈ b
+                y ∈ b
+            }
+        }
+        a.image(f) ⊆ b
+    }
+}
+
+theorem inv_image_description_of_image_subset[K, L](a: Set[K], f: K -> L, b: Set[L]) {
+    a.image(f) ⊆ b iff a ⊆ b.inv_image(f)
+} by {
+    if a.image(f) ⊆ b {
+        forall(x: K) {
+            if x ∈ a {
+                f(x) ∈ a.image(f)
+                f(x) ∈ b
+                x ∈ b.inv_image(f)
+            }
+        }
+        a ⊆ b.inv_image(f)
+    } 
+    if a ⊆ b.inv_image(f) {
+        forall(y: L) {
+            if y ∈ a.image(f) {
+                let x: K satisfy { x ∈ a and y = f(x) }
+                x ∈ b.inv_image(f)
+                f(x) ∈ b
+                y ∈ b
+            }
+        }
+        a.image(f) ⊆ b
+    }
+}
+
+theorem inv_image_preserve_compl[K, L](b: Set[L], f: K -> L) {
+    b.c.inv_image(f) = b.inv_image(f).c
+} by {
+    forall(x: K) {
+        if x ∈ b.c.inv_image(f) {
+            let y: L satisfy {
+                y ∈ b.c and y = f(x)
+            }
+            if x ∈ b.inv_image(f) {
+                f(x) ∈ b
+                false
+            }
+            x ∈ b.inv_image(f).c
+        }
+    }
+
+    b.c.inv_image(f) ⊆ b.inv_image(f).c
+
+    forall(x: K) {
+        if x ∈ b.inv_image(f).c {
+            not x ∈ b.inv_image(f)
+            forall(y: L) {
+                not (y ∈ b and y = f(x))
+                not f(x) ∈ b
+            }
+            f(x) ∈ b.c
+            x ∈ b.c.inv_image(f)
+        }
+    }
+
+    b.c.inv_image(f) ⊇ b.inv_image(f).c
+}
+
+theorem inv_image_preserve_intersection[K, L](a: Set[L], b: Set[L], f: K -> L) {
+    (a ∩ b).inv_image(f) = a.inv_image(f) ∩ b.inv_image(f)
+} by {
+    forall(x: K) {
+        if x ∈ (a ∩ b).inv_image(f) {
+            f(x) ∈ a ∩ b
+            f(x) ∈ a and f(x) ∈ b
+            x ∈ a.inv_image(f)
+            x ∈ b.inv_image(f)
+            x ∈ a.inv_image(f) ∩ b.inv_image(f)
+        }
+    }
+
+    (a ∩ b).inv_image(f) ⊆ a.inv_image(f) ∩ b.inv_image(f)
+
+    forall(x: K) {
+        if x ∈ a.inv_image(f) ∩ b.inv_image(f) {
+            x ∈ a.inv_image(f) and x ∈ b.inv_image(f)
+            f(x) ∈ a and f(x) ∈ b
+            f(x) ∈ a ∩ b
+            x ∈ (a ∩ b).inv_image(f)
+        }
+    }
+
+    (a ∩ b).inv_image(f) ⊇ a.inv_image(f) ∩ b.inv_image(f)
+}
+
+theorem inv_image_preserve_union[K, L](a: Set[L], b: Set[L], f: K -> L) {
+    (a ∩ b).inv_image(f) = a.inv_image(f) ∩ b.inv_image(f)
+}
+
+theorem image_of_inv_image_subset[K, L](f: K -> L, b: Set[L]) {
+    b.inv_image(f).image(f) ⊆ b
+} 

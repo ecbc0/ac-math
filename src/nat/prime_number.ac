@@ -1126,7 +1126,7 @@ theorem relative_prime_imp_gcd_one(a: ℕ, b: ℕ) {
 } by {
     gcd(a, b) != 0
     let (l: List[ℕ]) satisfy {
-        gcd(a,b).have_prime_decomp(l)
+        gcd(a, b).have_prime_decomp(l)
     }
     if gcd(a, b) != 1 {
         gcd(a, b) > 1

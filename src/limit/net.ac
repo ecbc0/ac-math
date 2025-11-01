@@ -1,0 +1,247 @@
+from set import Set, empty
+from order import Partial_Order, Linear_Order, is_acyclic, is_transitive, is_reflexive, is_antisymmetric, is_nonreflexive, lte_from, equivalent_representation_of_partial_order
+from nat import ℕ
+numerals ℕ
+
+attributes Set[K] {
+    define subset(self, other: Set[K]) -> Bool {
+        self ⊆ other and self != other
+    }
+}
+
+theorem subset_eq_is_transitive[K] {
+    is_transitive(Set[K].subset_eq)
+}
+
+theorem subset_eq_is_reflexive[K] {
+    is_reflexive(Set[K].subset_eq) 
+}
+
+theorem subset_eq_is_antisymmetric[K] {
+    is_antisymmetric(Set[K].subset_eq)
+}
+
+theorem subset_eq_is_lte_from_subset[K] {
+    Set[K].subset_eq = lte_from(Set[K].subset)
+} by {
+    forall(a: Set[K], b: Set[K]) {
+        Set[K].subset_eq(a, b) implies lte_from(Set[K].subset)(a, b)
+
+        Set[K].subset_eq(a, b) = lte_from(Set[K].subset)(a, b)
+    }
+}
+
+theorem subset_is_nonreflexive[K] {
+    is_nonreflexive(Set[K].subset)
+}
+
+theorem subset_is_partial_order[K] {
+    is_acyclic(Set[K].subset) and 
+    is_transitive(Set[K].subset)
+} by {
+    equivalent_representation_of_partial_order[Set[K]](Set[K].subset)
+}
+
+
+let comparable[P] = Partial_Order.comparable[P]
+
+// See #25, now Acorn not support generic types in instances of typeclasses
+
+// instance Set[K]: Partial_Order {
+//     let lt = Set[K].subset
+// }
+
+// And now Acorn not support direct subtype and dependent type. Once they are support, we can make the set c: Set[Set[K]], c.is_chain in to type 
+
+// Subtype make type and set almost the same thing, i.e. for a: Set[K], we have subtype { x: T | x ∈ a }
+
+// // expected param 0 to have typeclass None
+// attributes Set[P: Partial_Order] {
+//     define is_chain(self) -> Bool {
+//         forall(a: P, b: P) {
+//             a ∈ self and b ∈ self implies comparable(a, b)
+//         }
+//     }
+// }
+
+// Alternative
+attributes P: Partial_Order {
+    let is_subset_chain = function(contains: P -> Bool) {
+        forall(a: P, b: P) {
+            contains(a) and contains(b) implies comparable(a, b)
+        }
+    }
+}
+
+// // #25
+// structure Set_Chain[K] {
+//     contains: Set[K] -> Bool
+// } constraint {
+//     contains.is_subset_chain
+// }
+
+// You can define net by pure abstract typeclass between Partial_Order and Linear_Order, but it's less intuitive
+
+define no_empty[K](contains: Set[K] -> Bool) -> Bool {
+    forall(a: Set[K]) {
+        contains(a) implies a != empty[K]
+    }    
+}
+
+define subset_two_intersection[K](contains: Set[K] -> Bool) -> Bool {
+    forall(a1: Set[K], a2: Set[K]) {
+        contains(a1) and contains(a2) implies exists(b: Set[K]) {
+            contains(b) and b ⊆ a1 ∩ a2
+        }
+    }    
+}
+
+define is_net[K](contains: Set[K] -> Bool) -> Bool {
+    no_empty(contains) and subset_two_intersection(contains)
+}
+
+structure Net[K] {
+    contains: Set[K] -> Bool
+} constraint {
+    is_net(contains)
+} by {
+    let x: K satisfy { true }
+    let s = Set[K].singleton(x)
+    let n = Set[Set[K]].singleton(s)
+    forall(a: Set[K]) {
+        if a ∈ n {
+            a = s
+            s != empty
+            a != empty
+        }
+    }
+    no_empty(n.contains)
+    forall(a1: Set[K], a2: Set[K]) {
+        if a1 ∈ n and a2 ∈ n {
+            a1 = s
+            a2 = s
+            let b = s
+            b ∈ n
+            b ⊆ a1 ∩ a2
+            b ∈ n and b ⊆ a1 ∩ a2
+        }
+    }
+    subset_two_intersection(n.contains)
+}
+
+attributes Net[K] {
+    define finer(self, other: Net[K]) -> Bool {
+        forall(b: Set[K]) {
+            b ∈ other implies exists(a: Set[K]) {
+                a ∈ self and a ⊆ b
+            }
+        }
+    }
+
+    define same_limit(self, other: Net[K]) -> Bool {
+        self.finer(other) and other.finer(self)
+    }
+}
+
+// Alternative, you can use "image of net" and then use finer
+define is_limit[K, L](source_net: Net[K], target_net: Net[L], f: K -> L) -> Bool {
+    forall(b: Set[L]) {
+        b ∈ target_net implies exists(a: Set[K]) {
+            a ∈ source_net and a.image(f) ⊆ b
+        }
+    }
+}
+
+attributes Net[K] {
+    define have_common_pt(self, x: K) -> Bool {
+        forall(a: Set[K]) {
+            a ∈ self implies x ∈ a
+            // Alternative: use intersection to define
+        }
+    }
+}
+
+// Using the linear order of ℕ. I think that it's no easy to generalize the definition of shift to general linear order in Acorn now, until the support of subtype
+
+define seq_tail[K](shift: ℕ, f: ℕ -> K) -> (ℕ -> K) {
+    function(n: ℕ) { f(shift + n) }
+}
+
+define elem_in_seq_tail[K](f: ℕ -> K, shift: ℕ, x: K) -> Bool {
+    exists(n: ℕ) {
+        x = seq_tail(shift, f)(n)
+    }
+}
+
+theorem shift_gte_imp_subset[K](f: ℕ -> K, s1: ℕ, s2: ℕ) {
+    s1 >= s2 implies Set[K].new(elem_in_seq_tail(f, s1)) ⊆ Set[K].new(elem_in_seq_tail(f, s2))
+} by {
+    forall(x: K) {
+        if x ∈ Set[K].new(elem_in_seq_tail(f, s1)) {
+            elem_in_seq_tail(f, s1, x)
+            let n: ℕ satisfy { x = seq_tail(s1, f)(n) }
+
+            let m: ℕ satisfy { s1 = s2 + m }
+            f(s1 + n) = f(s2 + m + n)
+            seq_tail(s1, f)(n) = seq_tail(s2, f)(m + n)
+            elem_in_seq_tail(f, s2, x)
+
+            x ∈ Set[K].new(elem_in_seq_tail(f, s2))
+        }
+    }
+}
+
+define elem_in_seq_to_net[K](f: ℕ -> K, a: Set[K]) -> Bool {
+    exists(shift: ℕ) {
+        a = Set[K].new(elem_in_seq_tail(f, shift))
+    }
+}
+
+theorem seq_to_net_is_net[K](f: ℕ -> K) {
+    is_net(elem_in_seq_to_net(f))
+} by {
+    forall(a: Set[K]) {
+        if elem_in_seq_to_net(f)(a) {
+            let shift: ℕ satisfy { 
+                a = Set[K].new(elem_in_seq_tail(f, shift))
+            }
+            let x: K satisfy {
+                x = seq_tail(shift, f)(0)
+            }
+            x = f(shift)
+            x ∈ a
+            a != empty[K]
+        }
+    } 
+
+    no_empty(elem_in_seq_to_net(f))
+    
+    forall(a1: Set[K], a2: Set[K]) {
+        if elem_in_seq_to_net(f)(a1) and elem_in_seq_to_net(f)(a2) {
+            let shift_1: ℕ satisfy {
+                a1 = Set[K].new(elem_in_seq_tail(f, shift_1))
+            }
+            let shift_2: ℕ satisfy {
+                a2 = Set[K].new(elem_in_seq_tail(f, shift_2))
+            }
+            let shift = shift_1.max(shift_2)
+            let b = Set[K].new(elem_in_seq_tail(f, shift))
+            shift_1 <= shift
+            shift_2 <= shift
+            b ⊆ a1
+            b ⊆ a2
+            b ⊆ a1 ∩ a2
+            elem_in_seq_to_net(f)(b)
+            elem_in_seq_to_net(f)(b) and b ⊆ a1 ∩ a2
+        }
+    }
+
+    subset_two_intersection(elem_in_seq_to_net(f))
+}
+
+// // For Interval_Chain on ℝ, we avoid Set_Chain by first use Interval_Net inherit Set[Set[ℝ]], then Interval_Chain inherit Interval_Net. The same for other "topology"
+// structure Set_Chain[K] {
+//     contains: Set[K] -> Bool
+// } constraint {
+//     Set[Set[K]].new(contains).is_chain
+// }
