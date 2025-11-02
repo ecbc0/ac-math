@@ -128,17 +128,66 @@ theorem interior_exterior_separate[X: Point_Net_System](a: Set[X]) {
     a.interior ∩ a.exterior ⊆ a ∩ a.c
 }
 
+theorem boundary_is_compl_boundary[X: Point_Net_System](a: Set[X]) {
+    a.c.boundary = a.boundary
+} by {
+    forall(x: X) {
+        x ∈ a.c.boundary implies x ∈ a.boundary
+        if x ∈ a.boundary {
+            forall(b: Set[X]) {
+                b ∈ x.net implies a ∩ b != empty[X] and a.c ∩ b != empty[X]
+
+                b ∈ x.net implies a.c ∩ b != empty[X] and a.c.c ∩ b != empty[X]
+            }
+            x ∈ a.c.boundary
+        } 
+        x ∈ a.c.boundary iff x ∈ a.boundary
+    }
+}
+
+theorem interior_is_compl_exterior[X: Point_Net_System](a: Set[X]) {
+    a.c.exterior = a.interior
+} by {
+    forall(x: X) {
+        if x ∈ a.c.exterior {
+            let b: Set[X] satisfy {
+                b ∈ x.net and b ⊆ a.c.c
+            }
+            b ⊆ a
+            x ∈ a.interior
+        }
+    }
+
+    a.c.exterior ⊆ a.interior
+
+    forall(x: X) {
+        if x ∈ a.interior {
+            let b: Set[X] satisfy {
+                b ∈ x.net and b ⊆ a
+            }
+            b ⊆ a.c.c
+            x ∈ a.c.exterior
+        }
+    }
+
+    a.c.exterior ⊇ a.interior
+}
+
+theorem exterior_is_compl_interior[X: Point_Net_System](a: Set[X]) {
+    a.c.interior = a.exterior
+}
+
 typeclass X: Topology extends Point_Net_System {
-    net_limit_split_of_interior_exterior(a: Set[X], x: X) {
-        (
-            x ∈ a.interior implies exists(b: Set[X]) {
-                b ∈ x.net and b ⊆ a.interior
-            }
-        ) and (
-            x ∈ a.exterior implies exists(b: Set[X]) {
-                b ∈ x.net and b ⊆ a.exterior
-            }
-        )
+    net_limit_split_of_interior_boundary(a: Set[X], x: X) {
+        x ∈ a.interior implies exists(b: Set[X]) {
+            b ∈ x.net and b ⊆ a.interior
+        }
+    }
+}
+
+theorem net_limit_split_of_exterior_boundary[X: Topology](a: Set[X], x: X) {
+    x ∈ a.exterior implies exists(b: Set[X]) {
+        b ∈ x.net and b ⊆ a.exterior
     }
 }
 
@@ -263,55 +312,6 @@ theorem closure_is_smallest_closed_superset[X: Topology](a: Set[X], b: Set[X]) {
     a ⊆ b and b.is_closed implies a.closure ⊆ b
 } 
 
-theorem boundary_is_compl_boundary[X: Topology](a: Set[X]) {
-    a.c.boundary = a.boundary
-} by {
-    forall(x: X) {
-        x ∈ a.c.boundary implies x ∈ a.boundary
-        if x ∈ a.boundary {
-            forall(b: Set[X]) {
-                b ∈ x.net implies a ∩ b != empty[X] and a.c ∩ b != empty[X]
-
-                b ∈ x.net implies a.c ∩ b != empty[X] and a.c.c ∩ b != empty[X]
-            }
-            x ∈ a.c.boundary
-        } 
-        x ∈ a.c.boundary iff x ∈ a.boundary
-    }
-}
-
-theorem interior_is_compl_exterior[X: Topology](a: Set[X]) {
-    a.c.exterior = a.interior
-} by {
-    forall(x: X) {
-        if x ∈ a.c.exterior {
-            let b: Set[X] satisfy {
-                b ∈ x.net and b ⊆ a.c.c
-            }
-            b ⊆ a
-            x ∈ a.interior
-        }
-    }
-
-    a.c.exterior ⊆ a.interior
-
-    forall(x: X) {
-        if x ∈ a.interior {
-            let b: Set[X] satisfy {
-                b ∈ x.net and b ⊆ a
-            }
-            b ⊆ a.c.c
-            x ∈ a.c.exterior
-        }
-    }
-
-    a.c.exterior ⊇ a.interior
-}
-
-theorem exterior_is_compl_interior[X: Topology](a: Set[X]) {
-    a.c.interior = a.exterior
-}
-
 theorem compl_closure_is_exterior_or_boundary[X: Topology](a: Set[X]) {
     a.c.closure = a.exterior ∪ a.boundary
 }
@@ -404,11 +404,13 @@ theorem two_intersection_preserve_open[X: Topology](a: Set[X], b: Set[X]) {
         if x ∈ a ∩ b {
             x ∈ a
             a.interior = a
+            x ∈ a.interior
             let sa: Set[X] satisfy {
                 sa ∈ x.net and sa ⊆ a
             }
             x ∈ b
             b.interior = b
+            x ∈ b.interior
             let sb: Set[X] satisfy {
                 sb ∈ x.net and sb ⊆ b
             }
