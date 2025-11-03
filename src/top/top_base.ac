@@ -177,6 +177,7 @@ theorem exterior_is_compl_interior[X: Point_Net_System](a: Set[X]) {
     a.c.interior = a.exterior
 }
 
+// For the proof of ℝ as instance of Topology, use distance function and infimum, to show that if x ∈ a.interior then exist δ > 0 s.t. forall(y: ℝ) { |x - y| < δ ==> y ∈ a.interior }
 typeclass X: Topology extends Point_Net_System {
     net_limit_split_of_interior_boundary(a: Set[X], x: X) {
         x ∈ a.interior implies exists(b: Set[X]) {
@@ -478,6 +479,7 @@ theorem continuous_imp_inv_image_preserve_open[X: Topology, Y: Topology](f: X ->
                 }
             }
             forall(x: X) { 
+                open_cover(x).image(f) ⊆ v
                 open_cover(x) ⊆ v.inv_image(f) 
             }
             union_index(open_cover) ⊆ v.inv_image(f)

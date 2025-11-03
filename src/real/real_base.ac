@@ -2220,122 +2220,172 @@ theorem pos_mul_is_dedekind_cut(a: ℝ, b: ℝ) {
 
 // version 1
 
+// attributes ℝ {
+//     define mul(self, other: ℝ) -> ℝ {
+//         if self = 0 or other = 0 {
+//             0
+//         } else {
+//             if self > 0 {
+//                 if other > 0 {
+//                     ℝ.new(pos_mul_gt(self, other))
+//                 } else {
+//                     -ℝ.new(pos_mul_gt(self, -other))
+//                 }
+//             } else {
+//                 if other > 0 {
+//                     -ℝ.new(pos_mul_gt(-self, other))
+//                 } else {
+//                     ℝ.new(pos_mul_gt(-self, -other))
+//                 }
+//             }
+//         }
+//     }
+// }
+
+// version 2 (inspired from definition of add on ℤ)
+
+// truncated mul. when a <= 0 or b <= 0, it reture 0, or ℚ_(< 0)
+define pos_mul(a: ℝ, b: ℝ) -> ℝ {
+    if not (a > 0 and b > 0) {
+        0
+    } else {
+        ℝ.new(pos_mul_gt(a, b))
+    }
+}
+
 attributes ℝ {
-    define mul(self, other: ℝ) -> ℝ {
-        if self = 0 or other = 0 {
+    // The positive part of this real.
+    define pos_part(self) -> ℝ {
+        if self > 0 {
+            self.abs
+        } else {
+            0
+        }
+    }
+
+    // The negative part of this real.
+    define neg_part(self) -> ℝ {
+        if self > 0 {
             0
         } else {
-            if self > 0 {
-                if other > 0 {
-                    ℝ.new(pos_mul_gt(self, other))
-                } else {
-                    -ℝ.new(pos_mul_gt(self, -other))
-                }
-            } else {
-                if other > 0 {
-                    -ℝ.new(pos_mul_gt(-self, other))
-                } else {
-                    ℝ.new(pos_mul_gt(-self, -other))
-                }
-            }
+            self.abs
         }
     }
 }
 
-// version 2 (inspired from definition of add on ℤ)
+theorem pos_neg_decomposition(a: ℝ) {
+    a = a.pos_part - a.neg_part
+} by {
+    if a > 0 {
+        a.pos_part = a
+        a.neg_part = 0
+        a = a.pos_part - a.neg_part
+    } else {
+        a.pos_part = 0
+        a.neg_part = -a
+        a = a.pos_part - a.neg_part
+    }
+}
 
-// // truncated mul. when a <= 0 or b <= 0, it reture 0, or ℚ_(< 0)
-// define pos_mul(a: ℝ, b: ℝ) -> ℝ {
-//     if not (a > 0 and b > 0) {
-//         0
-//     } else {
-//         ℝ.new(pos_mul_gt(a, b))
-//     }
-// }
+attributes ℝ {
+    define mul(self, other: ℝ) -> ℝ {
+        (
+            pos_mul(self.pos_part, other.pos_part) 
+            - pos_mul(self.pos_part, other.neg_part) 
+            - pos_mul(self.neg_part, other.pos_part) 
+            + pos_mul(self.neg_part, other.neg_part)
+        )
+    }
+}
 
-// attributes ℝ {
-//     /// The positive part of this real.
-//     define pos_part(self) -> ℝ {
-//         if self > 0 {
-//             self.abs
-//         } else {
-//             0
-//         }
-//     }
+theorem mul_zero_left(a: ℝ) {
+    0 ⋅ a = 0
+} by {
+    not 0 > 0
+}
 
-//     /// The negative part of this real.
-//     define neg_part(self) -> ℝ {
-//         if self > 0 {
-//             0
-//         } else {
-//             self.abs
-//         }
-//     }
-// }
+theorem mul_zero_right(a: ℝ) {
+    a ⋅ 0 = 0
+} by {
+    not 0 > 0
+}
 
-// theorem pos_neg_decomposition(a: ℝ) {
-//     a = a.pos_part + a.neg_part
-// }
+theorem zero_mul(a: ℝ, b: ℝ) {
+    a = 0 or b = 0 implies a ⋅ b = 0
+} by {
+    if a = 0 {
+        a ⋅ b = 0
+    }
+    if b = 0 {
+        a ⋅ b = 0
+    }
+}
 
-// attributes ℝ {
-//     define mul(self, other: ℝ) -> ℝ {
-//         (
-//             pos_mul(self.pos_part, other.pos_part) 
-//             - pos_mul(self.pos_part, other.neg_part) 
-//             - pos_mul(self.neg_part, other.pos_part) 
-//             + pos_mul(self.neg_part, other.neg_part)
-//         )
-//     }
-// }
+theorem pos_mul_gt_imp_swap(a: ℝ, b: ℝ, r: ℚ) {
+    a > 0 and b > 0 implies (pos_mul_gt(a, b, r) implies pos_mul_gt(b, a, r))
+} by {
+    if pos_mul_gt(a, b, r) {
+        pos_mul_truncated_gt(a, b, r) or r <= ℚ.0
+        if r > ℚ.0 {
+            pos_mul_truncated_gt(a, b, r)
+            let (ra: ℚ, rb: ℚ) satisfy {
+                ra > ℚ.0 and a.gt_rat(ra) and
+                rb > ℚ.0 and b.gt_rat(rb) and
+                r = ra ⋅ rb
+            }
+            pos_mul_truncated_gt(b, a, r)
+            pos_mul_gt(b, a, r)
+        } else {
+            r <= ℚ.0
+            pos_mul_gt(b, a, r)
+        }
+    }
+}
 
-// theorem mul_zero_left(a: ℝ) {
-//     0 ⋅ a = 0
-// } 
+theorem pos_mul_gt_comm(a: ℝ, b: ℝ) {
+    a > 0 and b > 0 implies pos_mul_gt(a, b) = pos_mul_gt(b, a)
+} by {
+    forall(r: ℚ) {
+        if pos_mul_gt(a, b, r) {
+            pos_mul_gt(b, a, r)
+            pos_mul_gt(a, b, r) = pos_mul_gt(b, a, r)
+        } else {
+            not pos_mul_gt(a, b, r)
+            not pos_mul_gt(b, a, r)
+            pos_mul_gt(a, b, r) = pos_mul_gt(b, a, r)
+        }
+    }
+}
 
-// theorem mul_zero_right(a: ℝ) {
-//     a ⋅ 0 = 0
-// } 
+theorem pos_mul_comm(a: ℝ, b: ℝ) {
+    pos_mul(a, b) = pos_mul(b, a)
+} by {
+    if not (a > 0 and b > 0) {
+        pos_mul(a, b) = 0
+        pos_mul(b, a) = 0
+        pos_mul(a, b) = pos_mul(b, a)
+    } else {
+        a > 0 and b > 0
+        pos_mul_gt(a, b) = pos_mul_gt(b, a)
+        pos_mul(a, b) = ℝ.new(pos_mul_gt(a, b))
+        pos_mul(b, a) = ℝ.new(pos_mul_gt(b, a))
+        pos_mul(a, b) = pos_mul(b, a)
+    }
+}
 
-// theorem pos_mul_gt_imp_swap(a: ℝ, b: ℝ, r: ℚ) {
-//     pos_mul_gt(a, b, r) implies pos_mul_gt(b, a, r)
-// } by {
-//     let (ra: ℚ, rb: ℚ) satisfy {
-//         ra > ℚ.0 and ℝ.from_rat(ra) < a and
-//         rb > ℚ.0 and ℝ.from_rat(rb) < b and
-//         r = ra ⋅ rb
-//     }
-//     pos_mul_gt(b, a, r)
-// }
-
-// theorem pos_mul_gt_comm(a: ℝ, b: ℝ) {
-//     pos_mul_gt(a, b) = pos_mul_gt(b, a)
-// } by {
-//     forall(r: ℚ) {
-//         if pos_mul_gt(a, b, r) {
-//             pos_mul_gt(b, a, r)
-//             pos_mul_gt(a, b, r) = pos_mul_gt(b, a, r)
-//         } else {
-//             not pos_mul_gt(a, b, r)
-//             not pos_mul_gt(b, a, r)
-//             pos_mul_gt(a, b, r) = pos_mul_gt(b, a, r)
-//         }
-//     }
-// }
-
-// theorem mul_comm(a: ℝ, b: ℝ) {
-//     a ⋅ b = b ⋅ a
-// } by {
-//     if a < 0 {
-//         if b < 0 {
-//             a ⋅ b = b ⋅ a
-//         } else {
-//             a ⋅ b = b ⋅ a
-//         }
-//     } else {
-//         if b < 0 {
-//             a ⋅ b = b ⋅ a
-//         } else {
-//             a ⋅ b = b ⋅ a
-//         }
-//     }
-// }
+theorem mul_comm(a: ℝ, b: ℝ) {
+    a ⋅ b = b ⋅ a
+} by {
+    a ⋅ b = (
+        pos_mul(a.pos_part, b.pos_part) 
+        - pos_mul(a.pos_part, b.neg_part) 
+        - pos_mul(a.neg_part, b.pos_part) 
+        + pos_mul(a.neg_part, b.neg_part)
+    )
+    b ⋅ a = (
+        pos_mul(b.pos_part, a.pos_part) 
+        - pos_mul(b.pos_part, a.neg_part) 
+        - pos_mul(b.neg_part, a.pos_part) 
+        + pos_mul(b.neg_part, a.neg_part)
+    )    
+}
