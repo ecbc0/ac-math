@@ -153,6 +153,10 @@ attributes Set[K] {
             x ∈ b implies x ∈ a
         }
     }
+
+    define subset(self, other: Set[K]) -> Bool {
+        self ⊆ other and self != other
+    }
 }
 
 theorem sym_of_subset_and_supset[K](a: Set[K], b: Set[K]) {
@@ -374,6 +378,13 @@ theorem not_subset_iff_contains_compl[K](a: Set[K], b: Set[K]) {
     not a ⊆ b iff a ∩ b.c != empty[K] 
 } by {
     not a ⊆ b implies a ∩ b.c != empty[K] 
+}
+
+theorem not_subset_iff_contains_diff[K](a: Set[K], b: Set[K]) {
+    not a ⊆ b iff a ∖ b != empty[K] 
+} by {
+    a ∖ b = a ∩ b.c
+    not a ⊆ b implies a ∖ b != empty[K]
 }
 
 theorem union_associative[K](a1: Set[K], a2: Set[K], a3: Set[K]) {
@@ -1051,3 +1062,40 @@ theorem inv_image_preserve_union[K, L](a: Set[L], b: Set[L], f: K -> L) {
 theorem image_of_inv_image_subset[K, L](f: K -> L, b: Set[L]) {
     b.inv_image(f).image(f) ⊆ b
 } 
+
+theorem in_singleton[K](x: K, y: K) {
+    y ∈ Set[K].singleton(x) iff y = x
+} by {
+    y ∈ Set[K].singleton(x) implies y = x
+}
+
+theorem singleton_subset[K](a: Set[K], x: K) {
+    Set[K].singleton(x) ⊆ a iff x ∈ a
+} by {
+    Set[K].singleton(x) ⊆ a implies x ∈ a
+}
+
+theorem subset_singleton[K](a: Set[K], x: K) {
+    a ⊆ Set[K].singleton(x) implies (
+        a = Set[K].singleton(x) or a = empty[K]
+    )
+} by {
+    if a != empty[K] {
+        let y: K satisfy { y ∈ a }
+        y ∈ Set[K].singleton(x)
+        y = x
+        x ∈ a
+        Set[K].singleton(x) ⊆ a
+        a = Set[K].singleton(x)
+    }
+}
+
+theorem subset_not_eq_singleton[K](a: Set[K], x: K) {
+    a ⊂ Set[K].singleton(x) implies a = empty[K]
+}
+
+theorem subset_not_eq_by_contains[K](a: Set[K], b: Set[K]) {
+    a ⊂ b implies exists(x: K) {
+        x ∈ b and x ∉ a
+    }
+}

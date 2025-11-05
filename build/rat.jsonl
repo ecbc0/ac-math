@@ -212,3 +212,9 @@
 {"goal":"rat_total","proof":["a > b or a < b or b = a","a > b = b < a","not a < b or a <= b","not b < a or b <= a","not b < a","not a < b","b != a or b <= a","b != a","not a > b","a > b"]}
 {"goal":"(1 / a).abs = 1 / a.abs","proof":["(1 / a).abs != 1 / -a","1 / -a = -1 / a","(1 / a).abs != -1 / a","not 1 / a < 0 or (1 / a).abs = -1 / a"]}
 {"goal":"(1 / a).abs = 1 / a.abs","proof":["(1 / a).abs != 1 / -a","1 / -a = -1 / a","(1 / a).abs != -1 / a","not 1 / a < 0 or (1 / a).abs = -1 / a"]}
+{"goal":"(1 / a).abs = 1 / a.abs","proof":["(1 / a).abs != 1 / -a","1 / -a = -1 / a","(1 / a).abs != -1 / a","not 1 / a < 0 or (1 / a).abs = -1 / a"]}
+{"goal":"(1 / a).abs = 1 / a.abs","proof":["(1 / a).abs != 1 / -a","1 / -a = -1 / a","(1 / a).abs != -1 / a","not 1 / a < 0 or (1 / a).abs = -1 / a"]}
+{"goal":"(1 / a).abs = 1 / a.abs","proof":["(1 / a).abs != 1 / -a","1 / -a = -1 / a","(1 / a).abs != -1 / a","not 1 / a < 0 or (1 / a).abs = -1 / a"]}
+{"goal":"(1 / a).abs = 1 / a.abs","proof":["(1 / a).abs != 1 / -a","1 / -a = -1 / a","(1 / a).abs != -1 / a","not 1 / a < 0 or (1 / a).abs = -1 / a"]}
+{"goal":"(1 / a).abs = 1 / a.abs","proof":["(1 / a).abs != 1 / -a","1 / -a = -1 / a","(1 / a).abs != -1 / a","not 1 / a < 0 or (1 / a).abs = -1 / a"]}
+{"goal":"(1 / a).abs = 1 / a.abs","proof":["(1 / a).abs != 1 / -a","1 / -a = -1 / a","(1 / a).abs != -1 / a","not 1 / a < 0 or (1 / a).abs = -1 / a"]}

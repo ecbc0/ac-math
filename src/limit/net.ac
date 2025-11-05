@@ -3,12 +3,6 @@ from order import Partial_Order, Linear_Order, is_acyclic, is_transitive, is_ref
 from nat import ℕ
 numerals ℕ
 
-attributes Set[K] {
-    define subset(self, other: Set[K]) -> Bool {
-        self ⊆ other and self != other
-    }
-}
-
 theorem subset_eq_is_transitive[K] {
     is_transitive(Set[K].subset_eq)
 }
@@ -64,7 +58,7 @@ let comparable[P] = Partial_Order.comparable[P]
 //     }
 // }
 
-// Alternative
+// Alternative? But instance cannot use type parameter, which make this unusable, even if you not use attributes but just use define with type parameter that have typeclass
 attributes P: Partial_Order {
     let is_subset_chain = function(contains: P -> Bool) {
         forall(a: P, b: P) {
@@ -80,7 +74,7 @@ attributes P: Partial_Order {
 //     contains.is_subset_chain
 // }
 
-// You can define net by pure abstract typeclass between Partial_Order and Linear_Order, but it's less intuitive
+// To reuse, I should use typeclass or subtype, but Acorn now does not support them well. Note that using general set is not enough, for example, you may want to use subsets with certain properties, but not just use general set
 
 define no_empty[K](contains: Set[K] -> Bool) -> Bool {
     forall(a: Set[K]) {

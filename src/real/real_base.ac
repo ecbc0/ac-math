@@ -701,6 +701,12 @@ theorem rat_between_reals_gt(a: ℝ, b: ℝ) {
     }
 }
 
+theorem smaller_pos(a: ℝ) {
+    a > 0 implies exists(b: ℝ) {
+        b > 0 and b < a
+    }
+} 
+
 theorem add_gt_trans(z1: ℝ, z2: ℝ, r1: ℚ, r2: ℚ) {
     add_gt(z1, z2, r1) and r1 > r2 implies add_gt(z1, z2, r2)
 }
@@ -1322,9 +1328,19 @@ attributes ℝ {
         if self.is_negative {
             -1
         } else {
-            1
+            if self.is_positive {
+                1
+            } else {
+                0
+            }
         }
     }
+}
+
+theorem sub_zero_imp_eq(x: ℝ, y: ℝ) {
+    x - y = 0 implies x = y
+} by {
+    x + -y = 0
 }
 
 theorem sub_cancels(a: ℝ, b: ℝ) {
@@ -1593,6 +1609,10 @@ theorem gt_add_neg(a: ℝ, b: ℝ) {
     b < 0 implies a > a + b
 }
 
+theorem sub_lt_is_gt(a: ℝ, b: ℝ, c: ℝ) {
+    b < c implies a - b > a - c
+}
+
 theorem pos_imp_eq_abs(a: ℝ) {
     a > 0 implies a = a.abs
 }
@@ -1651,6 +1671,10 @@ theorem abs_not_neg(a: ℝ) {
     } else {
         a.abs >= 0
     }
+}
+
+theorem only_abs_zero_eq_zero(x: ℝ) {
+    x.abs = ℝ.0 implies x = ℝ.0
 }
 
 theorem min_pos_pos(a: ℝ, b: ℝ) {
@@ -1976,6 +2000,14 @@ theorem rat_intersect(a: ℝ, c1: ℝ, r1: ℝ, c2: ℝ, r2: ℝ) {
 
     (ℝ.from_rat(q) - c1).abs < r1
     (ℝ.from_rat(q) - c2).abs < r2
+}
+
+theorem swap_minus_minus(a: ℝ, b: ℝ, c: ℝ) {
+    a - b - c = a - c - b
+}
+
+theorem sub_both_eq_sub_add(a: ℝ, b: ℝ, c: ℝ) {
+    a - b - c = a - (b + c)
 }
 
 theorem swap_minus_plus(a: ℝ, b: ℝ, c: ℝ) {

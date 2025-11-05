@@ -1,0 +1,557 @@
+from set import Set, empty, union, intersection, elem_in_union_general
+from order import Partial_Order
+
+// Acorn now not support generics in let (top level), so we use ℝ insteand of K.
+
+define comparable[P: Partial_Order](a: P, b: P) -> Bool {
+    a <= b or b <= a
+}
+
+theorem comparable_comm[P: Partial_Order](a: P, b: P) {
+    comparable(a, b) iff comparable(b, a)
+} by {
+    comparable(a, b) implies comparable(b, a)
+}
+
+define is_chain[P: Partial_Order](c: Set[P]) -> Bool {
+    forall(a: P, b: P) {
+        a ∈ c and b ∈ c implies comparable(a, b)
+    }
+} 
+
+define is_chain_extention[P: Partial_Order](c: Set[P], s: P) -> Bool {
+    is_chain(c) and s ∉ c and forall(t: P) {
+        t ∈ c implies comparable(t, s)
+    }
+}
+
+define chain_extension[P: Partial_Order](c: Set[P], s: P) -> Set[P] {
+    if is_chain_extention(c, s) {
+        c ∪ Set[P].singleton(s)
+    } else {
+        c
+    }
+}
+
+theorem chain_extension_is_chain_extension[P: Partial_Order](c: Set[P], s: P) {
+    is_chain_extention(c, s) implies is_chain(chain_extension(c, s)) and c ⊂ chain_extension(c, s)
+} by {
+    is_chain(c)
+    s ∉ c
+    forall(s1: P, s2: P) {
+        if s1 ∈ chain_extension(c, s) and s2 ∈ chain_extension(c, s) {
+            if s1 ∈ c {
+                if s2 ∈ c { 
+                    comparable(s1, s2) 
+                } else {
+                    s2 ∈ Set[P].singleton(s)
+                    s2 = s
+                    comparable(s1, s2)
+                }
+            } else {
+                s1 ∈ Set[P].singleton(s)
+                s1 = s
+                if s2 ∈ c {
+                    comparable(s1, s2)
+                } else {
+                    s2 ∈ Set[P].singleton(s)
+                    s2 = s
+                    comparable(s1, s2)
+                }
+            }
+            comparable(s1, s2)
+        }
+    }
+    is_chain(chain_extension(c, s)) 
+    s ∈ Set[P].singleton(s)
+    s ∈ chain_extension(c, s)
+    s ∉ c
+    c ⊆ chain_extension(c, s)
+    c ⊂ chain_extension(c, s)
+}
+
+define is_maximal_chain[P: Partial_Order](c: Set[P]) -> Bool {
+    is_chain(c) and forall(s: P) {
+        not is_chain_extention(c, s)
+    }
+}
+
+theorem not_maximal_chain_imp[P: Partial_Order](c: Set[P]) {
+    is_chain(c) implies (
+        not is_maximal_chain(c) implies exists(s: P) {
+            is_chain_extention(c, s)
+        }
+    )
+} 
+
+theorem not_maximal_chain_imp_rev[P: Partial_Order](c: Set[P]) {
+    is_chain(c) implies (
+        exists(s: P) {
+            is_chain_extention(c, s)
+        } implies not is_maximal_chain(c)
+    )
+} 
+
+define is_non_maximal_chain[P: Partial_Order](c: Set[P]) -> Bool {
+    is_chain(c) and not is_maximal_chain(c)
+}
+
+// Acorn now does not support generics in let (top level)
+let chain_extend_fn[P: Partial_Order](c: Set[P]) -> s: P satisfy {
+    if is_non_maximal_chain(c) {
+        is_chain_extention(c, s)
+    } else {
+        s = axiom
+    }
+}
+
+define suc[P: Partial_Order](c: Set[P]) -> Set[P] {
+    chain_extension(c, chain_extend_fn(c))
+}
+
+define are_chains[P: Partial_Order](cs: Set[Set[P]]) -> Bool {
+    forall(c: Set[P]) {
+        c ∈ cs implies is_chain(c)
+    }
+}
+
+theorem subchains[P: Partial_Order](cs: Set[Set[P]]) {
+    are_chains(cs) implies forall(ds: Set[Set[P]]) {
+        ds ⊆ cs implies are_chains(ds)
+    }
+}
+
+define is_chain_comparable[P: Partial_Order](c1: Set[P], c2: Set[P]) -> Bool {
+    c1 ⊆ c2 or c2 ⊆ c1
+}
+
+theorem chain_comparable_comm[P: Partial_Order](c1: Set[P], c2: Set[P]) {
+    is_chain_comparable(c1, c2) iff is_chain_comparable(c2, c1)
+} by {
+    is_chain_comparable(c1, c2) implies is_chain_comparable(c2, c1)
+}
+
+define is_linear_chains[P: Partial_Order](cs: Set[Set[P]]) -> Bool {
+    forall(c1: Set[P], c2: Set[P]) {
+        c1 ∈ cs and c2 ∈ cs implies is_chain_comparable(c1, c2)
+    }
+}
+
+theorem sub_chains_of_linear_chains_is_linear[P: Partial_Order](cs: Set[Set[P]], ds: Set[Set[P]]) {
+    is_linear_chains(cs) and ds ⊆ cs implies is_linear_chains(ds)
+}
+
+theorem union_linear_chains_is_chain[P: Partial_Order](cs: Set[Set[P]]) {
+    are_chains(cs) and is_linear_chains(cs) implies is_chain(union(cs))
+} by {
+    forall(s1: P, s2: P) {
+        if s1 ∈ union(cs) and s2 ∈ union(cs) {
+            let c1: Set[P] satisfy { c1 ∈ cs and s1 ∈ c1 }
+            let c2: Set[P] satisfy { c2 ∈ cs and s2 ∈ c2 }
+            is_chain(c1)
+            is_chain(c2)
+            c1 ⊆ c2 or c2 ⊆ c1
+            if c1 ⊆ c2 {
+                s1 ∈ c2
+                comparable(s1, s2)
+            } else {
+                c2 ⊆ c1
+                s2 ∈ c1
+                comparable(s1, s2)
+            }
+            comparable(s1, s2)
+        }
+        }
+}
+
+define contains_suc[P: Partial_Order](cs: Set[Set[P]]) -> Bool {
+    forall(c: Set[P]) {
+        c ∈ cs implies suc(c) ∈ cs
+    }
+}
+
+define contains_elem_of_subchains_chain[P: Partial_Order](cs: Set[Set[P]]) -> Bool {
+    forall(ds: Set[Set[P]]) {
+        ds ⊆ cs and is_linear_chains(ds) implies union(ds) ∈ cs
+    }
+}
+
+// from Halmos's Naive Set Theory
+define are_inductive_chains[P: Partial_Order](cs: Set[Set[P]]) -> Bool {
+    are_chains(cs) and
+    Set[P].empty_set ∈ cs and
+    contains_suc(cs) and
+    contains_elem_of_subchains_chain(cs)
+}
+
+let all_chains[P: Partial_Order] = Set[Set[P]].new(is_chain)
+
+theorem all_chains_are_chains[P: Partial_Order] {
+    are_chains(all_chains)
+} by {
+    forall(c: Set[P]) {
+        c ∈ all_chains implies is_chain(c)
+    }
+}
+
+theorem all_chains_are_inductive_chain[P: Partial_Order] {
+    are_inductive_chains(all_chains)
+} by {
+    are_chains(all_chains)
+    Set[P].empty_set ∈ all_chains
+
+    forall(c: Set[P]) {
+        if c ∈ all_chains {
+            is_chain(c) 
+            is_chain(suc(c))
+            suc(c) ∈ all_chains
+        }
+    }
+    contains_suc(all_chains)
+
+    forall(ds: Set[Set[P]]) {
+        if ds ⊆ all_chains and is_linear_chains(ds) {
+            are_chains(all_chains)
+            are_chains(ds)
+            is_chain(union(ds))
+            union(ds) ∈ all_chains
+        } 
+    }
+    contains_elem_of_subchains_chain(all_chains)
+}
+
+theorem exists_inductive_chain[P: Partial_Order] {
+    exists(cs: Set[Set[P]]) {
+        are_inductive_chains(cs)
+    }
+} 
+
+// Or use intersection
+define elem_in_smallest_inductive_chains[P: Partial_Order](c: Set[P]) -> Bool {
+    forall(cs: Set[Set[P]]) {
+        are_inductive_chains(cs) implies c ∈ cs
+    }
+}
+
+let smallest_inductive_chains[P: Partial_Order] = Set[Set[P]].new(elem_in_smallest_inductive_chains)
+
+theorem smallest_inductive_chains_is_smallest [P: Partial_Order](cs: Set[Set[P]]) {
+    are_inductive_chains(cs) implies smallest_inductive_chains ⊆ cs
+}
+
+theorem smallest_inductive_chains_contains_empty[P: Partial_Order] {
+    Set[P].empty_set ∈ smallest_inductive_chains
+} by {
+    forall(cs: Set[Set[P]]) {
+        are_inductive_chains(cs) implies Set[P].empty_set ∈ cs
+    }
+}
+
+theorem smallest_inductive_chains_are_chains[P: Partial_Order] {
+    are_chains(smallest_inductive_chains)
+} by {
+    forall(c: Set[P]) {
+        if c ∈ smallest_inductive_chains {
+            let cs: Set[Set[P]] satisfy { 
+                c ∈ cs and are_inductive_chains(cs)
+            }
+            are_chains(cs)
+            is_chain(c)
+        } 
+    }
+}
+
+theorem smallest_inductive_chains_contains_suc[P: Partial_Order] {
+    contains_suc(smallest_inductive_chains)
+} by {
+    forall(c: Set[P]) {
+        if c ∈ smallest_inductive_chains {
+            forall(cs: Set[Set[P]]) {
+                if are_inductive_chains(cs) {
+                    contains_suc(cs)
+                    c ∈ cs
+                    suc(c) ∈ cs
+                }
+            }
+            suc(c) ∈ smallest_inductive_chains
+        }
+    }
+}
+
+theorem smallest_inductive_chains_contains_elem_of_subchains_chain[P: Partial_Order] {
+    contains_elem_of_subchains_chain(smallest_inductive_chains)
+} by {
+    forall(ds: Set[Set[P]]) {
+        if ds ⊆ smallest_inductive_chains and is_linear_chains(ds) {
+            forall(cs: Set[Set[P]]) {
+                if are_inductive_chains(cs) {
+                    ds ⊆ cs
+                    union(ds) ∈ cs
+                }
+            }
+            union(ds) ∈ smallest_inductive_chains
+        }
+    }
+}
+
+theorem smallest_inductive_chains_are_inductive_chains {
+    are_inductive_chains[P: Partial_Order](smallest_inductive_chains)
+}
+
+define is_comparable_chain[P: Partial_Order](c: Set[P]) -> Bool {
+    c ∈ smallest_inductive_chains and forall(d: Set[P]) {
+        d ∈ smallest_inductive_chains implies is_chain_comparable(c, d)
+    }
+}
+
+theorem empty_is_comparable_chain[P: Partial_Order] {
+    is_comparable_chain(Set[P].empty_set)
+}
+
+// we want to prove that suc(c) is also is_comparable_chain, start from empty, and hence they form a are_inductive_chains
+
+theorem inductive_compare_subset_not_eq[P: Partial_Order](c: Set[P], a: Set[P]) {
+    is_comparable_chain(c) and a ∈ smallest_inductive_chains and a ⊂ c implies suc(a) ⊆ c
+} by {
+    let s: P satisfy { s ∈ c and s ∉ a }
+    is_chain_extention(a, s)
+    is_non_maximal_chain(a)
+    if not suc(a) ⊆ c {
+        c ⊂ suc(a)
+        let t: P satisfy { 
+            t ∈ suc(a) and t ∉ c
+        }
+        if t ∈ a {
+            t ∈ c
+            false
+        }
+        not t ∈ a
+        suc(a) = a ∪ Set[P].singleton(chain_extend_fn(a))
+        c ⊂ a ∪ Set[P].singleton(chain_extend_fn(a))
+        t ∈ Set[P].singleton(chain_extend_fn(a))
+        t = chain_extend_fn(a)
+        c ⊂ a ∪ Set[P].singleton(t)
+        forall(u: P) {
+            if u ∈ c {
+                u != t 
+                u ∉ Set[P].singleton(t)
+                u ∈ a
+            }
+        }
+        c ⊂ a
+        false
+    }
+}
+
+define elem_in_suc_compare[P: Partial_Order](c: Set[P], a: Set[P]) -> Bool {
+    is_comparable_chain(c) and a ∈ smallest_inductive_chains and (a ⊆ c or suc(c) ⊆ a)
+}
+
+define suc_compare[P: Partial_Order](c: Set[P]) -> Set[Set[P]] {
+    Set[Set[P]].new(elem_in_suc_compare(c))
+}
+
+theorem inductive_compare_subset[P: Partial_Order](c: Set[P]) {
+    suc_compare(c) ⊆ smallest_inductive_chains
+}
+
+theorem inductive_compare_are_inductive_chains[P: Partial_Order](c: Set[P]) {
+    is_comparable_chain(c) implies are_inductive_chains(suc_compare(c))
+} by {
+    are_chains(suc_compare(c))
+
+    Set[P].empty_set ⊆ c
+    Set[P].empty_set ∈ suc_compare(c)
+
+    forall(a: Set[P]) {
+        if a ∈ suc_compare(c) {
+            a ∈ smallest_inductive_chains
+            suc(a) ∈ smallest_inductive_chains
+            if a ⊂ c {
+                suc(a) ⊆ c
+                suc(a) ∈ suc_compare(c)
+            } else {
+                if a = c {
+                    suc(a) = suc(c)
+                    suc(a) ⊆ suc(c)
+                    suc(a) ∈ suc_compare(c)
+                } else {
+                    suc(c) ⊆ a
+                    a ⊆ suc(a)
+                    suc(c) ⊆ suc(a)
+                    suc(a) ∈ suc_compare(c)
+                }
+                suc(a) ∈ suc_compare(c)
+            }
+            suc(a) ∈ suc_compare(c)
+        }
+    }
+    contains_suc(suc_compare(c))
+
+    forall(ds: Set[Set[P]]) {
+        if ds ⊆ suc_compare(c) and is_linear_chains(ds) {
+            suc_compare(c) ⊆ smallest_inductive_chains
+
+            ds ⊆ smallest_inductive_chains
+
+            union(ds) ∈ smallest_inductive_chains
+
+            forall(a: P) {
+                if a ∈ union(ds) {
+                    elem_in_union_general(ds, a)
+                    let d: Set[P] satisfy {
+                        d ∈ ds and a ∈ d
+                    }
+                    d ∈ suc_compare(c) 
+                    d ⊆ c or suc(c) ⊆ d
+                    d ⊆ union(ds)
+                    a ∈ c or suc(c) ⊆ union(ds)
+                }
+            }
+            union(ds) ⊆ c or suc(c) ⊆ union(ds)
+
+            union(ds) ∈ suc_compare(c)
+        }
+    }
+    contains_elem_of_subchains_chain(suc_compare(c))
+}
+
+theorem inductive_compare_is_smallest_inductive_chains[P: Partial_Order](c: Set[P]) {
+    is_comparable_chain(c) implies suc_compare(c) = smallest_inductive_chains
+} by {
+    are_inductive_chains(suc_compare(c))
+
+    smallest_inductive_chains ⊆ suc_compare(c)
+
+    suc_compare(c) ⊆ smallest_inductive_chains
+}
+
+theorem suc_preserve_comparable_chain[P: Partial_Order](c: Set[P]) {
+    is_comparable_chain(c) implies is_comparable_chain(suc(c))
+} by {
+    forall(a: Set[P]) {
+        if a ∈ smallest_inductive_chains {
+            a ∈ suc_compare(c) 
+            if not suc(c) ⊆ a {
+                a ⊆ c
+                c ⊆ suc(c)
+                a ⊆ suc(c)
+            }
+            a ⊆ suc(c) or suc(c) ⊆ a
+        }
+    }
+    suc(c) ∈ smallest_inductive_chains
+    is_comparable_chain(suc(c))
+}
+
+let comparable_chains[P: Partial_Order] = Set[Set[P]].new(is_comparable_chain)
+
+theorem comparable_chains_subset[P: Partial_Order] {
+    comparable_chains ⊆ smallest_inductive_chains
+}
+
+theorem suc_preserve_comparable_chain_by_comparable_chains[P: Partial_Order](c: Set[P]) {
+    c ∈ comparable_chains implies suc(c) ∈ comparable_chains
+}
+
+theorem comparable_chains_is_smallest_inductive_chains[P: Partial_Order] {
+    comparable_chains = smallest_inductive_chains
+} by {
+    are_chains(comparable_chains)
+
+    Set[P].empty_set ∈ comparable_chains
+
+    contains_suc(comparable_chains)
+
+    forall(cs: Set[Set[P]]) {
+        if cs ⊆ comparable_chains and is_linear_chains(cs) {
+            cs ⊆ smallest_inductive_chains
+            
+            union(cs) ∈ smallest_inductive_chains
+
+            forall(d: Set[P]) {
+                if d ∈ smallest_inductive_chains {
+                    if forall(c: Set[P]) {
+                        c ∈ cs implies c ⊆ d
+                    } {
+                        union(cs) ⊆ d
+                        is_chain_comparable(union(cs), d)
+                    } else {
+                        let c: Set[P] satisfy {
+                            c ∈ cs and (not c ⊆ d)
+                        }
+                        c ∈ comparable_chains
+                        is_chain_comparable(c, d)
+                        d ⊂ c
+                        d ⊆ c
+                        c ⊆ union(cs)
+                        d ⊆ union(cs)
+                        is_chain_comparable(union(cs), d)
+                    }
+                    is_chain_comparable(union(cs), d)
+                }
+            }
+            union(cs) ∈ comparable_chains
+        }     
+    }
+    contains_elem_of_subchains_chain(comparable_chains)
+
+    are_inductive_chains(comparable_chains)
+
+    smallest_inductive_chains ⊆ comparable_chains
+}
+
+theorem smallest_inductive_chains_is_linear_chains[P: Partial_Order] {
+    is_linear_chains(smallest_inductive_chains)
+} by {
+    forall(c1: Set[P], c2: Set[P]) {
+        if c1 ∈ smallest_inductive_chains and c2 ∈ smallest_inductive_chains {
+            c1 ∈ comparable_chains
+            is_chain_comparable(c1, c2)
+        } 
+    }
+}
+
+let chosen_maximal_chain[P: Partial_Order] = union(smallest_inductive_chains)
+
+theorem chosen_maximal_chain_is_linear[P: Partial_Order] {
+    is_chain(chosen_maximal_chain)
+} 
+
+theorem chosen_maximal_chain_in_smallest_inductive_chains[P: Partial_Order] {
+    chosen_maximal_chain ∈ smallest_inductive_chains
+}
+
+theorem chosen_maximal_chain_is_maximal[P: Partial_Order] {
+    is_maximal_chain(chosen_maximal_chain)
+} by {
+    is_chain(chosen_maximal_chain)
+    if not is_maximal_chain(chosen_maximal_chain) {
+        contains_suc(smallest_inductive_chains)
+
+        chosen_maximal_chain ∈ smallest_inductive_chains
+
+        suc(chosen_maximal_chain) ∈ smallest_inductive_chains
+
+        suc(chosen_maximal_chain) = chosen_maximal_chain ∪ Set[P].singleton(chain_extend_fn(chosen_maximal_chain))
+
+        chain_extend_fn(chosen_maximal_chain) ∉ chosen_maximal_chain
+
+        suc(chosen_maximal_chain) ⊆ union(smallest_inductive_chains)
+
+        suc(chosen_maximal_chain) ⊆ chosen_maximal_chain
+
+        Set[P].singleton(chain_extend_fn(chosen_maximal_chain)) ⊆ chosen_maximal_chain
+
+        chain_extend_fn(chosen_maximal_chain) ∈ chosen_maximal_chain
+
+        false
+    }
+}
+
+// Zorn Lemma
+theorem maximal_principle[P: Partial_Order] {
+    exists(c: Set[P]) {
+        is_maximal_chain(c)
+    }
+} 
