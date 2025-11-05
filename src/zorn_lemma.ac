@@ -97,6 +97,7 @@ define is_non_maximal_chain[P: Partial_Order](c: Set[P]) -> Bool {
 }
 
 // Acorn now does not support generics in let (top level)
+/// using axiom of choice, which is much stronger that axiom of induction on ℕ
 let chain_extend_fn[P: Partial_Order](c: Set[P]) -> s: P satisfy {
     if is_non_maximal_chain(c) {
         is_chain_extention(c, s)
@@ -109,6 +110,7 @@ define suc[P: Partial_Order](c: Set[P]) -> Set[P] {
     chain_extension(c, chain_extend_fn(c))
 }
 
+/// the "well order"
 define are_chains[P: Partial_Order](cs: Set[Set[P]]) -> Bool {
     forall(c: Set[P]) {
         c ∈ cs implies is_chain(c)
@@ -164,13 +166,15 @@ theorem union_linear_chains_is_chain[P: Partial_Order](cs: Set[Set[P]]) {
         }
 }
 
+/// direct induction, the "+1"
 define contains_suc[P: Partial_Order](cs: Set[Set[P]]) -> Bool {
     forall(c: Set[P]) {
         c ∈ cs implies suc(c) ∈ cs
     }
 }
 
-define contains_elem_of_subchains_chain[P: Partial_Order](cs: Set[Set[P]]) -> Bool {
+/// it seems like "strong induction & true below"
+define contains_elem_of_linear_subchains[P: Partial_Order](cs: Set[Set[P]]) -> Bool {
     forall(ds: Set[Set[P]]) {
         ds ⊆ cs and is_linear_chains(ds) implies union(ds) ∈ cs
     }
@@ -179,9 +183,10 @@ define contains_elem_of_subchains_chain[P: Partial_Order](cs: Set[Set[P]]) -> Bo
 // from Halmos's Naive Set Theory
 define are_inductive_chains[P: Partial_Order](cs: Set[Set[P]]) -> Bool {
     are_chains(cs) and
+    // the starting element "0"
     Set[P].empty_set ∈ cs and
     contains_suc(cs) and
-    contains_elem_of_subchains_chain(cs)
+    contains_elem_of_linear_subchains(cs)
 }
 
 let all_chains[P: Partial_Order] = Set[Set[P]].new(is_chain)
@@ -217,14 +222,16 @@ theorem all_chains_are_inductive_chain[P: Partial_Order] {
             union(ds) ∈ all_chains
         } 
     }
-    contains_elem_of_subchains_chain(all_chains)
+    contains_elem_of_linear_subchains(all_chains)
 }
 
 theorem exists_inductive_chain[P: Partial_Order] {
     exists(cs: Set[Set[P]]) {
         are_inductive_chains(cs)
     }
-} 
+} by {
+    let cs = all_chains
+}
 
 // Or use intersection
 define elem_in_smallest_inductive_chains[P: Partial_Order](c: Set[P]) -> Bool {
@@ -278,8 +285,8 @@ theorem smallest_inductive_chains_contains_suc[P: Partial_Order] {
     }
 }
 
-theorem smallest_inductive_chains_contains_elem_of_subchains_chain[P: Partial_Order] {
-    contains_elem_of_subchains_chain(smallest_inductive_chains)
+theorem smallest_inductive_chains_contains_elem_of_linear_subchains[P: Partial_Order] {
+    contains_elem_of_linear_subchains(smallest_inductive_chains)
 } by {
     forall(ds: Set[Set[P]]) {
         if ds ⊆ smallest_inductive_chains and is_linear_chains(ds) {
@@ -413,7 +420,7 @@ theorem inductive_compare_are_inductive_chains[P: Partial_Order](c: Set[P]) {
             union(ds) ∈ suc_compare(c)
         }
     }
-    contains_elem_of_subchains_chain(suc_compare(c))
+    contains_elem_of_linear_subchains(suc_compare(c))
 }
 
 theorem inductive_compare_is_smallest_inductive_chains[P: Partial_Order](c: Set[P]) {
@@ -494,7 +501,7 @@ theorem comparable_chains_is_smallest_inductive_chains[P: Partial_Order] {
             union(cs) ∈ comparable_chains
         }     
     }
-    contains_elem_of_subchains_chain(comparable_chains)
+    contains_elem_of_linear_subchains(comparable_chains)
 
     are_inductive_chains(comparable_chains)
 
