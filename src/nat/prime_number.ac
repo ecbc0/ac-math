@@ -126,14 +126,14 @@ theorem has_prime_divisor(n: ℕ) {
 
 from list.list_mul import List, Mul, product
 
-define all_prime(l: List[ℕ]) -> Bool {
+define are_primes(l: List[ℕ]) -> Bool {
     forall(n: ℕ) {
         n ∈ l implies n.is_prime
     }
 }
 
-theorem nil_list_all_prime {
-    all_prime(List[ℕ].nil)
+theorem nil_list_are_primes {
+    are_primes(List[ℕ].nil)
 }
 
 instance ℕ: Mul {
@@ -144,14 +144,14 @@ instance ℕ: Mul {
 
 theorem prime_decomposition(n: ℕ) {
     n != 0 implies exists(l: List[ℕ]) {
-        all_prime(l) and n = product(l)
+        are_primes(l) and n = product(l)
     }
 } by {   
     forall(k: ℕ) {
         if true_below(prime_decomposition, k) {
             if k = 0 { prime_decomposition(k) }
             if k = 1 {
-                all_prime(List[ℕ].nil)
+                are_primes(List[ℕ].nil)
                 1 = product(List[ℕ].nil)
 
                 prime_decomposition(k)
@@ -164,7 +164,7 @@ theorem prime_decomposition(n: ℕ) {
                     k.is_prime
                     m ∈ l implies m.is_prime
                 }
-                all_prime(l)
+                are_primes(l)
                 prime_decomposition(k)
             } 
             if k.is_composite {
@@ -179,10 +179,10 @@ theorem prime_decomposition(n: ℕ) {
                 a != 0
                 b != 0
                 let la: List[ℕ] satisfy {
-                    all_prime(la) and a = product(la)
+                    are_primes(la) and a = product(la)
                 }
                 let lb: List[ℕ] satisfy {
-                    all_prime(lb) and b = product(lb)
+                    are_primes(lb) and b = product(lb)
                 }
                 let l = la + lb
                 forall(x: ℕ) {
@@ -191,7 +191,7 @@ theorem prime_decomposition(n: ℕ) {
                     x ∈ lb implies x.is_prime
                     x ∈ l implies x.is_prime
                 }
-                all_prime(l)
+                are_primes(l)
                 product(la + lb) = a ⋅ b
                 product(l) = k
                 prime_decomposition(k)
@@ -767,23 +767,23 @@ theorem euclids_lemma_divides_primes(a: ℕ, b: ℕ, c: ℕ) {
     a.is_prime and b.is_prime and c.is_prime and a.divides(b ⋅ c) implies a = b or a = c
 } 
 
-theorem all_prime_decomposition(head: ℕ, tail: List[ℕ]) {
-    all_prime(List.cons(head, tail)) iff head.is_prime and all_prime(tail)
+theorem are_primes_decomposition(head: ℕ, tail: List[ℕ]) {
+    are_primes(List.cons(head, tail)) iff head.is_prime and are_primes(tail)
 } by {
-    if all_prime(List.cons(head, tail)) {
+    if are_primes(List.cons(head, tail)) {
         head.is_prime
         forall(x: ℕ) {
             x ∈ tail implies x ∈ List.cons(head, tail)
             x ∈ tail implies x.is_prime
         }
-        all_prime(tail)
+        are_primes(tail)
     }
-    if head.is_prime and all_prime(tail) {
+    if head.is_prime and are_primes(tail) {
         forall(x: ℕ) {
             x ∈ List.cons(head, tail) implies x = head or x ∈ tail
             x ∈ List.cons(head, tail) implies x.is_prime
         }
-        all_prime(List.cons(head, tail))
+        are_primes(List.cons(head, tail))
     }
 }
 
@@ -834,7 +834,7 @@ theorem euclids_lemma_prime_divides_list(a: ℕ, l: List[ℕ]) {
 }
 
 theorem euclids_lemma_prime_divides_prime_list(a: ℕ, l: List[ℕ]) {
-    a.is_prime and all_prime(l) and a.divides(product(l)) implies exists(p: ℕ) {
+    a.is_prime and are_primes(l) and a.divides(product(l)) implies exists(p: ℕ) {
         p ∈ l and a = p
     } 
 } by {
@@ -902,11 +902,11 @@ theorem remove_product(x: ℕ, l: List[ℕ]) {
 }
 
 theorem prime_divides_prime_list_iff_contains(x: ℕ, l: List[ℕ], q: ℕ) {
-    x.is_prime and x.divides(product(l)) and all_prime(l) implies l.count(x) != 0
+    x.is_prime and x.divides(product(l)) and are_primes(l) implies l.count(x) != 0
 } 
 
-theorem remove_preserve_all_prime(x: ℕ, l: List[ℕ]) {
-    all_prime(l) and x.is_prime implies all_prime(l ∖ x)
+theorem remove_preserve_are_primes(x: ℕ, l: List[ℕ]) {
+    are_primes(l) and x.is_prime implies are_primes(l ∖ x)
 } by {
     forall(n: ℕ) {
         n ∈ l ∖ x implies n ∈ l
@@ -917,7 +917,7 @@ theorem remove_preserve_all_prime(x: ℕ, l: List[ℕ]) {
 // half of theorem
 theorem prime_decomposition_have_same_count_of_prime_helper(x: ℕ, l1: List[ℕ], l2: List[ℕ]) {
     x.is_prime and 
-    all_prime(l1) and all_prime(l2) and
+    are_primes(l1) and are_primes(l2) and
     product(l1) = product(l2) 
     implies l1.count(x) >= l2.count(x)
 } by {
@@ -940,7 +940,7 @@ theorem prime_decomposition_have_same_count_of_prime_helper(x: ℕ, l1: List[ℕ
         product(l1 ∖ x) = x ⋅ x^(n - 1) ⋅ product(l2 ∖ x)
 
         x.is_prime
-        all_prime(l1 ∖ x)
+        are_primes(l1 ∖ x)
 
         x.divides(product(l1 ∖ x))
 
@@ -952,7 +952,7 @@ theorem prime_decomposition_have_same_count_of_prime_helper(x: ℕ, l1: List[ℕ
 
 theorem prime_list_same_count_prime(x: ℕ, l1: List[ℕ], l2: List[ℕ]) {
     x.is_prime and 
-    all_prime(l1) and all_prime(l2) and
+    are_primes(l1) and are_primes(l2) and
     product(l1) = product(l2) 
     implies l1.count(x) = l2.count(x)
 } by {
@@ -979,7 +979,7 @@ theorem composite_not_divides_prime(a: ℕ, p: ℕ) {
 }
 
 theorem not_prime_not_in_prime_list(n: ℕ, l: List[ℕ]) {
-    not n.is_prime and all_prime(l) implies l.count(n) = 0
+    not n.is_prime and are_primes(l) implies l.count(n) = 0
 } by {
     if n <= 1 {
         l.count(n) = 0
@@ -992,8 +992,8 @@ theorem not_prime_not_in_prime_list(n: ℕ, l: List[ℕ]) {
 
 theorem prime_decomposition_uniqueness(n: ℕ, l1: List[ℕ], l2: List[ℕ]) {
     1 < n and
-    all_prime(l1) and n = product(l1) and
-    all_prime(l2) and n = product(l2) implies 
+    are_primes(l1) and n = product(l1) and
+    are_primes(l2) and n = product(l2) implies 
     l1.is_permutation(l2)
 } by {
     forall(x: ℕ) {
@@ -1007,7 +1007,7 @@ theorem nil_list_product_is_one {
 }
 
 theorem non_nil_prime_list_product_gt_one(l: List[ℕ]) {
-    l != List[ℕ].nil and all_prime(l) implies 1 < product(l)
+    l != List[ℕ].nil and are_primes(l) implies 1 < product(l)
 } by {
     define f(ps: List[ℕ]) -> Bool {
         non_nil_prime_list_product_gt_one(ps)
@@ -1015,7 +1015,7 @@ theorem non_nil_prime_list_product_gt_one(l: List[ℕ]) {
     f(List[ℕ].nil)
     forall(head: ℕ, tail: List[ℕ]) {
         if f(tail) {
-            if all_prime(List.cons(head, tail)) {
+            if are_primes(List.cons(head, tail)) {
                 if tail = List[ℕ].nil {
                     product(List.cons(head, tail)) = head
                     head.is_prime
@@ -1037,20 +1037,20 @@ theorem non_nil_prime_list_product_gt_one(l: List[ℕ]) {
 }
 
 theorem prime_list_product_gte_one(l: List[ℕ]) {
-    all_prime(l) implies 1 <= product(l)
+    are_primes(l) implies 1 <= product(l)
 }
 
 theorem prime_list_product_one_imp_nil(l: List[ℕ]) {
-    all_prime(l) and product(l) = 1 implies l = List[ℕ].nil
+    are_primes(l) and product(l) = 1 implies l = List[ℕ].nil
 }
 
 theorem prime_list_product_gt_one_imp_non_nil(l: List[ℕ]) {
-    all_prime(l) and product(l) > 1 implies l != List[ℕ].nil
+    are_primes(l) and product(l) > 1 implies l != List[ℕ].nil
 }
 
 attributes ℕ {
     define have_prime_decomp(self, l: List[ℕ]) -> Bool {
-        all_prime(l) and self = product(l)
+        are_primes(l) and self = product(l)
     }
 }
 
@@ -1059,7 +1059,7 @@ theorem zero_have_no_prime_decomp(l: List[ℕ]) {
 }
 
 theorem prime_list_divides_product(p: ℕ, l: List[ℕ]) {
-    all_prime(l) and p ∈ l implies p.divides(product(l))
+    are_primes(l) and p ∈ l implies p.divides(product(l))
 } by {
     if l = List[ℕ].nil { 
         not p ∈ l 
@@ -1198,19 +1198,19 @@ theorem relative_prime_iff_gcd_one(a: ℕ, b: ℕ) {
 }
 
 theorem sub_prime_list_divides(l1: List[ℕ], l2: List[ℕ]) {
-    all_prime(l1) and all_prime(l2) and forall(p: ℕ) {
+    are_primes(l1) and are_primes(l2) and forall(p: ℕ) {
         l1.count(p) <= l2.count(p)
     } implies product(l1).divides(product(l2))
 } by {
     define f(l: List[ℕ]) -> Bool {
-        all_prime(l) and all_prime(l2) and forall(p: ℕ) {
+        are_primes(l) and are_primes(l2) and forall(p: ℕ) {
             l.count(p) <= l2.count(p)
         } implies product(l).divides(product(l2))    
     }
     f(List[ℕ].nil)
     forall(head: ℕ, tail: List[ℕ]) {
         if f(tail) {
-            if all_prime(List.cons(head, tail)) and all_prime(l2) and forall(p: ℕ) {
+            if are_primes(List.cons(head, tail)) and are_primes(l2) and forall(p: ℕ) {
                 List.cons(head, tail).count(p) <= l2.count(p)
             } {
                 let q1 = product(tail ∖ head) 
@@ -1221,7 +1221,7 @@ theorem sub_prime_list_divides(l1: List[ℕ], l2: List[ℕ]) {
 
                 head^(l2.count(head)) ⋅ q2 = product(l2)
 
-                all_prime(tail)
+                are_primes(tail)
 
                 forall(p: ℕ) {
                     tail.count(p) <= List.cons(head, tail).count(p)
@@ -1282,7 +1282,7 @@ theorem sub_prime_list_divides(l1: List[ℕ], l2: List[ℕ]) {
 }
 
 theorem divides_imp_sub_prime_list(l1: List[ℕ], l2: List[ℕ]) {
-    all_prime(l1) and all_prime(l2) and product(l1).divides(product(l2)) implies forall(p: ℕ) {
+    are_primes(l1) and are_primes(l2) and product(l1).divides(product(l2)) implies forall(p: ℕ) {
         l1.count(p) <= l2.count(p)
     }
 } by {
@@ -1304,7 +1304,7 @@ theorem divides_imp_sub_prime_list(l1: List[ℕ], l2: List[ℕ]) {
             } else {
                 l1.count(p) != 0 
                 l1.count(p) >= 1
-                all_prime(l2 ∖ p)
+                are_primes(l2 ∖ p)
                 not p.divides(product(l2 ∖ p))
 
                 if (l1.count(p) > l2.count(p)) {
@@ -1363,12 +1363,12 @@ theorem euclids_lemma(a: ℕ, b: ℕ, c: ℕ) {
         forall(p: ℕ) {
             if p ∈ lb + lc {
                 p ∈ lb or p ∈ lc
-                all_prime(lb)
-                all_prime(lc)
+                are_primes(lb)
+                are_primes(lc)
                 p.is_prime
             }
         }
-        all_prime(lb + lc)
+        are_primes(lb + lc)
         product(lb + lc) = product(lb) ⋅ product(lc)
         product(lb + lc) = b ⋅ c
         product(la) = a

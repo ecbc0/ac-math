@@ -42,13 +42,13 @@
 		"prefix": "superset",
 		"body": "⊇"
 	},
-	"⊊": {
+	"⊂": {
 		"prefix": "subset-not-eq",
-		"body": "⊊"
+		"body": "⊂"
 	},
-	"⊋": {
+	"⊃": {
 		"prefix": "superset-not-eq",
-		"body": "⊋"
+		"body": "⊃"
 	},
 	"∖": {
 		"prefix": ["without", "set-minus"],
@@ -142,7 +142,7 @@
 		]
 	},
 	"List.cons(head, tail)":{
-	  "prefix": "List.cons(head, tail)",
+	  "prefix": "List.cons(head,_tail)",
 	  "body": "List.cons(head, tail)"
 	},
 	"List[T].nil":{
@@ -150,7 +150,7 @@
 	  "body": "List[${1:T}].nil"
 	},
 	"head: T, tail: List[T]":{
-	  "prefix": "head: T, tail: List[T]",
+	  "prefix": "head:_T,_tail:_List[T]",
 	  "body": "head: ${1:T}, tail: List[${1:T}]"
 	},
 }

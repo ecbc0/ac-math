@@ -709,24 +709,41 @@ define sum_index[I, K](f: I -> Set[K]) -> Set[Product[I, K]] {
     Set[Product[I, K]].new(elem_in_sum_index(f))
 }
 
-define elem_in_union_collection_of_subset[K](c: Set[Set[K]], x: K) -> Bool {
+define elem_in_union_general[K](c: Set[Set[K]], x: K) -> Bool {
     exists(s: Set[K]) {
         s ∈ c and x ∈ s
     }
 }
 
 define union[K](c: Set[Set[K]]) -> Set[K] {
-    Set[K].new(elem_in_union_collection_of_subset(c))
+    Set[K].new(elem_in_union_general(c))
 }
 
-define elem_in_intersection_collection_of_subset[K](c: Set[Set[K]], x: K) -> Bool {
+theorem subset_union_general_is_subset[K](c: Set[Set[K]], a: Set[K]) {
     forall(s: Set[K]) {
-        s ∈ c and x ∈ s
+        s ∈ c implies s ⊆ a
+    } implies union(c) ⊆ a
+} by {
+    forall(x: K) {
+        if x ∈ union(c) {
+            let s: Set[K] satisfy {
+                s ∈ c and x ∈ s
+            }
+            s ⊆ a
+            x ∈ a
+        }
+    }
+    union(c) ⊆ a
+}
+
+define elem_in_intersection_general[K](c: Set[Set[K]], x: K) -> Bool {
+    forall(s: Set[K]) {
+        s ∈ c implies x ∈ s
     }
 }
 
 define intersection[K](c: Set[Set[K]]) -> Set[K] {
-    Set[K].new(elem_in_intersection_collection_of_subset(c))
+    Set[K].new(elem_in_intersection_general(c))
 }
 
 // todo: (product/sum)_index_of_two
