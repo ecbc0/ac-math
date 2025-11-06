@@ -163,7 +163,7 @@ theorem union_linear_chains_is_chain[P: Partial_Order](cs: Set[Set[P]]) {
             }
             comparable(s1, s2)
         }
-        }
+    }
 }
 
 /// direct induction, the "+1"
@@ -380,7 +380,7 @@ theorem inductive_compare_are_inductive_chains[P: Partial_Order](c: Set[P]) {
             } else {
                 if a = c {
                     suc(a) = suc(c)
-                    suc(a) ⊆ suc(c)
+                    suc(c) ⊆ suc(a)
                     suc(a) ∈ suc_compare(c)
                 } else {
                     suc(c) ⊆ a

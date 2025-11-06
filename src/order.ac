@@ -40,12 +40,50 @@ theorem lt_and_eq_is_different_thing[P: Partial_Order](a: P) {
     not (a < a)
 } 
 
+theorem partial_order_lt_is_nonreflexive[P: Partial_Order] {
+    is_nonreflexive(P.lt)
+} 
+
+theorem lt_imp_not_eq[P: Partial_Order](a: P, b: P) {
+    a < b implies a != b
+} 
+
 theorem acyclic_and_transitive_imp_not_self[T](lt: (T, T) -> Bool) {
     is_acyclic(lt) and is_transitive(lt) implies is_nonreflexive(lt)
 }
 
 define lte_from[T](lt: (T, T) -> Bool, x: T, y: T) -> Bool {
     lt(x, y) or x = y    
+}
+
+define lt_from[T](lte: (T, T) -> Bool, x: T, y: T) -> Bool {
+    lte(x, y) and x != y
+} 
+
+theorem lt_to_lte_to_lt[P: Partial_Order] {
+    lt_from(lte_from(P.lt)) = P.lt 
+} by {
+    forall(x: P, y: P) {
+        lte_from(P.lt)(x, y) implies (P.lt(x, y) or x = y)
+        (P.lt(x, y) or x = y) implies lte_from(P.lt)(x, y)
+
+        lte_from(P.lt)(x, y) = (P.lt(x, y) or x = y)
+
+        lt_from(lte_from(P.lt))(x, y) implies ((P.lt(x, y) or x = y) and x != y)
+        ((P.lt(x, y) or x = y) and x != y) implies lt_from(lte_from(P.lt))(x, y)
+
+        lt_from(lte_from(P.lt))(x, y) = ((P.lt(x, y) or x = y) and x != y)
+
+        ((P.lt(x, y) or x = y) and x != y) = ((P.lt(x, y) and x != y) or (x = y and x != y))
+
+        ((P.lt(x, y) or x = y) and x != y) = (P.lt(x, y) and x != y)
+
+        (P.lt(x, y) and x != y) = P.lt(x, y)
+
+        lt_from(lte_from(P.lt))(x, y) implies P.lt(x, y)
+
+        lt_from(lte_from(P.lt))(x, y) = P.lt(x, y)
+    }
 }
 
 theorem lte_is_reflexive[T](lt: (T, T) -> Bool) {
@@ -55,6 +93,46 @@ theorem lte_is_reflexive[T](lt: (T, T) -> Bool) {
         x = x
         lte_from(lt)(x, x)
     }
+}
+
+theorem lt_is_nonreflexive[T](lte: (T, T) -> Bool) {
+    is_nonreflexive(lt_from(lte))
+} by {
+    forall(x: T) {
+        if lt_from(lte)(x, x) {
+            lte(x, x) and x != x
+            false
+        }
+    }
+}
+
+theorem acyclic_imp_antisymmetric[T](lt: (T, T) -> Bool) {
+    is_acyclic(lt) implies is_antisymmetric(lte_from(lt))
+} by {
+    forall(x: T, y: T) {
+        if lte_from(lt)(x, y) and lte_from(lt)(y, x) {
+            lt(x, y) or x = y
+            lt(y, x) or y = x
+            x = y
+        }
+    }
+    is_antisymmetric(lte_from(lt))    
+}
+
+theorem antisymmetric_imp_acyclic[T](lte: (T, T) -> Bool) {
+    is_antisymmetric(lte) implies is_acyclic(lt_from(lte))
+} by {
+    forall(x: T, y: T) {
+        if lt_from(lte)(x, y) and lt_from(lte)(y, x) {
+            lte(x, y) and lte(y, x)
+            x = y
+            lt_from(lte)(x, x)
+            not is_nonreflexive(lt_from(lte))
+            false
+        }
+        not (lt_from(lte)(x, y) and lt_from(lte)(y, x))
+    }
+    is_acyclic(lt_from(lte))
 }
 
 theorem lt_trans_imp_lte_trans[T](lt: (T, T) -> Bool) {
@@ -80,63 +158,100 @@ theorem lt_trans_imp_lte_trans[T](lt: (T, T) -> Bool) {
     }
 }
 
-theorem lte_trans_imp_lt_trans[T](lt: (T, T) -> Bool) {
-    is_nonreflexive(lt) and is_acyclic(lt) implies (is_transitive(lte_from(lt)) implies is_transitive(lt))
+theorem lte_trans_imp_lt_trans[T](lte: (T, T) -> Bool) {
+    is_antisymmetric(lte) implies (is_transitive(lte) implies is_transitive(lt_from(lte)))
 } by {
-    if is_transitive(lte_from(lt)) {
+    is_acyclic(lt_from(lte))
+    if is_transitive(lte) {
         forall(x: T, y: T, z: T) {
-            if lt(x, y) and lt(y, z) {
-                lte_from(lt)(x, y)
-                lte_from(lt)(y, z)
-                lte_from(lt)(x, z)
+            if lt_from(lte)(x, y) and lt_from(lte)(y, z) {
+                lte(x, y)
+                lte(y, z)
+                lte(x, z)
                 x != y
                 y != z
                 if x = z {
-                    not is_acyclic(lt)
+                    not is_acyclic(lt_from(lte))
                     false
                 }
-                lt(x, z)
+                lt_from(lte)(x, z)
             }
         }   
     }
 }
 
-theorem acyclic_imp_antisymmetric[T](lt: (T, T) -> Bool) {
-    is_acyclic(lt) implies is_antisymmetric(lte_from(lt))
-} by {
-    forall(x: T, y: T) {
-        if lte_from(lt)(x, y) and lte_from(lt)(y, x) {
-            lt(x, y) or x = y
-            lt(y, x) or y = x
-            x = y
-        }
-    }
-    is_antisymmetric(lte_from(lt))    
-}
-
-theorem antisymmetric_imp_acyclic[T](lt: (T, T) -> Bool) {
-    is_nonreflexive(lt) and is_antisymmetric(lte_from(lt)) implies is_acyclic(lt)
-} by {
-    forall(x: T, y: T) {
-        if lt(x, y) and lt(y, x) {
-            lte_from(lt)(x, y) and lte_from(lt)(y, x)
-            x = y
-            lt(x, x)
-            not is_nonreflexive(lt)
-            false
-        }
-        not (lt(x, y) and lt(y, x))
-    }
-    is_acyclic(lt)
-}
-
 // equivalent representation of Partial_Order
-theorem equivalent_representation_of_partial_order[T](lt: (T, T) -> Bool) {
-    is_nonreflexive(lt) implies (
-        is_acyclic(lt) and is_transitive(lt) iff 
-        is_reflexive(lte_from(lt)) and is_transitive(lte_from(lt)) and is_antisymmetric(lte_from(lt))
+theorem lt_to_lte_partial_order[T](lt: (T, T) -> Bool) {
+    (
+        is_acyclic(lt) and 
+        is_transitive(lt)
+    ) implies (
+        is_reflexive(lte_from(lt)) and 
+        is_transitive(lte_from(lt)) and 
+        is_antisymmetric(lte_from(lt))
     )
 } 
+
+theorem lt_to_lte_partial_order_ver_typeclass[P: Partial_Order] {
+    is_reflexive(lte_from(P.lt)) and 
+    is_transitive(lte_from(P.lt)) and 
+    is_antisymmetric(lte_from(P.lt))
+} by {
+    is_acyclic(P.lt) 
+    is_transitive(P.lt)
+}
+
+theorem lte_to_lt_partial_order[T](lte: (T, T) -> Bool) {
+    (
+        is_reflexive(lte) and 
+        is_transitive(lte) and 
+        is_antisymmetric(lte)
+    ) implies (
+        is_acyclic(lt_from(lte)) and 
+        is_transitive(lt_from(lte))
+    ) 
+} 
+
+theorem lte_to_lt_to_lte[T](lte: (T, T) -> Bool) {
+    (
+        is_reflexive(lte) and 
+        is_transitive(lte) and 
+        is_antisymmetric(lte)
+    ) implies 
+    (lte = lte_from(lt_from(lte)))
+} by {
+    forall(x: T, y: T) {
+        lt_from(lte)(x, y) implies (lte(x, y) and x != y)
+
+        lt_from(lte)(x, y) = (lte(x, y) and x != y)
+
+        lte_from(lt_from(lte))(x, y) implies ((lte(x, y) and x != y) or x = y)
+        ((lte(x, y) and x != y) or x = y) implies lte_from(lt_from(lte))(x, y)
+
+        lte_from(lt_from(lte))(x, y) = ((lte(x, y) and x != y) or x = y)
+
+        ((lte(x, y) and x != y) or x = y) = ((lte(x, y) or x = y) and (x != y or x = y))
+
+        ((lte(x, y) and x != y) or x = y) = (lte(x, y) or x = y)
+
+        if lte(x, y) or x = y {
+            if x = y {
+                lte(x, x) // reflexive
+                lte(x, y)
+                (lte(x, y) or x = y) = lte(x, y)
+            } else {
+                x != y
+                lte(x, y)
+                (lte(x, y) or x = y) = lte(x, y)
+            }
+        } 
+        (lte(x, y) or x = y) = lte(x, y)
+
+        lte_from(lt_from(lte))(x, y) implies lte(x, y)
+
+        lte_from(lt_from(lte))(x, y) = lte(x, y)
+    }
+}
 
 attributes P: Partial_Order {
     let comparable = function(a: P, b: P) {

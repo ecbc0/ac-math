@@ -1,5 +1,5 @@
 from set import Set, empty
-from order import Partial_Order, Linear_Order, is_acyclic, is_transitive, is_reflexive, is_antisymmetric, is_nonreflexive, lte_from, equivalent_representation_of_partial_order
+from order import Partial_Order, Linear_Order, is_acyclic, is_transitive, is_reflexive, is_antisymmetric, is_nonreflexive, lte_from, lt_from, lte_to_lt_partial_order
 from nat import ℕ
 numerals ℕ
 
@@ -25,17 +25,24 @@ theorem subset_eq_is_lte_from_subset[K] {
     }
 }
 
-theorem subset_is_nonreflexive[K] {
-    is_nonreflexive(Set[K].subset)
+theorem subset_is_lt_from_subset_eq[K] {
+    Set[K].subset = lt_from(Set[K].subset_eq)
+} by {
+    forall(a: Set[K], b: Set[K]) {
+        Set[K].subset(a, b) implies lt_from(Set[K].subset_eq)(a, b)
+        Set[K].subset(a, b) = lt_from(Set[K].subset_eq)(a, b)
+    }
 }
 
 theorem subset_is_partial_order[K] {
     is_acyclic(Set[K].subset) and 
     is_transitive(Set[K].subset)
 } by {
-    equivalent_representation_of_partial_order[Set[K]](Set[K].subset)
+    lte_to_lt_partial_order[Set[K]](Set[K].subset)
+    is_transitive(Set[K].subset_eq)
+    is_reflexive(Set[K].subset_eq)
+    is_antisymmetric(Set[K].subset_eq)
 }
-
 
 let comparable[P] = Partial_Order.comparable[P]
 

@@ -213,8 +213,3 @@
 {"goal":"(1 / a).abs = 1 / a.abs","proof":["(1 / a).abs != 1 / -a","1 / -a = -1 / a","(1 / a).abs != -1 / a","not 1 / a < 0 or (1 / a).abs = -1 / a"]}
 {"goal":"(1 / a).abs = 1 / a.abs","proof":["(1 / a).abs != 1 / -a","1 / -a = -1 / a","(1 / a).abs != -1 / a","not 1 / a < 0 or (1 / a).abs = -1 / a"]}
 {"goal":"(1 / a).abs = 1 / a.abs","proof":["(1 / a).abs != 1 / -a","1 / -a = -1 / a","(1 / a).abs != -1 / a","not 1 / a < 0 or (1 / a).abs = -1 / a"]}
-{"goal":"(1 / a).abs = 1 / a.abs","proof":["(1 / a).abs != 1 / -a","1 / -a = -1 / a","(1 / a).abs != -1 / a","not 1 / a < 0 or (1 / a).abs = -1 / a"]}
-{"goal":"(1 / a).abs = 1 / a.abs","proof":["(1 / a).abs != 1 / -a","1 / -a = -1 / a","(1 / a).abs != -1 / a","not 1 / a < 0 or (1 / a).abs = -1 / a"]}
-{"goal":"(1 / a).abs = 1 / a.abs","proof":["(1 / a).abs != 1 / -a","1 / -a = -1 / a","(1 / a).abs != -1 / a","not 1 / a < 0 or (1 / a).abs = -1 / a"]}
-{"goal":"(1 / a).abs = 1 / a.abs","proof":["(1 / a).abs != 1 / -a","1 / -a = -1 / a","(1 / a).abs != -1 / a","not 1 / a < 0 or (1 / a).abs = -1 / a"]}
-{"goal":"(1 / a).abs = 1 / a.abs","proof":["(1 / a).abs != 1 / -a","1 / -a = -1 / a","(1 / a).abs != -1 / a","not 1 / a < 0 or (1 / a).abs = -1 / a"]}

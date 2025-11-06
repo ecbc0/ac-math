@@ -833,7 +833,7 @@ define is_net(c: Set[Set[ℝ]]) -> Bool {
 }
 
 define is_closed_interval_net(c: Set[Set[ℝ]]) -> Bool {
-    c != empty[Set[ℝ]] and all_closed_interval(c) and is_net(c)
+    all_closed_interval(c) and is_net(c)
 }
 
 define is_maximal_closed_interval_chain(c: Set[Set[ℝ]]) -> Bool {
