@@ -300,6 +300,13 @@ theorem max_imp_gte[L: Linear_Order](a: L, b: L) {
     }
 }
 
+theorem lte_max[L: Linear_Order](a: L, b: L) {
+    a <= a.max(b) and b <= a.max(b)
+} by {
+    a <= a.max(b)
+    b <= a.max(b)
+}
+
 theorem min_imp_lte[L: Linear_Order](a: L, b: L) {
     a.min(b) <= a and a.min(b) <= b
 } by {
@@ -310,6 +317,13 @@ theorem min_imp_lte[L: Linear_Order](a: L, b: L) {
         a.min(b) <= a
         a.min(b) <= b
     }
+}
+
+theorem gte_min[L: Linear_Order](a: L, b: L) {
+    a >= a.min(b) and b >= a.min(b)
+} by {
+    a >= a.min(b) 
+    b >= a.min(b)
 }
 
 theorem lt_imp_min[L: Linear_Order](a: L, b: L) {

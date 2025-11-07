@@ -684,6 +684,10 @@
 {"goal":"neg_by_div","proof":["reduce(a.denom, a.num) ⋅ -ℚ.1 = -reduce(a.denom, a.num)","ℚ.1 / a ⋅ -ℚ.1 = -ℚ.1 / a","ℚ.1 / -a = (-a).reciprocal","ℚ.1 / a = a.reciprocal"]}
 {"goal":"neg_by_div","proof":["reduce(a.denom, a.num) ⋅ -ℚ.1 = -reduce(a.denom, a.num)","ℚ.1 / a ⋅ -ℚ.1 = -ℚ.1 / a","ℚ.1 / -a = (-a).reciprocal","ℚ.1 / a = a.reciprocal"]}
 {"goal":"neg_by_div","proof":["reduce(a.denom, a.num) ⋅ -ℚ.1 = -reduce(a.denom, a.num)","ℚ.1 / a ⋅ -ℚ.1 = -ℚ.1 / a","ℚ.1 / -a = (-a).reciprocal","ℚ.1 / a = a.reciprocal"]}
+{"goal":"neg_by_div","proof":["reduce(a.denom, a.num) ⋅ -ℚ.1 = -reduce(a.denom, a.num)","ℚ.1 / a ⋅ -ℚ.1 = -ℚ.1 / a","ℚ.1 / -a = (-a).reciprocal","ℚ.1 / a = a.reciprocal"]}
+{"goal":"neg_by_div","proof":["reduce(a.denom, a.num) ⋅ -ℚ.1 = -reduce(a.denom, a.num)","ℚ.1 / a ⋅ -ℚ.1 = -ℚ.1 / a","ℚ.1 / -a = (-a).reciprocal","ℚ.1 / a = a.reciprocal"]}
+{"goal":"neg_reciprocal_iff","proof":["0 - 1 / a > 0 = 0 > 1 / a","1 / -a > 0 = -a > 0","1 / -a = -1 / a","-(1 / a - 0) = 0 - 1 / a","-a > 0 = a < 0","0 > 1 / a = 1 / a < 0","1 / a = a.reciprocal","a.reciprocal - 0 = a.reciprocal"]}
+{"goal":"neg_reciprocal_iff","proof":["0 - 1 / a > 0 = 0 > 1 / a","1 / -a > 0 = -a > 0","1 / -a = -1 / a","-(1 / a - 0) = 0 - 1 / a","-a > 0 = a < 0","0 > 1 / a = 1 / a < 0","1 / a = a.reciprocal","a.reciprocal - 0 = a.reciprocal"]}
 {"goal":"neg_reciprocal_iff","proof":["0 - 1 / a > 0 = 0 > 1 / a","1 / -a > 0 = -a > 0","1 / -a = -1 / a","-(1 / a - 0) = 0 - 1 / a","-a > 0 = a < 0","0 > 1 / a = 1 / a < 0","1 / a = a.reciprocal","a.reciprocal - 0 = a.reciprocal"]}
 {"goal":"neg_reciprocal_iff","proof":["0 - 1 / a > 0 = 0 > 1 / a","1 / -a > 0 = -a > 0","1 / -a = -1 / a","-(1 / a - 0) = 0 - 1 / a","-a > 0 = a < 0","0 > 1 / a = 1 / a < 0","1 / a = a.reciprocal","a.reciprocal - 0 = a.reciprocal"]}
 {"goal":"neg_reciprocal_iff","proof":["0 - 1 / a > 0 = 0 > 1 / a","1 / -a > 0 = -a > 0","1 / -a = -1 / a","-(1 / a - 0) = 0 - 1 / a","-a > 0 = a < 0","0 > 1 / a = 1 / a < 0","1 / a = a.reciprocal","a.reciprocal - 0 = a.reciprocal"]}
