@@ -3,6 +3,14 @@
 {"goal":"-a + a + (-a + --a) = -a + --a","proof":["-a + a + (-a + --a) = -a + a + -a + --a"]}
 {"goal":"-a + a + A.0 = A.0","proof":["a + -a + A.0 = a + (-a + A.0)","-a + A.0 + a = a + (-a + A.0)","-a + a = a + -a","A.0 + -a = -a + A.0","a + -a = A.0"]}
 {"goal":"inverse_left","proof":["-a + a = a + -a","a + -a != A.0","a + -a = A.0"]}
+{"goal":"add_identity_left","proof":["A.0 + a = a + A.0","a + A.0 != a","a + A.0 = a"]}
+{"goal":"a - A.0 = a + -A.0","proof":["a + -A.0 = a - A.0"]}
+{"goal":"a - A.0 = a + A.0","proof":["a + -A.0 = a - A.0","-A.0 + A.0 = A.0","-A.0 + A.0 = -A.0","a + -A.0 != a + A.0","-A.0 != A.0"]}
+{"goal":"a - A.0 = a","proof":["a + A.0 != a","a + A.0 = a"]}
+{"goal":"sub_zero_right","proof":[]}
+{"goal":"A.0 - a = A.0 + -a","proof":["A.0 + -a = A.0 - a"]}
+{"goal":"A.0 - a = -a","proof":["A.0 + -a = A.0 - a","A.0 + -a = -a + A.0","A.0 + -a != -a","-a + A.0 = -a"]}
+{"goal":"sub_zero_left","proof":[]}
 {"goal":"a + -a = A.0","proof":["a + -a = A.0"]}
 {"goal":"a + -a + --a = --a","proof":["A.0 + --a != --a","A.0 + --a = --a + A.0","--a + A.0 != --a","--a + A.0 = --a"]}
 {"goal":"inverse_inverse","proof":["a + -a + --a = a + (-a + --a)","-a + --a = A.0","a + A.0 = a","--a != a + A.0","a + (-a + --a) = --a"]}
@@ -13,3 +21,39 @@
 {"goal":"-(a + b) + (a + b) = A.0","proof":["-(a + b) + (a + b) = a + b + -(a + b)","a + b + -(a + b) != A.0","a + b + -(a + b) = A.0"]}
 {"goal":"-(a + b) + a = -b","proof":["-(a + b) + (a + b) = -(a + b) + a + b","-(a + b) + a + b != -b + b or -(a + b) + a = -b","-b + b = A.0","-(a + b) + a + b = A.0","-(a + b) + a + b != -b + b","-(a + b) + a + b = -b + b"]}
 {"goal":"inverse_add","proof":["-(a + b) + (a + -a) = -(a + b) + a + -a","-a + a = a + -a","-a + a = A.0","-(a + b) + A.0 = -(a + b)"]}
+{"goal":"neg_distrib","proof":["-a + -b = -(b + a)","-(b + a) != -(a + b)","b + a != a + b","b + a = a + b"]}
+{"goal":"-(b - a) = -(b + -a)","proof":["b + -a != b - a","b + -a = b - a"]}
+{"goal":"-(b - a) = -b + --a","proof":["-b + --a = -(-a + b)","-(-a + b) != -(b - a)","-a + b = b + -a"]}
+{"goal":"-(b - a) = -b + a","proof":["--a = a"]}
+{"goal":"-(b - a) = a + -b","proof":["-b + a != a + -b","-b + a = a + -b"]}
+{"goal":"sub_anticomm","proof":["a + -b != a - b","a + -b = a - b"]}
+{"goal":"sub_self","proof":["a + -a = a - a","a + -a != A.0","a + -a = A.0"]}
+{"goal":"a - b = A.0 implies a = b","proof":["--b + -b != a + -b or --b = a","a + -b = a - b","--b + -b = A.0","--b = b","--b != a","a + -b = A.0","--b + -b != a + -b","--b + -b = a + -b"]}
+{"goal":"sub_eq_zero","proof":["b = a","a - b != A.0","a - a != A.0","a + -a = a - a","a + -a = A.0"]}
+{"goal":"a + b = A.0 implies a = -b","proof":["a + --b = a - -b","a - -b != A.0 or -b = a","a - -b != A.0","--b = b"]}
+{"goal":"add_eq_zero","proof":["a + b + -b = a + (b + -b)","a + b + -b != A.0 + -b or a + b = A.0","A.0 + -b = A.0 - b","b + -b = A.0","A.0 - b = -b","a + A.0 = a","a + b = A.0","-b != a"]}
+{"goal":"a + (b + -b) = a","proof":["b + -b = A.0","a + A.0 != a","a + A.0 = a"]}
+{"goal":"sub_add_left","proof":["a + b + -b = a + (b + -b)","a + b + -b = a + b - b"]}
+{"goal":"sub_add_right","proof":["-(a + b - a) = a - (a + b)","b + a - a = b","b + a = a + b","-(a + b - a) != -b","a + b - a != b"]}
+{"goal":"add_cancels_sub","proof":["a + -b = a - b","a - b + --b = a - b - -b","a + -b - -b = a","--b = b","a - b + --b != a","a - b - -b != a"]}
+{"goal":"a + b = c implies a = c - b","proof":["a + b - b = a"]}
+{"goal":"add_to_sub","proof":["a + b != c","c - b = a","a + b + -c = a + (b + -c)","a + b + -c = a + b - c","b + -c = b - c","c - b + -a = c - b - a","-(b - c) = c - b","c - b != a or c - b - a = A.0","a + b - c != A.0 or a + b = c","--(b - c) = b - c","a + b - c != A.0","c - b - a = A.0"]}
+{"goal":"a + b = c implies b = -a + c","proof":["b + a != c or c - a = b","c + -a = c - a","-a + c = c + -a","b + a = a + b","c + -a != b","c - a != b","b + a = c","b + a != c"]}
+{"goal":"add_to_sub_left","proof":["a + b != c","-a + c = b","c - a != b or b + a = c","c + -a = c - a","-a + c = c + -a","b + a = a + b","c + -a = b","c - a = b","b + a != c","b + a = c"]}
+{"goal":"a - b + b = a","proof":["c + b != a","a - b != c or c + b = a"]}
+{"goal":"sub_imp_add","proof":["c + b = a","c + b = b + c"]}
+{"goal":"sub_negate_imp_add","proof":["a - b != -c or b + -c = a","b - c != a or a + c = b","b - c != a","b + -c = b - c","b + -c = a","b + -c != a"]}
+{"goal":"sub_cancel_right","proof":["b - c != a - c or b - c + c = a","b - c != b - c or b - c + c = b","b - c + c = b","b - c + c != a"]}
+{"goal":"sub_cancel_left","proof":["-(c - a) != a - b or a + (c - a) = b","c - a != c - a or a + (c - a) = c","-(c - a) = a - c","a + (c - a) = c","a + (c - a) != b","-(c - a) = a - b"]}
+{"goal":"b + a + -(a + c) = b - c","proof":["b + a + -(a + c) = b + (a + -(a + c))","b + (a + -(a + c)) != b - c","a + -(a + c) = a - (a + c)","b + -c = b - c","a - (a + c) = -c","b + (a - (a + c)) != b - c"]}
+{"goal":"sub_add_cancel_left","proof":["b + a + -(a + c) = b + a - (a + c)","a + b = b + a"]}
+{"goal":"sub_add_cancel_right","proof":["c + a - (c + b) = a - b","b + c = c + b","c + a = a + c","a + c - (c + b) != a - b"]}
+{"goal":"a - (b + c) = a + -(b + c)","proof":["a + -(b + c) = a - (b + c)"]}
+{"goal":"a - (b + c) = a + (-b + -c)","proof":["-b + -c = -(b + c)"]}
+{"goal":"a - (b + c) = a + -b + -c","proof":["a + -b + -c = a + (-b + -c)"]}
+{"goal":"a - (b + c) = a - b - c","proof":["a + -b + -c = a + -b - c","a + -b = a - b"]}
+{"goal":"sub_add","proof":[]}
+{"goal":"a + -a = a + a","proof":["-a != a"]}
+{"goal":"A.0 = a + a","proof":["a + -a != A.0","a + -a = a - a","a - a != A.0","a != a or a - a = A.0"]}
+{"goal":"false","proof":[]}
+{"goal":"fix_neg","proof":[]}

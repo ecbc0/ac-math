@@ -1771,6 +1771,39 @@ attributes List[T] {
     }
 }
 
+/// Applies a function to each element of a list, creating a new list of results.
+/// Deprecated non-attribute definition.
+define map[T, U](items: List[T], f: T -> U) -> List[U] {
+    match items {
+        List.nil {
+            List.nil[U]
+        }
+        List.cons(head, tail) {
+            List.cons(f(head), map(tail, f))
+        }
+    }
+}
+
+// The two definitions of map are the same
+theorem map_equivalence[T, U] {
+    List.map[T, U] = map[T, U]
+} by {
+    forall(f: T -> U) {
+        // Induction on p
+        define p(ts: List[T]) -> Bool {
+            ts.map(f) = map(ts, f)
+        }
+
+        // Base case
+        p(List.nil)
+
+        forall(ts: List[T]) {
+            p(ts)
+            ts.map(f) = map(ts, f)
+        }
+    }
+}
+
 theorem map_singleton[T, U](f: T -> U, x: T) {
     List.singleton(x).map(f) = List.singleton(f(x))
 }

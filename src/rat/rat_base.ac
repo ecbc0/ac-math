@@ -1,5 +1,11 @@
 from nat import ℕ
 from int import ℤ, gcd, abs, mul_pos_pos_iff
+from util import is_transitive, is_acyclic
+from order import Partial_Order, Linear_Order, typeclass_lte_order
+from type_class.ring import Mul, zero_mul_to_zero
+from type_class.ordered_ring import Add, Ring, Ordered_Add, Ordered_Ring, lt_mul_pos, mul_lt_lt
+from type_class.field import Field
+from type_class.ordered_field import Ordered_Field, lt_pos_reciprocal, square_lt_imp_lt
 
 /// True if a fraction a/b is in reduced form (lowest terms).
 /// The denominator must be positive and gcd(a,b) must be 1.  
@@ -219,12 +225,6 @@ attributes ℚ {
         reduce(self.denom, self.num)
     }
 
-    /// The quotient of two rational numbers.
-    /// Division by zero is defined to yield zero.
-    define div(self, other: ℚ) -> ℚ {
-        self ⋅ other.reciprocal
-    }
-
     /// The rational formed by appending a digit to this rational in base 10.
     define read(self, other: ℚ) -> ℚ { ℚ.10 ⋅ self + other }
 }
@@ -296,14 +296,6 @@ theorem mul_one_right(r: ℚ) {
 
 theorem mul_one_left(r: ℚ) {
     ℚ.1 ⋅ r = r
-}
-
-theorem reciprocal_by_div(a: ℚ) {
-    a.reciprocal = ℚ.1 / a
-} 
-
-theorem div_by_reciprocal(p: ℚ, q: ℚ) {
-    p/q = p ⋅ ℚ.1 / q
 }
 
 theorem mul_int_eq_int_mul(a: ℤ, b: ℤ) {
@@ -409,15 +401,6 @@ theorem mul_reduced_int_right(a: ℤ, b: ℤ, c: ℤ) {
 
 theorem mul_reduced_int_left(a: ℤ, b: ℤ, c: ℤ) {
     ℚ.from_int(c) ⋅ reduce(a, b) = reduce(c ⋅ a, b)
-}
-
-theorem neg_by_div(a: ℚ) {
-    ℚ.1 / (-a) = - (ℚ.1 / a)
-} by {
-    a.reciprocal = reduce(a.denom, a.num)
-    (-a).reciprocal = reduce(a.denom, - a.num)
-    (-a).reciprocal = reduce(- a.denom, a.num)
-    (-a).reciprocal = - reduce(a.denom, a.num)
 }
 
 theorem mul_int_right_cancel(r1: ℚ, r2: ℚ, n: ℤ) {
@@ -529,6 +512,11 @@ theorem mul_assoc(a: ℚ, b: ℚ, c: ℚ) {
 } by {
     (a ⋅ b) ⋅ c = reduce(a.num ⋅ b.num ⋅ c.num, a.denom ⋅ b.denom ⋅ c.denom)
     a ⋅ (b ⋅ c) = reduce(a.num ⋅ (b.num ⋅ c.num), a.denom ⋅ (b.denom ⋅ c.denom))
+}
+
+instance ℚ: Mul {
+    let mul = ℚ.mul
+    let 1 = ℚ.1
 }
 
 theorem add_int_eq_int_add(a: ℤ, b: ℤ) {
@@ -659,6 +647,12 @@ theorem add_assoc(a: ℚ, b: ℚ, c: ℚ) {
     a + b + c = a + (b + c)
 }
 
+instance ℚ: Add {
+    let add = ℚ.add
+    let 0 = ℚ.0
+    let neg = ℚ.neg
+}
+
 theorem common_denom(r1: ℚ, r2: ℚ) {
     exists(n1: ℤ, n2: ℤ, d: ℤ) {
         r1 = reduce(n1, d) and r2 = reduce(n2, d)
@@ -692,6 +686,8 @@ theorem distrib_left(r1: ℚ, r2: ℚ, r3: ℚ) {
     r1 ⋅ r3 = reduce(r1.num ⋅ b, r1.denom ⋅ c)
     r1 ⋅ r2 + r1 ⋅ r3 = reduce(r1.num ⋅ a + r1.num ⋅ b, r1.denom ⋅ c)
 }
+
+instance ℚ: Ring
 
 theorem distrib_right(r1: ℚ, r2: ℚ, r3: ℚ) {
     (r1 + r2) ⋅ r3 = r1 ⋅ r3 + r2 ⋅ r3
@@ -746,6 +742,38 @@ theorem mul_inv_cancels_left_raw(a: ℚ) {
     a != 0 implies a.reciprocal ⋅ a = 1
 }
 
+theorem reciprocal_inverts_raw(a: ℚ) {
+    a != 0 implies a.reciprocal.reciprocal = a
+} by {
+    a ⋅ a.reciprocal = 1
+    ℚ.new(a.reciprocal.num, a.reciprocal.denom) ⋅ a.reciprocal ⋅ a = ℚ.new(a.reciprocal.num, a.reciprocal.denom)
+    a.reciprocal != 0
+    (a ⋅ a.reciprocal) ⋅ a.reciprocal.reciprocal = a
+    1 ⋅ a.reciprocal.reciprocal = a
+}
+
+theorem one_neq_zero {
+    ℚ.1 != ℚ.0
+}
+
+theorem field_inverse_zero(a: ℚ) {
+    a = ℚ.0 implies a.reciprocal = ℚ.0
+}
+
+instance ℚ: Field {
+    let reciprocal = ℚ.reciprocal
+}
+
+// define div(self, other: ℚ) -> ℚ { self ⋅ other.reciprocal }
+
+theorem reciprocal_by_div(a: ℚ) {
+    a.reciprocal = ℚ.1 / a
+} 
+
+theorem div_by_reciprocal(p: ℚ, q: ℚ) {
+    p/q = p ⋅ ℚ.1 / q
+}
+
 theorem mul_inv_cancels_right(a: ℚ) {
     a != 0 implies a ⋅ 1/a = 1
 } 
@@ -754,19 +782,18 @@ theorem mul_inv_cancels_left(a: ℚ) {
     a != 0 implies 1/a ⋅ a = 1
 }
 
-theorem reciprocal_inverts_raw(a: ℚ) {
-    a != 0 implies a.reciprocal.reciprocal = a
-} by {
-    a ⋅ a.reciprocal = 1
-    ℚ.new(a.reciprocal.num, a.reciprocal.denom) / a ⋅ a = ℚ.new(a.reciprocal.num, a.reciprocal.denom)
-    a.reciprocal != 0
-    (a ⋅ a.reciprocal) / a.reciprocal = a
-    1 ⋅ a.reciprocal.reciprocal = a
-}
-
 theorem reciprocal_inverts(a: ℚ) {
     a != 0 implies 1/(1/a) = a
 } 
+
+theorem neg_by_div(a: ℚ) {
+    ℚ.1 / (-a) = - (ℚ.1 / a)
+} by {
+    a.reciprocal = reduce(a.denom, a.num)
+    (-a).reciprocal = reduce(a.denom, - a.num)
+    (-a).reciprocal = reduce(- a.denom, a.num)
+    (-a).reciprocal = - reduce(a.denom, a.num)
+}
 
 theorem sub_zero(a: ℚ) {
     a - 0 = a
@@ -862,17 +889,11 @@ theorem pos_reciprocal_iff(a: ℚ) {
 
 theorem add_cancels_sub(a: ℚ, b: ℚ) {
     a - b + b = a
-} by {
-    a + (-b + b) = a
-    a + -b + b = a
-}
+} 
 
 theorem sub_cancels_add(a: ℚ, b: ℚ) {
     (a + b) - b = a
-} by {
-    a + (b + -b) = a
-    a + b + -b = a
-}
+} 
 
 theorem sub_moves_sides(a: ℚ, b: ℚ, c: ℚ) {
     a + b = c implies a = c - b
@@ -900,14 +921,7 @@ theorem zero_minus(a: ℚ) {
 
 theorem mul_cancels_div(a: ℚ, b: ℚ) {
     b != ℚ.0 implies (a / b) ⋅ b = a
-} by {
-    (a / b) ⋅ b = a ⋅ b.reciprocal ⋅ b
-    (a / b) ⋅ b = a ⋅ (b.reciprocal ⋅ b)
-    (a / b) ⋅ b = a ⋅ ℚ.1
-    (a / b) ⋅ b = a
-}
-
-from util import is_transitive, is_acyclic
+} 
 
 theorem lt_trans(a: ℚ, b: ℚ, c: ℚ) {
     a < b and b < c implies a < c
@@ -937,37 +951,6 @@ theorem rat_is_transitive {
     is_transitive(ℚ.lt)
 }
 
-theorem gt_trans(a: ℚ, b: ℚ, c: ℚ) {
-    a > b and b > c implies a > c
-} 
-
-theorem gte_trans(a: ℚ, b: ℚ, c: ℚ) {
-    a >= b and b >= c implies a >= c
-} by {
-    c <= b
-    b <= a
-    c <= a
-}
-
-theorem neg_sub(a: ℚ, b: ℚ) {
-    -(a - b) = b - a
-} by {
-    -(a - b) = -(a + -b)
-    -(a - b) = -a + --b
-    -(a - b) = -a + b
-    -(a - b) = b + -a
-}
-
-theorem compare_by_gt_zero(a: ℚ, b: ℚ) {
-    a - b > 0 iff a > b
-} 
-
-theorem compare_by_gte_zero(a: ℚ, b: ℚ) {
-    a - b >= 0 iff a >= b
-} by {
-    a - b >= 0 implies a >= b
-}
-
 theorem lt_acyclic_zero(a: ℚ) {
     not (a < 0 and 0 < a) 
 }
@@ -987,14 +970,54 @@ theorem rat_is_acyclic {
     is_acyclic(ℚ.lt)
 }
 
-from order import Partial_Order, Linear_Order
-
 instance ℚ: Partial_Order {
     let lt = ℚ.lt
 }
 
-theorem one_neq_zero {
-    1 != 0
+theorem lte_cover {
+    Partial_Order.lte[ℚ] = ℚ.lte
+} by {
+    forall(r1: ℚ, r2: ℚ) {
+        Partial_Order.lte[ℚ](r1, r2) implies ℚ.lte(r1, r2)
+        Partial_Order.lte[ℚ](r1, r2) = ℚ.lte(r1, r2)
+    }
+}
+
+theorem gt_cover {
+    Partial_Order.gt[ℚ] = ℚ.gt
+} 
+
+theorem gte_cover {
+    Partial_Order.gte[ℚ] = ℚ.gte
+} by {
+    forall(r1: ℚ, r2: ℚ) {
+        Partial_Order.gte[ℚ](r1, r2) implies ℚ.gte(r1, r2)
+        Partial_Order.gte[ℚ](r1, r2) = ℚ.gte(r1, r2)
+    }
+}
+
+theorem gt_trans(a: ℚ, b: ℚ, c: ℚ) {
+    a > b and b > c implies a > c
+} 
+
+theorem gte_trans(a: ℚ, b: ℚ, c: ℚ) {
+    a >= b and b >= c implies a >= c
+} by {
+    typeclass_lte_order[ℚ]
+}
+
+theorem neg_sub(a: ℚ, b: ℚ) {
+    -(a - b) = b - a
+} 
+
+theorem compare_by_gt_zero(a: ℚ, b: ℚ) {
+    a - b > 0 iff a > b
+} 
+
+theorem compare_by_gte_zero(a: ℚ, b: ℚ) {
+    a - b >= 0 iff a >= b
+} by {
+    a - b >= 0 implies a >= b
 }
 
 theorem two_neq_zero {
@@ -1014,12 +1037,7 @@ theorem times_two(r: ℚ) {
 
 theorem mul_cancels_right(a: ℚ, b: ℚ, c: ℚ) {
     c != ℚ.0 and a ⋅ c = b ⋅ c implies a = b
-} by {
-    a ⋅ c ⋅ c.reciprocal = b ⋅ c ⋅ c.reciprocal
-    a ⋅ (c ⋅ c.reciprocal) = b ⋅ (c ⋅ c.reciprocal)
-    a ⋅ 1 = b ⋅ 1
-    a = b
-}
+} 
 
 theorem mul_cancels_left(a: ℚ, b: ℚ, c: ℚ) {
     c != ℚ.0 and c ⋅ a = c ⋅ b implies a = b
@@ -1068,11 +1086,7 @@ theorem half_is_pos {
 
 theorem sub_add_quasi_cancel(a: ℚ, b: ℚ) {
     a - (a + b) = -b
-} by {
-    a - (a + b) = a + (-a + -b)
-    a - (a + b) = a + -a + -b
-    a - (a + b) = -b
-}
+} 
 
 theorem not_lt_self(a: ℚ) {
     not a < a
@@ -1087,17 +1101,6 @@ theorem lt_add_pos(a: ℚ, b: ℚ) {
 } by {
     (a + b) - a = b
     b > 0
-}
-
-attributes ℚ {
-    /// The absolute value of a rational number.
-    define abs(self) -> ℚ {
-        if self < 0 {
-            -self
-        } else {
-            self
-        }
-    }
 }
 
 theorem single_trichotomy(a: ℚ) {
@@ -1176,6 +1179,10 @@ theorem lt_add_right(a: ℚ, b: ℚ, c: ℚ) {
     ((b + c) - (a + c)) > 0
 }
 
+instance ℚ: Ordered_Add
+instance ℚ: Ordered_Ring
+instance ℚ: Ordered_Field
+
 theorem lt_add_left(a: ℚ, b: ℚ, c: ℚ) {
     a < b implies c + a < c + b
 }
@@ -1194,26 +1201,15 @@ theorem add_neg_lt(a: ℚ, b: ℚ) {
 
 theorem adding_lts(a: ℚ, b: ℚ, c: ℚ, d: ℚ) {
     a < b and c < d implies a + c < b + d
-} by {
-    a + c < b + c
-    b + c < b + d
-}
+} 
 
 theorem gt_minus_pos(a: ℚ, b: ℚ) {
     b > 0 implies a > a - b
-} by {
-    a - (a - b) = b
-    (a - (a - b)) > 0
-}
+} 
 
 theorem sub_add(a: ℚ, b: ℚ, c: ℚ) {
     a - (b + c) = a - b - c
-} by {
-    a - (b + c) = a + -(b + c)
-    a - (b + c) = a + (-b + -c)
-    a - (b + c) = a + -b + -c
-    a - (b + c) = a - b - c
-}
+} 
 
 theorem no_greatest(a: ℚ) {
     exists(b: ℚ) {
@@ -1248,13 +1244,10 @@ theorem gte_from_int(a: ℤ, b: ℤ) {
     a >= b implies ℚ.from_int(a) >= ℚ.from_int(b)
 }
 
-theorem lt_mul_pos(a: ℚ, b: ℚ, c: ℚ) {
+theorem rat_lt_mul_pos(a: ℚ, b: ℚ, c: ℚ) {
     a < b and c > 0 implies a ⋅ c < b ⋅ c
 } by {
-    b - a > 0
-    c > 0
-    (b - a) ⋅ c > 0
-    b ⋅ c - a ⋅ c > 0
+    lt_mul_pos(a, b, c)
 }
 
 theorem lte_mul_pos(a: ℚ, b: ℚ, c: ℚ) {
@@ -1263,10 +1256,7 @@ theorem lte_mul_pos(a: ℚ, b: ℚ, c: ℚ) {
 
 theorem lt_div_pos(a: ℚ, b: ℚ, c: ℚ) {
     c > 0 and a < b implies a/c < b/c
-} by {
-    1/c > 0
-    a ⋅ 1/c < b ⋅ 1/c
-}
+} 
 
 theorem lte_div_pos(a: ℚ, b: ℚ, c: ℚ) {
     c > 0 and a <= b implies a/c <= b/c
@@ -1274,10 +1264,7 @@ theorem lte_div_pos(a: ℚ, b: ℚ, c: ℚ) {
 
 theorem mul_div_cancels(a: ℚ, b: ℚ) {
     b != 0 implies (a ⋅ b) / b = a
-} by {
-    (a ⋅ b) / b = a ⋅ (b / b)
-    (a ⋅ b) / b = a ⋅ 1
-}
+} 
 
 theorem div_from_int(a: ℚ) {
     ℚ.from_int(a.num) / ℚ.from_int(a.denom) = a
@@ -1371,20 +1358,14 @@ theorem lt_some_int(a: ℚ) {
     }
 } 
 
-theorem mul_lt_lt(a: ℚ, b: ℚ, c: ℚ, d: ℚ) {
+theorem rat_mul_lt_lt(a: ℚ, b: ℚ, c: ℚ, d: ℚ) {
     a > 0 and c > 0 and a < b and c < d implies a ⋅ c < b ⋅ d
 } by {
-    a ⋅ c < b ⋅ c
-    b > 0
-    b ⋅ c < b ⋅ d
+    mul_lt_lt(a, b, c, d)
 }
 
 theorem mul_lt_lte(a: ℚ, b: ℚ, c: ℚ, d: ℚ) {
     a > 0 and c > 0 and a < b and c <= d implies a ⋅ c < b ⋅ d
-} by {
-    a ⋅ c < b ⋅ c
-    b > 0
-    b ⋅ c <= b ⋅ d
 }
 
 theorem pos_lte(a: ℚ, b: ℚ) {
@@ -1393,22 +1374,12 @@ theorem pos_lte(a: ℚ, b: ℚ) {
 
 theorem mul_lte_lt(a: ℚ, b: ℚ, c: ℚ, d: ℚ) {
     a > 0 and c > 0 and a <= b and c < d implies a ⋅ c < b ⋅ d
-} by {
-    a ⋅ c <= b ⋅ c
-    b > 0
-    b ⋅ c < b ⋅ d
-}
+} 
 
-theorem lt_pos_reciprocal(a: ℚ, b: ℚ) {
+theorem rat_lt_pos_reciprocal(a: ℚ, b: ℚ) {
     a > 0 and a < b implies 1/b < 1/a
 } by {
-    1/a > 0
-    1/b > 0
-    a ⋅ 1/a ⋅ 1/b < b ⋅ 1/a ⋅ 1/b
-    a ⋅ 1/a ⋅ 1/b = 1/b
-    (b ⋅ 1/a) ⋅ 1/b = b ⋅ (1/a ⋅ 1/b)
-    b ⋅ 1/a ⋅ 1/b = 1/a
-    1/b < 1/a
+    lt_pos_reciprocal(a, b)
 }
 
 theorem smaller_int_reciprocal(a: ℚ) {
@@ -1449,18 +1420,9 @@ theorem half_pos(r: ℚ) {
     1/2 > 0
 }
 
-theorem add_half_half(r: ℚ) {
-    (r / 2) + (r / 2) = r
-} 
-
 theorem lt_neg(p: ℚ, q: ℚ) {
     p < q implies -p > -q
-} by {
-    (q - p) > 0
-    (q - p) + -q > -q
-    (q - p) + -q = (q + -q) - p
-    -p > -q
-}
+} 
 
 theorem lte_neg(p: ℚ, q: ℚ) {
     p <= q implies -p >= -q
@@ -1497,13 +1459,7 @@ theorem gt_imp_rat_between(a: ℚ, b: ℚ) {
 
 theorem lt_cancel_pos_mul_right(a: ℚ, b: ℚ, c: ℚ) {
     c > 0 and a ⋅ c < b ⋅ c implies a < b
-} by {
-    if a >= b {
-        a ⋅ c >= b ⋅ c
-        not (a ⋅ c < b ⋅ c)
-        false
-    }
-}
+} 
 
 theorem lt_cancel_pos_mul_left(a: ℚ, b: ℚ, c: ℚ) {
     c > 0 and c ⋅ a < c ⋅ b implies a < b
@@ -1573,38 +1529,24 @@ theorem mul_to_zero(a: ℚ, b: ℚ) {
     a ⋅ b = 0 implies a = 0 or b = 0 
 } 
 
-theorem mul_to_zero_imp_rev(a: ℚ, b: ℚ) { 
+theorem rat_zero_mul_to_zero(a: ℚ, b: ℚ) { 
     a = 0 or b = 0 implies a ⋅ b = 0  
 } by {
-    a = 0 implies a ⋅ b = 0
-    b = 0 implies a ⋅ b = 0
+    zero_mul_to_zero(a, b)
 }
 
 theorem mul_non_neg(a: ℚ, b: ℚ) {
     a >= 0 and b >= 0 implies (a ⋅ b) >= 0
-} by {
-    if a = 0 or b = 0 {
-        a ⋅ b = 0
-    } else {
-        a ⋅ b > 0
-    }
-}
+} 
 
-theorem mul_two_abs(a: ℚ, b: ℚ) {
-    a.abs ⋅ b.abs = (a ⋅ b).abs
-} by {
-    (a ⋅ b).abs = (a.abs ⋅ b.abs).abs
-    not a.abs < 0
-    not b.abs < 0
-    not (a.abs ⋅ b.abs) < 0
-    (a.abs ⋅ b.abs).abs = a.abs ⋅ b.abs
-}
+theorem rat_abs_distrib_mul(a: ℚ, b: ℚ) {
+    (a ⋅ b).abs = (a).abs ⋅ (b).abs
+} 
 
-theorem abs_zero_imp_zero(a: ℚ) {
+theorem abs_zero_iff_zero(a: ℚ) {
+    a.abs = 0 iff a = 0
+} by {
     a.abs = 0 implies a = 0
-} by {
-    if a > 0 { a.abs = a }
-    if a < 0 { a.abs = -a }
 }
 
 theorem zero_lte_abs(a: ℚ) {
@@ -1618,49 +1560,25 @@ theorem pos_inverses_lt(p: ℚ, q: ℚ, r: ℚ) {
     and r/p < r/q
     implies
     p > q
-} by {
-    r ⋅ 1/p < r ⋅ 1/q
-    1/p < 1/q
-    1/(1/q) < 1/(1/p)
-    1/(1/q) = q
-    1/(1/p) = p
-}
+} 
 
 theorem reciprocal_eq(p: ℚ, q: ℚ) {
     p != 0 and q != 0 and 1/p = 1/q implies p = q
-} by {
-    1/(1/q) = q
-    1/(1/p) = p
-}
+} 
 
 theorem inverses_eq(p: ℚ, q: ℚ, r: ℚ) {
     p != 0 and q != 0 and r != 0
     and r/p = r/q
     implies
     p = q
-} by {
-    r/p = r ⋅ 1/p
-    r/q = r ⋅ 1/q
-    r ⋅ 1/p = r ⋅ 1/q
-    1/p = 1/q
-}
+} 
 
 theorem pos_inverses_lte(p: ℚ, q: ℚ, r: ℚ) {
     p > 0 and q > 0 and r > 0
     and r/p <= r/q
     implies
     p >= q
-} by {
-    p != 0 
-    q != 0 
-    r != 0
-    if r/p = r/q { 
-        p = q 
-    } else {
-        r/p < r/q
-        p > q
-    }
-}
+} 
 
 theorem pos_inverses_gt(p: ℚ, q: ℚ, r: ℚ) {
     p > 0 and q > 0 and r > 0
@@ -1674,29 +1592,15 @@ theorem pos_inverses_gte(p: ℚ, q: ℚ, r: ℚ) {
     and r/p >= r/q
     implies
     p <= q
-} by {
-    if r/p = r/q { p = q } else {
-        r/p > r/q
-        p < q
-    }
-}
+} 
 
 theorem lt_cancel_add_right(p: ℚ, q: ℚ, r: ℚ) {
     p + r < q + r implies p < q
-} by {
-    if p >= q {
-        p + r >= q + r
-        false
-    }
-}
+} 
 
 theorem sub_distrib(p: ℚ, q: ℚ, r: ℚ) {
     p ⋅ (q - r) = p ⋅ q - p ⋅ r
-} by {
-    p ⋅ (q - r) = p ⋅ (q + -r)
-    p ⋅ (q - r) = p ⋅ q + p ⋅ -r
-    p ⋅ (q - r) = p ⋅ q - p ⋅ r
-}
+} 
 
 theorem half_lt_one {
     1/2 < 1
@@ -1726,17 +1630,12 @@ theorem lower_squared(a: ℚ) {
     }
 }
 
-theorem square_lt_imp_lt(a: ℚ, b: ℚ) {
+theorem rat_square_lt_imp_lt(a: ℚ, b: ℚ) {
     a > 0 and b > 0 and a ⋅ a < b ⋅ b
     implies
     a < b
 } by {
-    if a >= b {
-        a ⋅ a >= b ⋅ a
-        b ⋅ a >= b ⋅ b
-        a ⋅ a >= b ⋅ b
-        false
-    }
+    square_lt_imp_lt(a, b)
 }
 
 theorem smaller_positive(a: ℚ) {
@@ -1767,10 +1666,7 @@ theorem lt_both_pos(a: ℚ, b: ℚ) {
 
 theorem lt_rhs_div_pos(a: ℚ, b: ℚ, c: ℚ) {
     c > 0 and a < b/c implies a ⋅ c < b
-} by {
-    a ⋅ c < b/c ⋅ c
-    b/c ⋅ c = b
-}
+} 
 
 theorem lte_abs(q: ℚ) {
     q <= q.abs

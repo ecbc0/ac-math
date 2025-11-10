@@ -1,5 +1,7 @@
 from nat.nat_divide import ℕ, divides_suc, divides_trans
 from nat.nat_base import true_below, strong_induction
+from list.list_mul import List, Mul, product
+
 numerals ℕ
 
 attributes ℕ {
@@ -123,8 +125,6 @@ theorem has_prime_divisor(n: ℕ) {
     }
     has_prime_divisor(n)
 }
-
-from list.list_mul import List, Mul, product
 
 define are_primes(l: List[ℕ]) -> Bool {
     forall(n: ℕ) {

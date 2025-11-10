@@ -1,0 +1,601 @@
+from type_class.ring import Ring, Add
+from order import Linear_Order
+from nat import ℕ
+
+// reuse for ℤ, ℚ, ℝ
+
+typeclass A: Ordered_Add extends Add, Linear_Order {
+    /// Right addition preserves the order relation: if `a < b`, then `a + c < b + c`.
+    right_invariance(a: A, b: A, c: A) {
+        a < b implies a + c < b + c
+    }    
+}
+
+theorem left_invariance[A: Ordered_Add](a: A, b: A, c: A) {
+    a < b implies c + a < c + b
+}
+
+theorem lte_add_left[A: Ordered_Add](a: A, b: A, c: A) { 
+    b <= c implies a + b <= a + c 
+}
+
+theorem right_lte_lt[A: Ordered_Add](a: A, b: A, c: A, d: A) {
+    a < b and c <= d implies a + c < b + d
+} by {
+    if c = d {
+        a + c < b + d
+    } else {
+        c < d
+        a + c < b + c
+        b + c < b + d
+        a + c < b + d
+    }
+}
+
+theorem left_lte_lt[A: Ordered_Add](a: A, b: A, c: A, d: A) {
+    a <= b and c < d implies a + c < b + d
+}
+
+theorem lte_add_right[A: Ordered_Add](a: A, b: A, c: A) { 
+    b <= c implies b + a <= c + a 
+}
+
+theorem lt_sub[A: Ordered_Add](a: A, b: A, c: A) { 
+    a < b + c implies a - b < c 
+} by {
+    a + -b < b + c + -b
+}
+
+theorem lte_sub[A: Ordered_Add](a: A, b: A, c: A) { 
+    a <= b + c implies a - b <= c 
+} by {
+    if a = b + c {
+        a - b = c
+        a - b <= c
+    } else {
+        a - b < c
+        a - b <= c
+    }
+}
+
+theorem gt_sub[A: Ordered_Add](a: A, b: A, c: A) { 
+    a > b + c implies a - b > c 
+} by {
+    a + -b > b + c + -b
+}
+
+theorem gte_sub[A: Ordered_Add](a: A, b: A, c: A) { 
+    a >= b + c implies a - b >= c 
+} by {
+    if a = b + c {
+        a - b = c
+        a - b >= c
+    } else {
+        a - b > c
+        a - b >= c
+    }
+}
+
+theorem gt_minus_pos[A: Ordered_Add](a: A, b: A) {
+    b > A.0 implies a > a - b
+} by {
+    a - (a - b) = b
+    (a - (a - b)) > A.0
+}
+
+theorem add_pos_pos[A: Ordered_Add](a: A, b: A) {
+    a > A.0 and b > A.0 implies (a + b) > A.0
+} 
+
+theorem add_pos_nonneg[A: Ordered_Add](a: A, b: A) {
+    a > A.0 and b >= A.0 implies (a + b) > A.0
+} 
+
+theorem add_neg_nonpos[A: Ordered_Add](a: A, b: A) {
+    a < A.0 and b <= A.0 implies (a + b) < A.0
+}
+
+theorem add_nonneg_nonneg[A: Ordered_Add](a: A, b: A) {
+    a >= A.0 and b >= A.0 implies (a + b) >= A.0
+}
+
+theorem add_nonpos_nonpos[A: Ordered_Add](a: A, b: A) {
+    a <= A.0 and b <= A.0 implies (a + b) <= A.0
+} 
+
+theorem compare_by_zero[A: Ordered_Add](a: A, b: A) {
+    a - b > A.0 iff a > b
+} by {
+    a - b > A.0 implies a > b
+}
+
+theorem nonpos_lt_pos[A: Ordered_Add](a: A, b: A) {
+    a <= A.0 and b > A.0 implies a < b
+} by {
+    (b - a) > A.0
+}
+
+theorem neg_lt_nonneg[A: Ordered_Add](a: A, b: A) { 
+    a < A.0 and b >= A.0 implies a < b 
+}
+
+theorem nonpos_lte_nonneg[A: Ordered_Add](a: A, b: A) {
+    a <= A.0 and b >= A.0 implies a <= b
+}
+
+theorem pos_lte[A: Ordered_Add](a: A, b: A) {
+    a > A.0 and a <= b implies b > A.0
+} 
+
+attributes A: Ordered_Add {
+    define abs(self) -> A {
+        if self > A.0 {
+            self
+        } else {
+            -self
+        }
+    }
+
+    /// The positive part of this integer.
+    define pos_part(self) -> A {
+        if self > A.0 {
+            self.abs
+        } else {
+            A.0
+        }
+    }
+
+    /// The negative part of this integer.
+    define neg_part(self) -> A {
+        if self > A.0 {
+            A.0
+        } else {
+            self.abs
+        }
+    }
+}
+
+theorem pos_neg_decomposition[A: Ordered_Add](a: A) {
+    a = a.pos_part - a.neg_part
+} by {
+    if a > A.0 {
+        a.pos_part = a
+        a.neg_part = A.0
+        a = a.pos_part - a.neg_part
+    } else {
+        a.pos_part = A.0
+        a.neg_part = -a
+        a = a.pos_part - a.neg_part
+    }
+}
+
+theorem neg_abs[A: Ordered_Add](a: A) {
+    (-a).abs = a.abs
+} by {
+    if a > A.0 {
+        -a < A.0
+        (-a).abs = a
+        a.abs = a
+        (-a).abs = a.abs
+    } else {
+        a <= A.0
+        -a >= A.0
+        (-a).abs = -a
+        a.abs = -a
+        (-a).abs = a.abs
+    }
+}
+
+theorem abs_gte_zero[A: Ordered_Add](a: A) {
+    a.abs >= A.0
+} by {
+    if a > A.0 {
+        a.abs = a
+        a.abs >= A.0
+    } else {
+        a <= A.0
+        a.abs = -a
+        -a >= A.0
+        a.abs >= A.0
+    }
+}
+
+theorem pos_part_neg[A: Ordered_Add](a: A) { 
+    (-a).pos_part = a.neg_part 
+} by {
+    if a > A.0 {
+        -a < A.0
+        (-a).pos_part = A.0
+        a.neg_part = A.0
+        (-a).pos_part = a.neg_part
+    } else {
+        a <= A.0
+        -a >= A.0
+        (-a).pos_part = (-a).abs
+        a.neg_part = a.abs
+        (-a).pos_part = a.neg_part
+    }
+}
+
+theorem neg_part_neg[A: Ordered_Add](a: A) { 
+    (-a).neg_part = a.pos_part 
+}
+
+theorem abs_zero_iff_zero[A: Ordered_Add](a: A) {
+    (a).abs = A.0 iff a = A.0
+} by {
+    (a).abs = A.0 implies a = A.0
+}
+
+theorem member_abs_neg[A: Ordered_Add](a: A) {
+    a < A.0 implies a.abs = -a
+}
+
+theorem member_abs_nonneg[A: Ordered_Add](a: A) {
+    a >= A.0 implies a.abs = a
+}
+
+theorem member_abs_pos[A: Ordered_Add](a: A) {
+    a > A.0 implies a.abs = a
+}
+
+theorem member_abs_nonpos[A: Ordered_Add](a: A) {
+    a <= A.0 implies a.abs = -a
+}
+
+define abs[A: Ordered_Add](a: A) -> A {
+    a.abs
+}
+
+theorem lte_abs[A: Ordered_Add](a: A) { a <= abs(a) } by {
+    if a > A.0 {
+        abs(a) = a
+        a <= abs(a)
+    } else {
+        a <= A.0
+        abs(a) >= A.0
+        a <= abs(a)
+    }
+}
+
+theorem abs_add_nonneg[A: Ordered_Add](a: A, b: A) {
+    a >= A.0 and b >= A.0 implies abs(a + b) = abs(a) + abs(b)
+}
+
+theorem abs_add_nonpos[A: Ordered_Add](a: A, b: A) {
+    a <= A.0 and b <= A.0 implies abs(a + b) = abs(a) + abs(b)
+} by {
+    (-a) >= A.0
+    (-b) >= A.0
+    abs(-a + -b) = abs(-a) + abs(-b)
+    abs(-a + -b) = abs(-(a + b))
+}
+
+// One case of the triangle inequality
+theorem triangle_nonpos_lte_nonneg[A: Ordered_Add](a: A, b: A) {
+    a >= A.0 and b <= A.0 and abs(b) <= abs(a) implies abs(a + b) <= abs(a) + abs(b)
+} by {
+    a = abs(a)
+    b = -abs(b)
+    a + b = abs(a) + -abs(b)
+    a + b >= A.0
+    a + b = abs(a + b)
+    -abs(b) <= abs(b)
+    a + b <= abs(a) + abs(b)
+}
+
+theorem triangle_nonneg_nonpos[A: Ordered_Add](a: A, b: A) {
+    a >= A.0 and b <= A.0 implies abs(a + b) <= abs(a) + abs(b)
+} by {
+    if abs(b) <= abs(a) {
+        abs(a + b) <= abs(a) + abs(b)
+    } else {
+        abs(a) <= abs(b)
+        abs(-a) <= abs(-b)
+        (-b) >= A.0
+        (-a) <= A.0
+        abs(-b + -a) <= abs(-b) + abs(-a)
+
+        abs(a + b) <= abs(a) + abs(b)
+    }
+}
+
+theorem triangle_ineq[A: Ordered_Add](a: A, b: A) { 
+    (a + b).abs <= (a).abs + (b).abs 
+} by {
+    if a < A.0 {
+        if b < A.0 {
+            abs(a + b) <= abs(a) + abs(b)
+        } else {
+            abs(b + a) <= abs(b) + abs(a)
+            abs(a + b) <= abs(a) + abs(b)
+        }
+    } else {
+        a >= A.0
+        if b < A.0 {
+            abs(a + b) <= abs(a) + abs(b)
+        } else {
+            b >= A.0
+            abs(a + b) <= abs(a) + abs(b)
+        }
+    }
+}
+
+theorem triangle_ineq_sub[A: Ordered_Add](a: A, b: A) { 
+    (a).abs - (b).abs <= (a - b).abs
+} by {
+    // prove |a| <= |(a - b) + b| => |a| - |b| <= |a - b|
+    abs(a) = abs((a - b) + b)
+    abs(a) <= abs(a - b) + abs(b)
+
+    abs(a) <= abs(a - b) + abs(b)
+    
+    abs(a) - abs(b) <= abs(a - b)
+
+    // prove |b| <= |(a - b) + a| => |b| - |a| <= |a - b|
+    abs(b) = abs((b - a) + a)
+    abs(b) <= abs(b - a) + abs(a)
+
+    abs(b) <= abs(b - a) + abs(a)
+    
+    abs(b) - abs(a) <= abs(b - a)
+}
+
+// reuse theorem to ℤ, ℚ, ℝ
+typeclass R: Ordered_Ring extends Ring, Ordered_Add {
+    /// product of positive elements is positive
+    mul_preserves_pos(a: R, b: R) {
+        a > R.0 and b > R.0 implies a ⋅ b > R.0
+    } 
+}
+
+theorem neg_change_sign[R: Ordered_Ring](a: R) {
+    a > R.0 iff -a < R.0
+} by {
+    if a > R.0 {
+        a + -a > -a
+        R.0 > -a
+    }
+    if -a < R.0 {
+        a + -a < a + R.0
+        R.0 < a
+    }
+}
+
+theorem neg_change_sign_weak[R: Ordered_Ring](a: R) {
+    a >= R.0 iff -a <= R.0
+} by {
+    a >= R.0 implies -a <= R.0
+}
+
+theorem mul_nonneg_nonneg_nonneg[R: Ordered_Ring](a: R, b: R) {
+    a >= R.0 and b >= R.0 implies (a ⋅ b) >= R.0
+} by {
+    if a = R.0 or b = R.0 {
+        a ⋅ b = R.0
+        (a ⋅ b) >= R.0
+    } else {
+        a > R.0
+        b > R.0
+        a ⋅ b > R.0
+        (a ⋅ b) >= R.0
+    }
+}
+
+theorem mul_nonneg_nonpos_nonpos[R: Ordered_Ring](a: R, b: R) {
+    a >= R.0 and b <= R.0 implies (a ⋅ b) <= R.0
+}
+
+theorem mul_pos_neg_neg[R: Ordered_Ring](a: R, b: R) {
+    a > R.0 and b < R.0 implies (a ⋅ b) < R.0
+}
+
+theorem mul_nonpos_nonneg_nonpos[R: Ordered_Ring](a: R, b: R) {
+    a <= R.0 and b >= R.0 implies (a ⋅ b) <= R.0
+}
+
+theorem mul_nonpos_nonpos_nonneg[R: Ordered_Ring](a: R, b: R) {
+    a <= R.0 and b <= R.0 implies (a ⋅ b) >= R.0
+}
+
+theorem mul_neg_neg_pos[R: Ordered_Ring](a: R, b: R) {
+    a < R.0 and b < R.0 implies (a ⋅ b) > R.0
+}
+
+
+theorem mul_neg_pos_neg[R: Ordered_Ring](a: R, b: R) {
+    a < R.0 and b > R.0 implies (a ⋅ b) < R.0
+}
+
+theorem square_gte_zero[R: Ordered_Ring](a: R) {
+    a ⋅ a >= R.0
+} by {
+    if a > R.0 {
+    } else {
+        a <= R.0
+    }
+}
+
+theorem one_gte_zero[R: Ordered_Ring] {
+    R.1 >= R.0
+} by {
+    R.1 ⋅ R.1 = R.1
+    R.1 ⋅ R.1 >= R.0
+    R.1 >= R.0
+}
+
+theorem one_gt_zero[R: Ordered_Ring] {
+    R.1 != R.0 implies R.1 > R.0
+}
+
+theorem lt_mul_pos[R: Ordered_Ring](a: R, b: R, c: R) {
+    a < b and c > R.0 implies a ⋅ c < b ⋅ c
+} by {
+    b - a > R.0
+    c > R.0
+    (b - a) ⋅ c > R.0
+    b ⋅ c - a ⋅ c > R.0
+}
+
+theorem lt_mul_pos_neg[R: Ordered_Ring](a: R, b: R, c: R) {
+    a < b and c < R.0 implies a ⋅ c > b ⋅ c
+} 
+
+theorem lte_mul_pos[R: Ordered_Ring](a: R, b: R, c: R) {
+    a <= b and c > R.0 implies a ⋅ c <= b ⋅ c
+} 
+
+theorem mul_lt_lt[R: Ordered_Ring](a: R, b: R, c: R, d: R) {
+    a > R.0 and c > R.0 and a < b and c < d implies a ⋅ c < b ⋅ d
+} by {
+    a ⋅ c < b ⋅ c
+    b > R.0
+    b ⋅ c < b ⋅ d
+}
+
+theorem mul_lt_lte[R: Ordered_Ring](a: R, b: R, c: R, d: R) {
+    a > R.0 and c > R.0 and a < b and c <= d implies a ⋅ c < b ⋅ d
+} by {
+    a ⋅ c < b ⋅ c
+    b > R.0
+    b ⋅ c <= b ⋅ d
+}
+
+theorem mul_lte_lt[R: Ordered_Ring](a: R, b: R, c: R, d: R) {
+    a > R.0 and c > R.0 and a <= b and c < d implies a ⋅ c < b ⋅ d
+} by {
+    a ⋅ c <= b ⋅ c
+    b > R.0
+    b ⋅ c < b ⋅ d
+}
+
+theorem lt_pos_mul_lt_pos[R: Ordered_Ring](a: R, b: R, c: R, d: R) {
+    a >= R.0 and c >= R.0 and a < b and c < d
+    implies
+    a ⋅ c < b ⋅ d
+} by {
+    a ⋅ c <= b ⋅ c
+    b > R.0
+    b ⋅ c < b ⋅ d
+}
+
+theorem lte_mul_lte[R: Ordered_Ring](a: R, b: R, c: R, d: R) {
+    a >= R.0 and c >= R.0 and a <= b and c <= d
+    implies
+    a ⋅ c <= b ⋅ d
+} by {
+    not b < R.0
+    not d < R.0
+    if a = b {
+        c ⋅ b <= d ⋅ b
+        a ⋅ c <= b ⋅ d
+    } else {
+        a < b
+        if c = d {
+            a ⋅ c <= b ⋅ d
+        } else {
+            c < d
+            a ⋅ c < b ⋅ d
+            a ⋅ c <= b ⋅ d
+        }
+    }
+}
+
+theorem lte_mul_nonneg[R: Ordered_Ring](a: R, b: R, c: R) {
+    a <= b and c >= R.0 implies a ⋅ c <= b ⋅ c
+} by {
+    if c = R.0 {
+        a ⋅ c = R.0
+        b ⋅ c = R.0
+        a ⋅ c <= b ⋅ c
+    } else {
+        c > R.0
+        a ⋅ c <= b ⋅ c
+    }
+}
+
+theorem lt_neg[R: Ordered_Ring](p: R, q: R) {
+    p < q implies -p > -q
+} by {
+    (q - p) > R.0
+    (q - p) + -q > -q
+    (q - p) + -q = (q + -q) - p
+    -p > -q
+}
+
+theorem lte_neg[R: Ordered_Ring](p: R, q: R) {
+    p <= q implies -p >= -q
+} 
+
+theorem lt_cancel_pos_mul_right[R: Ordered_Ring](a: R, b: R, c: R) {
+    c > R.0 and a ⋅ c < b ⋅ c implies a < b
+} by {
+    if a >= b {
+        a ⋅ c >= b ⋅ c
+        not (a ⋅ c < b ⋅ c)
+        false
+    }
+}
+
+theorem lt_cancel_pos_mul_left[R: Ordered_Ring](a: R, b: R, c: R) {
+    c > R.0 and c ⋅ a < c ⋅ b implies a < b
+}
+
+theorem gt_cancel_pos_mul_right[R: Ordered_Ring](a: R, b: R, c: R) {
+    c > R.0 and a ⋅ c > b ⋅ c implies a > b
+} 
+
+theorem gt_cancel_pos_mul_left[R: Ordered_Ring](a: R, b: R, c: R) {
+    c > R.0 and c ⋅ a > c ⋅ b implies a > b
+} 
+
+theorem cancel_positivity_left[R: Ordered_Ring](a: R, b: R) {
+    a > R.0 and (a ⋅ b) > R.0 implies b > R.0
+} 
+
+theorem cancel_positivity_right[R: Ordered_Ring](a: R, b: R) {
+    b > R.0 and (a ⋅ b) > R.0 implies a > R.0
+}
+
+theorem abs_distrib_mul[R: Ordered_Ring](a: R, b: R) {
+    (a ⋅ b).abs = (a).abs ⋅ (b).abs
+} by {
+    if a > R.0 {
+        if b > R.0 {
+            a ⋅ b > R.0
+            abs(a ⋅ b) = abs(a) ⋅ abs(b)
+        } else {
+            a ⋅ b <= R.0
+            abs(a ⋅ b) = abs(a) ⋅ abs(b)
+        }
+    } else {
+        if b > R.0 {
+            a ⋅ b <= R.0
+            abs(a ⋅ b) = abs(a) ⋅ abs(b)
+        } else {
+            a ⋅ b >= R.0
+            abs(a ⋅ b) = abs(a) ⋅ abs(b)
+        }
+    }
+}
+
+theorem pow_abs_eq_abs_pow[R: Ordered_Ring](a: R, n: ℕ) {
+    abs(a^n) = abs(a)^n
+} by {
+    let f = function(x: ℕ) {
+        abs(a^x) = abs(a)^x
+    }
+    a^(ℕ.0) = R.1
+    R.1 >= R.0
+    abs(R.1) = R.1
+    abs(a)^(ℕ.0) = R.1
+    f(ℕ.0)
+    forall(x: ℕ) {
+        if f(x) {
+            abs(a^x) = abs(a)^x
+            abs(a^(x.suc)) = abs(a)^(x.suc)
+            f(x.suc)
+        }
+    }
+    f(n)
+}

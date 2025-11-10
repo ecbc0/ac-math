@@ -48,6 +48,21 @@ theorem inverse_left[A: Add](a: A) {
     (-a + a) + A.0 = A.0
 }
 
+theorem add_identity_left[A: Add](a: A) {
+    A.0 + a = a
+}
+
+theorem sub_zero_right[A: Add](a: A) { a - A.0 = a } by {
+    a - A.0 = a + -(A.0)
+    a - A.0 = a + A.0
+    a - A.0 = a
+}
+
+theorem sub_zero_left[A: Add](a: A) { A.0 - a = -a } by {
+    A.0 - a = A.0 + -a
+    A.0 - a = -a
+}
+
 theorem inverse_inverse[A: Add](a: A) {
     --a = a
 } by {
@@ -72,6 +87,102 @@ theorem inverse_add[A: Add](a: A, b: A) {
 } by {
     -(a + b) + (a + b) = A.0
     -(a + b) + a = -b
+}
+
+theorem neg_distrib[A: Add](a: A, b: A) { 
+    -(a + b) = -a + -b 
+}
+
+theorem sub_anticomm[A: Add](a: A, b: A) { 
+    a - b = -(b - a) 
+} by {
+    -(b - a) = -(b + -a)
+    -(b - a) = -b + -(-a)
+    -(b - a) = -b + a
+    -(b - a) = a + -b
+}
+
+theorem sub_self[A: Add](a: A) { a - a = A.0 }
+
+theorem sub_eq_zero[A: Add](a: A, b: A) { a - b = A.0 iff a = b } by { 
+    a - b = A.0 implies a = b 
+}
+
+theorem add_eq_zero[A: Add](a: A, b: A) { 
+    a + b = A.0 iff a = -b 
+} by {
+    a + b = A.0 implies a = -b
+}
+
+theorem sub_add_left[A: Add](a: A, b: A) {
+    (a + b) - b = a
+} by {
+    a + (b + -b) = a
+}
+
+theorem sub_add_right[A: Add](a: A, b: A) { a - (a + b) = -b }
+
+theorem add_cancels_sub[A: Add](a: A, b: A) {
+    a - b + b = a
+} 
+
+theorem add_to_sub[A: Add](a: A, b: A, c: A) {
+    a + b = c iff a = c - b
+} by {
+    a + b = c implies a = c - b
+}
+
+theorem add_to_sub_left[A: Add](a: A, b: A, c: A) {
+    a + b = c iff b = -a + c
+} by {
+    a + b = c implies b = -a + c
+}
+
+theorem sub_imp_add[A: Add](a: A, b: A, c: A) { a - b = c implies b + c = a } by {
+    (a - b) + b = a
+}
+
+theorem sub_negate_imp_add[A: Add](a: A, b: A, c: A) { 
+    a - b = -c implies a + c = b 
+}
+
+theorem sub_cancel_right[A: Add](a: A, b: A, c: A) { 
+    a - c = b - c implies a = b 
+}
+
+theorem sub_cancel_left[A: Add](a: A, b: A, c: A) { 
+    a - b = a - c implies b = c 
+}
+
+theorem sub_add_cancel_left[A: Add](a: A, b: A, c: A) { 
+    (a + b) - (a + c) = b - c 
+} by {
+    b + a + -(a + c) = b - c
+}
+
+theorem sub_add_cancel_right[A: Add](a: A, b: A, c: A) { 
+    (a + c) - (b + c) = a - b 
+}
+
+theorem sub_add[A: Add](a: A, b: A, c: A) {
+    a - (b + c) = a - b - c
+} by {
+    a - (b + c) = a + -(b + c)
+    a - (b + c) = a + (-b + -c)
+    a - (b + c) = a + -b + -c
+    a - (b + c) = a - b - c
+}
+
+theorem fix_neg[A: Add](a: A) {
+    (a != A.0 implies a + a != A.0) implies (-a = a implies a = A.0)
+} by {
+    if -a = a {
+        if a != A.0 {
+            a + -a = a + a
+            A.0 = a + a
+            false
+        }
+    }
 }
 
 /// Pointwise addition of two functions.

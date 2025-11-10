@@ -38,33 +38,3 @@
 {"goal":"partial_sum[A](add_fn[ℕ, A](f, g), n, m) = sum[A](n.upto(m).map(add_fn[ℕ, A](f, g)))","proof":["sum[A](n.upto(m).map(add_fn[ℕ, A](f, g))) = partial_sum[A](add_fn[ℕ, A](f, g), n, m)"]}
 {"goal":"sum[A](n.upto(m).map(f)) + sum[A](n.upto(m).map(g)) = sum[A](n.upto(m).map(add_fn[ℕ, A](f, g)))","proof":["sum[A](n.upto(m).map(f)) + sum[A](n.upto(m).map(g)) = sum[A](n.upto(m).map(add_fn[ℕ, A](f, g)))"]}
 {"goal":"partial_add","proof":[]}
-{"goal":"sum[S](List.nil[S]) = S.0","proof":["List.nil[S] != List.nil[S] or sum[S](List.nil[S]) = S.0"]}
-{"goal":"c ⋅ S.0 = S.0","proof":["S.0 ⋅ c = c ⋅ S.0","S.0 ⋅ c != S.0","S.0 ⋅ c = S.0"]}
-{"goal":"List.nil[S].map(scalar_mul(c)) = List.nil[S]","proof":["List.nil[S] != List.nil[S] or List.nil[S].map(scalar_mul(c)) = List.nil[S]"]}
-{"goal":"sum[S](List.nil[S]) = S.0","proof":[]}
-{"goal":"p(List.nil[S])","proof":["sum[S](List.nil[S].map(scalar_mul(c))) != c ⋅ sum[S](List.nil[S]) or p(List.nil[S])","sum[S](List.nil[S].map(scalar_mul(c))) != c ⋅ sum[S](List.nil[S])"]}
-{"goal":"sum[S](List.cons(head, tail)) = head + sum[S](tail)","proof":["List.cons(head, tail) != List.cons(head, tail) or sum[S](List.cons(head, tail)) = head + sum[S](tail)"]}
-{"goal":"c ⋅ sum[S](List.cons(head, tail)) = c ⋅ (head + sum[S](tail))","proof":["sum[S](List.cons(head, tail)) != head + sum[S](tail)"]}
-{"goal":"c ⋅ (head + sum[S](tail)) = c ⋅ head + c ⋅ sum[S](tail)","proof":["c ⋅ head + c ⋅ sum[S](tail) = c ⋅ (head + sum[S](tail))"]}
-{"goal":"c ⋅ sum[S](tail) = sum[S](tail.map(scalar_mul(c)))","proof":["not p(tail) or sum[S](tail.map(scalar_mul(c))) = c ⋅ sum[S](tail)"]}
-{"goal":"c ⋅ head + c ⋅ sum[S](tail) = c ⋅ head + sum[S](tail.map(scalar_mul(c)))","proof":["sum[S](tail.map(scalar_mul(c))) != c ⋅ sum[S](tail)"]}
-{"goal":"List.cons(head, tail).map(scalar_mul(c)) = List.cons(scalar_mul(c)(head), tail.map(scalar_mul(c)))","proof":["List.cons(head, tail) != List.cons(head, tail) or List.cons(scalar_mul(c, head), tail.map(scalar_mul(c))) = List.cons(head, tail).map(scalar_mul(c))","List.cons(scalar_mul(c, head), tail.map(scalar_mul(c))) = List.cons(head, tail).map(scalar_mul(c))"]}
-{"goal":"scalar_mul(c)(head) = c ⋅ head","proof":["scalar_mul(c, head) = c ⋅ head"]}
-{"goal":"List.cons(head, tail).map(scalar_mul(c)) = List.cons(c ⋅ head, tail.map(scalar_mul(c)))","proof":["List.cons(scalar_mul(c, head), tail.map(scalar_mul(c))) != List.cons(head, tail).map(scalar_mul(c))"]}
-{"goal":"sum[S](List.cons(head, tail).map(scalar_mul(c))) = c ⋅ head + sum[S](tail.map(scalar_mul(c)))","proof":["List.cons(c ⋅ head, tail.map(scalar_mul(c))) != List.cons(head, tail).map(scalar_mul(c)) or c ⋅ head + sum[S](tail.map(scalar_mul(c))) = sum[S](List.cons(head, tail).map(scalar_mul(c)))"]}
-{"goal":"c ⋅ sum[S](List.cons(head, tail)) = sum[S](List.cons(head, tail).map(scalar_mul(c)))","proof":[]}
-{"goal":"p(List.cons(head, tail))","proof":["sum[S](List.cons(head, tail).map(scalar_mul(c))) != c ⋅ sum[S](List.cons(head, tail)) or p(List.cons(head, tail))","sum[S](List.cons(head, tail).map(scalar_mul(c))) != c ⋅ sum[S](List.cons(head, tail))"]}
-{"goal":"sum_scalar_mul","proof":["let (s0: (List[S] -> Bool) -> S, s1: (List[S] -> Bool) -> List[S]) satisfy { forall(x0: List[S] -> Bool, x1: List[S]) { not x0(List.nil[S]) or x0(s1(x0)) or x0(x1) } and forall(x2: List[S] -> Bool, x3: List[S]) { not x2(List.cons(s0(x2), s1(x2))) or not x2(List.nil[S]) or x2(x3) } }","not p(s1(p)) or p(List.cons(s0(p), s1(p)))","not p(list) or sum[S](list.map(scalar_mul(c))) = c ⋅ sum[S](list)","not p(list)","not p(List.cons(s0(p), s1(p))) or not p(List.nil[S]) or p(list)","not p(List.nil[S]) or p(s1(p)) or p(list)","p(s1(p)) or p(list)","p(s1(p))","not p(List.cons(s0(p), s1(p))) or p(list)","not p(List.cons(s0(p), s1(p)))"]}
-{"goal":"partial_sum[S](f, n, m) = sum[S](n.upto(m).map(f))","proof":["sum[S](n.upto(m).map(f)) = partial_sum[S](f, n, m)"]}
-{"goal":"c ⋅ partial_sum[S](f, n, m) = c ⋅ sum[S](n.upto(m).map(f))","proof":["sum[S](n.upto(m).map(f)) != partial_sum[S](f, n, m)"]}
-{"goal":"c ⋅ sum[S](n.upto(m).map(f)) = sum[S](n.upto(m).map(f).map(scalar_mul(c)))","proof":["sum[S](n.upto(m).map(f).map(scalar_mul(c))) = c ⋅ sum[S](n.upto(m).map(f))"]}
-{"goal":"n.upto(m).map(f).map(scalar_mul(c)) = n.upto(m).map(compose[ℕ, S, S](scalar_mul(c), f))","proof":["n.upto(m).map(compose[ℕ, S, S](scalar_mul(c), f)) = n.upto(m).map(f).map(scalar_mul(c))"]}
-{"goal":"compose[ℕ, S, S](scalar_mul(c), f)(k) = scalar_mul(c)(f(k))","proof":["compose[ℕ, S, S](scalar_mul(c), f, k) = scalar_mul(c, f(k))"]}
-{"goal":"scalar_mul(c)(f(k)) = c ⋅ f(k)","proof":["scalar_mul(c, f(k)) = c ⋅ f(k)"]}
-{"goal":"mul_fn[ℕ, S](c, f)(k) = c ⋅ f(k)","proof":["mul_fn(c, f, k) = c ⋅ f(k)"]}
-{"goal":"compose[ℕ, S, S](scalar_mul(c), f)(k) = mul_fn[ℕ, S](c, f)(k)","proof":[]}
-{"goal":"compose[ℕ, S, S](scalar_mul(c), f) = mul_fn[ℕ, S](c, f)","proof":["let s0: ℕ satisfy { compose[ℕ, S, S](scalar_mul(c), f, s0) != mul_fn(c, f, s0) }","compose[ℕ, S, S](scalar_mul(c), f, s0) = mul_fn(c, f, s0)"]}
-{"goal":"n.upto(m).map(compose[ℕ, S, S](scalar_mul(c), f)) = n.upto(m).map(mul_fn[ℕ, S](c, f))","proof":["compose[ℕ, S, S](scalar_mul(c), f) != mul_fn[ℕ, S](c, f)"]}
-{"goal":"sum[S](n.upto(m).map(f).map(scalar_mul(c))) = sum[S](n.upto(m).map(mul_fn[ℕ, S](c, f)))","proof":[]}
-{"goal":"partial_sum[S](mul_fn[ℕ, S](c, f), n, m) = sum[S](n.upto(m).map(mul_fn[ℕ, S](c, f)))","proof":["sum[S](n.upto(m).map(mul_fn[ℕ, S](c, f))) = partial_sum[S](mul_fn[ℕ, S](c, f), n, m)"]}
-{"goal":"partial_scalar_mul","proof":[]}

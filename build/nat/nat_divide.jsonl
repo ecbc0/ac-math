@@ -37,7 +37,7 @@
 {"goal":"b != 0","proof":["b != 0 or a ⋅ b = 0","a ⋅ b = 0"]}
 {"goal":"a = n","proof":["a - 0 = lib(nat.nat_base).bounded_sub(a, 0)","b ⋅ a = a ⋅ b","a^1 = a","a^1 - 0 = a^1","1 ⋅ lib(nat.nat_base).bounded_sub(a, 0) = lib(nat.nat_base).bounded_sub(a, 0)"]}
 {"goal":"a < a ⋅ b","proof":["not 1 < b or a < a ⋅ b or 0 = a","not 1 < b","b > 1 = 1 < b"]}
-{"goal":"a < n","proof":["not a < a * b"]}
+{"goal":"a < n","proof":["not 1 < b or a < a ⋅ b or 0 = a","not a < a ⋅ b"]}
 {"goal":"a <= n","proof":["not a <= a ⋅ b","a <= a ⋅ b or b = 0"]}
 {"goal":"factor_lte","proof":["a * b != n"]}
 {"goal":"divides_lte","proof":["let s0: (ℕ, ℕ) -> ℕ satisfy { forall(x0: ℕ, x1: ℕ) { not x0.divides(x1) or x0 ⋅ s0(x0, x1) = x1 } and forall(x2: ℕ, x3: ℕ, x4: ℕ) { x2 ⋅ x3 != x4 or x2.divides(x4) } }","a ⋅ s0(a, n) != n or a <= n or 0 = n","a ⋅ s0(a, n) != n","not a.divides(n) or a ⋅ s0(a, n) = n"]}
@@ -81,7 +81,7 @@
 {"goal":"a = 0 implies b = 0","proof":["not 0.divides(b) or 0 = b","0.divides(b)","not 0.divides(b)"]}
 {"goal":"b = 0 implies a = 0","proof":["not 0.divides(a) or 0 = a","0.divides(a)","not 0.divides(a)"]}
 {"goal":"a.divides(b)","proof":[]}
-{"goal":"a <= b","proof":["let s0: (ℕ, ℕ) -> ℕ satisfy { forall(x0: ℕ, x1: ℕ) { not x0.divides(x1) or x0 ⋅ s0(x0, x1) = x1 } and forall(x2: ℕ, x3: ℕ, x4: ℕ) { x2 ⋅ x3 != x4 or x2.divides(x4) } }","a ⋅ s0(a, b) != b or a <= b or 0 = b","a ⋅ s0(a, b) != b","not a.divides(b) or a ⋅ s0(a, b) = b"]}
+{"goal":"a <= b","proof":["not a.divides(b) or a <= b or 0 = b","0 = b","b > 1 = 1 < b","not b.is_prime or b > 1","not 1 < 0","b > 1","1 < b"]}
 {"goal":"b.divides(a)","proof":[]}
 {"goal":"a >= b","proof":["not b.divides(a) or b <= a or 0 = a","a >= b = b <= a","b <= a","not b <= a"]}
 {"goal":"a = b","proof":["not a <= b or a < b or b = a","not b <= a or b < a or b = a","a < b","not a < b or not b < a","a >= b = b <= a","b <= a","not b < a","b < a"]}

@@ -69,7 +69,7 @@ theorem pow_one[M: Mul](a: M) {
     a^(ℕ.1) = a // transitivity
 }
 
-// Proof that (a^n)^m = a ^ (n ⋅ m)
+// Proof that (a^n)^m = a^(n ⋅ m)
 theorem pow_mul[M: Mul](a: M, b: ℕ, c: ℕ) {
     a^(b ⋅ c) = (a^b)^c
 } by {

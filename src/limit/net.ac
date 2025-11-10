@@ -67,9 +67,9 @@ let comparable[P] = Partial_Order.comparable[P]
 
 // Alternative? But instance cannot use type parameter, which make this unusable, even if you not use attributes but just use define with type parameter that have typeclass
 attributes P: Partial_Order {
-    let is_subset_chain = function(contains: P -> Bool) {
+    let is_subset_chain = function(set: Set[P]) {
         forall(a: P, b: P) {
-            contains(a) and contains(b) implies comparable(a, b)
+            a ∈ set and b ∈ set implies comparable(a, b)
         }
     }
 }
@@ -83,28 +83,36 @@ attributes P: Partial_Order {
 
 // To reuse, I should use typeclass or subtype, but Acorn now does not support them well. Note that using general set is not enough, for example, you may want to use subsets with certain properties, but not just use general set
 
-define no_empty[K](contains: Set[K] -> Bool) -> Bool {
+define no_empty[K](sets: Set[Set[K]]) -> Bool {
     forall(a: Set[K]) {
-        contains(a) implies a != empty[K]
+        a ∈ sets implies a != Set[K].empty_set
     }    
 }
 
-define subset_two_intersection[K](contains: Set[K] -> Bool) -> Bool {
+define subset_two_intersection[K](sets: Set[Set[K]]) -> Bool {
     forall(a1: Set[K], a2: Set[K]) {
-        contains(a1) and contains(a2) implies exists(b: Set[K]) {
-            contains(b) and b ⊆ a1 ∩ a2
+        a1 ∈ sets and a2 ∈ sets implies exists(b: Set[K]) {
+            b ∈ sets and b ⊆ a1 ∩ a2
         }
     }    
 }
 
-define is_net[K](contains: Set[K] -> Bool) -> Bool {
-    no_empty(contains) and subset_two_intersection(contains)
+theorem subset_two_intersection_helper[K](sets: Set[Set[K]]) {
+    forall(a1: Set[K], a2: Set[K]) {
+        a1 ∈ sets and a2 ∈ sets implies exists(b: Set[K]) {
+            b ∈ sets and b ⊆ a1 ∩ a2
+        }
+    } implies subset_two_intersection(sets) 
 }
 
-structure Net[K] {
-    contains: Set[K] -> Bool
+define is_set_net[K](sets: Set[Set[K]]) -> Bool {
+    no_empty(sets) and subset_two_intersection(sets)
+}
+
+structure Set_Net[K] {
+    sets: Set[Set[K]]
 } constraint {
-    is_net(contains)
+    is_set_net(sets)
 } by {
     let x: K satisfy { true }
     let s = Set[K].singleton(x)
@@ -116,7 +124,7 @@ structure Net[K] {
             a != empty
         }
     }
-    no_empty(n.contains)
+    no_empty(n)
     forall(a1: Set[K], a2: Set[K]) {
         if a1 ∈ n and a2 ∈ n {
             a1 = s
@@ -127,36 +135,45 @@ structure Net[K] {
             b ∈ n and b ⊆ a1 ∩ a2
         }
     }
-    subset_two_intersection(n.contains)
+    subset_two_intersection(n)
 }
 
-attributes Net[K] {
-    define finer(self, other: Net[K]) -> Bool {
-        forall(b: Set[K]) {
-            b ∈ other implies exists(a: Set[K]) {
-                a ∈ self and a ⊆ b
+typeclass N: Net extends Partial_Order {
+    directed(a: N, b: N) {
+        exists(c: N) {
+            c <= a and c <= b
+            // note that when it's not linear order, we can't just use c = a or c = b
+        }
+    }
+}
+
+attributes N: Net {
+    define finer(self, other: N) -> Bool {
+        forall(b: N) {
+            exists(a: N) {
+                a <= b
             }
         }
     }
 
-    define same_limit(self, other: Net[K]) -> Bool {
+    define same_limit(self, other: N) -> Bool {
         self.finer(other) and other.finer(self)
     }
 }
 
 // Alternative, you can use "image of net" and then use finer
-define is_limit[K, L](source_net: Net[K], target_net: Net[L], f: K -> L) -> Bool {
-    forall(b: Set[L]) {
-        b ∈ target_net implies exists(a: Set[K]) {
-            a ∈ source_net and a.image(f) ⊆ b
+define is_limit[K: Net, L: Net](source_net: K, target_net: L, f: K -> L) -> Bool {
+    forall(b: L) {
+        exists(a: K) {
+            f(a) <= b
         }
     }
 }
 
-attributes Net[K] {
+attributes Set_Net[K] {
     define have_common_pt(self, x: K) -> Bool {
         forall(a: Set[K]) {
-            a ∈ self implies x ∈ a
+            a ∈ self.sets implies x ∈ a
             // Alternative: use intersection to define
         }
     }
@@ -198,11 +215,16 @@ define elem_in_seq_to_net[K](f: ℕ -> K, a: Set[K]) -> Bool {
     }
 }
 
-theorem seq_to_net_is_net[K](f: ℕ -> K) {
-    is_net(elem_in_seq_to_net(f))
+define seq_to_net[K](f: ℕ -> K) -> Set[Set[K]] {
+    Set[Set[K]].new(elem_in_seq_to_net(f))
+}
+
+theorem seq_to_net_is_set_net[K](f: ℕ -> K) {
+    is_set_net(seq_to_net(f))
 } by {
     forall(a: Set[K]) {
-        if elem_in_seq_to_net(f)(a) {
+        if a ∈ seq_to_net(f) {
+            elem_in_seq_to_net(f)(a)
             let shift: ℕ satisfy { 
                 a = Set[K].new(elem_in_seq_tail(f, shift))
             }
@@ -211,14 +233,16 @@ theorem seq_to_net_is_net[K](f: ℕ -> K) {
             }
             x = f(shift)
             x ∈ a
-            a != empty[K]
+            a != Set[K].empty_set
         }
     } 
 
-    no_empty(elem_in_seq_to_net(f))
+    no_empty(seq_to_net(f))
     
     forall(a1: Set[K], a2: Set[K]) {
-        if elem_in_seq_to_net(f)(a1) and elem_in_seq_to_net(f)(a2) {
+        if a1 ∈ seq_to_net(f) and a2 ∈ seq_to_net(f) {
+            elem_in_seq_to_net(f)(a1) 
+            elem_in_seq_to_net(f)(a2)
             let shift_1: ℕ satisfy {
                 a1 = Set[K].new(elem_in_seq_tail(f, shift_1))
             }
@@ -233,11 +257,12 @@ theorem seq_to_net_is_net[K](f: ℕ -> K) {
             b ⊆ a2
             b ⊆ a1 ∩ a2
             elem_in_seq_to_net(f)(b)
-            elem_in_seq_to_net(f)(b) and b ⊆ a1 ∩ a2
+            b ∈ seq_to_net(f)
+            b ∈ seq_to_net(f) and b ⊆ a1 ∩ a2
         }
     }
-
-    subset_two_intersection(elem_in_seq_to_net(f))
+    subset_two_intersection_helper(seq_to_net(f))
+    subset_two_intersection(seq_to_net(f))
 }
 
 // // For Interval_Chain on ℝ, we avoid Set_Chain by first use Interval_Net inherit Set[Set[ℝ]], then Interval_Chain inherit Interval_Net. The same for other "topology"

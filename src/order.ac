@@ -192,7 +192,7 @@ theorem lt_to_lte_partial_order[T](lt: (T, T) -> Bool) {
     )
 } 
 
-theorem lt_to_lte_partial_order_ver_typeclass[P: Partial_Order] {
+theorem typeclass_lt_to_lte_partial_order[P: Partial_Order] {
     is_reflexive(lte_from(P.lt)) and 
     is_transitive(lte_from(P.lt)) and 
     is_antisymmetric(lte_from(P.lt))
@@ -253,6 +253,53 @@ theorem lte_to_lt_to_lte[T](lte: (T, T) -> Bool) {
     }
 }
 
+theorem typeclass_lte_from[P: Partial_Order] {
+    lte_from(P.lt) = P.lte
+} by {
+    forall(a: P, b: P) {
+        lte_from(P.lt)(a, b) implies P.lte(a, b)
+        P.lte(a, b) implies lte_from(P.lt)(a, b)
+        lte_from(P.lt)(a, b) = P.lte(a, b)
+    }
+    lte_from(P.lt) = P.lte
+}
+
+theorem typeclass_lt_to_lte_to_lt[P: Partial_Order] {
+    lt_from(lte_from(P.lt)) = P.lt
+}
+
+theorem typeclass_lte_order[P: Partial_Order] {
+    is_reflexive(P.lte) and 
+    is_transitive(P.lte) and 
+    is_antisymmetric(P.lte)
+} by {
+    P.lte = lte_from(P.lt)
+}
+
+theorem typeclass_lt_from[P: Partial_Order] {
+    lt_from(P.lte) = P.lt
+}
+
+theorem typeclass_lte_to_lt_to_lte[P: Partial_Order] {
+    lte_from(lt_from(P.lte)) = P.lte
+}
+
+theorem lt_and_lte[P: Partial_Order](a: P, b: P, c: P) { a < b and b <= c implies a < c } by {
+    if b = c {
+        a < c
+    } else {
+        a < c
+    }
+}
+
+theorem lte_and_lt[P: Partial_Order](a: P, b: P, c: P) { a <= b and b < c implies a < c } by {
+    if a = b {
+        a < c
+    } else {
+        a < c
+    }
+}
+
 attributes P: Partial_Order {
     let comparable = function(a: P, b: P) {
         (a < b) or (b < a) or (a = b)
@@ -265,6 +312,12 @@ typeclass L: Linear_Order extends Partial_Order {
     trichotomy(a: L, b: L) {
         Partial_Order.comparable(a, b)
     }
+}
+
+theorem gt_is_not_lte[L: Linear_Order](a: L, b: L) { 
+    a > b iff not a <= b 
+} by {
+    a > b implies not a <= b 
 }
 
 attributes L: Linear_Order {

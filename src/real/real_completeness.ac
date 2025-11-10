@@ -3,6 +3,7 @@ from rat import ℚ
 from real.real_base import ℝ, is_cut, is_lower_interval, is_greatest, has_greatest, is_dedekind_cut
 numerals ℝ
 from set import Set, empty, intersection, constant_false
+from limit.net import Net, no_empty, subset_two_intersection, is_set_net
 
 attributes ℝ {
     /// True if this real number is an upper bound for the set s.
@@ -814,26 +815,8 @@ theorem nested_closed_interval_intersection_theorem(c: Set[Set[ℝ]]) {
     closed_interval(a, b) ⊆ intersection(c)
 }
 
-define subset_two_intersection(c: Set[Set[ℝ]]) -> Bool {
-    forall(a1: Set[ℝ], a2: Set[ℝ]) {
-        a1 ∈ c and a2 ∈ c implies exists(b: Set[ℝ]) {
-            b ∈ c and b ⊆ a1 ∩ a2
-        }
-    }    
-}
-
-define no_empty(c: Set[Set[ℝ]]) -> Bool {
-    forall(a: Set[ℝ]) {
-        a ∈ c implies a != empty[ℝ]
-    }    
-}
-
-define is_net(c: Set[Set[ℝ]]) -> Bool {
-    no_empty(c) and subset_two_intersection(c)
-}
-
 define is_closed_interval_net(c: Set[Set[ℝ]]) -> Bool {
-    all_closed_interval(c) and is_net(c)
+    all_closed_interval(c) and is_set_net(c)
 }
 
 define is_maximal_closed_interval_chain(c: Set[Set[ℝ]]) -> Bool {
@@ -845,9 +828,17 @@ define is_maximal_closed_interval_chain(c: Set[Set[ℝ]]) -> Bool {
 }
 
 structure Interval_Net {
-    contains: Set[ℝ] -> Bool
+    sets: Set[Set[ℝ]]
 } constraint {
-    is_closed_interval_net(Set[Set[ℝ]].new(contains))
+    is_closed_interval_net(sets)
 } by {
-    let contains = constant_false[Set[ℝ]]
+    all_closed_interval(Set[Set[ℝ]].empty_set)
+    no_empty(Set[Set[ℝ]].empty_set)
+    subset_two_intersection(Set[Set[ℝ]].empty_set)
+    is_set_net(Set[Set[ℝ]].empty_set)
+    is_closed_interval_net(Set[Set[ℝ]].empty_set)
 }
+
+// instance Set[Set[ℝ]]: Partial_Order {
+//     let lt = Set[Set[ℝ]].subset
+// }

@@ -98,10 +98,6 @@ attributes ℤ {
     }
 }
 
-theorem neg_zero {
-    -0 = 0
-}
-
 theorem neg_neg_suc(n: ℕ) {
     -neg_suc(n) = pos_suc(n)
 }
@@ -144,6 +140,24 @@ theorem numerals_from_nat {
     from_nat(ℕ.8) = pos_suc(ℕ.7)
     from_nat(ℕ.9) = pos_suc(ℕ.8)
     from_nat(ℕ.10) = pos_suc(ℕ.9)
+}
+
+theorem pos_from_nat(n: ℕ) {
+    from_nat(n.suc) = pos_suc(n)
+}
+
+theorem pos_from_nat_exists(m: ℕ) {
+    m != ℕ.0 implies exists(n: ℕ) {
+        from_nat(m) = pos_suc(n)
+    } 
+}
+
+theorem pos_from_nat_pred(n: ℕ, m: ℕ) {
+    m = n.suc implies from_nat(m) = pos_suc(n)
+}
+
+theorem pos_from_int_pred(k: ℤ, n: ℕ) {
+    k = pos_suc(n) implies k = from_nat(n.suc)
 }
 
 theorem neg_from_nat(n: ℕ) {
@@ -683,62 +697,14 @@ theorem add_neg(a: ℤ) {
     a + -a = 0
 }
 
+theorem neg_eq_zero(a: ℤ) {
+    -a = 0 iff a = 0
+} by {
+    -a = 0 implies a = 0
+}
+
 theorem sub_nat_as_add_int(a: ℕ, b: ℕ) {
     sub_nat(a, b) = from_nat(a) + -from_nat(b)
-}
-
-theorem add_eq_zero(a: ℤ, b: ℤ) { 
-    a + b = 0 iff a = -b 
-} by {
-    if a + b = 0 {
-        sub_nat(
-            a.pos_part + b.pos_part, 
-            a.neg_part + b.neg_part
-        ) = 0
-
-        a.pos_part + b.pos_part = a.neg_part + b.neg_part
-
-        a.pos_part + (-b).neg_part = a.neg_part + (-b).pos_part
-
-        sub_nat(a.pos_part, a.neg_part) = sub_nat((-b).pos_part, (-b).neg_part)
-        
-        a = -b
-    }
-    if a = -b {
-        // just reverse the order of proof
-        sub_nat(a.pos_part, a.neg_part) = sub_nat((-b).pos_part, (-b).neg_part)
-
-        a.pos_part + (-b).neg_part = a.neg_part + (-b).pos_part
-
-        a.pos_part + b.pos_part = a.neg_part + b.neg_part
-
-        sub_nat(
-            a.pos_part + b.pos_part, 
-            a.neg_part + b.neg_part
-        ) = 0
-
-        a + b = 0
-    }
-}
-
-theorem add_right_cancel(a: ℤ, b: ℤ, c: ℤ) { 
-    a + c = b + c implies a = b 
-} by {
-    sub_nat(
-        a.pos_part + c.pos_part, 
-        a.neg_part + c.neg_part
-    ) = sub_nat(
-        b.pos_part + c.pos_part, 
-        b.neg_part + c.neg_part
-    )
-
-    sub_nat(a.pos_part, a.neg_part) = sub_nat(b.pos_part, b.neg_part)
-}
-
-theorem add_left_cancel(a: ℤ, b: ℤ, c: ℤ) { 
-    c + a = c + b implies a = b 
-} by {
-    a + c = b + c
 }
 
 theorem add_sub_nat_left_pos(p: ℕ, q: ℕ, r: ℕ) {
@@ -864,6 +830,32 @@ theorem add_assoc(a: ℤ, b: ℤ, c: ℤ) { (a + b) + c = a + (b + c) } by {
     )
 }
 
+from type_class.add import Add, left_cancel
+
+instance ℤ: Add {
+    let add = ℤ.add
+   
+    let 0 = ℤ.0
+
+    let neg = ℤ.neg
+}
+
+theorem add_eq_zero(a: ℤ, b: ℤ) { 
+    a + b = 0 iff a = -b 
+} by {
+    a + b = 0 implies a = -b 
+}
+
+theorem add_left_cancel(a: ℤ, b: ℤ, c: ℤ) { 
+    c + a = c + b implies a = b 
+} by {
+    left_cancel(a, b, c)
+}
+
+theorem add_right_cancel(a: ℤ, b: ℤ, c: ℤ) { 
+    a + c = b + c implies a = b 
+} 
+
 theorem add_from_nat(a: ℕ, b: ℕ) {
     from_nat(a) + from_nat(b) = from_nat(a + b)
 }
@@ -922,36 +914,17 @@ theorem add_comm_4(a: ℤ, b: ℤ, c: ℤ, d: ℤ) {
     a + (b + c) = a + c + b
 }
 
-attributes ℤ {
-    /// Subtracts one element from another using additive inverse.
-    define sub(self, other: ℤ) -> ℤ {
-        self + -other
-    }
-}
+// define sub(self, other: A) -> A { self + -other }
 
 // Subtraction, and theorems about subtraction
 
-theorem sub_zero_right(a: ℤ) { a - 0 = a } by {
-    a - 0 = a + -(0)
-    a - 0 = a + 0
-    a - 0 = a
-}
+theorem sub_zero_right(a: ℤ) { a - 0 = a } 
 
-theorem sub_zero_left(a: ℤ) { 0 - a = -a } by {
-    0 - a = 0 + -a
-    0 - a = -a
-}
+theorem sub_zero_left(a: ℤ) { 0 - a = -a } 
 
 theorem sub_anticomm(a: ℤ, b: ℤ) { 
     a - b = -(b - a) 
-} by {
-    -(b - a) = -(b + -a)
-    -(b - a) = -b + -(-a)
-    -(b - a) = -b + a
-    -(b - a) = a + -b
-}
-
-theorem neg_sub(a: ℤ, b: ℤ) { -(a - b) = b - a }
+} 
 
 theorem sub_self(a: ℤ) { a - a = 0 }
 
@@ -1079,18 +1052,12 @@ theorem int_total(a: ℤ, b: ℤ) {
 }
 
 instance ℤ: Linear_Order
+from order import gt_is_not_lte as order_gt_is_not_lte
 
 theorem gt_is_not_lte(a: ℤ, b: ℤ) { 
     a > b iff not a <= b 
 } by {
-    if a > b {
-        not a < b
-        not a = b
-        not a <= b
-    }
-    if not a > b {
-        a <= b
-    }
+    a > b implies not a <= b 
 }
 
 theorem compare_by_zero(a: ℤ, b: ℤ) {
@@ -1274,6 +1241,21 @@ theorem mul_zero_right(a: ℤ) { a ⋅ 0 = 0 } by {
     a ⋅ 0 = -(0)
 }
 
+theorem mul_zero_left(a: ℤ) {
+    0 ⋅ a = 0
+} 
+
+theorem mul_to_zero(a: ℤ, b: ℤ) {
+    a = 0 or b = 0 implies a ⋅ b = 0
+} by {
+    if a = 0 { 
+        a ⋅ b = 0 
+    } else { 
+        b = 0
+        a ⋅ b = 0
+    }
+}
+
 theorem mul_nat_from_nat_right(a: ℤ, n: ℕ) { 
     a.mul_nat(n) = (a ⋅ from_nat(n)) 
 } by {
@@ -1319,38 +1301,6 @@ theorem mul_nonpos_nonpos(a: ℤ, b: ℤ) {
     a ⋅ b = -(a.mul_nat(abs(b)))
     a ⋅ b = -(-(from_nat(abs(a) ⋅ abs(b))))
 }
-
-theorem mul_nonneg_nonneg_nonneg(a: ℤ, b: ℤ) {
-    a >= 0 and b >= 0 implies (a ⋅ b) >= 0
-} by {
-    a ⋅ b = from_nat(abs(a) ⋅ abs(b))
-}
-
-theorem mul_nonneg_nonpos_nonpos(a: ℤ, b: ℤ) {
-    a >= 0 and b <= 0 implies (a ⋅ b) <= 0
-} by {
-    a ⋅ b = -(from_nat(abs(a) ⋅ abs(b)))
-}
-
-theorem mul_nonneg_nonpos_nonpos_raw(a: ℤ, b: ℤ) {
-    not a.is_negative and not b.is_positive implies not (a ⋅ b).is_positive
-}
-
-theorem mul_nonpos_nonneg_nonpos(a: ℤ, b: ℤ) {
-    a <= 0 and b >= 0 implies (a ⋅ b) <= 0
-} by {
-    a ⋅ b = -(from_nat(abs(a) ⋅ abs(b)))
-}
-
-theorem mul_nonpos_nonpos_nonneg(a: ℤ, b: ℤ) {
-    a <= 0 and b <= 0 implies (a ⋅ b) >= 0
-} by {
-    a ⋅ b = from_nat(abs(a) ⋅ abs(b))
-}
-
-theorem mul_zero_left(a: ℤ) {
-    0 ⋅ a = 0
-} 
 
 theorem mul_comm(a: ℤ, b: ℤ) { a ⋅ b = b ⋅ a } by {
     if a > 0 {

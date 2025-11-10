@@ -1,5 +1,6 @@
 from nat.prime_number import ℕ, mod_maintains, gcd as nat_gcd, relative_prime as nat_relative_prime
-from int.int_base import ℤ, from_nat, abs, abs_neg, abs_zero, neg_neg, neg_sub, nonzero_pos_or_neg, sub_eq_zero, sub_nat, lt_trans, neg_lt_zero
+from int.int_base import ℤ, from_nat, abs, abs_neg, abs_zero, neg_neg, nonzero_pos_or_neg, sub_eq_zero, sub_nat, lt_trans, neg_lt_zero
+from type_class.ordered_ring import triangle_ineq, triangle_ineq_sub
 
 numerals ℤ
 
@@ -14,13 +15,6 @@ theorem abs_zero_imp_zero(a: ℤ) {
 theorem mul_to_zero(a: ℤ, b: ℤ) { a ⋅ b = 0 implies a = 0 or b = 0 } by {
     abs(a) ⋅ abs(b) = ℕ.0
     abs(a) = ℕ.0 or abs(b) = ℕ.0
-}
-
-theorem mul_to_zero_imp_rev(a: ℤ, b: ℤ) { 
-    a = 0 or b = 0 implies a ⋅ b = 0  
-} by {
-    a = 0 implies a ⋅ b = 0
-    b = 0 implies a ⋅ b = 0
 }
 
 theorem mul_pos_pos(a: ℤ, b: ℤ) {
@@ -68,6 +62,26 @@ theorem mul_neg_neg(a: ℤ, b: ℤ) {
     b != 0
     a ⋅ b != 0
 }
+
+theorem mul_nonneg_nonneg_nonneg(a: ℤ, b: ℤ) {
+    a >= 0 and b >= 0 implies (a ⋅ b) >= 0
+} 
+
+theorem mul_nonneg_nonpos_nonpos(a: ℤ, b: ℤ) {
+    a >= 0 and b <= 0 implies (a ⋅ b) <= 0
+} 
+
+theorem mul_nonneg_nonpos_nonpos_raw(a: ℤ, b: ℤ) {
+    not a.is_negative and not b.is_positive implies not (a ⋅ b).is_positive
+}
+
+theorem mul_nonpos_nonneg_nonpos(a: ℤ, b: ℤ) {
+    a <= 0 and b >= 0 implies (a ⋅ b) <= 0
+} 
+
+theorem mul_nonpos_nonpos_nonneg(a: ℤ, b: ℤ) {
+    a <= 0 and b <= 0 implies (a ⋅ b) >= 0
+} 
 
 theorem int_mul_nat_mul(a: ℤ, j: ℕ, k: ℕ) { 
     a.mul_nat(j ⋅ k) = a ⋅ from_nat(j) ⋅ from_nat(k)
@@ -130,11 +144,20 @@ theorem mul_assoc(a: ℤ, b: ℤ, c: ℤ) {
     }
 }
 
+from type_class.mul import Mul
+from type_class.ring import Ring
+
+instance ℤ: Mul {
+    let mul = ℤ.mul
+
+    let 1 = ℤ.1
+}
+
+instance ℤ: Ring 
+
 theorem nonpos_lt_pos(a: ℤ, b: ℤ) {
     a <= 0 and b > 0 implies a < b
-} by {
-    (b - a) > 0
-}
+} 
 
 theorem neg_lt_nonneg(a: ℤ, b: ℤ) { 
     a < 0 and b >= 0 implies a < b 
@@ -142,17 +165,7 @@ theorem neg_lt_nonneg(a: ℤ, b: ℤ) {
 
 theorem nonpos_lte_nonneg(a: ℤ, b: ℤ) {
     a <= 0 and b >= 0 implies a <= b
-} by {
-    if a = 0 and b = 0 { 
-        a <= b 
-    } 
-    if a < 0 { 
-        a <= b 
-    }
-    if b > 0 { 
-        a <= b 
-    }
-}
+} 
 
 theorem lte_abs(a: ℤ) { a <= from_nat(abs(a)) } by {
     if a > 0 {
@@ -165,11 +178,13 @@ theorem lte_abs(a: ℤ) { a <= from_nat(abs(a)) } by {
 
 theorem lt_add_left(a: ℤ, b: ℤ, c: ℤ) { 
     b < c implies a + b < a + c 
-} by {
-    (c - b) > 0
-    (a + c) - (a + b) = c - b
-    ((a + c) - (a + b)) > 0
-}
+} 
+
+from type_class.ordered_ring import Ordered_Add, Ordered_Ring
+
+instance ℤ: Ordered_Add
+
+instance ℤ: Ordered_Ring 
 
 theorem lte_add_left(a: ℤ, b: ℤ, c: ℤ) { 
     b <= c implies a + b <= a + c 
@@ -185,39 +200,19 @@ theorem lte_add_right(a: ℤ, b: ℤ, c: ℤ) {
 
 theorem lt_sub(a: ℤ, b: ℤ, c: ℤ) { 
     a < b + c implies a - b < c 
-} by {
-    a + -b < b + c + -b
-}
+} 
 
 theorem lte_sub(a: ℤ, b: ℤ, c: ℤ) { 
     a <= b + c implies a - b <= c 
-} by {
-    if a = b + c {
-        a - b = c
-        a - b <= c
-    } else {
-        a - b < c
-        a - b <= c
-    }
-}
+} 
 
 theorem gt_sub(a: ℤ, b: ℤ, c: ℤ) { 
     a > b + c implies a - b > c 
-} by {
-    a + -b > b + c + -b
-}
+} 
 
 theorem gte_sub(a: ℤ, b: ℤ, c: ℤ) { 
     a >= b + c implies a - b >= c 
-} by {
-    if a = b + c {
-        a - b = c
-        a - b >= c
-    } else {
-        a - b > c
-        a - b >= c
-    }
-}
+} 
 
 theorem abs_add_nonneg(a: ℤ, b: ℤ) {
     a >= 0 and b >= 0 implies abs(a + b) = abs(a) + abs(b)
@@ -232,56 +227,6 @@ theorem abs_add_nonpos(a: ℤ, b: ℤ) {
 } by {
     (-a) >= 0
     (-b) >= 0
-}
-
-// One case of the triangle inequality
-theorem triangle_nonpos_lte_nonneg(a: ℤ, b: ℤ) {
-    a >= 0 and b <= 0 and abs(b) <= abs(a) implies abs(a + b) <= abs(a) + abs(b)
-} by {
-    let (n: ℕ) satisfy { n + abs(b) = abs(a) }
-    from_nat(n) + from_nat(abs(b)) = from_nat(abs(a))
-    from_nat(n) + -b = from_nat(abs(a))
-    from_nat(n) + -b = a
-    a + b = from_nat(n)
-    abs(a + b) = n
-    n <= abs(a)
-    abs(a) <= abs(a) + abs(b)
-    n <= abs(a) + abs(b)
-}
-
-theorem triangle_nonneg_nonpos(a: ℤ, b: ℤ) {
-    a >= 0 and b <= 0 implies abs(a + b) <= abs(a) + abs(b)
-} by {
-    if abs(b) <= abs(a) {
-        abs(a + b) <= abs(a) + abs(b)
-    } else {
-        abs(a) <= abs(b)
-        abs(-a) <= abs(-b)
-        (-b) >= 0
-        (-a) <= 0
-        abs(-b + -a) <= abs(-b) + abs(-a)
-
-        abs(a + b) <= abs(a) + abs(b)
-    }
-}
-
-theorem triangle_ineq(a: ℤ, b: ℤ) { 
-    abs(a + b) <= abs(a) + abs(b) 
-} by {
-    if a < 0 {
-        if b < 0 {
-            abs(a + b) <= abs(a) + abs(b)
-        } else {
-            abs(b + a) <= abs(b) + abs(a)
-            abs(a + b) <= abs(a) + abs(b)
-        }
-    } else {
-        if b < 0 {
-            abs(a + b) <= abs(a) + abs(b)
-        } else {
-            abs(a + b) <= abs(a) + abs(b)
-        }
-    }
 }
 
 theorem nat_lt_embed(a: ℕ, b: ℕ) {
@@ -343,77 +288,21 @@ theorem pos_neg_lte_abs(a: ℤ, b: ℤ) {
     }
 }
 
-theorem triangle_ineq_sub(a: ℤ, b: ℤ) { 
-    abs(from_nat(abs(a)) - from_nat(abs(b))) <= abs(a - b)
-} by {
-    // prove |a| <= |(a - b) + b| => |a| - |b| <= |a - b|
-    abs(a) = abs((a - b) + b)
-    abs(a) <= abs(a - b) + abs(b)
-
-    from_nat(abs(a)) <= from_nat(abs(a - b)) + from_nat(abs(b))
-    
-    from_nat(abs(a)) - from_nat(abs(b)) <= from_nat(abs(a - b))
-
-    // prove |b| <= |(a - b) + a| => |b| - |a| <= |a - b|
-    abs(b) = abs((b - a) + a)
-    abs(b) <= abs(b - a) + abs(a)
-
-    from_nat(abs(b)) <= from_nat(abs(b - a)) + from_nat(abs(a))
-    
-    from_nat(abs(b)) - from_nat(abs(a)) <= from_nat(abs(b - a))
-}
-
 theorem lt_mul_pos(a: ℤ, b: ℤ, c: ℤ) { 
     a < b and c > 0 implies a ⋅ c < b ⋅ c 
-} by {
-    b ⋅ c - a ⋅ c = (b - a) ⋅ c
-    (b - a) > 0
-    (b ⋅ c - a ⋅ c) > 0
-}
+} 
 
 theorem lt_mul_neg(a: ℤ, b: ℤ, c: ℤ) { 
     a < b and c < 0 implies b ⋅ c < a ⋅ c 
-} by {
-    a ⋅ c - b ⋅ c = c ⋅ (a - b)
-    (a - b) < 0
-    (c ⋅ (a - b)) > 0
-    (a ⋅ c - b ⋅ c) > 0
-}
+} 
+
+theorem lt_and_lte(a: ℤ, b: ℤ, c: ℤ) { a < b and b <= c implies a < c } 
+
+theorem lte_and_lt(a: ℤ, b: ℤ, c: ℤ) { a <= b and b < c implies a < c } 
 
 theorem lte_trans(a: ℤ, b: ℤ, c: ℤ) { 
     a <= b and b <= c implies a <= c 
-} by {
-    if a = b {
-        if b = c {
-            a <= c
-        } else {
-            a <= c
-        }
-    } else {
-        if b = c {
-            a <= c
-        } else {
-            lt_trans(a, b, c)
-            a <= c
-        }
-    }
-}
-
-theorem lt_and_lte(a: ℤ, b: ℤ, c: ℤ) { a < b and b <= c implies a < c } by {
-    if b = c {
-        a < c
-    } else {
-        a < c
-    }
-}
-
-theorem lte_and_lt(a: ℤ, b: ℤ, c: ℤ) { a <= b and b < c implies a < c } by {
-    if a = b {
-        a < c
-    } else {
-        a < c
-    }
-}
+} 
 
 // Units and dividing
 
@@ -727,26 +616,6 @@ theorem plus_abs_gte_zero(n: ℤ) {
     }
 }
 
-from type_class.add import Add
-from type_class.mul import Mul
-from type_class.ring import Ring
-
-instance ℤ: Add {
-    let add = ℤ.add
-   
-    let 0 = ℤ.0
-
-    let neg = ℤ.neg
-}
-
-instance ℤ: Mul {
-    let mul = ℤ.mul
-
-    let 1 = ℤ.1
-}
-
-instance ℤ: Ring 
-
 // for definition of ^, see mul.ac
 theorem pow_one(a: ℤ) {
     a^(ℕ.1) = a
@@ -790,27 +659,17 @@ theorem sq_pos(a: ℤ) {
     a != 0 implies a^(ℕ.2) > 0
 }
 
-theorem pow_abs_eq_abs_pow(a: ℤ, n: ℕ) {
-    abs(a^n) = abs(a)^n
+theorem abs_by_from_nat(a: ℤ) {
+    a.abs = from_nat(abs(a))
 } by {
-    let f = function(x: ℕ) {
-        abs(a^x) = abs(a)^x
-    }
-    f(ℕ.0)
-    forall(x: ℕ) {
-        if f(x) {
-            abs(a^x) = abs(a)^x
-            abs(a^(x.suc)) = abs(a)^(x.suc)
-            f(x.suc)
-        }
-    }
-    f(n)
-}
-
-attributes ℤ {
-    /// The absolute value of an integer.
-    define abs(self) -> ℤ {
-        from_nat(abs(self))
+    if a > 0 {
+        from_nat(abs(a)) = a
+        a.abs = a
+        abs_by_from_nat(a)
+    } else {
+        from_nat(abs(a)) = -a
+        a.abs = -a
+        abs_by_from_nat(a)
     }
 }
 
@@ -830,11 +689,13 @@ theorem member_abs_nonpos(a: ℤ) {
     a <= 0 implies a.abs = -a
 }
 
-theorem member_triangle(a: ℤ, b: ℤ) {
-    (a + b).abs <= a.abs + b.abs
-} by {
-    abs(a + b) <= abs(a) + abs(b)
-}
+theorem int_triangle_ineq(a: ℤ, b: ℤ) { 
+    (a + b).abs <= (a).abs + (b).abs 
+} 
+
+theorem int_triangle_ineq_sub(a: ℤ, b: ℤ) { 
+    (a).abs - (b).abs <= (a - b).abs
+} 
 
 define gcd(a: ℤ, b: ℤ) -> ℤ {
     from_nat(nat_gcd(abs(a), abs(b)))

@@ -1,6 +1,11 @@
 from rat import ℚ
 from int import ℤ, abs
 from nat import ℕ
+from type_class.add import neg_distrib
+from type_class.ring import Add, Mul, Ring
+from type_class.field import Field
+from type_class.ordered_ring import Ordered_Ring, Ordered_Add, lt_mul_pos, mul_lt_lt, lte_mul_pos, lte_mul_lte
+from type_class.ordered_field import Ordered_Field
 
 numerals ℚ
 
@@ -283,6 +288,18 @@ instance ℝ: Partial_Order {
 }
 
 instance ℝ: Linear_Order
+
+theorem lte_cover {
+    Linear_Order.lte[ℝ] = ℝ.lte
+}
+
+theorem gt_cover {
+    Linear_Order.gt[ℝ] = ℝ.gt
+}
+
+theorem gte_cover {
+    Linear_Order.gte[ℝ] = ℝ.gte
+}
 
 theorem gt_iff_from_rat_gt(r1: ℚ, r2: ℚ) {
     r1 > r2 iff ℝ.from_rat(r1).gt_rat(r2)
@@ -1007,6 +1024,7 @@ attributes ℝ {
         ℝ.new(neg_gt(self))
     }
 }
+
 theorem neg_gt_imp_not_gt_neg(a: ℝ, r: ℚ) {
     neg_gt(a, r) implies not a.gt_rat(-r)
 }
@@ -1312,20 +1330,14 @@ theorem add_neg_eq_zero(a: ℝ) {
     a + -a = 0
 } 
 
+instance ℝ: Add {
+    let add = ℝ.add
+    let 0 = ℝ.0
+    let neg = ℝ.neg
+}
+
 attributes ℝ {
     let 1 = ℝ.from_rat(ℚ.1)
-
-    define sub(self, other: ℝ) -> ℝ {
-        self + -other
-    }
-    /// The absolute value of this ℝ number.
-    define abs(self) -> ℝ {
-        if self.is_negative {
-            -self
-        } else {
-            self
-        }
-    }
 
     /// The sign of this ℝ number as a unit value (`-1` for negative, `1` for non-negative).
     define unit_sign(self) -> ℝ {
@@ -1340,6 +1352,10 @@ attributes ℝ {
         }
     }
 }
+
+// define sub(self, other: ℝ) -> ℝ {
+//     self + -other
+// }
 
 theorem sub_zero_imp_eq(x: ℝ, y: ℝ) {
     x - y = 0 implies x = y
@@ -1369,6 +1385,8 @@ theorem add_cancel_left(a: ℝ, b: ℝ, c: ℝ) {
 theorem lt_add_right(a: ℝ, b: ℝ, c: ℝ) {
     a < b implies a + c < b + c
 } 
+
+instance ℝ: Ordered_Add
 
 theorem lt_add_left(a: ℝ, b: ℝ, c: ℝ) {
     a < b implies c + a < c + b
@@ -1410,12 +1428,10 @@ theorem add_lte_lt(a: ℝ, b: ℝ, c: ℝ, d: ℝ) {
     a <= b and c < d implies a + c < b + d
 } 
 
-theorem neg_distrib(a: ℝ, b: ℝ) {
+theorem real_neg_distrib(a: ℝ, b: ℝ) {
     -(a + b) = -a + -b
 } by {
-    a + b + -(a + b) = 0
-    -(a + b) + b + a = 0
-    -(a + b) = -a + -b
+    neg_distrib(a, b)
 }
 
 theorem neg_distrib_sub(a: ℝ, b: ℝ) {
@@ -1522,6 +1538,8 @@ theorem floor_exists(a: ℝ) {
         
         m + ℤ.from_nat(abs(m)) + ℤ.from_nat(abs(big)) < big
 
+        m + ℤ.from_nat(abs(m)) + ℤ.from_nat(abs(big)) + -big < ℤ.0
+
         m + ℤ.from_nat(abs(m)) + (ℤ.from_nat(abs(big)) + -big) < ℤ.0
         
         m + ℤ.from_nat(abs(m)) >= ℤ.0
@@ -1617,43 +1635,26 @@ theorem sub_lt_is_gt(a: ℝ, b: ℝ, c: ℝ) {
     b < c implies a - b > a - c
 }
 
+// /// The absolute value of this ℝ number.
+// define abs(self) -> ℝ {
+//     if self.positive {
+//         self
+//     } else {
+//         -self
+//     }
+// }
+
 theorem pos_imp_eq_abs(a: ℝ) {
     a > 0 implies a = a.abs
 }
 
 theorem lte_abs(a: ℝ) {
     a <= a.abs
-} by {
-    if a < 0 {
-        a <= 0
-        0 <= a.abs
-        a <= a.abs
-    } else {
-        a = a.abs
-        a <= a.abs
-    }
-}
+} 
 
 theorem abs_neg(a: ℝ) {
     (-a).abs = a.abs
-} by {
-    if a < 0 {
-        a.abs = -a
-        -a > 0
-        (-a).abs = -a
-        (-a).abs = a.abs
-    } else {
-        if a = 0 {
-            (-a).abs = a.abs
-        } else {
-            (-a) < 0
-            (-a).abs = a
-            a > 0
-            a.abs = a
-            (-a).abs = a.abs
-        }
-    }
-}
+} 
 
 theorem neg_lte_abs(a: ℝ) {
     -a <= a.abs
@@ -2018,7 +2019,10 @@ theorem swap_minus_plus(a: ℝ, b: ℝ, c: ℝ) {
     a + b - c = a - c + b
 }
 
-// Multiplication not preserve order. We will first use ℚ_(0, a) + ℚ_(a, ∞), truncated from ℚ_(< a) + ℚ_(> a), or just ℚ_(0, a), and define ℚ_(0, a) ⋅ ℚ_(0, b) = ℚ_(0, a ⋅ b). Then use neg to define mul in cases other than a > 0 and b > 0
+/// Multiplication not preserve order. We will first use ℚ_(0, a) + ℚ_(a, ∞), truncated from ℚ_(< a) + ℚ_(> a), or just ℚ_(0, a), and define ℚ_(0, a) ⋅ ℚ_(0, b) = ℚ_(0, a ⋅ b).  
+/// Then use neg to define mul in cases other than a > 0 and b > 0  
+/// Indeed, after defing add on ℝ, you can define mul, reciprocal on ℝ using net of ℚ that converge to ℝ.  
+/// That maybe more convenient than defining mul by Dedekind cut, but I will not try it now. (Need intersection_of_net_non_empty_theorem) 
 define pos_mul_truncated_gt(a: ℝ, b: ℝ, r: ℚ) -> Bool {
     exists(ra: ℚ, rb: ℚ) {
         ra > ℚ.0 and a.gt_rat(ra) and
@@ -2172,6 +2176,14 @@ define has_greatest_truncated(contains: ℚ -> Bool) -> Bool {
             y > ℚ.0 and contains(y) implies y <= x 
         }
     }    
+}
+
+theorem has_greatest_truncated_helper (contains: ℚ -> Bool) {
+    has_greatest_truncated(contains) implies exists(x: ℚ) {
+        x > ℚ.0 and contains(x) and forall(y: ℚ) {
+            y > ℚ.0 and contains(y) implies y <= x 
+        }
+    } 
 }
 
 theorem pos_mul_truncated_has_no_greatest(a: ℝ, b: ℝ) {
@@ -2566,6 +2578,14 @@ theorem pos_mul_gt_helper(a: ℝ, b: ℝ, r: ℚ) {
     pos_mul(a, b) = ℝ.new(pos_mul_gt(a, b))
 }
 
+theorem pos_mul_gt_helper_positive_rat(a: ℝ, b: ℝ, r: ℚ) {
+    a > 0 and b > 0 and r > ℚ.0 implies (
+        pos_mul(a, b).gt_rat(r) iff pos_mul_truncated_gt(a, b, r)
+    )
+} by {
+    pos_mul(a, b).gt_rat(r) implies pos_mul_truncated_gt(a, b, r)
+}
+
 theorem pos_mul_gt_assoc_imp(a: ℝ, b: ℝ, c: ℝ, r: ℚ) {
     a > 0 and b > 0 and c > 0 implies (
         pos_mul_gt(pos_mul(a, b), c, r) implies pos_mul_gt(a, pos_mul(b, c), r)
@@ -2833,6 +2853,229 @@ theorem mul_assoc(a: ℝ, b: ℝ, c: ℝ) {
     mul_assoc(a, b, c)
 }
 
+theorem pos_mul_one_lte(a: ℝ, r: ℚ) {
+    a > 0 implies (
+        (a ⋅ 1).gt_rat(r) implies a.gt_rat(r)
+    )
+} by {
+    if (a ⋅ 1).gt_rat(r) {
+        1 > 0
+        pos_mul_gt(a, 1, r)
+        if r <= ℚ.0 {
+            a.gt_rat(r)
+        } else {
+            pos_mul_truncated_gt(a, 1, r)
+            let (ra: ℚ, r1: ℚ) satisfy {
+                ra > ℚ.0 and a.gt_rat(ra) and
+                r1 > ℚ.0 and 1.gt_rat(r1) and
+                r = ra ⋅ r1
+            }
+            r1 < ℚ.1
+            ra ⋅ r1 < ra ⋅ ℚ.1
+            r < ra
+            a.gt_rat(r)
+        }
+    }
+}
+
+theorem lte_pos_mul_one(a: ℝ, r: ℚ) {
+    a > 0 implies (
+        a.gt_rat(r) implies (a ⋅ 1).gt_rat(r)
+    )
+} by {
+    1 > 0
+    if a.gt_rat(r) {
+        if r <= ℚ.0 {
+            (a ⋅ 1).gt_rat(r)
+        } else {
+            r > ℚ.0
+            ℝ.from_rat(r) < a
+            let q: ℚ satisfy {
+                ℝ.from_rat(r) < ℝ.from_rat(q) and ℝ.from_rat(q) < a
+            }
+            r < q
+            q > ℚ.0
+            let ra = q
+            let r1 = r/q
+            r/q < ℚ.1
+            r/q > ℚ.0
+            1.gt_rat(r/q)
+            a.gt_rat(ra)
+            r = q ⋅ r/q
+            r = ra ⋅ r1
+            pos_mul_truncated_gt(a, 1, r)
+            pos_mul_gt(a, 1, r)
+            pos_mul_gt_helper(a, 1, r)
+            a ⋅ 1 = pos_mul(a, 1)
+            (a ⋅ 1).gt_rat(r)
+        }
+        (a ⋅ 1).gt_rat(r)
+    }
+}
+
+theorem pos_mul_one(a: ℝ) {
+    a > 0 implies (
+        a ⋅ 1 = a
+    )
+} by {
+    forall(r: ℚ) {
+        (a ⋅ 1).gt_rat(r) implies a.gt_rat(r)
+        (a ⋅ 1).gt_rat(r) = a.gt_rat(r)
+    }
+    (a ⋅ 1).gt_rat = a.gt_rat
+}
+
+theorem mul_one_right(a: ℝ) {
+    a ⋅ 1 = a
+} by {
+    if a = 0 {
+        a ⋅ 1 = a
+    } else {
+        if a > 0 {
+            a ⋅ 1 = a
+        } else {
+            a < 0
+            -a > 0
+            -a ⋅ 1 = -a
+            -a ⋅ 1 = -(a ⋅ 1)
+            a ⋅ 1 = a
+        }
+    }
+}
+
+theorem mul_one_left(a: ℝ) {
+    1 ⋅ a = a
+}
+
+instance ℝ: Mul {
+    let mul = ℝ.mul
+    let 1 = ℝ.1
+}
+
+theorem pos_mul_from_rat(a: ℚ, b: ℚ) {
+    a > ℚ.0 and b > ℚ.0 implies pos_mul(ℝ.from_rat(a), ℝ.from_rat(b)) = ℝ.from_rat(a ⋅ b)
+} by {
+    ℝ.from_rat(a) > 0
+    ℝ.from_rat(b) > 0
+    a ⋅ b > ℚ.0
+    ℝ.from_rat(a ⋅ b) > 0
+    forall(r: ℚ) {
+        if r <= ℚ.0 {
+            pos_mul(ℝ.from_rat(a), ℝ.from_rat(b)).gt_rat(r)
+            ℝ.from_rat(a ⋅ b).gt_rat(r)
+            pos_mul(ℝ.from_rat(a), ℝ.from_rat(b)).gt_rat(r)
+            pos_mul(ℝ.from_rat(a), ℝ.from_rat(b)).gt_rat(r) = ℝ.from_rat(a ⋅ b).gt_rat(r) 
+        } else {
+            r > ℚ.0
+            if pos_mul(ℝ.from_rat(a), ℝ.from_rat(b)).gt_rat(r) {
+                pos_mul_truncated_gt(ℝ.from_rat(a), ℝ.from_rat(b), r)
+                pos_mul_truncated_gt_helper_imp(ℝ.from_rat(a), ℝ.from_rat(b), r)
+                let (ra: ℚ, rb: ℚ) satisfy {
+                    ra > ℚ.0 and ℝ.from_rat(a).gt_rat(ra) and
+                    rb > ℚ.0 and ℝ.from_rat(b).gt_rat(rb) and 
+                    r = ra ⋅ rb
+                }
+                ra < a
+                rb < b
+                ra ⋅ rb < a ⋅ b
+                r < a ⋅ b
+                ℝ.from_rat(a ⋅ b).gt_rat(r)
+            }
+            if ℝ.from_rat(a ⋅ b).gt_rat(r) {
+                r < a ⋅ b
+                let q = r/(a ⋅ b)
+                q < ℚ.1
+                ℚ.0 < q
+                let x: ℚ satisfy {
+                    q < x and x < ℚ.1
+                }
+                x > ℚ.0
+                x < ℚ.1
+                q/x > ℚ.0
+                let ra = a ⋅ x
+                ra < a ⋅ ℚ.1
+                ra < a
+                let rb = q/x ⋅ b
+                q/x < ℚ.1
+                rb < ℚ.1 ⋅ b
+                rb < b
+                ℚ.0 < ra
+                ℚ.0 < rb
+                ra ⋅ rb = a ⋅ x ⋅ q/x ⋅ b
+                ra ⋅ rb = a ⋅ (x ⋅ q/x) ⋅ b
+                (x ⋅ q/x) = q
+                ra ⋅ rb = a ⋅ q ⋅ b
+                a ⋅ q ⋅ b = q ⋅ a ⋅ b
+                q ⋅ a ⋅ b = r ⋅ ℚ.1/(a ⋅ b) ⋅ (a ⋅ b)
+                q ⋅ a ⋅ b = r ⋅ (ℚ.1/(a ⋅ b) ⋅ (a ⋅ b))
+                ℚ.1/(a ⋅ b) ⋅ (a ⋅ b) = ℚ.1
+                q ⋅ a ⋅ b = r 
+                ra ⋅ rb = r
+                ℝ.from_rat(a).gt_rat(ra)
+                ℝ.from_rat(b).gt_rat(rb)
+                pos_mul_truncated_gt(ℝ.from_rat(a), ℝ.from_rat(b), r)
+                pos_mul_gt(ℝ.from_rat(a), ℝ.from_rat(b), r)
+                pos_mul(ℝ.from_rat(a), ℝ.from_rat(b)).gt_rat(r)
+            }
+            pos_mul(ℝ.from_rat(a), ℝ.from_rat(b)).gt_rat(r) = ℝ.from_rat(a ⋅ b).gt_rat(r)
+        }
+        pos_mul(ℝ.from_rat(a), ℝ.from_rat(b)).gt_rat(r) = ℝ.from_rat(a ⋅ b).gt_rat(r)
+    }
+    pos_mul(ℝ.from_rat(a), ℝ.from_rat(b)).gt_rat = ℝ.from_rat(a ⋅ b).gt_rat
+}
+
+theorem mul_from_rat(a: ℚ, b: ℚ) {
+    ℝ.from_rat(a) ⋅ ℝ.from_rat(b) = ℝ.from_rat(a ⋅ b)
+} by {
+    if a = ℚ.0 or b = ℚ.0 {
+        a = ℚ.0 implies ℝ.from_rat(a) ⋅ ℝ.from_rat(b) = 0
+        b = ℚ.0 implies ℝ.from_rat(a) ⋅ ℝ.from_rat(b) = 0
+        a ⋅ b = ℚ.0
+        ℝ.from_rat(a) ⋅ ℝ.from_rat(b) = ℝ.from_rat(a ⋅ b)
+
+    } else {
+        if a > ℚ.0 {
+            if b > ℚ.0 {
+                ℝ.from_rat(a) ⋅ ℝ.from_rat(b) = pos_mul(ℝ.from_rat(a), ℝ.from_rat(b))
+                pos_mul(ℝ.from_rat(a), ℝ.from_rat(b)) = ℝ.from_rat(a ⋅ b)
+                ℝ.from_rat(a) ⋅ ℝ.from_rat(b) = ℝ.from_rat(a ⋅ b)
+            } else {
+                b < ℚ.0
+                -b > ℚ.0
+                ℝ.from_rat(a) ⋅ ℝ.from_rat(b) = -pos_mul(ℝ.from_rat(a), -ℝ.from_rat(b))
+                -pos_mul(ℝ.from_rat(a), -ℝ.from_rat(b)) = -pos_mul(ℝ.from_rat(a), ℝ.from_rat(-b))
+                pos_mul(ℝ.from_rat(a), ℝ.from_rat(-b)) = ℝ.from_rat(a ⋅ -b)
+                ℝ.from_rat(a ⋅ -b) = -ℝ.from_rat(a ⋅ b)
+                ℝ.from_rat(a) ⋅ ℝ.from_rat(b) = ℝ.from_rat(a ⋅ b)
+            }
+            ℝ.from_rat(a) ⋅ ℝ.from_rat(b) = ℝ.from_rat(a ⋅ b)
+        } else {
+            a < ℚ.0
+            -a > ℚ.0
+            if b > ℚ.0 {
+                ℝ.from_rat(a) ⋅ ℝ.from_rat(b) = -pos_mul(-ℝ.from_rat(a), ℝ.from_rat(b))
+                -pos_mul(-ℝ.from_rat(a), ℝ.from_rat(b)) = -pos_mul(ℝ.from_rat(-a), ℝ.from_rat(b))
+                pos_mul(ℝ.from_rat(-a), ℝ.from_rat(b)) = ℝ.from_rat(-a ⋅ b)
+                ℝ.from_rat(-a ⋅ b) = -ℝ.from_rat(a ⋅ b)
+                ℝ.from_rat(a) ⋅ ℝ.from_rat(b) = ℝ.from_rat(a ⋅ b)
+            } else {
+                b < ℚ.0
+                -b > ℚ.0
+                ℝ.from_rat(a) < 0
+                ℝ.from_rat(b) < 0
+                ℝ.from_rat(a) ⋅ ℝ.from_rat(b) = pos_mul(-ℝ.from_rat(a), -ℝ.from_rat(b))
+                pos_mul(-ℝ.from_rat(a), -ℝ.from_rat(b)) = pos_mul(ℝ.from_rat(-a), ℝ.from_rat(-b))
+                pos_mul(ℝ.from_rat(-a), ℝ.from_rat(-b)) = ℝ.from_rat(-a ⋅ -b)
+                ℝ.from_rat(-a ⋅ -b) = ℝ.from_rat(a ⋅ b)
+                ℝ.from_rat(a) ⋅ ℝ.from_rat(b) = ℝ.from_rat(a ⋅ b)        
+            }
+            ℝ.from_rat(a) ⋅ ℝ.from_rat(b) = ℝ.from_rat(a ⋅ b)
+        }
+        ℝ.from_rat(a) ⋅ ℝ.from_rat(b) = ℝ.from_rat(a ⋅ b)
+    }
+    ℝ.from_rat(a) ⋅ ℝ.from_rat(b) = ℝ.from_rat(a ⋅ b)
+}
+
 theorem add_gt_pos_lemma(z1: ℝ, z2: ℝ, r: ℚ, q1: ℚ, q2: ℚ) {
     z1 > 0 and z2 > 0 and 
     r > ℚ.0 and add_gt(z1, z2, r) and 
@@ -3078,6 +3321,7 @@ theorem pos_pos_mul_distrib_sub(a: ℝ, b: ℝ, c: ℝ) {
     -b > 0
     let d = b + c 
     d > 0
+    -b + d = -b + b + c
     c = -b + d
     a ⋅ (-b + d) = a ⋅ -b + a ⋅ d
     a ⋅ c = -(a ⋅ b) + a ⋅ (b + c)
@@ -3202,6 +3446,9 @@ theorem mul_distrib_right(a: ℝ, b: ℝ, c: ℝ) {
     mul_distrib_right(a, b, c)
 }
 
+instance ℝ: Ring
+instance ℝ: Ordered_Ring
+
 theorem mul_distrib_left(a: ℝ, b: ℝ, c: ℝ) {
     (a + b) ⋅ c = a ⋅ c + b ⋅ c
 }
@@ -3214,109 +3461,10 @@ theorem mul_distrib_sub_left(a: ℝ, b: ℝ, c: ℝ) {
     (a - b) ⋅ c = a ⋅ c - b ⋅ c
 }
 
-theorem pos_mul_one_lte(a: ℝ, r: ℚ) {
-    a > 0 implies (
-        (a ⋅ 1).gt_rat(r) implies a.gt_rat(r)
-    )
-} by {
-    if (a ⋅ 1).gt_rat(r) {
-        1 > 0
-        pos_mul_gt(a, 1, r)
-        if r <= ℚ.0 {
-            a.gt_rat(r)
-        } else {
-            pos_mul_truncated_gt(a, 1, r)
-            let (ra: ℚ, r1: ℚ) satisfy {
-                ra > ℚ.0 and a.gt_rat(ra) and
-                r1 > ℚ.0 and 1.gt_rat(r1) and
-                r = ra ⋅ r1
-            }
-            r1 < ℚ.1
-            ra ⋅ r1 < ra ⋅ ℚ.1
-            r < ra
-            a.gt_rat(r)
-        }
-    }
-}
-
-theorem lte_pos_mul_one(a: ℝ, r: ℚ) {
-    a > 0 implies (
-        a.gt_rat(r) implies (a ⋅ 1).gt_rat(r)
-    )
-} by {
-    1 > 0
-    if a.gt_rat(r) {
-        if r <= ℚ.0 {
-            (a ⋅ 1).gt_rat(r)
-        } else {
-            r > ℚ.0
-            ℝ.from_rat(r) < a
-            let q: ℚ satisfy {
-                ℝ.from_rat(r) < ℝ.from_rat(q) and ℝ.from_rat(q) < a
-            }
-            r < q
-            q > ℚ.0
-            let ra = q
-            let r1 = r/q
-            r/q < ℚ.1
-            r/q > ℚ.0
-            1.gt_rat(r/q)
-            a.gt_rat(ra)
-            r = q ⋅ r/q
-            r = ra ⋅ r1
-            pos_mul_truncated_gt(a, 1, r)
-            pos_mul_gt(a, 1, r)
-            pos_mul_gt_helper(a, 1, r)
-            a ⋅ 1 = pos_mul(a, 1)
-            (a ⋅ 1).gt_rat(r)
-        }
-        (a ⋅ 1).gt_rat(r)
-    }
-}
-
-theorem pos_mul_one(a: ℝ) {
-    a > 0 implies (
-        a ⋅ 1 = a
-    )
-} by {
-    forall(r: ℚ) {
-        (a ⋅ 1).gt_rat(r) implies a.gt_rat(r)
-        (a ⋅ 1).gt_rat(r) = a.gt_rat(r)
-    }
-    (a ⋅ 1).gt_rat = a.gt_rat
-}
-
-theorem mul_one_right(a: ℝ) {
-    a ⋅ 1 = a
-} by {
-    if a = 0 {
-        a ⋅ 1 = a
-    } else {
-        if a > 0 {
-            a ⋅ 1 = a
-        } else {
-            a < 0
-            -a > 0
-            -a ⋅ 1 = -a
-            -a ⋅ 1 = -(a ⋅ 1)
-            a ⋅ 1 = a
-        }
-    }
-}
-
-theorem mul_one_left(a: ℝ) {
-    1 ⋅ a = a
-}
-
-// Todo: use order field instead, to reuse the result from ℚ. Also for division
-theorem lt_imp_pos_mul_lt_right(a: ℝ, b: ℝ, c: ℝ) {
+theorem real_lt_mul_pos(a: ℝ, b: ℝ, c: ℝ) { 
     a < b and c > 0 implies a ⋅ c < b ⋅ c
 } by {
-    b ⋅ c - a ⋅ c = (b - a) ⋅ c
-    b - a > 0
-    (b - a) ⋅ c > 0
-    b ⋅ c - a ⋅ c > 0
-    b ⋅ c > a ⋅ c
+    lt_mul_pos(a, b, c)
 }
 
 theorem lt_imp_pos_mul_lt_left(a: ℝ, b: ℝ, c: ℝ) {
@@ -3331,24 +3479,16 @@ theorem lt_imp_neg_mul_gt_left(a: ℝ, b: ℝ, c: ℝ) {
     a < b and c < 0 implies c ⋅ a > c ⋅ b
 }
 
-theorem pos_left_lt_imp_mul_lt(a: ℝ, b: ℝ, c: ℝ, d: ℝ) {
+theorem real_mul_lt_lt(a: ℝ, b: ℝ, c: ℝ, d: ℝ) {
     a > 0 and a < b and c > 0 and c < d implies a ⋅ c < b ⋅ d
 } by {
-    b > 0
-    d > 0
-    a ⋅ c < b ⋅ c
-    b ⋅ c < b ⋅ d
+    mul_lt_lt(a, b, c, d)
 }
 
-theorem lte_imp_pos_mul_lte_right(a: ℝ, b: ℝ, c: ℝ) {
+theorem real_lte_mul_pos(a: ℝ, b: ℝ, c: ℝ) {
     a <= b and c > 0 implies a ⋅ c <= b ⋅ c
 } by {
-    if a = b {
-        a ⋅ c = b ⋅ c
-    } else {
-        a < b
-        a ⋅ c < b ⋅ c
-    }
+    lte_mul_pos(a, b, c)
 }
 
 theorem lte_imp_pos_mul_lte_left(a: ℝ, b: ℝ, c: ℝ) {
@@ -3371,47 +3511,393 @@ theorem pos_right_lte_imp_mul_lt(a: ℝ, b: ℝ, c: ℝ, d: ℝ) {
     a > 0 and a < b and c > 0 and c <= d implies a ⋅ c < b ⋅ d
 }
 
-theorem pos_lte_imp_mul_lte(a: ℝ, b: ℝ, c: ℝ, d: ℝ) {
-    a > 0 and a <= b and c > 0 and c <= d implies a ⋅ c <= b ⋅ d
+theorem real_lte_mul_lte(a: ℝ, b: ℝ, c: ℝ, d: ℝ) {
+    a > 0 and a <= b and c >= 0 and c <= d implies a ⋅ c <= b ⋅ d
 } by {
-    if a = b {
-        a ⋅ c <= b ⋅ d
-    } else {
-        a < b
-        a ⋅ c <= b ⋅ d
-    }
-}
-
-attributes ℝ {
-    // The positive part of this real.
-    define pos_part(self) -> ℝ {
-        if self > 0 {
-            self.abs
-        } else {
-            0
-        }
-    }
-
-    // The negative part of this real.
-    define neg_part(self) -> ℝ {
-        if self > 0 {
-            0
-        } else {
-            self.abs
-        }
-    }
+    lte_mul_lte(a, b, c, d)
 }
 
 theorem pos_neg_decomposition(a: ℝ) {
     a = a.pos_part - a.neg_part
+} 
+
+// example: a = 3, r = 1/5. let ra = 1/r = 5
+define pos_reciprocal_truncated_gt(a: ℝ, r: ℚ) -> Bool {
+    r > ℚ.0 and a < ℝ.from_rat(r.reciprocal) 
+}
+
+define pos_reciprocal_gt(a: ℝ, r: ℚ) -> Bool {
+    a > 0 and 
+    (pos_reciprocal_truncated_gt(a, r) or r <= ℚ.0)
+}
+
+theorem pos_reciprocal_truncated_is_lower_interval(a: ℝ) {
+    a > 0 implies is_lower_interval_truncated(pos_reciprocal_truncated_gt(a))
 } by {
-    if a > 0 {
-        a.pos_part = a
-        a.neg_part = 0
-        a = a.pos_part - a.neg_part
-    } else {
-        a.pos_part = 0
-        a.neg_part = -a
-        a = a.pos_part - a.neg_part
+    forall(x: ℚ, y: ℚ) {
+        if pos_reciprocal_truncated_gt(a, y) and 
+        ℚ.0 < x and x < y {
+            let (ry: ℚ) satisfy {
+                ry > ℚ.0 and a < ℝ.from_rat(ry.reciprocal)
+            }
+            y.reciprocal < x.reciprocal
+            a < ℝ.from_rat(x.reciprocal)
+            pos_reciprocal_truncated_gt(a, x)
+        }
+    }
+    is_lower_interval_truncated(pos_reciprocal_truncated_gt(a))
+}
+
+theorem pos_reciprocal_is_lower_interval(a: ℝ) {
+    a > 0 implies is_lower_interval(pos_reciprocal_gt(a))
+} by {
+    forall(x: ℚ, y: ℚ) {
+        if pos_reciprocal_gt(a, y) and x < y {
+            if x <= ℚ.0 {
+                pos_reciprocal_gt(a, x)
+            } else {
+                x > ℚ.0
+                pos_reciprocal_truncated_gt(a, y)
+                pos_reciprocal_truncated_gt(a, x)
+                pos_reciprocal_gt(a, x)
+            }
+        }
     }
 }
+
+theorem pos_reciprocal_truncated_is_cut(a: ℝ) {
+    a > 0 implies is_cut_truncated(pos_reciprocal_truncated_gt(a)) 
+} by {
+    let r_recip: ℚ satisfy {
+        0 < ℝ.from_rat(r_recip) and ℝ.from_rat(r_recip) < a
+    }
+    let r = r_recip.reciprocal
+    r > ℚ.0 
+    r.reciprocal = r_recip
+    not a < ℝ.from_rat(r.reciprocal)
+    not pos_reciprocal_truncated_gt(a, r)
+
+    let q_recip: ℚ satisfy {
+        a < ℝ.from_rat(q_recip)
+    }
+    q_recip > ℚ.0
+    let q = q_recip.reciprocal
+    q > ℚ.0
+    q.reciprocal = q_recip
+    pos_reciprocal_truncated_gt(a, q)
+}
+
+theorem pos_reciprocal_is_cut(a: ℝ) {
+    a > 0 implies exists(x: ℚ) {
+        pos_reciprocal_gt(a, x)
+    } and exists(x: ℚ) {
+        not pos_reciprocal_gt(a, x)
+    }
+} by {
+    is_cut_truncated(pos_reciprocal_truncated_gt(a))
+
+    let r: ℚ satisfy { 
+        r > ℚ.0 and not pos_reciprocal_truncated_gt(a, r) 
+    }
+
+    let q: ℚ satisfy { 
+        q > ℚ.0 and pos_reciprocal_truncated_gt(a, q) 
+    }
+
+    not pos_reciprocal_gt(a, r) 
+    pos_reciprocal_gt(a, q)
+}
+
+theorem pos_reciprocal_truncated_has_no_greatest(a: ℝ) {
+    a > 0 implies not has_greatest_truncated(pos_reciprocal_truncated_gt(a))
+} by {
+    if has_greatest_truncated(pos_reciprocal_truncated_gt(a)) {
+        has_greatest_truncated_helper(pos_reciprocal_truncated_gt(a))
+        let x: ℚ satisfy {
+            x > ℚ.0 and pos_reciprocal_truncated_gt(a, x) and forall(y: ℚ) {
+                y > ℚ.0 and pos_reciprocal_truncated_gt(a, y) implies y <= x
+            }
+        }
+        a < ℝ.from_rat(x.reciprocal) 
+        let r: ℚ satisfy {
+            a < ℝ.from_rat(r) and ℝ.from_rat(r) < ℝ.from_rat(x.reciprocal) 
+        }
+        r > ℚ.0
+        r.reciprocal.reciprocal = r
+        r.reciprocal > ℚ.0
+        pos_reciprocal_truncated_gt(a, r.reciprocal)
+        r < x.reciprocal
+        x < r.reciprocal
+        false
+    }
+}
+
+theorem pos_reciprocal_has_no_greatest(a: ℝ) {
+    a > 0 implies not has_greatest(pos_reciprocal_gt(a))
+} by {
+    is_cut_truncated(pos_reciprocal_truncated_gt(a))
+    forall(x: ℚ) {
+        if x <= ℚ.0 {
+            let r: ℚ satisfy {
+                r > ℚ.0 and pos_reciprocal_truncated_gt(a, r)
+            }
+            pos_reciprocal_gt(a, r)
+            r > x
+            not is_greatest(pos_reciprocal_gt(a), x)
+        } else {
+            x > ℚ.0
+            if is_greatest(pos_reciprocal_gt(a), x) {
+                pos_reciprocal_gt(a, x)
+                pos_reciprocal_truncated_gt(a, x)
+                forall(y: ℚ) {
+                    if y > ℚ.0 and pos_reciprocal_truncated_gt(a, y) {
+                        pos_reciprocal_gt(a, y)
+                        y <= x
+                    }
+                }
+                has_greatest_truncated(pos_reciprocal_truncated_gt(a))
+                false
+            }
+            not is_greatest(pos_reciprocal_gt(a), x)
+        }
+    }
+    not has_greatest(pos_reciprocal_gt(a))
+}
+
+theorem pos_reciprocal_is_dedekind_cut(a: ℝ) {
+    a > 0 implies is_dedekind_cut(pos_reciprocal_gt(a))
+} by {
+    is_lower_interval(pos_reciprocal_gt(a))
+    is_cut(pos_reciprocal_gt(a))
+    not has_greatest(pos_reciprocal_gt(a))
+}
+
+// truncated mul. when a <= 0 or b <= 0, it reture 0, or ℚ_(< 0)
+define pos_reciprocal(a: ℝ) -> ℝ {
+    if not (a > 0) {
+        0
+    } else {
+        ℝ.new(pos_reciprocal_gt(a))
+    }
+}
+
+theorem pos_reciprocal_gt_zero(a: ℝ) {
+    a > 0 implies pos_reciprocal(a) > 0
+} by {
+    is_cut_truncated(pos_reciprocal_truncated_gt(a))
+    let r: ℚ satisfy {
+        r > ℚ.0 and pos_reciprocal_truncated_gt(a, r)
+    }
+    ℝ.new(pos_reciprocal_gt(a)).gt_rat(r)
+    pos_reciprocal(a) = ℝ.new(pos_reciprocal_gt(a))
+    pos_reciprocal(a).gt_rat(r)
+    ℝ.from_rat(r) > 0
+    pos_reciprocal(a) > ℝ.from_rat(r)
+}
+
+theorem pos_reciprocal_gt_helper(a: ℝ, r: ℚ) {
+    a > 0 implies (
+        pos_reciprocal(a).gt_rat(r) iff pos_reciprocal_gt(a, r)
+    )
+} by {
+    pos_reciprocal(a) = ℝ.new(pos_reciprocal_gt(a))
+}
+
+theorem pos_reciprocal_gt_helper_positive_rat(a: ℝ, r: ℚ) {
+    a > 0 and r > ℚ.0 implies (
+        pos_reciprocal(a).gt_rat(r) iff pos_reciprocal_truncated_gt(a, r)
+    )
+} by {
+    pos_reciprocal(a).gt_rat(r) implies pos_reciprocal_truncated_gt(a, r)
+}
+
+attributes ℝ {
+    define reciprocal(self) -> ℝ {
+        if self > 0 {
+            pos_reciprocal(self)
+        } else {
+            // self <= 0
+            -pos_reciprocal(-self)
+        }   
+    }
+}
+
+theorem field_reciprocal_zero(a: ℝ) {
+    a = 0 implies a.reciprocal = 0
+} by {
+    -a = 0
+    not -a > 0
+}
+
+theorem reciprocal_preserve_positive(a: ℝ) {
+    a > 0 implies a.reciprocal > 0
+}
+
+theorem neg_pos_reciprocal(a: ℝ) {
+    a > 0 implies (-a).reciprocal = -(a.reciprocal)
+} by {
+    -a < 0
+    (-a).reciprocal = -pos_reciprocal(--a)
+    --a = a
+    pos_reciprocal(a) = a.reciprocal
+}
+
+theorem neg_reciprocal(a: ℝ) {
+    (-a).reciprocal = -(a.reciprocal)
+} by {
+    if a > 0 {
+        (-a).reciprocal = -(a.reciprocal)
+    } else {
+        if a <= 0 {
+            if a = 0 {
+                -a = 0
+                (-a).reciprocal = -(a.reciprocal)
+            } else {
+                a < 0
+                -a > 0
+                neg_pos_reciprocal(-a)
+                (-(-a)).reciprocal = -((-a).reciprocal)
+                -(-a) = a
+                (-a).reciprocal = -(a.reciprocal)
+            }
+        }
+    }
+}
+
+theorem reciprocal_is_field_reciprocal_imp(a: ℝ, r: ℚ) {
+    a > 0 implies (
+        (a ⋅ a.reciprocal).gt_rat(r) implies 1.gt_rat(r)
+    ) 
+} by {
+    if (a ⋅ a.reciprocal).gt_rat(r) {
+        if r <= ℚ.0 {
+            1 > 0
+            ℚ.1 > r
+            1.gt_rat(r)
+        } else {
+            r > ℚ.0
+            a.reciprocal > 0
+            pos_mul_gt(a, a.reciprocal, r)
+            pos_mul_truncated_gt(a, a.reciprocal, r)
+            // example: a = 3, ra = 2, qa_recip = 1/5, r = 2/5 < 1
+            let (ra: ℚ, qa_recip: ℚ) satisfy {
+                ra > ℚ.0 and a.gt_rat(ra) and 
+                qa_recip > ℚ.0 and a.reciprocal.gt_rat(qa_recip) and 
+                r = ra ⋅ qa_recip
+            }
+            ℝ.from_rat(ra) < a
+            let qa = qa_recip.reciprocal
+            pos_reciprocal_truncated_gt(a, qa_recip)
+            a < ℝ.from_rat(qa)
+            ra < qa
+            qa.reciprocal = qa_recip
+            ra ⋅ qa.reciprocal < ℚ.1
+            ra ⋅ qa_recip < ℚ.1
+            r < ℚ.1
+            1.gt_rat(r)
+        }
+    }
+}
+
+theorem reciprocal_is_field_reciprocal_imp_rev(a: ℝ, r: ℚ) {
+    a > 0 implies (
+        1.gt_rat(r) implies (a ⋅ a.reciprocal).gt_rat(r) 
+    ) 
+} by {
+    a.reciprocal > 0
+    if 1.gt_rat(r) {
+        if r <= ℚ.0 {
+            (a ⋅ a.reciprocal).gt_rat(r) 
+        } else {
+            r > ℚ.0
+            ℝ.from_rat(r) < ℝ.from_rat(ℚ.1)
+            r < ℚ.1
+            let q: ℚ satisfy {
+                r < q and q < ℚ.1
+            }
+            r/q < ℚ.1
+            r/q > ℚ.0
+            ℝ.from_rat(r/q) < 1
+            a ⋅ ℝ.from_rat(r/q) < a
+            rat_between_reals(a ⋅ ℝ.from_rat(r/q), a)
+            let x: ℚ satisfy {
+                a ⋅ ℝ.from_rat(r/q) < ℝ.from_rat(x) and ℝ.from_rat(x) < a
+            }
+            a.gt_rat(x)
+            a ⋅ ℝ.from_rat(r/q) > 0
+            ℝ.from_rat(x) > 0
+            x > ℚ.0
+            ℚ.1/x > ℚ.0
+            let y = r/x
+            x ⋅ y = (x ⋅ r) ⋅ ℚ.1/x
+            x ⋅ y = r ⋅ (x ⋅ ℚ.1/x)
+            (x ⋅ ℚ.1/x) = ℚ.1
+            x ⋅ y = r
+            y > ℚ.0
+            ℚ.1/y = x/r
+            y.reciprocal = x/r
+            q/r > ℚ.0
+            a ⋅ ℝ.from_rat(r/q) ⋅ ℝ.from_rat(q/r) < ℝ.from_rat(x) ⋅ ℝ.from_rat(q/r)
+            ℝ.from_rat(r/q) ⋅ ℝ.from_rat(q/r) = ℝ.from_rat(r/q ⋅ q/r)
+            r/q ⋅ q/r = ℚ.1
+            ℝ.from_rat(r/q) ⋅ ℝ.from_rat(q/r) = 1
+            a < ℝ.from_rat(x) ⋅ ℝ.from_rat(q/r)
+            ℝ.from_rat(x) ⋅ ℝ.from_rat(q/r) = ℝ.from_rat(x/r ⋅ q)
+            x/r ⋅ q < x/r 
+            ℝ.from_rat(x/r ⋅ q) < ℝ.from_rat(x/r)
+            a < ℝ.from_rat(x/r)
+            a < ℝ.from_rat(y.reciprocal)
+            pos_reciprocal_gt(a, y)
+            pos_mul_truncated_gt(a, a.reciprocal, r)
+            pos_mul_gt(a, a.reciprocal, r)
+            pos_mul(a, a.reciprocal).gt_rat(r)
+            a ⋅ a.reciprocal = pos_mul(a, a.reciprocal)
+            (a ⋅ a.reciprocal).gt_rat(r) 
+        }
+    }
+}
+
+theorem pos_reciprocal_is_field_reciprocal(a: ℝ) {
+    a > 0 implies (
+        (a ⋅ a.reciprocal) = 1
+    ) 
+} by {
+    forall(r: ℚ) {
+        (a ⋅ a.reciprocal).gt_rat(r) implies 1.gt_rat(r)
+        (a ⋅ a.reciprocal).gt_rat(r) = 1.gt_rat(r)
+    }
+    (a ⋅ a.reciprocal).gt_rat = 1.gt_rat
+}
+
+theorem reciprocal_is_field_reciprocal(a: ℝ) {
+    a != 0 implies (
+        (a ⋅ a.reciprocal) = 1
+    ) 
+} by {
+    if a > 0 {
+        reciprocal_is_field_reciprocal(a)
+    } else {
+        a < 0
+        -a > 0
+        reciprocal_is_field_reciprocal(-a)
+        (-a ⋅ (-a).reciprocal) = 1
+        (-a ⋅ -a.reciprocal) = 1
+        (a ⋅ a.reciprocal) = 1
+    }
+}
+
+theorem zero_and_one_are_distinct {
+    1 != 0
+} by {
+    1 > 0
+}
+
+instance ℝ: Field {
+    let reciprocal = ℝ.reciprocal
+}
+
+theorem field_reciprocal_left(f: ℝ) {
+    f != 0 implies f.reciprocal ⋅ f = 1
+}
+
+instance ℝ: Ordered_Field

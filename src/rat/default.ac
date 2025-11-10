@@ -2,6 +2,7 @@ from nat import ℕ
 from int import ℤ
 from rat.rat_base import ℚ, reduce
 from order import Linear_Order
+from type_class.ordered_ring import lt_pos_mul_lt_pos, lte_mul_lte
 
 numerals ℚ
 
@@ -74,6 +75,7 @@ theorem lt_some_nat(a: ℚ) {
     let n = i.abs
     i <= n
     ℚ.from_int(i) <= ℚ.from_int(n)
+    a < ℚ.from_int(n)
 }
 
 theorem iop_gets_lt(ε: ℚ) {
@@ -164,16 +166,7 @@ theorem close_neg(a: ℚ, b: ℚ, ε: ℚ) {
 
 theorem lte_mul_nonneg(a: ℚ, b: ℚ, c: ℚ) {
     a <= b and 0 <= c implies a ⋅ c <= b ⋅ c
-} by {
-    if c = 0 {
-        a ⋅ c = 0
-        b ⋅ c = 0
-        a ⋅ c <= b ⋅ c
-    } else {
-        c > 0
-        a ⋅ c <= b ⋅ c
-    }
-}
+} 
 
 theorem bounding_both(a: ℚ, b: ℚ) {
     exists(c: ℚ) {
@@ -299,16 +292,7 @@ theorem lte_cancel_mul_pos(p: ℚ, q: ℚ, r: ℚ) {
     r > 0 and p ⋅ r <= q ⋅ r
     implies
     p <= q
-} by {
-    if p ⋅ r = q ⋅ r {
-        p = q
-        p <= q
-    } else {
-        p ⋅ r < q ⋅ r
-        p < q
-        p <= q
-    }
-}
+} 
 
 theorem reduce_lte(a: ℤ, b: ℤ, c: ℤ) {
     c >= ℤ.0 and a <= b implies
@@ -330,58 +314,31 @@ theorem reduce_lte(a: ℤ, b: ℤ, c: ℤ) {
 
 theorem triangle_ineq(a: ℚ, b: ℚ) {
     (a + b).abs <= a.abs + b.abs
-} by {
-    let (an: ℤ, bn: ℤ, c: ℤ) satisfy {
-        a = reduce(an, c) and b = reduce(bn, c)
-    }
-    a + b = reduce(an + bn, c)
-    (a + b).abs = reduce((an + bn).abs, c.abs)
-    (an + bn).abs <= an.abs + bn.abs
-    not c.abs < ℤ.0
-    reduce((an + bn).abs, c.abs) <= reduce(an.abs + bn.abs, c.abs)
-    reduce(an.abs + bn.abs, c.abs) = reduce(an, c).abs + reduce(bn, c).abs
-    reduce(an.abs + bn.abs, c.abs) = a.abs + b.abs
-}
+} 
 
 theorem nonneg_lt_imp_pos(a: ℚ, b: ℚ) {
     a >= 0 and a < b implies
     b > 0
 }
 
-theorem lt_pos_mul_lt_pos(a: ℚ, b: ℚ, c: ℚ, d: ℚ) {
+theorem rat_lt_pos_mul_lt_pos(a: ℚ, b: ℚ, c: ℚ, d: ℚ) {
     a >= 0 and c >= 0 and a < b and c < d
     implies
     a ⋅ c < b ⋅ d
 } by {
-    a ⋅ c <= b ⋅ c
-    b > 0
-    b ⋅ c < b ⋅ d
+    lt_pos_mul_lt_pos(a, b, c, d)
 }
 
 theorem abs_nonneg(a: ℚ) {
     not a.abs < 0
 }
 
-theorem lte_mul_lte(a: ℚ, b: ℚ, c: ℚ, d: ℚ) {
+theorem rat_lte_mul_lte(a: ℚ, b: ℚ, c: ℚ, d: ℚ) {
     a >= 0 and c >= 0 and a <= b and c <= d
     implies
     a ⋅ c <= b ⋅ d
 } by {
-    not b < 0
-    not d < 0
-    if a = b {
-        c ⋅ b <= d ⋅ b
-        a ⋅ c <= b ⋅ d
-    } else {
-        a < b
-        if c = d {
-            a ⋅ c <= b ⋅ d
-        } else {
-            c < d
-            a ⋅ c < b ⋅ d
-            a ⋅ c <= b ⋅ d
-        }
-    }
+    lte_mul_lte(a, b, c, d)
 }
 
 theorem add_div_distrib(a: ℚ, b: ℚ, c: ℚ) {
@@ -394,39 +351,16 @@ theorem sub_div_distrib(a: ℚ, b: ℚ, c: ℚ) {
 
 theorem recip_mul(a: ℚ, b: ℚ) {
     1/(a ⋅ b) = 1/a ⋅ 1/b
-} by {
-    if a = 0 {
-        // Degenerate but it works
-        a ⋅ b = 0
-        1/(a ⋅ b) = 0
-        1/(a ⋅ b) = 1/a ⋅ 1/b
-    } else {
-        if b = 0 {
-            a ⋅ b = 0
-            1/(a ⋅ b) = 0
-            1/(a ⋅ b) = 1/a ⋅ 1/b
-        } else {
-            1/(a ⋅ b) ⋅ (a ⋅ b) = 1
-            1/(a ⋅ b) = 1/a ⋅ 1/b
-        }
-    }
-}
+} 
 
 theorem mul_fractions(a: ℚ, b: ℚ, c: ℚ, d: ℚ) {
     (a / b) ⋅ (c / d) = (a ⋅ c) / (b ⋅ d)
-} by {
-    (a / b) ⋅ (c / d) = (a ⋅ 1/b) ⋅ (c ⋅ 1/d)
-    (a / b) ⋅ (c / d) = (a ⋅ c) ⋅ (1/b ⋅ 1/d)
-    (1/b ⋅ 1/d) = 1/(b ⋅ d)
-    (a / b) ⋅ (c / d) = (a ⋅ c) ⋅ 1/(b ⋅ d)
-}
+} 
 
 theorem cancel_left_num_denom(a: ℚ, b: ℚ, c: ℚ) {
     a != 0 implies
     (a ⋅ b) / (a ⋅ c) = b / c
-} by {
-    (a / a) ⋅ (b / c) = (a ⋅ b) / (a ⋅ c)
-}
+} 
 
 theorem cancel_to_reciprocal(a: ℚ, b: ℚ) {
     a != 0 and b != 0 implies
@@ -436,11 +370,8 @@ theorem cancel_to_reciprocal(a: ℚ, b: ℚ) {
 theorem recip_diff(a: ℚ, b: ℚ) {
     a != 0 and b != 0 implies
     1/a - 1/b = (b - a) / (a ⋅ b)
-} by {
-    b / (a ⋅ b) = 1/a
-    a / (a ⋅ b) = 1/b
-    (b - a) / (a ⋅ b) = (b / (a ⋅ b)) - (a / (a ⋅ b))
-}
+} 
+
 theorem lt_mul_lte(a: ℚ, b: ℚ, c: ℚ, d: ℚ) {
     a >= 0 and c > 0 and a < b and c <= d
     implies
@@ -457,14 +388,7 @@ theorem div_zero(a: ℚ) {
 
 theorem recip_recip_raw(a: ℚ) {
     a.reciprocal.reciprocal = a
-} by {
-    if a = 0 {
-        a.reciprocal = 0
-        a.reciprocal.reciprocal = 0
-    } else {
-        a.reciprocal.reciprocal = a
-    }
-}
+} 
 
 theorem recip_recip(a: ℚ) {
     1/(1/a) = a
@@ -474,32 +398,15 @@ theorem div_neg_neg(a: ℚ, b: ℚ) {
     a < 0 and b < 0
     implies
     a/b > 0
-} by {
-    a < 0
-    1/b < 0
-}
+} 
 
 theorem div_negs_cancel(a: ℚ, b: ℚ) {
     a / b = (-a) / (-b)
-} by {
-    -1 != 0
-    (-1 ⋅ a) / (-1 ⋅ b) = a / b
-    (-1 ⋅ a) / -b = a / b
-}
+} 
 
 theorem abs_reciprocal(a: ℚ) {
     (1/a).abs = 1/a.abs
-} by {
-    if a >= 0 { 
-        a.abs = a
-        (1/a).abs = 1/a.abs 
-    } else {
-        a < 0
-        1/a < 0
-        a.abs = -a
-        (1/a).abs = 1/a.abs 
-    }
-}
+} 
 
 theorem abs_div(a: ℚ, b: ℚ) {
     b != 0 implies
@@ -516,12 +423,7 @@ theorem lt_make_left_denom(a: ℚ, b: ℚ, c: ℚ) {
 
 theorem lt_make_right_denom(a: ℚ, b: ℚ, c: ℚ) {
     b > 0 and a ⋅ b < c implies a < c/b
-} by {
-    1/b > 0
-    a ⋅ b ⋅ 1/b < c ⋅ 1/b
-    a ⋅ b ⋅ 1/b = a
-    a < c ⋅ 1/b
-}
+} 
 
 theorem lt_elim_left_denom(a: ℚ, b: ℚ, c: ℚ) {
     b > 0 and a/b < c implies a < c ⋅ b
@@ -535,10 +437,8 @@ theorem zero_recip(a: ℚ) {
     1/0 = 0
 }
 
-// The multiplicative algebraic structure.
-
-attributes ℚ {
-    let inverse = ℚ.reciprocal
+theorem div_reciprocal(a: ℚ, b: ℚ) {
+    a ⋅ b != 0 implies a/b ⋅ b/a = 1
 }
 
 theorem rat_total(a: ℚ, b: ℚ) { a <= b or b <= a } 
