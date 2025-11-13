@@ -1,4 +1,5 @@
 from util import is_acyclic, is_transitive, is_reflexive, is_antisymmetric, is_nonreflexive
+from set import Set
 
 /// A partial order is a relation that is reflexive, transitive, and antisymmetric.
 /// Not all elements need to be comparable.
@@ -284,6 +285,49 @@ theorem typeclass_lte_to_lt_to_lte[P: Partial_Order] {
     lte_from(lt_from(P.lte)) = P.lte
 }
 
+typeclass P: Partial_Order_Lte {
+    /// The less-than relation defining the partial order.
+    lte: (P, P) -> Bool
+
+    reflexive {
+        is_reflexive(P.lte)
+    }
+
+    transitive {
+        is_transitive(P.lte)
+    }
+    
+    antisymmetric {
+        is_antisymmetric(P.lte)
+    }
+} 
+
+theorem typeclass_lte_to_lt_partial_order[P: Partial_Order_Lte] {
+    is_acyclic(lt_from(P.lte)) and
+    is_transitive(lt_from(P.lte))
+} by {
+    is_reflexive(P.lte)
+    is_transitive(P.lte)
+    is_antisymmetric(P.lte)   
+}
+
+attributes P: Partial_Order_Lte {
+    /// Strict less-than comparison.
+    define lt(self, other: P) -> Bool {
+        self <= other and self != other
+    }
+
+    /// Strict greater-than comparison.
+    define gt(self, other: P) -> Bool {
+        other < self
+    }
+
+    /// Greater-than-or-equal-to comparison.
+    define gte(self, other: P) -> Bool {
+        other <= self
+    }
+}
+
 theorem lt_and_lte[P: Partial_Order](a: P, b: P, c: P) { a < b and b <= c implies a < c } by {
     if b = c {
         a < c
@@ -523,3 +567,123 @@ theorem gt_max_imp_gt_left[L: Linear_Order](a: L, b: L, c: L) {
 theorem gt_max_imp_gt_right[L: Linear_Order](a: L, b: L, c: L) {
     a > b.max(c) implies a > c
 } 
+
+attributes P: Partial_Order_Lte {
+    let comparable = function(a: P, b: P) {
+        (a <= b) or (b <= a)
+    }
+}
+
+/// A linear order (total order) is a partial order where all elements are comparable.
+typeclass L: Linear_Order_Lte extends Partial_Order_Lte {
+    /// All elements are comparable: for any two elements `a` and `b`, either `a < b` or `b < a` or `a = b`.
+    trichotomy(a: L, b: L) {
+        Partial_Order_Lte.comparable(a, b)
+    }
+}
+
+attributes L: Linear_Order_Lte {
+    /// Yields the smaller of two elements.
+    define min(self, other: L) -> L {
+        if self <= other {
+            self
+        } else {
+            other
+        }
+    }
+
+    /// Yields the larger of two elements.
+    define max(self, other: L) -> L {
+        if other <= self {
+            self
+        } else {
+            other
+        }
+    }
+}
+
+theorem max_imp_gte_ver_lte[L: Linear_Order_Lte](a: L, b: L) {
+    a.max(b) >= a and a.max(b) >= b
+} by {
+    // Funny that the prover needs help here (says Prover status: Exhausted?)
+    if a.max(b) = b {
+        a.max(b) >= a
+        a.max(b) >= b
+    } else {
+        a.max(b) >= a
+        a.max(b) >= b
+    }
+}
+
+theorem lte_max_ver_lte[L: Linear_Order_Lte](a: L, b: L) {
+    a <= a.max(b) and b <= a.max(b)
+} by {
+    a <= a.max(b)
+    b <= a.max(b)
+}
+
+theorem min_imp_lte_ver_lte[L: Linear_Order_Lte](a: L, b: L) {
+    a.min(b) <= a and a.min(b) <= b
+} by {
+    if a.min(b) = a {
+        a.min(b) <= a
+        a.min(b) <= b
+    } else {
+        a.min(b) <= a
+        a.min(b) <= b
+    }
+}
+
+theorem gte_min_ver_lte[L: Linear_Order_Lte](a: L, b: L) {
+    a >= a.min(b) and b >= a.min(b)
+} by {
+    a >= a.min(b) 
+    b >= a.min(b)
+}
+
+theorem subset_eq_is_transitive[K] {
+    is_transitive(Set[K].subset_eq)
+}
+
+theorem subset_eq_is_reflexive[K] {
+    is_reflexive(Set[K].subset_eq) 
+}
+
+theorem subset_eq_is_antisymmetric[K] {
+    is_antisymmetric(Set[K].subset_eq)
+}
+
+theorem subset_eq_is_lte_from_subset[K] {
+    Set[K].subset_eq = lte_from(Set[K].subset)
+} by {
+    forall(a: Set[K], b: Set[K]) {
+        Set[K].subset_eq(a, b) implies lte_from(Set[K].subset)(a, b)
+
+        Set[K].subset_eq(a, b) = lte_from(Set[K].subset)(a, b)
+    }
+}
+
+theorem subset_is_lt_from_subset_eq[K] {
+    Set[K].subset = lt_from(Set[K].subset_eq)
+} by {
+    forall(a: Set[K], b: Set[K]) {
+        Set[K].subset(a, b) implies lt_from(Set[K].subset_eq)(a, b)
+        Set[K].subset(a, b) = lt_from(Set[K].subset_eq)(a, b)
+    }
+}
+
+theorem subset_is_partial_order[K] {
+    is_acyclic(Set[K].subset) and 
+    is_transitive(Set[K].subset)
+} by {
+    lte_to_lt_partial_order[Set[K]](Set[K].subset)
+    is_transitive(Set[K].subset_eq)
+    is_reflexive(Set[K].subset_eq)
+    is_antisymmetric(Set[K].subset_eq)
+}
+
+// See #25, now Acorn not support it
+
+// instance Set[K]: Partial_Order {
+//     let lt = Set[K].subset
+// }

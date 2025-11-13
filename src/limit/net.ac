@@ -1,87 +1,13 @@
-from set import Set, empty
-from order import Partial_Order, Linear_Order, is_acyclic, is_transitive, is_reflexive, is_antisymmetric, is_nonreflexive, lte_from, lt_from, lte_to_lt_partial_order
+from finite_set import Set, List, list_to_set
+from set import intersection, elem_in_intersection_general
+from order import Partial_Order, Linear_Order, is_acyclic, is_transitive, is_reflexive, is_antisymmetric, is_nonreflexive, lte_from, lt_from, lte_to_lt_partial_order, Partial_Order_Lte
 from nat import ℕ
+from list.list_base import flatten, max_list
 numerals ℕ
-
-theorem subset_eq_is_transitive[K] {
-    is_transitive(Set[K].subset_eq)
-}
-
-theorem subset_eq_is_reflexive[K] {
-    is_reflexive(Set[K].subset_eq) 
-}
-
-theorem subset_eq_is_antisymmetric[K] {
-    is_antisymmetric(Set[K].subset_eq)
-}
-
-theorem subset_eq_is_lte_from_subset[K] {
-    Set[K].subset_eq = lte_from(Set[K].subset)
-} by {
-    forall(a: Set[K], b: Set[K]) {
-        Set[K].subset_eq(a, b) implies lte_from(Set[K].subset)(a, b)
-
-        Set[K].subset_eq(a, b) = lte_from(Set[K].subset)(a, b)
-    }
-}
-
-theorem subset_is_lt_from_subset_eq[K] {
-    Set[K].subset = lt_from(Set[K].subset_eq)
-} by {
-    forall(a: Set[K], b: Set[K]) {
-        Set[K].subset(a, b) implies lt_from(Set[K].subset_eq)(a, b)
-        Set[K].subset(a, b) = lt_from(Set[K].subset_eq)(a, b)
-    }
-}
-
-theorem subset_is_partial_order[K] {
-    is_acyclic(Set[K].subset) and 
-    is_transitive(Set[K].subset)
-} by {
-    lte_to_lt_partial_order[Set[K]](Set[K].subset)
-    is_transitive(Set[K].subset_eq)
-    is_reflexive(Set[K].subset_eq)
-    is_antisymmetric(Set[K].subset_eq)
-}
-
-let comparable[P] = Partial_Order.comparable[P]
-
-// See #25, now Acorn not support generic types in instances of typeclasses
-
-// instance Set[K]: Partial_Order {
-//     let lt = Set[K].subset
-// }
 
 // And now Acorn not support direct subtype and dependent type. Once they are support, we can make the set c: Set[Set[K]], c.is_chain in to type 
 
 // Subtype make type and set almost the same thing, i.e. for a: Set[K], we have subtype { x: T | x ∈ a }
-
-// // expected param 0 to have typeclass None
-// attributes Set[P: Partial_Order] {
-//     define is_chain(self) -> Bool {
-//         forall(a: P, b: P) {
-//             a ∈ self and b ∈ self implies comparable(a, b)
-//         }
-//     }
-// }
-
-// Alternative? But instance cannot use type parameter, which make this unusable, even if you not use attributes but just use define with type parameter that have typeclass
-attributes P: Partial_Order {
-    let is_subset_chain = function(set: Set[P]) {
-        forall(a: P, b: P) {
-            a ∈ set and b ∈ set implies comparable(a, b)
-        }
-    }
-}
-
-// // #25
-// structure Set_Chain[K] {
-//     contains: Set[K] -> Bool
-// } constraint {
-//     contains.is_subset_chain
-// }
-
-// To reuse, I should use typeclass or subtype, but Acorn now does not support them well. Note that using general set is not enough, for example, you may want to use subsets with certain properties, but not just use general set
 
 define no_empty[K](sets: Set[Set[K]]) -> Bool {
     forall(a: Set[K]) {
@@ -105,14 +31,14 @@ theorem subset_two_intersection_helper[K](sets: Set[Set[K]]) {
     } implies subset_two_intersection(sets) 
 }
 
-define is_set_net[K](sets: Set[Set[K]]) -> Bool {
+define is_net[K](sets: Set[Set[K]]) -> Bool {
     no_empty(sets) and subset_two_intersection(sets)
 }
 
 structure Set_Net[K] {
     sets: Set[Set[K]]
 } constraint {
-    is_set_net(sets)
+    is_net(sets)
 } by {
     let x: K satisfy { true }
     let s = Set[K].singleton(x)
@@ -120,8 +46,8 @@ structure Set_Net[K] {
     forall(a: Set[K]) {
         if a ∈ n {
             a = s
-            s != empty
-            a != empty
+            s != Set[K].empty_set
+            a != Set[K].empty_set
         }
     }
     no_empty(n)
@@ -179,7 +105,28 @@ attributes Set_Net[K] {
     }
 }
 
-// Using the linear order of ℕ. I think that it's no easy to generalize the definition of shift to general linear order in Acorn now, until the support of subtype
+theorem gte_trans(a: ℕ, b: ℕ, c: ℕ) { a >= b and b >= c implies a >= c } 
+
+theorem gte_reflexive(a: ℕ) { a >= a }
+
+theorem gte_antisymmetric(a: ℕ, b: ℕ) { a >= b and b >= a implies a = b }
+
+theorem gte_partial_order {
+    is_reflexive(ℕ.gte) and
+    is_transitive(ℕ.gte) and
+    is_antisymmetric(ℕ.gte)
+} by {
+    is_reflexive(ℕ.gte) 
+    is_transitive(ℕ.gte) 
+    is_antisymmetric(ℕ.gte)   
+}
+
+// // ℕ is linear order, so we can directly use it, without using set_net. But, will there be conflict on symbol `<=`? 
+// instance ℕ: Partial_Order_Lte {
+//     let lte = ℕ.gte
+// }
+
+// Using the linear order of ℕ
 
 define seq_tail[K](shift: ℕ, f: ℕ -> K) -> (ℕ -> K) {
     function(n: ℕ) { f(shift + n) }
@@ -219,8 +166,8 @@ define seq_to_net[K](f: ℕ -> K) -> Set[Set[K]] {
     Set[Set[K]].new(elem_in_seq_to_net(f))
 }
 
-theorem seq_to_net_is_set_net[K](f: ℕ -> K) {
-    is_set_net(seq_to_net(f))
+theorem seq_to_net_is_net[K](f: ℕ -> K) {
+    is_net(seq_to_net(f))
 } by {
     forall(a: Set[K]) {
         if a ∈ seq_to_net(f) {
@@ -265,9 +212,323 @@ theorem seq_to_net_is_set_net[K](f: ℕ -> K) {
     subset_two_intersection(seq_to_net(f))
 }
 
-// // For Interval_Chain on ℝ, we avoid Set_Chain by first use Interval_Net inherit Set[Set[ℝ]], then Interval_Chain inherit Interval_Net. The same for other "topology"
-// structure Set_Chain[K] {
-//     contains: Set[K] -> Bool
-// } constraint {
-//     Set[Set[K]].new(contains).is_chain
-// }
+define is_set_of_finite_intersection[K](n: Set[Set[K]], s: Set[K]) -> Bool {
+    exists(c: Set[Set[K]]) {
+        c ⊆ n and c.is_finite and s = intersection(c)
+    }
+}
+
+define sets_of_finite_intersection[K](n: Set[Set[K]]) -> Set[Set[K]] {
+    Set[Set[K]].new(is_set_of_finite_intersection(n))
+}
+
+theorem sets_of_finite_intersection_preserve_two_intersection[K](n: Set[Set[K]], s1: Set[K], s2: Set[K]) {
+    s1 ∈ sets_of_finite_intersection(n) and s2 ∈ sets_of_finite_intersection(n) implies s1 ∩ s2 ∈ sets_of_finite_intersection(n)
+} by {
+    let c1: Set[Set[K]] satisfy {
+        c1 ⊆ n and c1.is_finite and s1 = intersection(c1)
+    }
+    is_set_of_finite_intersection(n, s2)
+    let c2: Set[Set[K]] satisfy {
+        c2 ⊆ n and c2.is_finite and s2 = intersection(c2)
+    }
+
+    let c = c1 ∪ c2
+    c1 ∪ c2 ⊆ n
+    c ⊆ n
+    c.is_finite
+    c1 ⊆ c
+    c2 ⊆ c
+    intersection(c) ⊆ intersection(c1)
+    intersection(c) ⊆ intersection(c2)
+    intersection(c) ⊆ s1 ∩ s2
+
+    forall(x: K) {
+        if x ∈ s1 ∩ s2 {
+            x ∈ s1
+            x ∈ s2
+            x ∈ intersection(c1)
+            x ∈ intersection(c2)
+            forall(s: Set[K]) {
+                if s ∈ c {
+                    if s ∈ c1 {
+                        x ∈ s
+                    }
+                    if s ∈ c2 {
+                        x ∈ s
+                    }
+                    x ∈ s
+                }
+            }
+            elem_in_intersection_general(c, x)
+            x ∈ intersection(c)
+        }
+    }
+    s1 ∩ s2 ⊆ intersection(c)
+
+    s1 ∩ s2 = intersection(c)
+
+    s1 ∩ s2 ∈ sets_of_finite_intersection(n)
+}
+
+theorem sets_of_finite_intersection_preserve_subset_two_intersection[K](n: Set[Set[K]], s1: Set[K], s2: Set[K]) {
+    subset_two_intersection(n) implies subset_two_intersection(sets_of_finite_intersection(n))
+}
+
+define intersection_of_list_recursion[K](l: List[Set[K]]) -> Set[K] {
+    match l {
+        List[Set[K]].nil {
+            Set[K].universal_set
+        }
+        List.cons(head, tail) {
+            head ∩ intersection_of_list_recursion(tail)
+        }
+    }
+}
+
+define elem_in_intersection_of_list[K](l: List[Set[K]], x: K) -> Bool {
+    forall(s: Set[K]) {
+        s ∈ l implies x ∈ s
+    }
+}
+
+define intersection_of_list[K](l: List[Set[K]]) -> Set[K] {
+    Set[K].new(elem_in_intersection_of_list(l))
+}
+
+theorem equivalent_of_intersection_of_list_and_set[K](c: Set[Set[K]], l: List[Set[K]]) {
+    c.have_exact_list(l) implies intersection(c) = intersection_of_list(l)
+} by {
+    c.contains = l.contains
+    forall(x: K) {
+        if x ∈ intersection(c) {
+            forall(s: Set[K]) {
+                if s ∈ l {
+                    s ∈ c
+                    x ∈ s
+                }
+            }
+            x ∈ intersection_of_list(l)
+        }
+    }
+    intersection(c) ⊆ intersection_of_list(l)
+
+    forall(x: K) {
+        if x ∈ intersection_of_list(l) {
+            forall(s: Set[K]) {
+                if s ∈ c {
+                    s ∈ l
+                    x ∈ s
+                }
+            }
+            x ∈ intersection(c)
+        }
+    }
+    intersection_of_list(l) ⊆ intersection(c)
+
+    intersection(c) = intersection_of_list(l)
+}
+
+theorem empty_intersection_is_universe[K] {
+    intersection_of_list(List[Set[K]].nil) = Set[K].universal_set
+} 
+
+theorem intersection_of_list_decomposition[K](head: Set[K], tail: List[Set[K]]) {
+    intersection_of_list(List.cons(head, tail)) = head ∩ intersection_of_list(tail)
+} by {
+    forall(x: K) {
+        if x ∈ intersection_of_list(List.cons(head, tail)) {
+            head ∈ List.cons(head, tail)
+            x ∈ head
+            forall(s: Set[K]) {
+                if s ∈ tail {
+                    s ∈ List.cons(head, tail)
+                    x ∈ s
+                }
+            }            
+            x ∈ intersection_of_list(tail)
+            x ∈ head ∩ intersection_of_list(tail)
+        }
+    }
+    intersection_of_list(List.cons(head, tail)) ⊆ head ∩ intersection_of_list(tail)
+
+    forall(x: K) {
+        if x ∈ head ∩ intersection_of_list(tail) {
+            x ∈ head
+            x ∈ intersection_of_list(tail)
+            forall(s: Set[K]) {
+                if s ∈ List.cons(head, tail) {
+                    if s = head {
+                        x ∈ s
+                    } else {
+                        s ∈ tail
+                        x ∈ s
+                    }
+                    x ∈ s
+                }
+            }
+            x ∈ intersection_of_list(List.cons(head, tail))
+        }
+    }
+    head ∩ intersection_of_list(tail) ⊆ intersection_of_list(List.cons(head, tail))
+
+    intersection_of_list(List.cons(head, tail)) = head ∩ intersection_of_list(tail)
+}
+
+theorem intersection_of_list_recursion_decomposition[K](head: Set[K], tail: List[Set[K]]) {
+    intersection_of_list_recursion(List.cons(head, tail)) = head ∩ intersection_of_list_recursion(tail)
+}
+
+theorem equivalent_of_two_definiton_of_intersection_of_list[K](c: Set[Set[K]], list: List[Set[K]]) {
+    intersection_of_list_recursion(list) = intersection_of_list(list)
+} by {
+    define p(l: List[Set[K]]) -> Bool {
+        intersection_of_list_recursion(l) = intersection_of_list(l)
+    }
+    p(List[Set[K]].nil) 
+    forall(head: Set[K], tail: List[Set[K]]) {
+        if p(tail) {
+            intersection_of_list_recursion(List.cons(head, tail)) = head ∩ intersection_of_list_recursion(tail)
+
+            intersection_of_list(List.cons(head, tail)) = head ∩ intersection_of_list(tail)
+
+            intersection_of_list_recursion(tail) = intersection_of_list(tail)
+
+            intersection_of_list_recursion(List.cons(head, tail)) = intersection_of_list(List.cons(head, tail))
+
+            p(List.cons(head, tail))
+        }
+    }
+    p(list)
+}
+
+theorem equivalent_of_intersection_of_list_recursion_and_set[K](c: Set[Set[K]], list: List[Set[K]]) {
+    c.have_exact_list(list) implies intersection(c) = intersection_of_list_recursion(list)
+} 
+
+theorem intersection_of_unique_list[K](list: List[Set[K]]) {
+    intersection_of_list(list.unique) = intersection_of_list(list)
+} by {
+    list.contains = list.unique.contains
+
+    forall(x: K) {
+        if x ∈ intersection_of_list(list.unique) {
+            forall(s: Set[K]) {
+                if s ∈ list {
+                    s ∈ list.unique
+                    x ∈ s
+                }
+            }
+            x ∈ intersection_of_list(list)
+        }
+    }
+    intersection_of_list(list.unique) ⊆ intersection_of_list(list)
+
+    forall(x: K) {
+        if x ∈ intersection_of_list(list) {
+            forall(s: Set[K]) {
+                if s ∈ list.unique {
+                    s ∈ list
+                    x ∈ s
+                }
+            }
+            x ∈ intersection_of_list(list.unique)
+        }
+    }
+    intersection_of_list(list) ⊆ intersection_of_list(list.unique)
+
+    intersection_of_list(list.unique) = intersection_of_list(list)
+}
+
+// helper
+define list_subset_sets[K](n: Set[Set[K]], l: List[Set[K]]) -> Bool {
+    forall(s: Set[K]){ s ∈ l implies s ∈ n }
+}
+
+define subset_intersection_of_list[K](n: Set[Set[K]], l: List[Set[K]]) -> Bool {
+    exists(t: Set[K]) { t ∈ n and t ⊆ intersection_of_list_recursion(l) }
+}
+
+theorem sets_of_finite_intersection_preserve_net_no_empty_lemma[K](n: Set[Set[K]], list: List[Set[K]]) {
+    is_net(n)
+    and n != Set[Set[K]].empty_set
+    and list_subset_sets(n, list)
+    implies 
+    subset_intersection_of_list(n, list) 
+} by {
+
+    define p(l: List[Set[K]]) -> Bool {
+        list_subset_sets(n, l) implies subset_intersection_of_list(n, l) 
+    }
+
+    let not_empty_set: Set[K] satisfy { not_empty_set ∈ n }
+    not_empty_set ⊆ intersection_of_list_recursion(List[Set[K]].nil)
+    p(List[Set[K]].nil)
+    forall(head: Set[K], tail: List[Set[K]]) {
+        if p(tail) {
+            intersection_of_list_recursion(List.cons(head, tail)) = head ∩ intersection_of_list_recursion(tail)
+
+            if list_subset_sets(n, List.cons(head, tail)) {
+                forall(s: Set[K]){ s ∈ List.cons(head, tail) implies s ∈ n }
+                head ∈ List.cons(head, tail)
+                head ∈ n
+
+                forall(s: Set[K]) {
+                    if s ∈ tail {
+                        s ∈ List.cons(head, tail)
+                        s ∈ n
+                    }
+                }
+                list_subset_sets(n, tail)
+                subset_intersection_of_list(n, tail)
+
+                let t_tail: Set[K] satisfy { 
+                    t_tail ∈ n and t_tail ⊆ intersection_of_list_recursion(tail)
+                }
+                
+                let t: Set[K] satisfy {
+                    t ∈ n and t ⊆ head ∩ t_tail
+                }
+
+                t ⊆ head ∩ intersection_of_list_recursion(tail)
+                
+                t ⊆ intersection_of_list_recursion(List.cons(head, tail))
+
+                subset_intersection_of_list(n, List.cons(head, tail))
+            }
+            p(List.cons(head, tail))
+        }
+    }
+    p(list)
+}
+
+theorem sets_of_finite_intersection_preserve_net_no_empty[K](n: Set[Set[K]], list: List[Set[K]]) {
+    is_net(n) and n != Set[Set[K]].empty_set implies no_empty(sets_of_finite_intersection(n))
+} by {
+    forall(s: Set[K]) {
+        if s ∈ sets_of_finite_intersection(n) {
+            let c: Set[Set[K]] satisfy {
+                c ⊆ n and c.is_finite and s = intersection(c)
+            }
+
+            let l: List[Set[K]] satisfy {
+                c.have_exact_list(l)
+            }
+
+            intersection(c) = intersection_of_list_recursion(l)
+
+            c.contains = l.contains
+            list_subset_sets(n, l)
+            subset_intersection_of_list(n, l)
+
+            let (t: Set[K]) satisfy { t ∈ n and t ⊆ intersection_of_list_recursion(l) }
+            t != Set[K].empty_set
+            intersection_of_list_recursion(l) != Set[K].empty_set
+            s != Set[K].empty_set
+        }
+    }
+}
+
+theorem sets_of_finite_intersection_preserve_net[K](n: Set[Set[K]]) {
+    is_net(n) and n != Set[Set[K]].empty_set implies is_net(sets_of_finite_intersection(n))
+}

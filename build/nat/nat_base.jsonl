@@ -135,6 +135,13 @@
 {"goal":"exists(k0: ℕ) { a + k0 = b }","proof":["let s0: (ℕ, ℕ) -> ℕ satisfy { forall(x0: ℕ, x1: ℕ) { not x0 < x1 or 0 != s0(x0, x1) } and forall(x2: ℕ, x3: ℕ) { not x2 < x3 or x2 + s0(x2, x3) = x3 } and forall(x4: ℕ, x5: ℕ, x6: ℕ) { x4 + x5 != x6 or x4 < x6 or 0 = x5 } }","a + s0(a, b) != b","not a < b or a + s0(a, b) = b"]}
 {"goal":"a + c + n = b + c","proof":["c + (a + n) = c + a + n","c + a = a + c","c + b = b + c"]}
 {"goal":"lt_add_left","proof":["a + c + n != b + c or a + c < b + c or n = 0","n = 0","not b < a or not a < b","a + 0 = 0 + a","0 + a = a","not b < a"]}
+{"goal":"a + c < b + d","proof":["not a + c < b + c","not a < b or a + c < b + c"]}
+{"goal":"c < d","proof":["not c <= d or c < d or d = c"]}
+{"goal":"a + c < b + c","proof":["not a < b or a + c < b + c"]}
+{"goal":"b + c < b + d","proof":["not c < d or c + b < d + b","c + b = b + c","d + b = b + d","not c + b < b + d","c + b < d + b"]}
+{"goal":"a + c < b + d","proof":["not a + c < b + c or not b + c < b + d or a + c < b + d","not b + c < b + d or not a + c < b + c"]}
+{"goal":"right_lte_lt","proof":[]}
+{"goal":"left_lte_lt","proof":["not a <= b or not c < d or c + a < d + b","c + a = a + c","d + b = b + d","not a + c < d + b","not a <= b or c + a < d + b","not c + a < d + b","c + a < d + b"]}
 {"goal":"0 = a or 0 < a","proof":["0 + a != a or 0 < a or 0 = a","0 + a != a or 0 = a","0 + a != a","0 + a = a"]}
 {"goal":"f(0)","proof":["trichotomy(a, 0) = f(0)","0 != a or trichotomy(a, 0)","not 0 < a or trichotomy(a, 0)","not trichotomy(a, 0)","0 != a","not 0 < a","0 < a"]}
 {"goal":"trichotomy(a, x)","proof":["trichotomy(a, x) = f(x)"]}

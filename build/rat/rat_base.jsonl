@@ -593,3 +593,39 @@
 {"goal":"from_nat_one","proof":["ℚ.from_int(ℤ.from_nat(ℕ.1)) = ℚ.from_nat(ℕ.1)","ℚ.from_int(ℤ.from_nat(ℕ.1)) != 1"]}
 {"goal":"ℚ.from_nat(a + b) = ℚ.from_int(ℤ.from_nat(a) + ℤ.from_nat(b))","proof":["ℤ.from_nat(a) + ℤ.from_nat(b) = ℤ.from_nat(a + b)","ℚ.from_int(ℤ.from_nat(a + b)) != ℚ.from_nat(a + b)","ℚ.from_int(ℤ.from_nat(a + b)) = ℚ.from_nat(a + b)"]}
 {"goal":"from_nat_add","proof":["ℚ.from_int(ℤ.from_nat(a)) + ℚ.from_int(ℤ.from_nat(b)) = ℚ.from_int(ℤ.from_nat(a) + ℤ.from_nat(b))","ℚ.from_int(ℤ.from_nat(a)) = ℚ.from_nat(a)","ℚ.from_int(ℤ.from_nat(b)) = ℚ.from_nat(b)"]}
+{"goal":"neg_reciprocal_iff","proof":["1 / -a = -1 / a","1 / -1 / a > 0 = -1 / a > 0","-1 / a > 0 = 1 / a < 0","-a > 0 = a < 0","1 / (1 / -a) = -a"]}
+{"goal":"neg_reciprocal_iff","proof":["1 / -a = -1 / a","1 / -1 / a > 0 = -1 / a > 0","-1 / a > 0 = 1 / a < 0","-a > 0 = a < 0","1 / (1 / -a) = -a"]}
+{"goal":"neg_reciprocal_iff","proof":["1 / -a = -1 / a","1 / -1 / a > 0 = -1 / a > 0","-1 / a > 0 = 1 / a < 0","-a > 0 = a < 0","1 / (1 / -a) = -a"]}
+{"goal":"neg_reciprocal_iff","proof":["1 / -a = -1 / a","1 / -1 / a > 0 = -1 / a > 0","-1 / a > 0 = 1 / a < 0","-a > 0 = a < 0","1 / (1 / -a) = -a"]}
+{"goal":"neg_reciprocal_iff","proof":["1 / -a = -1 / a","1 / -1 / a > 0 = -1 / a > 0","-1 / a > 0 = 1 / a < 0","-a > 0 = a < 0","1 / (1 / -a) = -a"]}
+{"goal":"neg_reciprocal_iff","proof":["1 / -a = -1 / a","1 / -1 / a > 0 = -1 / a > 0","-1 / a > 0 = 1 / a < 0","-a > 0 = a < 0","1 / (1 / -a) = -a"]}
+{"goal":"neg_reciprocal_iff","proof":["1 / -a = -1 / a","1 / -1 / a > 0 = -1 / a > 0","-1 / a > 0 = 1 / a < 0","-a > 0 = a < 0","1 / (1 / -a) = -a"]}
+{"goal":"neg_reciprocal_iff","proof":["1 / -a = -1 / a","1 / -1 / a > 0 = -1 / a > 0","-1 / a > 0 = 1 / a < 0","-a > 0 = a < 0","1 / (1 / -a) = -a"]}
+{"goal":"neg_reciprocal_iff","proof":["1 / -a = -1 / a","1 / -1 / a > 0 = -1 / a > 0","-1 / a > 0 = 1 / a < 0","-a > 0 = a < 0","1 / (1 / -a) = -a"]}
+{"goal":"neg_reciprocal_iff","proof":["1 / -a = -1 / a","1 / -1 / a > 0 = -1 / a > 0","-1 / a > 0 = 1 / a < 0","-a > 0 = a < 0","1 / (1 / -a) = -a"]}
+{"goal":"neg_reciprocal_iff","proof":["1 / -a = -1 / a","1 / -1 / a > 0 = -1 / a > 0","-1 / a > 0 = 1 / a < 0","-a > 0 = a < 0","1 / (1 / -a) = -a"]}
+{"goal":"neg_reciprocal_iff","proof":["1 / -a = -1 / a","1 / -1 / a > 0 = -1 / a > 0","-1 / a > 0 = 1 / a < 0","-a > 0 = a < 0","1 / (1 / -a) = -a"]}
+{"goal":"neg_reciprocal_iff","proof":["1 / -a = -1 / a","1 / -1 / a > 0 = -1 / a > 0","-1 / a > 0 = 1 / a < 0","-a > 0 = a < 0","1 / (1 / -a) = -a"]}
+{"goal":"neg_reciprocal_iff","proof":["1 / -a = -1 / a","1 / -1 / a > 0 = -1 / a > 0","-1 / a > 0 = 1 / a < 0","-a > 0 = a < 0","1 / (1 / -a) = -a"]}
+{"goal":"neg_reciprocal_iff","proof":["1 / -a = -1 / a","1 / -1 / a > 0 = -1 / a > 0","-1 / a > 0 = 1 / a < 0","-a > 0 = a < 0","1 / (1 / -a) = -a"]}
+{"goal":"neg_reciprocal_iff","proof":["1 / -a = -1 / a","1 / -1 / a > 0 = -1 / a > 0","-1 / a > 0 = 1 / a < 0","-a > 0 = a < 0","1 / (1 / -a) = -a"]}
+{"goal":"neg_reciprocal_iff","proof":["1 / -a = -1 / a","1 / -1 / a > 0 = -1 / a > 0","-1 / a > 0 = 1 / a < 0","-a > 0 = a < 0","1 / (1 / -a) = -a"]}
+{"goal":"neg_reciprocal_iff","proof":["1 / -a = -1 / a","1 / -1 / a > 0 = -1 / a > 0","-1 / a > 0 = 1 / a < 0","-a > 0 = a < 0","1 / (1 / -a) = -a"]}
+{"goal":"neg_by_div","proof":["1 / -a = -1 / a"]}
+{"goal":"neg_by_div","proof":["1 / -a = -1 / a"]}
+{"goal":"neg_by_div","proof":["1 / -a = -1 / a"]}
+{"goal":"neg_by_div","proof":["1 / -a = -1 / a"]}
+{"goal":"neg_by_div","proof":["1 / -a = -1 / a"]}
+{"goal":"neg_by_div","proof":["1 / -a = -1 / a"]}
+{"goal":"neg_by_div","proof":["1 / -a = -1 / a"]}
+{"goal":"neg_by_div","proof":["1 / -a = -1 / a"]}
+{"goal":"neg_by_div","proof":["1 / -a = -1 / a"]}
+{"goal":"neg_by_div","proof":["1 / -a = -1 / a"]}
+{"goal":"neg_by_div","proof":["1 / -a = -1 / a"]}
+{"goal":"neg_by_div","proof":["1 / -a = -1 / a"]}
+{"goal":"neg_by_div","proof":["1 / -a = -1 / a"]}
+{"goal":"neg_by_div","proof":["1 / -a = -1 / a"]}
+{"goal":"neg_by_div","proof":["1 / -a = -1 / a"]}
+{"goal":"neg_by_div","proof":["1 / -a = -1 / a"]}
+{"goal":"neg_by_div","proof":["1 / -a = -1 / a"]}
+{"goal":"neg_by_div","proof":["1 / -a = -1 / a"]}

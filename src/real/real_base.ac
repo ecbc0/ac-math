@@ -710,6 +710,37 @@ theorem rat_between_reals(a: ℝ, b: ℝ) {
     ℝ.from_rat(r2) < b
 }
 
+theorem real_between_reals(a: ℝ, b: ℝ) {
+    a < b implies exists(c: ℝ) {
+        a < c and c < b
+    }
+} by {
+    let (r: ℚ) satisfy {
+        a < ℝ.from_rat(r) and ℝ.from_rat(r) < b
+    }
+}
+
+theorem real_between_reals_with_eq(a: ℝ, b: ℝ) {
+    a <= b implies exists(c: ℝ) {
+        a <= c and c <= b
+    }
+} by {
+    if a = b {
+        let c = a
+        a <= c
+        c <= b
+        a <= c and c <= b
+    } else {
+        a < b
+        let c: ℝ satisfy {
+            a < c and c < b
+        }
+        a <= c
+        c <= b
+        a <= c and c <= b
+    }
+}
+
 theorem rat_between_reals_gt(a: ℝ, b: ℝ) {
     a > b implies
     exists(r: ℚ) {
@@ -2022,7 +2053,7 @@ theorem swap_minus_plus(a: ℝ, b: ℝ, c: ℝ) {
 /// Multiplication not preserve order. We will first use ℚ_(0, a) + ℚ_(a, ∞), truncated from ℚ_(< a) + ℚ_(> a), or just ℚ_(0, a), and define ℚ_(0, a) ⋅ ℚ_(0, b) = ℚ_(0, a ⋅ b).  
 /// Then use neg to define mul in cases other than a > 0 and b > 0  
 /// Indeed, after defing add on ℝ, you can define mul, reciprocal on ℝ using net of ℚ that converge to ℝ.  
-/// That maybe more convenient than defining mul by Dedekind cut, but I will not try it now. (Need intersection_of_net_non_empty_theorem) 
+/// That maybe more convenient than defining mul by Dedekind cut, but I will not try it now. (Need intersection_of_net_non_empty_theorem.) Measure and integral will also be defined by completion of net (rather than completion of linear order, as the case of from ℚ to ℝ)
 define pos_mul_truncated_gt(a: ℝ, b: ℝ, r: ℚ) -> Bool {
     exists(ra: ℚ, rb: ℚ) {
         ra > ℚ.0 and a.gt_rat(ra) and

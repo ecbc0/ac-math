@@ -68,8 +68,17 @@ attributes Set[K] {
         }
     }
 }
+
 let empty[K] = Set[K].empty_set
 let universe[K] = Set[K].universal_set
+
+theorem empty_is_not_universal[K] {
+    empty[K] != universe[K]
+} by {
+    let x: K satisfy { true }
+    constant_false(x) = false
+    constant_true(x) = true
+}
 
 theorem empty_set_is_empty[K](a: Set[K]) {
     (a = empty[K]) iff (a.is_empty)
@@ -747,6 +756,20 @@ theorem subset_union_general_is_subset[K](c: Set[Set[K]], a: Set[K]) {
     union(c) ⊆ a
 }
 
+theorem sets_subset_imp_union_subset[K](c1: Set[Set[K]], c2: Set[Set[K]]) {
+    c1 ⊆ c2 implies union(c1) ⊆ union(c2)
+} by {
+    forall(x: K) {
+        if x ∈ union(c1) {
+            let s: Set[K] satisfy {
+                s ∈ c1 and x ∈ s
+            }
+            s ∈ c2
+            x ∈ union(c2)
+        }
+    }
+}
+
 define elem_in_intersection_general[K](c: Set[Set[K]], x: K) -> Bool {
     forall(s: Set[K]) {
         s ∈ c implies x ∈ s
@@ -755,6 +778,41 @@ define elem_in_intersection_general[K](c: Set[Set[K]], x: K) -> Bool {
 
 define intersection[K](c: Set[Set[K]]) -> Set[K] {
     Set[K].new(elem_in_intersection_general(c))
+}
+
+theorem sets_subset_imp_intersection_superset[K](c1: Set[Set[K]], c2: Set[Set[K]]) {
+    c1 ⊆ c2 implies intersection(c1) ⊇ intersection(c2)
+} by {
+    forall(x: K) {
+        if x ∈ intersection(c2) {
+            forall(s: Set[K]) {
+                if s ∈ c1 {
+                    s ∈ c2
+                    x ∈ s
+                }
+            }
+            x ∈ intersection(c1)
+        }
+    }
+}
+
+theorem empty_intersection_is_universe[K] {
+    intersection(Set[Set[K]].empty_set) = Set[K].universal_set
+} by {
+    forall(x: K) {
+        x ∈ Set[K].universal_set
+        forall(s: Set[K]) {
+            if s ∈ Set[Set[K]].empty_set {
+                if not x ∈ s {
+                    false
+                }
+                x ∈ s
+            }
+            s ∈ Set[Set[K]].empty_set implies x ∈ s
+        }
+        x ∈ intersection(Set[Set[K]].empty_set)
+    }
+    intersection(Set[Set[K]].empty_set).contains = Set[K].universal_set.contains
 }
 
 // todo: (product/sum)_index_of_two
@@ -1097,5 +1155,113 @@ theorem subset_not_eq_singleton[K](a: Set[K], x: K) {
 theorem subset_not_eq_by_contains[K](a: Set[K], b: Set[K]) {
     a ⊂ b implies exists(x: K) {
         x ∈ b and x ∉ a
+    }
+}
+
+/// Creates a new function that returns true for the given item and delegates to the original function for all other inputs.  
+/// i.e. add a true value to f: T -> Bool by change f(item) to true 
+define functional_insert[T](f: T -> Bool, item: T, x: T) -> Bool {
+    if x = item {
+        true
+    } else {
+        f(x)
+    }
+}
+
+/// Creates a new function that returns false for the given item and delegates to the original function for all other inputs.  
+/// i.e. add a false value to f: T -> Bool by change f(item) to false 
+define functional_remove[T](f: T -> Bool, item: T, x: T) -> Bool {
+    if x = item {
+        false
+    } else {
+        f(x)
+    }
+}
+
+attributes Set[K] {
+    define insert(self, item: K) -> Set[K] {
+        Set[K].new(functional_insert(self.contains, item))
+    }
+
+    define remove(self, item: K) -> Set[K] {
+        Set[K].new(functional_remove(self.contains, item))
+    }
+}
+
+theorem insert_contains[T](a: Set[T], item: T) {
+    item ∈ a.insert(item)
+}
+
+theorem remove_does_not_contain[T](a: Set[T], item: T) {
+    not item ∈ a.remove(item)
+}
+
+theorem insert_other_contains_eq[T](a: Set[T], item: T, other: T) {
+    item != other implies item ∈ a = item ∈ a.insert(other)
+} by {
+    if item ∈ a {
+        item ∈ a iff item ∈ a.insert(other)
+    } else {
+        not item ∈ a
+        not item ∈ a.insert(other)
+        item ∈ a = item ∈ a.insert(other)
+    }
+}
+
+theorem remove_other_contains_eq[T](a: Set[T], item: T, other: T) {
+    item != other implies item ∈ a = item ∈ a.remove(other)
+} by {
+    if item ∈ a {
+        item ∈ a iff item ∈ a.remove(other)
+    } else {
+        not item ∈ a
+        not item ∈ a.remove(other)
+        item ∈ a = item ∈ a.remove(other)
+    }
+}
+
+theorem remove_then_insert[T](a: Set[T], item: T) {
+    item ∈ a implies a.remove(item).insert(item) = a
+} by {
+    if a.remove(item).insert(item) != a {
+        a.remove(item).insert(item).contains != a.contains
+        let t: T satisfy {
+            t ∈ a.remove(item).insert(item) != t ∈ a
+        }
+        if item != t {
+            if t ∈ a {
+                t ∈ a.remove(item)
+                false
+            } else {
+                false
+            }
+        } else {
+            item = t
+            not t ∈ a
+            false
+        }
+    }
+}
+
+theorem insert_then_remove[T](a: Set[T], item: T) {
+    not item ∈ a implies a.insert(item).remove(item) = a
+} by {
+    if a.insert(item).remove(item) != a {
+        a.insert(item).remove(item).contains != a.contains
+        let t: T satisfy {
+            t ∈ a.insert(item).remove(item) != t ∈ a
+        }
+        if item != t {
+            if t ∈ a {
+                false
+            } else {
+                t ∈ a.insert(item)
+                false
+            }
+        } else {
+            item = t
+            not t ∈ a
+            false
+        }
     }
 }

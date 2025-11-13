@@ -402,7 +402,7 @@ theorem union_preserve_open[X: Topology](c: Set[Set[X]]) {
     union(c).is_open
 }
 
-from limit.net import is_set_net, subset_two_intersection
+from limit.net import is_net, subset_two_intersection
 
 theorem two_intersection_preserve_open[X: Topology](a: Set[X], b: Set[X]) {
     a.is_open and b.is_open implies (a ∩ b).is_open
@@ -421,7 +421,7 @@ theorem two_intersection_preserve_open[X: Topology](a: Set[X], b: Set[X]) {
             let sb: Set[X] satisfy {
                 sb ∈ x.net.sets and sb ⊆ b
             }
-            is_set_net(x.net.sets)
+            is_net(x.net.sets)
             subset_two_intersection(x.net.sets)
             let s: Set[X] satisfy {
                 s ∈ x.net.sets and s ⊆ sa ∩ sb

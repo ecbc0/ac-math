@@ -1,35 +1,348 @@
 from list import List
-
-/// A constant function that always returns false, regardless of input.
-define const_false[T](x: T) -> Bool {
-    false
-}
+from set import Set, constant_false, functional_insert, functional_remove
+from nat import ℕ
 
 /// True if a boolean function represents a finite set.
 /// A function satisfies the finite constraint if there exists a finite list containing all elements for which the function returns true.
 define finite_constraint[T](contains: T -> Bool) -> Bool {
-    exists(superset: List[T]) {
+    exists(super: List[T]) {
         forall(x: T) {
-            contains(x) implies superset.contains(x)
+            contains(x) implies super.contains(x)
         }
     }
 }
 
 theorem const_false_satisfies_finite_constraint[T] {
-    finite_constraint(const_false[T])
+    finite_constraint(constant_false[T])
 }
 
 theorem list_contains_satisfies_finite_constraint[T](ts: List[T]) {
     finite_constraint(ts.contains)
+    // ts.contains implies ts.contains
 }
 
-/// Creates a new function that returns true for the given item and delegates to the original function for all other inputs.  
-/// i.e. add a true value to f: T -> Bool by change f(item) to true 
-define functional_insert[T](f: T -> Bool, item: T, x: T) -> Bool {
-    if x = item {
-        true
+// Finite-set attributes and lemmas
+attributes Set[K] {
+    /// True if the set contains only finitely many elements.
+    define is_finite(self) -> Bool {
+        finite_constraint(self.contains)
+    }
+
+    define have_super_list(self, super: List[K]) -> Bool {
+        forall(x: K) {
+            x ∈ self implies x ∈ super
+        }        
+    }
+
+    define have_exact_list(self, list: List[K]) -> Bool {
+        list.is_unique and self.contains = list.contains
+    }
+
+    /// True if the cardinality is at most n.
+    define cardinality_at_most(self, n: ℕ) -> Bool {
+        exists(l: List[K]) {
+            self.have_super_list(l) and l.length <= n
+        }
+    }
+
+    /// True if the cardinality equals n.
+    define cardinality_is(self, n: ℕ) -> Bool {
+        exists(l: List[K]) {
+            self.have_exact_list(l) and l.length = n
+        }
+    }
+}
+
+theorem is_finite_imp_have_super_list[K](a: Set[K]) {
+    a.is_finite implies exists(l: List[K]) { a.have_super_list(l) }
+} 
+
+theorem have_super_list_imp_is_finite[K](a: Set[K]) {
+    exists(l: List[K]) { a.have_super_list(l) } implies a.is_finite
+}
+
+theorem have_exact_list_imp_same_contains[K](s: Set[K], l: List[K]) {
+    s.have_exact_list(l) implies s.contains = l.contains
+}
+
+define to_exact[K](s: Set[K], l: List[K]) -> List[K] {
+    if s.have_super_list(l) {
+        l.filter(s.contains).unique
     } else {
-        f(x)
+        List[K].nil
+    }
+}
+
+theorem super_list_to_exact_list_is_exact_list[K](s: Set[K], l: List[K]) {
+    s.have_super_list(l) implies s.have_exact_list(to_exact(s, l))
+}
+ by {
+    let filtered = l.filter(s.contains).unique
+    filtered = to_exact(s, l)
+
+    forall(x: K) {
+        x ∈ l.filter(s.contains) iff x ∈ l.filter(s.contains).unique
+        x ∈ s implies x ∈ filtered
+        x ∈ filtered implies x ∈ s
+        x ∈ s iff x ∈ filtered
+    }
+
+    s.have_exact_list(filtered)
+}
+
+theorem finite_set_has_exact_list[K](s: Set[K]) {
+    s.is_finite implies exists(l: List[K]) {
+        s.have_exact_list(l)
+    }
+}
+
+theorem have_exact_list_imp_finite[K](s: Set[K]) {
+    exists(l: List[K]) {
+        s.have_exact_list(l)
+    } implies s.is_finite
+}
+
+theorem cardinality_is_imp_finite[K](s: Set[K], n: ℕ) {
+    s.cardinality_is(n) implies s.is_finite
+}
+
+theorem cardinality_always_exists[K](s: Set[K]) {
+    s.is_finite implies exists(n: ℕ) {
+        s.cardinality_is(n)
+    }
+} by {
+    let (l: List[K]) satisfy {
+        s.have_exact_list(l)
+    }
+
+    let n = l.length
+}
+
+theorem exact_list_is_well_defined[K](s: Set[K], l1: List[K], l2: List[K]) {
+    s.have_exact_list(l1) and s.have_exact_list(l2) implies l1.is_permutation(l2)
+} by {
+    l1.contains = l2.contains
+    l1.is_unique
+    l2.is_unique
+    l1.is_permutation(l2)    
+}
+
+theorem cardinality_is_well_defined[K](s: Set[K], n1: ℕ, n2: ℕ) {
+    s.cardinality_is(n1) and s.cardinality_is(n2) implies n1 = n2
+} by {
+    let (l1: List[K]) satisfy {
+        s.have_exact_list(l1) and l1.length = n1
+    }
+    let (l2: List[K]) satisfy {
+        s.have_exact_list(l2) and l2.length = n2
+    }
+    l1.is_permutation(l2)
+    l1.length = l2.length
+    n1 = n2
+}
+
+theorem cardinality_is_smallest_cardinality[K](s: Set[K], n: ℕ, m: ℕ) {
+    s.cardinality_is(n) and s.cardinality_at_most(m) implies n <= m
+} by {
+    s.is_finite
+    let (l: List[K]) satisfy {
+        s.have_super_list(l) and l.length <= m
+    }
+    s.have_exact_list(to_exact(s, l))
+    to_exact(s, l).length = n
+    to_exact(s, l) = l.filter(s.contains).unique
+    l.filter(s.contains).unique.length <= l.filter(s.contains).length
+    l.filter(s.contains).length <= l.length
+}
+
+theorem cardinality_is_implies_is_finite[K](s: Set[K], n: ℕ) {
+    s.cardinality_is(n) implies s.is_finite
+} 
+
+theorem union_is_finite_of_finite[K](a: Set[K], b: Set[K]) {
+    a.is_finite and b.is_finite implies (a ∪ b).is_finite
+} by {
+    let la: List[K] satisfy {
+        a.have_super_list(la)
+    }
+    let lb: List[K] satisfy {
+        b.have_super_list(lb)
+    }
+
+    let l = la + lb
+
+    forall(x: K) {
+        if x ∈ a ∪ b {
+            if x ∈ a {
+                x ∈ la
+                x ∈ l
+            } else {
+                x ∈ b
+                x ∈ lb
+                x ∈ l
+            }
+            x ∈ l
+        }
+    }
+    (a ∪ b).have_super_list(l)
+}
+
+theorem intersection_is_finite_of_finite[K](a: Set[K], b: Set[K]) {
+    a.is_finite and b.is_finite implies (a ∩ b).is_finite
+} by {
+    a.is_finite
+
+    let la: List[K] satisfy {
+        a.have_super_list(la)
+    }
+
+    let l = la
+
+    forall(x: K) {
+        if x ∈ a ∩ b {
+            x ∈ a
+            x ∈ l 
+        }
+    }
+
+    (a ∩ b).have_super_list(l)
+}
+
+theorem difference_is_finite_of_finite[K](a: Set[K], b: Set[K]) {
+    a.is_finite implies (a ∖ b).is_finite
+} by {
+    a.is_finite
+
+    let la: List[K] satisfy {
+        a.have_super_list(la)
+    }
+
+    let l = la
+
+    forall(x: K) {
+        if x ∈ a ∖ b {
+            x ∈ a
+            x ∈ l
+        }
+    }
+
+    (a ∖ b).have_super_list(l)
+}
+
+theorem union_is_at_most_length[K](a: Set[K], b: Set[K], n1: ℕ, n2: ℕ) {
+    a.cardinality_at_most(n1) and b.cardinality_at_most(n2) implies (a ∪ b).cardinality_at_most(n1 + n2)
+} by {
+    let (la: List[K]) satisfy {
+        a.have_super_list(la) and la.length <= n1
+    }
+
+    let (lb: List[K]) satisfy {
+        b.have_super_list(lb) and lb.length <= n2
+    }
+
+    let l = la + lb
+
+    forall(x: K) {
+        x ∈ a ∪ b implies x ∈ l
+    }
+
+    l.length = la.length + lb.length
+    la.length + lb.length <= n1 + n2
+    l.length <= n1 + n2
+}
+
+// // #25. Acorn dose not support it now
+// let set_to_exact_list[T](s: Set[T]) -> l: List[T] satisfy {
+//     if s.is_finite {
+//        s.have_exact_list(l) 
+//     } else {
+//         List[T].nil
+//     }
+// } 
+
+theorem empty_set_have_exact_list_nil[T] {
+    Set[T].empty_set.have_exact_list(List[T].nil)
+} by {
+    List[T].nil.is_unique
+    forall(x: T) {
+        not x ∈ Set[T].empty_set
+        not x ∈ List[T].nil
+    }
+    Set[T].empty_set.contains = List[T].nil.contains
+}
+
+// theorem empty_set_to_nil[T] {
+//     set_to_exact_list(Set[T].empty_set) = List[T].nil
+// }
+
+define list_to_set[T](l: List[T]) -> Set[T] {
+    Set[T].new(l.contains)
+}
+
+theorem unique_list_to_set_is_exact[T](l: List[T]) {
+    l.is_unique implies list_to_set(l).have_exact_list(l)
+}
+
+/// A finite set is a `Set` bundled with a finiteness proof.
+structure Finite_Set[T] {
+    /// The underlying set.
+    set: Set[T]
+} constraint {
+    set.is_finite
+}
+
+attributes Finite_Set[T] {
+    /// Access the underlying set.
+    define as_set(self) -> Set[T] {
+        self.set
+    }
+
+    /// Membership predicate.
+    define contains(self, x: T) -> Bool {
+        self.set.contains(x)
+    }
+
+    /// The empty finite set.
+    let empty: Finite_Set[T] = Finite_Set.new(Set[T].empty_set)
+
+    /// Subset relation lifted from sets.
+    define subset_eq(self, other: Finite_Set[T]) -> Bool {
+        self.set.subset_eq(other.set)
+    }
+
+    /// Superset relation lifted from sets.
+    define superset_eq(self, other: Finite_Set[T]) -> Bool {
+        self.set.superset_eq(other.set)
+    }
+
+    /// Union of finite sets.
+    define union(self, other: Finite_Set[T]) -> Finite_Set[T] {
+        Finite_Set.new(self.set ∪ other.set)
+    }
+
+    /// Intersection of finite sets.
+    define intersection(self, other: Finite_Set[T]) -> Finite_Set[T] {
+        Finite_Set.new(self.set ∩ other.set)
+    }
+
+    /// Difference of finite sets.
+    define difference(self, other: Finite_Set[T]) -> Finite_Set[T] {
+        Finite_Set.new(self.set ∖ other.set)
+    }
+
+    /// Empty predicate.
+    define is_empty(self) -> Bool {
+        self.set.is_empty
+    }
+
+    /// Cardinality helper lifted from sets.
+    define cardinality_at_most(self, n: ℕ) -> Bool {
+        self.set.cardinality_at_most(n)
+    }
+
+    /// True if the cardinality equals n.
+    define cardinality_is(self, n: ℕ) -> Bool {
+        self.set.cardinality_is(n)
     }
 }
 
@@ -37,155 +350,86 @@ theorem functional_insert_preserve_finite_constraint[T](f: T -> Bool, item: T) {
     finite_constraint(f) implies finite_constraint(functional_insert(f, item))
 }
 
-/// Creates a new function that returns false for the given item and delegates to the original function for all other inputs.  
-/// i.e. add a false value to f: T -> Bool by change f(item) to false 
-define functional_remove[T](f: T -> Bool, item: T, x: T) -> Bool {
-    if x = item {
-        false
-    } else {
-        f(x)
-    }
-}
-
 theorem functional_remove_preserve_finite_constraint[T](f: T -> Bool, item: T) {
     finite_constraint(f) implies finite_constraint(functional_remove(f, item))
 }
 
-/// A finite set represented as a boolean membership function.
-/// The constraint ensures that only finitely many elements are members.
-structure Finite_Set[T] {
-    /// Finite sets are defined by a membership function.
-    contains: T -> Bool
-} constraint {
-    finite_constraint(contains)
+theorem functional_insert_preserve_finite[T](s: Set[T], item: T) {
+    s.is_finite implies s.insert(item).is_finite
+} by {
+    finite_constraint(s.contains) 
+    finite_constraint(functional_insert(s.contains, item))
+    s.insert(item).contains = functional_insert(s.contains, item)
+    finite_constraint(s.insert(item).contains)
+}
+
+theorem functional_remove_preserve_finite[T](s: Set[T], item: T) {
+    s.is_finite implies s.remove(item).is_finite
+} by {
+    finite_constraint(s.contains) 
+    finite_constraint(functional_remove(s.contains, item))
+    s.remove(item).contains = functional_remove(s.contains, item)
+    finite_constraint(s.remove(item).contains)
 }
 
 attributes Finite_Set[T] {
     /// Converts a list to a finite set.
     let from_list: List[T] -> Finite_Set[T] = function(ts: List[T]) {
-        Finite_Set.new(ts.contains)
+        Finite_Set.new(Set[T].new(ts.contains))
     }
 
-    /// True if the set contains no elements.
-    define is_empty(self) -> Bool {
-        forall(x: T) {
-            not x ∈ self
-        }
-    }
-
-    /// Removes an element from the set. If the item isn't present, this is a no-op.
-    define remove(self, item: T) -> Finite_Set[T] {
-        Finite_Set.new(functional_remove(self.contains, item))
-    }
-
-    /// Adds an element to the set. If the item is already present, this is a no-op.
+    /// Insert preserves finiteness.
     define insert(self, item: T) -> Finite_Set[T] {
-        Finite_Set.new(functional_insert(self.contains, item))
+        Finite_Set.new(self.set.insert(item))
+    }
+
+    /// Remove preserves finiteness.
+    define remove(self, item: T) -> Finite_Set[T] {
+        Finite_Set.new(self.set.remove(item))
     }
 }
 
-theorem insert_contains[T](set: Finite_Set[T], item: T) {
-    item ∈ set.insert(item)
-}
-
-theorem remove_does_not_contain[T](set: Finite_Set[T], item: T) {
-    not item ∈ set.remove(item)
-}
-
-theorem insert_other_still_contains[T](set: Finite_Set[T], item: T, other: T) {
-    item ∈ set implies item ∈ set.insert(other)
+theorem insert_contains[T](a: Finite_Set[T], item: T) {
+    item ∈ a.insert(item)
 } by {
-    finite_constraint(set.contains)
-    finite_constraint(set.insert(other).contains)
+    a.set.is_finite
+    a.set.insert(item).is_finite
 }
 
-theorem remove_other_still_contains[T](set: Finite_Set[T], item: T, other: T) {
-    item != other and item ∈ set implies item ∈ set.remove(other)
+theorem remove_does_not_contain[T](a: Finite_Set[T], item: T) {
+    not item ∈ a.remove(item)
 } by {
-    finite_constraint(set.contains)
-    finite_constraint(set.remove(other).contains)
+    a.set.is_finite
+    a.set.remove(item).is_finite
 }
 
-theorem insert_other_contains_imp_contains[T](set: Finite_Set[T], item: T, other: T) {
-    item != other and item ∈ set.insert(other) implies item ∈ set
+theorem insert_other_contains_eq[T](a: Finite_Set[T], item: T, other: T) {
+    item != other implies item ∈ a = item ∈ a.insert(other)
 } by {
-    finite_constraint(set.contains)
-    finite_constraint(set.insert(other).contains)
+    a.set.is_finite
+    a.set.insert(other).is_finite
 }
 
-theorem remove_other_contains_imp_contains[T](set: Finite_Set[T], item: T, other: T) {
-    item != other and item ∈ set.remove(other) implies item ∈ set
+theorem remove_other_contains_eq[T](a: Finite_Set[T], item: T, other: T) {
+    item != other implies item ∈ a = item ∈ a.remove(other)
 } by {
-    finite_constraint(set.contains)
-    finite_constraint(set.remove(other).contains)
+    a.set.is_finite
+    a.set.insert(other).is_finite
+    a.set.remove(other).is_finite
 }
 
-theorem insert_other_contains_eq[T](set: Finite_Set[T], item: T, other: T) {
-    item != other implies item ∈ set = item ∈ set.insert(other)
+theorem remove_then_insert[T](a: Finite_Set[T], item: T) {
+    item ∈ a implies a.remove(item).insert(item) = a
 } by {
-    if item ∈ set {
-        item ∈ set iff item ∈ set.insert(other)
-    } else {
-        not item ∈ set
-        not item ∈ set.insert(other)
-        item ∈ set = item ∈ set.insert(other)
-    }
+    a.set.is_finite
+    a.set.remove(item).is_finite
+    a.set.remove(item).insert(item).is_finite
 }
 
-theorem remove_other_contains_eq[T](set: Finite_Set[T], item: T, other: T) {
-    item != other implies item ∈ set = item ∈ set.remove(other)
+theorem insert_then_remove[T](a: Finite_Set[T], item: T) {
+    not item ∈ a implies a.insert(item).remove(item) = a
 } by {
-    if item ∈ set {
-        item ∈ set iff item ∈ set.remove(other)
-    } else {
-        not item ∈ set
-        not item ∈ set.remove(other)
-        item ∈ set = item ∈ set.remove(other)
-    }
-}
-
-theorem remove_then_insert[T](set: Finite_Set[T], item: T) {
-    item ∈ set implies set.remove(item).insert(item) = set
-} by {
-    if set.remove(item).insert(item) != set {
-        set.remove(item).insert(item).contains != set.contains
-        let t: T satisfy {
-            t ∈ set.remove(item).insert(item) != t ∈ set
-        }
-        if item != t {
-            if t ∈ set {
-                t ∈ set.remove(item)
-                false
-            } else {
-                false
-            }
-        } else {
-            item = t
-            not t ∈ set
-            false
-        }
-    }
-}
-
-theorem insert_then_remove[T](set: Finite_Set[T], item: T) {
-    not item ∈ set implies set.insert(item).remove(item) = set
-} by {
-    if set.insert(item).remove(item) != set {
-        set.insert(item).remove(item).contains != set.contains
-        let t: T satisfy {
-            t ∈ set.insert(item).remove(item) != t ∈ set
-        }
-        if item != t {
-            if t ∈ set {
-                false
-            } else {
-                t ∈ set.insert(item)
-                false
-            }
-        } else {
-            item = t
-            not t ∈ set
-            false
-        }
-    }
+    a.set.is_finite
+    a.set.insert(item).is_finite
+    a.set.insert(item).remove(item).is_finite
 }

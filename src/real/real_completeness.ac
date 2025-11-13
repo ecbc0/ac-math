@@ -3,7 +3,7 @@ from rat import ℚ
 from real.real_base import ℝ, is_cut, is_lower_interval, is_greatest, has_greatest, is_dedekind_cut
 numerals ℝ
 from set import Set, empty, intersection, constant_false
-from limit.net import Net, no_empty, subset_two_intersection, is_set_net
+from limit.net import Net, no_empty, subset_two_intersection, is_net
 
 attributes ℝ {
     /// True if this real number is an upper bound for the set s.
@@ -45,10 +45,16 @@ theorem uniqueness_of_greatest_lower_bound(u1: ℝ, u2: ℝ, s: Set[ℝ]) {
     u1.is_set_greatest_lower_bound(s) and u2.is_set_greatest_lower_bound(s) implies u1 = u2
 }
 
-define is_nonempty(s: Set[ℝ]) -> Bool {
-    exists(x: ℝ) {
+define is_nonempty[K](s: Set[K]) -> Bool {
+    exists(x: K) {
         x ∈ s
     }
+}
+
+theorem is_nonempty_iff_is_not_empty_set[K](s: Set[K]) {
+    is_nonempty(s) iff s != Set[K].empty_set
+} by {
+    is_nonempty(s) implies s != Set[K].empty_set
 }
 
 // The supremum condition on s is that it's nonempty, and has
@@ -479,8 +485,8 @@ theorem seq_nonempty(f: ℕ -> ℝ) {
     f(ℕ.0) ∈ seq_image(f)
 }
 
-theorem monotone_convergence(f: ℕ -> ℝ) {
-    is_monotone_increase(f) and have_seq_upper_bound(f) implies converge(f)
+theorem monotone_convergence_to(f: ℕ -> ℝ) {
+    is_monotone_increase(f) and have_seq_upper_bound(f) implies converge_to(f, ℝ.new(sup_cut(seq_image(f))))
 } by {
     is_nonempty(seq_image(f))
     have_upper_bound(seq_image(f))
@@ -507,6 +513,11 @@ theorem monotone_convergence(f: ℕ -> ℝ) {
             }
         }
     }
+    converge_to(f, a)
+}
+
+theorem monotone_convergence(f: ℕ -> ℝ) {
+    is_monotone_increase(f) and have_seq_upper_bound(f) implies converge(f)
 }
 
 define elem_in_closed_interval(a: ℝ, b: ℝ, x: ℝ) -> Bool {
@@ -517,11 +528,22 @@ define closed_interval(a: ℝ, b: ℝ) -> Set[ℝ] {
     Set[ℝ].new(elem_in_closed_interval(a, b))
 }
 
-// Acorn now not support to define instance attributes, e.g. attributes Set[ℝ]
 define is_closed_interval(s: Set[ℝ]) -> Bool {
     exists(a: ℝ, b: ℝ) {
         a <= b and s = closed_interval(a, b)
     }
+}
+
+theorem closed_interval_is_nonempty(s: Set[ℝ]) {
+    is_closed_interval(s) implies is_nonempty(s)
+} by {
+    let (a: ℝ, b: ℝ) satisfy {
+        a <= b and s = closed_interval(a, b)
+    }
+    let x: ℝ satisfy { a <= x and x <= b }
+    elem_in_closed_interval(a, b, x)
+    x ∈ closed_interval(a, b)
+    x ∈ s
 }
 
 theorem end_point_in_closed_interval(a: ℝ, b: ℝ) {
@@ -641,7 +663,15 @@ theorem inf_sup_in_closed_interval(s: Set[ℝ]) {
     s = closed_interval(inf(s), sup(s))
 }
 
-define all_closed_interval(c: Set[Set[ℝ]]) -> Bool {
+theorem in_closed_interval_imp_gte_lower_end_point(s: Set[ℝ], x: ℝ) {
+    is_closed_interval(s) and x ∈ s implies x >= inf(s)
+}
+
+theorem in_closed_interval_imp_lte_upper_end_point(s: Set[ℝ], x: ℝ) {
+    is_closed_interval(s) and x ∈ s implies x <= sup(s)
+}
+
+define are_closed_intervals(c: Set[Set[ℝ]]) -> Bool {
     forall(s: Set[ℝ]) {
         s ∈ c implies is_closed_interval(s)
     }
@@ -658,11 +688,11 @@ define is_chain(c: Set[Set[ℝ]]) -> Bool {
 }
 
 define is_closed_interval_chain(c: Set[Set[ℝ]]) -> Bool {
-    c != empty[Set[ℝ]] and is_chain(c) and all_closed_interval(c)
+    is_chain(c) and are_closed_intervals(c)
 }
 
-define elem_in_closed_interval_chain_lower_end_point(c: Set[Set[ℝ]], x: ℝ) -> Bool {
-    if is_closed_interval_chain(c) {
+define elem_in_closed_intervals_lower_end_point(c: Set[Set[ℝ]], x: ℝ) -> Bool {
+    if are_closed_intervals(c) {
         exists(s: Set[ℝ]) {
             s ∈ c and x = inf(s)
         }
@@ -671,8 +701,8 @@ define elem_in_closed_interval_chain_lower_end_point(c: Set[Set[ℝ]], x: ℝ) -
     }
 }
 
-define elem_in_closed_interval_chain_upper_end_point(c: Set[Set[ℝ]], x: ℝ) -> Bool {
-    if is_closed_interval_chain(c) {
+define elem_in_closed_intervals_upper_end_point(c: Set[Set[ℝ]], x: ℝ) -> Bool {
+    if are_closed_intervals(c) {
         exists(s: Set[ℝ]) {
             s ∈ c and x = sup(s)
         }
@@ -681,49 +711,67 @@ define elem_in_closed_interval_chain_upper_end_point(c: Set[Set[ℝ]], x: ℝ) -
     }
 }
 
-define closed_interval_chain_lower_end_point(c: Set[Set[ℝ]]) -> Set[ℝ] {
-    Set[ℝ].new(elem_in_closed_interval_chain_lower_end_point(c))
+define closed_intervals_lower_end_point(c: Set[Set[ℝ]]) -> Set[ℝ] {
+    Set[ℝ].new(elem_in_closed_intervals_lower_end_point(c))
 }
 
-define closed_interval_chain_upper_end_point(c: Set[Set[ℝ]]) -> Set[ℝ] {
-    Set[ℝ].new(elem_in_closed_interval_chain_upper_end_point(c))
+define closed_intervals_upper_end_point(c: Set[Set[ℝ]]) -> Set[ℝ] {
+    Set[ℝ].new(elem_in_closed_intervals_upper_end_point(c))
 }
 
-theorem closed_interval_chain_lower_lte_upper(c: Set[Set[ℝ]], a1: ℝ, a2: ℝ) {
-    is_closed_interval_chain(c) and a1 ∈ closed_interval_chain_lower_end_point(c) and a2 ∈ closed_interval_chain_upper_end_point(c) implies a1 <= a2
+define lower_lte_upper(c: Set[Set[ℝ]]) -> Bool {
+    forall(l: ℝ, u: ℝ) {
+        l ∈ closed_intervals_lower_end_point(c) and u ∈ closed_intervals_upper_end_point(c) implies l <= u 
+    }
+}
+
+define is_lower_lte_upper_intervals(c: Set[Set[ℝ]]) -> Bool {
+    are_closed_intervals(c) and lower_lte_upper(c)
+}
+
+theorem closed_interval_chain_imp_lower_lte_upper(c: Set[Set[ℝ]]) {
+    is_closed_interval_chain(c) implies is_lower_lte_upper_intervals(c)
 } by {
-    let ls = closed_interval_chain_lower_end_point(c)
-    let us = closed_interval_chain_upper_end_point(c)
-    let s1: Set[ℝ] satisfy {
-        s1 ∈ c and a1 = inf(s1)
-    }
-    elem_in_closed_interval_chain_upper_end_point(c, a2)
-    let s2: Set[ℝ] satisfy {
-        s2 ∈ c and a2 = sup(s2)
-    }
-    if s1 ⊆ s2 {
-        inf(s1) ∈ s1
-        a1 ∈ s1
-        a1 ∈ s2
-        a1 <= sup(s2)
-        inf(s1) <= sup(s2)
-    } else {
-        s2 ⊆ s1
-        sup(s2) ∈ s2
-        a2 ∈ s2
-        a2 ∈ s1
-        is_closed_interval(s1)
-        inf(s1) <= a2
-        inf(s1) <= sup(s2)
+    let ls = closed_intervals_lower_end_point(c)
+    let us = closed_intervals_upper_end_point(c)
+    forall(a1: ℝ, a2: ℝ) {
+        if a1 ∈ closed_intervals_lower_end_point(c) and a2 ∈ closed_intervals_upper_end_point(c) {
+            elem_in_closed_intervals_lower_end_point(c, a1)
+            let s1: Set[ℝ] satisfy {
+                s1 ∈ c and a1 = inf(s1)
+            }
+            elem_in_closed_intervals_upper_end_point(c, a2)
+            let s2: Set[ℝ] satisfy {
+                s2 ∈ c and a2 = sup(s2)
+            }
+            if s1 ⊆ s2 {
+                inf(s1) ∈ s1
+                a1 ∈ s1
+                a1 ∈ s2
+                a1 <= sup(s2)
+                inf(s1) <= sup(s2)
+                a1 <= a2
+            } else {
+                s2 ⊆ s1
+                sup(s2) ∈ s2
+                a2 ∈ s2
+                a2 ∈ s1
+                is_closed_interval(s1)
+                inf(s1) <= a2
+                inf(s1) <= sup(s2)
+                a1 <= a2
+            }
+            a1 <= a2
+        }
     }
 }
 
-theorem closed_interval_chain_lower_end_point_have_upper_bound(c: Set[Set[ℝ]]) {
-    is_closed_interval_chain(c) implies have_upper_bound(closed_interval_chain_lower_end_point(c))
+theorem lower_lte_upper_intervals_lower_end_point_have_upper_bound(c: Set[Set[ℝ]]) {
+    is_nonempty(c) and is_lower_lte_upper_intervals(c) implies have_upper_bound(closed_intervals_lower_end_point(c))
 } by {
     let s: Set[ℝ] satisfy { s ∈ c }
-    sup(s) ∈ closed_interval_chain_upper_end_point(c)
-    let ls = closed_interval_chain_lower_end_point(c)
+    sup(s) ∈ closed_intervals_upper_end_point(c)
+    let ls = closed_intervals_lower_end_point(c)
     forall(x: ℝ) {
         if x ∈ ls {
             x <= sup(s)
@@ -732,12 +780,12 @@ theorem closed_interval_chain_lower_end_point_have_upper_bound(c: Set[Set[ℝ]])
     sup(s).is_set_upper_bound(ls)
 }
 
-theorem closed_interval_chain_upper_end_point_have_lower_bound(c: Set[Set[ℝ]]) {
-    is_closed_interval_chain(c) implies have_lower_bound(closed_interval_chain_upper_end_point(c))
+theorem lower_lte_upper_intervals_upper_end_point_have_lower_bound(c: Set[Set[ℝ]]) {
+    is_nonempty(c) and is_lower_lte_upper_intervals(c) implies have_lower_bound(closed_intervals_upper_end_point(c))
 } by {
     let s: Set[ℝ] satisfy { s ∈ c }
-    inf(s) ∈ closed_interval_chain_lower_end_point(c)
-    let us = closed_interval_chain_upper_end_point(c)
+    inf(s) ∈ closed_intervals_lower_end_point(c)
+    let us = closed_intervals_upper_end_point(c)
     forall(x: ℝ) {
         if x ∈ us {
             inf(s) <= x
@@ -746,25 +794,25 @@ theorem closed_interval_chain_upper_end_point_have_lower_bound(c: Set[Set[ℝ]])
     inf(s).is_set_lower_bound(us)
 }
 
-theorem closed_interval_chain_lower_end_point_is_nonempty(c: Set[Set[ℝ]]) {
-    is_closed_interval_chain(c) implies is_nonempty(closed_interval_chain_lower_end_point(c))
+theorem lower_lte_upper_intervals_lower_end_point_is_nonempty(c: Set[Set[ℝ]]) {
+    is_nonempty(c) and are_closed_intervals(c) implies is_nonempty(closed_intervals_lower_end_point(c))
 } by {
     let s: Set[ℝ] satisfy { s ∈ c }
 }
 
-theorem closed_interval_chain_upper_end_point_is_nonempty(c: Set[Set[ℝ]]) {
-    is_closed_interval_chain(c) implies is_nonempty(closed_interval_chain_upper_end_point(c))
+theorem lower_lte_upper_intervals_upper_end_point_is_nonempty(c: Set[Set[ℝ]]) {
+    is_nonempty(c) and are_closed_intervals(c) implies is_nonempty(closed_intervals_upper_end_point(c))
 } by {
     let s: Set[ℝ] satisfy { s ∈ c }
 }
 
-theorem closed_interval_chain_lower_sup_lte_upper_inf(c: Set[Set[ℝ]]) {
-    is_closed_interval_chain(c) implies (
-        sup(closed_interval_chain_lower_end_point(c)) <= inf(closed_interval_chain_upper_end_point(c))
+theorem lower_lte_upper_intervals_lower_sup_lte_upper_inf(c: Set[Set[ℝ]]) {
+    is_nonempty(c) and is_lower_lte_upper_intervals(c) implies (
+        sup(closed_intervals_lower_end_point(c)) <= inf(closed_intervals_upper_end_point(c))
     )
 } by {
-    let ls = closed_interval_chain_lower_end_point(c)
-    let us = closed_interval_chain_upper_end_point(c)
+    let ls = closed_intervals_lower_end_point(c)
+    let us = closed_intervals_upper_end_point(c)
     let a = sup(ls)
     let b = inf(us)
     if a > b {
@@ -780,16 +828,19 @@ theorem closed_interval_chain_lower_sup_lte_upper_inf(c: Set[Set[ℝ]]) {
             y ∈ us and y < r and b <= y
         }
         y < x
-        closed_interval_chain_lower_lte_upper(c, x, y)
+        x <= y
         false
     }
 }
 
-theorem nested_closed_interval_intersection_theorem(c: Set[Set[ℝ]]) {
-    is_closed_interval_chain(c) implies intersection(c) != empty
+theorem closed_interval_intersection(c: Set[Set[ℝ]]) {
+    is_nonempty(c) and is_lower_lte_upper_intervals(c) implies intersection(c) = closed_interval(
+        sup(closed_intervals_lower_end_point(c)), 
+        inf(closed_intervals_upper_end_point(c))
+    )
 } by {
-    let ls = closed_interval_chain_lower_end_point(c)
-    let us = closed_interval_chain_upper_end_point(c)
+    let ls = closed_intervals_lower_end_point(c)
+    let us = closed_intervals_upper_end_point(c)
     let a = sup(ls)
     let b = inf(us)
     a <= b
@@ -798,6 +849,7 @@ theorem nested_closed_interval_intersection_theorem(c: Set[Set[ℝ]]) {
             inf(s) ∈ ls
             sup(s) ∈ us
             inf(s) <= a
+            inf(us) <= sup(s)
             b <= sup(s)
             s = closed_interval(inf(s), sup(s))
             closed_interval(a, b) ⊆ s
@@ -813,32 +865,94 @@ theorem nested_closed_interval_intersection_theorem(c: Set[Set[ℝ]]) {
         }
     }
     closed_interval(a, b) ⊆ intersection(c)
+
+    forall(x: ℝ) {
+        if x ∈ intersection(c) {
+            if x < a {
+                x < sup(ls)
+                sup(ls).is_set_least_upper_bound(ls)
+                let l: ℝ satisfy { l ∈ ls and x < l }
+                l ∈ closed_intervals_lower_end_point(c)
+                elem_in_closed_intervals_lower_end_point(c, l)
+                let s_l: Set[ℝ] satisfy {
+                    s_l ∈ c and l = inf(s_l)
+                }
+                not l <= x
+                is_closed_interval(s_l)
+                not x ∈ s_l
+                not x ∈ intersection(c)
+                false
+            }
+            a <= x
+            if x > b {
+                x > inf(us)
+                inf(us).is_set_greatest_lower_bound(us)
+                let u: ℝ satisfy { u ∈ us and x > u }
+                u ∈ closed_intervals_upper_end_point(c)
+                elem_in_closed_intervals_upper_end_point(c, u)
+                let s_u: Set[ℝ] satisfy {
+                    s_u ∈ c and u = sup(s_u)
+                }
+                not x <= u
+                is_closed_interval(s_u)
+                not x ∈ s_u
+                not x ∈ intersection(c)
+                false
+            }
+            x <= b
+            x ∈ closed_interval(a, b)
+        }
+    }
+    intersection(c) ⊆ closed_interval(a, b)
+    intersection(c) = closed_interval(a, b)
 }
 
-define is_closed_interval_net(c: Set[Set[ℝ]]) -> Bool {
-    all_closed_interval(c) and is_set_net(c)
+theorem closed_interval_intersection_theorem(c: Set[Set[ℝ]]) {
+    is_nonempty(c) and is_lower_lte_upper_intervals(c) implies intersection(c) != empty
+} by {
+    let (a: ℝ, b: ℝ) satisfy {
+        a <= b and intersection(c) = closed_interval(a, b)
+    }
+    is_nonempty(closed_interval(a, b))
 }
 
-define is_maximal_closed_interval_chain(c: Set[Set[ℝ]]) -> Bool {
-    is_closed_interval_chain(c) and forall(s: Set[ℝ]) {
-        forall(t: Set[ℝ]) {
-            t ∈ c implies comparable(s, t)
-        } implies s ∈ c
+define is_closed_interval_net(n: Set[Set[ℝ]]) -> Bool {
+    are_closed_intervals(n) and is_net(n)
+}
+
+theorem closed_interval_net_is_lower_lte_upper_intervals(n: Set[Set[ℝ]]) {
+    is_closed_interval_net(n) implies is_lower_lte_upper_intervals(n)
+} by {
+    forall(a1: ℝ, a2: ℝ) {
+        if a1 ∈ closed_intervals_lower_end_point(n) and a2 ∈ closed_intervals_upper_end_point(n) {
+            let s1: Set[ℝ] satisfy {
+                s1 ∈ n and a1 = inf(s1)
+            }
+
+            elem_in_closed_intervals_upper_end_point(n, a2)
+            let s2: Set[ℝ] satisfy {
+                s2 ∈ n and a2 = sup(s2)
+            }
+            
+            subset_two_intersection(n)
+            let s: Set[ℝ] satisfy {
+                s ∈ n and s ⊆ s1 ∩ s2
+            }
+
+            is_nonempty(s)
+            let x: ℝ satisfy { x ∈ s }
+
+            x ∈ s1
+            s1 = closed_interval(inf(s1), sup(s1))
+            inf(s1) <= x
+            a1 <= x
+
+            x ∈ s2
+            s2 = closed_interval(inf(s2), sup(s2))
+            x <= sup(s2)
+            x <= a2
+
+            a1 <= a2
+        }
     }
 }
-
-structure Interval_Net {
-    sets: Set[Set[ℝ]]
-} constraint {
-    is_closed_interval_net(sets)
-} by {
-    all_closed_interval(Set[Set[ℝ]].empty_set)
-    no_empty(Set[Set[ℝ]].empty_set)
-    subset_two_intersection(Set[Set[ℝ]].empty_set)
-    is_set_net(Set[Set[ℝ]].empty_set)
-    is_closed_interval_net(Set[Set[ℝ]].empty_set)
-}
-
-// instance Set[Set[ℝ]]: Partial_Order {
-//     let lt = Set[Set[ℝ]].subset
-// }

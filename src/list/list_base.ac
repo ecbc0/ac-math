@@ -511,6 +511,12 @@ theorem list_not_contains_iff_count_zero[T](list: List[T], item: T) {
     p(list)
 }
 
+theorem list_contains_iff_not_count_zero[T](list: List[T], item: T) {
+    item ∈ list iff list.count(item) != 0
+} by {
+    item ∈ list implies list.count(item) != 0
+}
+
 // obvious direction 
 theorem singleton_imp_only_have_and_count_one[T](x: T, list: List[T]) {
     list = List.singleton(x) implies forall(y: T) { y ∈ list implies y = x } and list.count(x) = 1
@@ -866,6 +872,10 @@ theorem remove_length[T](list: List[T], elem: T) {
     p(list)
 }
 
+theorem remove_length_lte[T](list: List[T], elem: T) {
+    (list ∖ elem).length <= list.length
+} 
+
 theorem remove_contains_length_lt[T](list: List[T], elem: T) {
     elem ∈ list implies (list ∖ elem).length < list.length
 } 
@@ -1076,6 +1086,169 @@ theorem remove_unique[T](list: List[T], elem: T) {
         }
     }
     p(list)
+}
+
+theorem filter_length_lte[T](list: List[T], f: T -> Bool) {
+    list.filter(f).length <= list.length
+} by {
+    define p(l: List[T]) -> Bool {
+        l.filter(f).length <= l.length
+    }
+    p(List[T].nil)
+    forall(head: T, tail: List[T]) {
+        if p(tail) {
+            tail.filter(f).length <= tail.length
+            List.cons(head, tail).length = 1 + tail.length
+            if f(head) {
+                List.cons(head, tail).filter(f) = List.cons(head, tail.filter(f))
+
+                List.cons(head, tail).filter(f).length = 1 + tail.filter(f).length
+
+                List.cons(head, tail).filter(f).length <= 1 + tail.length
+
+                List.cons(head, tail).filter(f).length <= List.cons(head, tail).length
+            } else {
+                List.cons(head, tail).filter(f) = tail.filter(f)
+                
+                List.cons(head, tail).filter(f).length = tail.filter(f).length
+
+                List.cons(head, tail).filter(f).length <= tail.length
+
+                List.cons(head, tail).filter(f).length <= List.cons(head, tail).length
+            }
+            List.cons(head, tail).filter(f).length <= List.cons(head, tail).length
+
+            p(List.cons(head, tail))
+        }
+    }
+    p(list)
+}
+
+theorem filter_contains_and[T](list: List[T], f: T -> Bool, item: T) {
+    (item ∈ list and f(item)) implies item ∈ list.filter(f)
+} by {
+    define p(l: List[T]) -> Bool {
+        item ∈ l and f(item) implies item ∈ l.filter(f)
+    }
+
+    // Base case: empty list
+    p(List.nil[T])
+
+    // Induction
+    forall(head: T, tail: List[T]) {
+        if p(tail) {
+            if item ∈ tail {
+                item ∈ tail.filter(f)
+                if f(head) {
+                    List.cons(head, tail).filter(f) = List.cons(head, tail.filter(f))
+
+                    item ∈ List.cons(head, tail).filter(f)
+                } else {
+                    List.cons(head, tail).filter(f) = tail.filter(f)
+
+                    item ∈ List.cons(head, tail).filter(f)
+                }
+            } else {
+                item ∉ tail
+                if head = item {
+                    f(head)
+                    List.cons(head, tail).filter(f) = List.cons(head, tail.filter(f))
+
+                    item ∈ List.cons(head, tail).filter(f)
+                }
+            }
+            p(List.cons(head, tail))
+        }
+    }
+
+    p(list)
+}
+
+theorem filter_contained_by_and[T](list: List[T], f: T -> Bool, item: T) {
+    item ∈ list.filter(f) implies (item ∈ list and f(item))
+} by {
+    define p(l: List[T]) -> Bool {
+        item ∈ l.filter(f) implies (item ∈ l and f(item))
+    }
+
+    // Base case: empty list
+    p(List.nil[T])
+
+    // Induction
+    forall(head: T, tail: List[T]) {
+        if p(tail) {
+            if item ∈ List.cons(head, tail).filter(f) {
+                // By the def of tail, if the filter contains the item then item must either be in tail.filter or head
+                if item ∈ tail.filter(f) {
+                    // `and` phrase here is needed to help prover
+                    f(item) and item ∈ tail
+
+                    f(item) and item ∈ List.cons(head, tail)
+                } else {
+                    // see def of filter
+                    f(head)
+                    head = item
+                    f(item) and item ∈ List.cons(head, tail)
+                }
+                f(item) and item ∈ List.cons(head, tail)
+            }
+            p(List.cons(head, tail))
+        }
+    }
+    p(list)
+}
+
+theorem filter_equivalent_to_and[T](list: List[T], f: T -> Bool, item: T) {
+    (item ∈ list and f(item)) = item ∈ list.filter(f)
+} by {
+    item ∈ list.filter(f) implies (item ∈ list and f(item))
+    (item ∈ list and f(item)) implies item ∈ list.filter(f)
+}
+
+theorem filter_of_super_is_self[T](list: List[T], contains: T -> Bool) {
+    forall(x: T) {
+        x ∈ list implies contains(x)
+    } implies list.filter(contains) = list
+} by {
+    // Induction
+    define f(l: List[T]) -> Bool {
+        forall(x: T) {
+            x ∈ l implies contains(x)
+        } implies l.filter(contains) = l
+    }
+
+    // Base case: empty list
+    f(List.nil[T])
+
+    // Inductive step
+    forall(head: T, tail: List[T]) {        
+        if f(tail) {
+            if forall(x: T) {
+                x ∈ List.cons(head, tail) implies contains(x)
+            } {
+                head ∈ List.cons(head, tail)
+                contains(head)
+
+                List.cons(head, tail).filter(contains) = List.cons(head, tail.filter(contains))
+
+                forall(x: T) {
+                    if x ∈ tail {
+                        x ∈ List.cons(head, tail)
+                        contains(x)
+                    }
+                }
+                tail.filter(contains) = tail
+
+                List.cons(head, tail).filter(contains) = List.cons(head, tail)
+            }
+            f(List.cons(head, tail))
+        }
+    }
+    f(list)
+}
+
+theorem filter_of_self_is_self[T](list: List[T]) {
+    list.filter(list.contains) = list
 }
 
 // Length theorems
@@ -1659,6 +1832,16 @@ theorem permutation_comm[T](l1: List[T], l2: List[T]) {
     l1.is_permutation(l2) implies l2.is_permutation(l1)
 }
 
+theorem permutation_is_transitive[T](l1: List[T], l2: List[T], l3: List[T]) {
+    l1.is_permutation(l2) and l2.is_permutation(l3) implies l1.is_permutation(l3)
+} by {
+    forall(item: T) {
+        l1.count(item) = l2.count(item)
+        l2.count(item) = l3.count(item)
+        l1.count(item) = l3.count(item)
+    }
+}
+
 theorem nil_permutation[T](list: List[T]) {
     (List[T].nil).is_permutation(list) iff list = List[T].nil 
 } by {
@@ -1737,23 +1920,66 @@ theorem permutation_length[T](list_1: List[T], list_2: List[T]) {
     f(list_1.length)
 }
 
-theorem permutation_unique_permutation[T](l1: List[T], l2: List[T]) {
-    l1.is_permutation(l2) implies l1.unique.is_permutation(l2.unique)
+theorem permutation_imp_same_contains[T](l1: List[T], l2: List[T]) {
+    l1.is_permutation(l2) implies l1.contains = l2.contains
+} by {
+    forall(x: T) {
+        if x ∈ l1 {
+            l1.count(x) != 0
+            l2.count(x) != 0
+            x ∈ l2
+            l1.contains(x) = l2.contains(x)
+        } else {
+            x ∉ l1
+            l1.count(x) = 0
+            l2.count(x) = 0
+            x ∉ l2
+            l1.contains(x) = l2.contains(x)
+        }
+        l1.contains(x) = l2.contains(x)
+    }
+    l1.contains = l2.contains
+}
+
+theorem unique_and_same_contains_imp_permutation[T](l1: List[T], l2: List[T]) {
+    l1.is_unique and l2.is_unique and l1.contains = l2.contains implies l1.is_permutation(l2)
 } by {
     forall(item: T) {
         if item ∈ l1 {
             item ∈ l2
-            l1.unique.count(item) = 1
-            l2.unique.count(item) = 1
-            l1.unique.count(item) = l2.unique.count(item)
+            l1.count(item) = 1
+            l2.count(item) = 1
+            l2.count(item) = l2.count(item)
         } else {
             item ∉ l1
             item ∉ l2
-            l1.unique.count(item) = 0
-            l2.unique.count(item) = 0
-            l1.unique.count(item) = l2.unique.count(item)            
+            l1.count(item) = l2.count(item)
         }
-        l1.unique.count(item) = l2.unique.count(item)   
+        l1.count(item) = l2.count(item)
+    }
+}
+
+theorem permutation_unique_permutation[T](l1: List[T], l2: List[T]) {
+    l1.is_permutation(l2) implies l1.unique.is_permutation(l2.unique)
+} by {
+    l1.contains = l2.contains
+    l1.unique.contains = l2.unique.contains
+}
+
+theorem singleton_permutation[T](l: List[T], x: T) {
+    List[T].singleton(x).is_permutation(l) implies l = List[T].singleton(x)
+} by {
+    forall(y: T) {
+        List[T].singleton(x).count(y) = l.count(y)
+        if y ∈ l {
+            if y != x {
+                l.count(y) = 0
+                y ∉ l
+                false
+            }
+            y = x
+        }
+        l.count(x) = 1
     }
 }
 
@@ -1883,6 +2109,17 @@ theorem map_map[T, U, V](items: List[T], f: T -> U, g: U -> V) {
             // Therefore
             List.cons(head, tail).map(f).map(g) = List.cons(head, tail).map(compose(g, f))
             p(List.cons(head, tail))
+        }
+    }
+}
+
+define flatten[T](ls: List[List[T]]) -> List[T] {
+    match ls {
+        List[List[T]].nil {
+            List[T].nil
+        }
+        List[List[T]].cons(head, tail) {
+            head + flatten(tail)
         }
     }
 }
