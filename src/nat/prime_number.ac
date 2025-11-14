@@ -834,9 +834,7 @@ theorem euclids_lemma_prime_divides_list(a: ℕ, l: List[ℕ]) {
 }
 
 theorem euclids_lemma_prime_divides_prime_list(a: ℕ, l: List[ℕ]) {
-    a.is_prime and are_primes(l) and a.divides(product(l)) implies exists(p: ℕ) {
-        p ∈ l and a = p
-    } 
+    a.is_prime and are_primes(l) and a.divides(product(l)) implies a ∈ l
 } by {
     let (p: ℕ) satisfy {
         p ∈ l and a.divides(p)
@@ -1388,5 +1386,82 @@ theorem euclids_lemma(a: ℕ, b: ℕ, c: ℕ) {
             }
         }
         a.divides(c)
+    }
+}
+
+// Todo: use unique list and power to represent prime list
+
+theorem prime_divide_power(p: ℕ, a: ℕ, n: ℕ) {
+    p.is_prime and n != 0 and p.divides(a^n) implies p.divides(a) 
+} by {
+    define f(m: ℕ) -> Bool {
+        p.is_prime and m != 0 and p.divides(a^m) implies p.divides(a) 
+    }
+    f(0)
+    forall(m: ℕ) {
+        if f(m) {
+            if p.divides(a^(m.suc)) {
+                p.divides(a^m ⋅ a)
+                p.divides(a^m) or p.divides(a)
+                p.divides(a)
+                f(m.suc)
+            }
+        }
+    }
+    f(n)
+}
+
+define have_common_prime_factor(a: ℕ, b: ℕ) -> Bool {
+    exists(p: ℕ) {
+        p.is_prime and p.divides(a) and p.divides(b)
+    }
+}
+
+theorem not_have_no_common_prime_factor_imp_have_common_prime_facotr(a: ℕ, b: ℕ) {
+    not have_no_common_prime_factor(a, b) implies have_common_prime_factor(a, b)
+} by {
+    let(la: List[ℕ], lb: List[ℕ], p: ℕ) satisfy {
+        a.have_prime_decomp(la) and 
+        b.have_prime_decomp(lb) and 
+        p ∈ la and p ∈ lb
+    }
+    p.is_prime
+    p.divides(a)
+    p.divides(b)
+}
+
+theorem power_preserve_relative_prime(a: ℕ, b: ℕ, n: ℕ, m: ℕ) {
+    relative_prime(a, b) and n != 0 and m != 0 implies relative_prime(a^n, b^m)
+} by {
+    a^n != 0
+    b^n != 0
+    if not relative_prime(a^n, b^m) {
+        not have_no_common_prime_factor(a^n, b^m)
+        have_common_prime_factor(a^n, b^m)
+        let c: ℕ satisfy {
+            c.is_prime and c.divides(a^n) and c.divides(b^m)
+        }
+        c.divides(a)
+        c.divides(b)
+        not have_no_common_prime_factor(a, b)
+        not relative_prime(a, b)
+        false
+    }
+}
+
+theorem power_preserve_gcd_one(a: ℕ, b: ℕ, n: ℕ, m: ℕ) {
+    a != 0 and b != 0 and gcd(a, b) = 1 and n != 0 and m != 0 implies gcd(a^n, b^m) = 1
+}
+
+theorem gcd_one_and_divide_imp_one(a: ℕ, b: ℕ) {
+    a != 0 and gcd(a, b) = 1 and a.divides(b) implies a = 1
+} by {
+    if a != 1 {
+        a > 1
+        a.divides(a)
+        a.divides(b)
+        gcd(a, b) >= a
+        gcd(a, b) > 1
+        false
     }
 }

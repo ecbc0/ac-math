@@ -1266,7 +1266,7 @@ theorem mul_div_cancels(a: ℚ, b: ℚ) {
     b != 0 implies (a ⋅ b) / b = a
 } 
 
-theorem div_from_int(a: ℚ) {
+theorem rat_from_div_int(a: ℚ) {
     ℚ.from_int(a.num) / ℚ.from_int(a.denom) = a
 } by {
     ℚ.from_int(a.num) / ℚ.from_int(a.denom) = reduce(a.num, ℤ.1) ⋅ reduce(ℤ.1, a.denom)
@@ -1749,4 +1749,55 @@ theorem from_nat_add(a: ℕ, b: ℕ) {
     ℚ.from_nat(a + b) = ℚ.from_nat(a) + ℚ.from_nat(b)
 } by {
     ℚ.from_nat(a + b) = ℚ.from_int(ℤ.from_nat(a) + ℤ.from_nat(b))
+}
+
+theorem square_root_of_two_is_not_rat(x: ℚ) {
+    not x^(ℕ.2) = 2
+} by {
+    let a = ℚ.from_int(x.num)
+    let b = ℚ.from_int(x.denom)
+    x = a/b
+    is_reduced(x.num, x.denom)
+    let p = x.num
+    let q = x.denom
+    gcd(p, q) = ℤ.1
+    q > ℤ.0
+    b != 0
+    if x^(ℕ.2) = 2 {
+        (a/b)^(ℕ.2) = 2
+        (a/b) ⋅ (a/b) = 2
+        (a ⋅ a)/(b ⋅ b) = 2
+        (a^(ℕ.2))/(b^(ℕ.2)) = 2
+
+        (a^(ℕ.2))/(b^(ℕ.2)) ⋅ b^(ℕ.2) = 2 ⋅ b^(ℕ.2)
+
+        a^(ℕ.2) = 2 ⋅ b^(ℕ.2)
+
+        ℚ.from_int(p)^(ℕ.2) = ℚ.from_int(ℤ.2) ⋅ ℚ.from_int(q)^(ℕ.2)
+
+        ℚ.from_int(p) ⋅ ℚ.from_int(p) = ℚ.from_int(ℤ.2) ⋅ (ℚ.from_int(q) ⋅ ℚ.from_int(q))
+
+        ℚ.from_int(p^(ℕ.2)) = ℚ.from_int(ℤ.2 ⋅ q^(ℕ.2))
+
+        p^(ℕ.2) = ℤ.2 ⋅ q^(ℕ.2)
+        p^(ℕ.2) != ℤ.0
+        p = ℤ.0 implies p^(ℕ.2) = ℤ.0
+        p != ℤ.0
+        gcd(p^(ℕ.2), q) = ℤ.1
+        q.divides(p^(ℕ.2))
+        q = ℤ.1
+        p^(ℕ.2) = ℤ.2
+        let n = abs(p)
+        n^(ℕ.2) = ℕ.2
+        if n <= ℕ.1 {
+            n = ℕ.1
+            n^(ℕ.2) = ℕ.1
+            false
+        } else {
+            n > ℕ.1
+            n >= ℕ.2
+            n^(ℕ.2) > ℕ.2
+            false
+        }
+    }
 }

@@ -651,11 +651,11 @@ theorem pos_pow(a: ℤ, n: ℕ) {
     f(n)
 }
 
-theorem sq_eq_mul(a: ℤ) {
+theorem square_eq_mul(a: ℤ) {
     a ⋅ a = a^(ℕ.2)
 }
 
-theorem sq_pos(a: ℤ) {
+theorem square_pos(a: ℤ) {
     a != 0 implies a^(ℕ.2) > 0
 }
 
@@ -860,4 +860,61 @@ theorem division_theorem(m: ℤ, n: ℤ) {
         0 <= m
         division_theorem(m, n)
     }
+}
+
+theorem abs_pow_comm(a: ℤ, n: ℕ) {
+    abs(a^n) = abs(a)^n
+} by {
+    let f = function(x: ℕ) {
+        abs(a^x) = abs(a)^x
+    }
+    a^(ℕ.0) = 1
+    ℕ.1 >= ℕ.0
+    abs(1) = ℕ.1
+    abs(a)^(ℕ.0) = ℕ.1
+    f(ℕ.0)
+    forall(x: ℕ) {
+        if f(x) {
+            abs(a^x) = abs(a)^x
+            abs(a^(x.suc)) = abs(a)^(x.suc)
+            f(x.suc)
+        }
+    }
+    f(n)
+}
+
+theorem prime_divide_power(p: ℤ, a: ℤ, n: ℕ) {
+    p.is_prime and n != ℕ.0 and p.divides(a^n) implies p.divides(a) 
+} by {
+    (abs(p)).divides(abs(a^n))
+    (abs(p)).divides(abs(a)^n)
+    (abs(p)).divides(abs(a))
+    p.divides(a)
+}
+
+define have_common_prime_factor(a: ℤ, b: ℤ) -> Bool {
+    exists(p: ℤ) {
+        p.is_prime and p.divides(a) and p.divides(b)
+    }
+}
+
+theorem power_preserve_relative_prime(a: ℤ, b: ℤ, n: ℕ, m: ℕ) {
+    relative_prime(a, b) and n != ℕ.0 and m != ℕ.0 implies relative_prime(a^n, b^m)
+} by {
+    nat_relative_prime(abs(a), abs(b))
+    nat_relative_prime(abs(a)^n, abs(b)^m)
+    relative_prime(a^n, b^m)
+}
+
+theorem power_preserve_gcd_one(a: ℤ, b: ℤ, n: ℕ, m: ℕ) {
+    a != 0 and b != 0 and gcd(a, b) = 1 and n != ℕ.0 and m != ℕ.0 implies gcd(a^n, b^m) = 1
+}
+
+theorem gcd_one_and_divide_imp_one(a: ℤ, b: ℤ) {
+    a != 0 and gcd(a, b) = 1 and a.divides(b) implies a = 1 or a = -1
+} by {
+    nat_gcd(abs(a), abs(b)) = ℕ.1
+    abs(a) != ℕ.0
+    (abs(a)).divides(abs(b))
+    abs(a) = ℕ.1
 }

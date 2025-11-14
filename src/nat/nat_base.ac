@@ -577,6 +577,17 @@ theorem gte_mul_both_right(a: ℕ, b: ℕ, c: ℕ) {
     b >= c implies b ⋅ a >= c ⋅ a 
 }
 
+theorem right_lte_left_lt_mul_lt(a: ℕ, b: ℕ, c: ℕ, d: ℕ) { 
+    a != 0 and c != 0 and a <= b and c < d implies a ⋅ c < b ⋅ d 
+} by {
+    a ⋅ c <= b ⋅ c
+    b ⋅ c < b ⋅ d
+}
+
+theorem left_lte_right_lt_mul_lt(a: ℕ, b: ℕ, c: ℕ, d: ℕ) { 
+    a != 0 and c != 0 and a < b and c <= d implies a ⋅ c < b ⋅ d 
+}
+
 theorem lt_cancel_mul(a: ℕ, b: ℕ, c: ℕ) { 
     a != 0 and a ⋅ b < a ⋅ c implies b < c 
 } by {
@@ -922,8 +933,44 @@ theorem pow_eq_one_imp(a: ℕ, b: ℕ) {
     }
 }
 
-theorem sq_eq_mul(a: ℕ) {
+theorem power_increase(a: ℕ, b: ℕ, n: ℕ) {
+    n != 0 and a < b implies a^n < b^n
+} by {
+    define f(m: ℕ) -> Bool {
+        m != 0 and a < b implies a^m < b^m
+    }
+    f(0)
+    forall(m: ℕ) {
+        if f(m) {
+            if m != 0 and a < b  {
+                a^(m.suc) = a^m ⋅ a
+                b^(m.suc) = b^m ⋅ b
+                a^m < b^m
+                a < b
+                if a = 0 {
+                    a^(m.suc) = 0
+                    b^(m.suc) != 0
+                    a^(m.suc) < b^(m.suc)
+                } else {
+                    a != 0
+                    a^m != 0
+                    a^m ⋅ a < b^m ⋅ b
+                    a^(m.suc) < b^(m.suc)
+                }
+                a^(m.suc) < b^(m.suc)
+            }
+            f(m.suc)
+        }
+    }
+    f(n)
+}
+
+theorem square_eq_mul(a: ℕ) {
     a^2 = a ⋅ a
+}
+
+theorem square_gt(a: ℕ) {
+    a > 1 implies a^2 > a
 }
 
 define true_below(f: ℕ -> Bool, n: ℕ) -> Bool {
