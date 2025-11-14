@@ -1,3 +1,10 @@
+from util import compose, id_map
+from nat.nat_base import ℕ
+numerals ℕ
+from order import max_imp_gte
+from option import Option
+from nat.nat_base import true_below, strong_induction
+
 /// A generic list data structure that can hold elements of any type.
 /// Lists are constructed using nil (empty list) and cons (prepending an element).  
 /// ℕ is also defined inductively. In fact, List can be understood as a mapping constructed in an inductive way with ℕ or a finite subset of it as the domain, by the length method 
@@ -131,9 +138,6 @@ theorem not_contains_add[T](left: List[T], right: List[T], item: T) {
 theorem contains_add[T](left: List[T], right: List[T], item: T) {
     item ∈ (left + right) implies item ∈ left or item ∈ right
 }
-
-from nat.nat_base import ℕ
-numerals ℕ
 
 attributes List[T] {
     /// True if this list contains every element of type T.
@@ -1727,8 +1731,6 @@ define max_list(list: List[ℕ]) -> ℕ {
     }
 }
 
-from order import max_imp_gte
-
 theorem list_has_max(list: List[ℕ]) {
     forall(a: ℕ) {
         a ∈ list implies a <= max_list(list)
@@ -1766,8 +1768,6 @@ theorem no_list_contains_nat(list: List[ℕ]) {
         n ∉ list
     } // max_list + 1
 }
-
-from option import Option
 
 attributes List[T] {
     define find_first_idx(self, item: T) -> ℕ {
@@ -1868,8 +1868,6 @@ theorem remove_preserve_permutation[T](l1: List[T], l2: List[T], item: T) {
         (l1 ∖ item).count(x) = (l2 ∖ item).count(x)
     }
 }
-
-from nat.nat_base import true_below, strong_induction
 
 theorem permutation_length[T](list_1: List[T], list_2: List[T]) {
     list_1.is_permutation(list_2) implies list_1.length = list_2.length
@@ -2077,8 +2075,6 @@ theorem map_append[T, U](initial: List[T], last: T, f: T -> U) {
     (initial.append(last)).map(f) = initial.map(f).append(f(last))
 }
 
-from util import compose
-
 theorem map_map[T, U, V](items: List[T], f: T -> U, g: U -> V) {
     (items.map(f)).map(g) = items.map(compose(g, f))
 } by {
@@ -2111,6 +2107,23 @@ theorem map_map[T, U, V](items: List[T], f: T -> U, g: U -> V) {
             p(List.cons(head, tail))
         }
     }
+}
+
+theorem map_id_map[T](list: List[T]) {
+    list.map(id_map[T]) = list
+} by {
+    define p(l: List[T]) -> Bool {
+        l.map(id_map[T]) = l
+    }
+    p(List[T].nil)
+    forall(head: T, tail: List[T]) {
+        if p(tail) {
+            List.cons(head, tail).map(id_map[T]) = List.cons(id_map[T](head), tail.map(id_map[T]))
+            List.cons(head, tail).map(id_map[T]) = List.cons(head, tail)
+        }
+        p(List.cons(head, tail))
+    }
+    p(list)
 }
 
 define flatten[T](ls: List[List[T]]) -> List[T] {

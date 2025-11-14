@@ -7,6 +7,10 @@ define compose[T, U, V](f: U -> V, g: T -> U) -> T -> V {
     }
 }
 
+define id_map[T](x: T) -> T {
+    x
+}
+
 /// constant[T, U](u) is a T -> U function that always returns u.
 define constant[T, U](u: U, t: T) -> U {
     u

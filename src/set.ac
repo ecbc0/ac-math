@@ -1,3 +1,5 @@
+from util import compose, id_map
+
 /// Sets with elements of type `K` are defined as Boolean functions over `K`, in the form of named wrapper structure
 structure Set[K] {
     /// ∈  
@@ -90,6 +92,18 @@ theorem empty_set_is_empty[K](a: Set[K]) {
     } // "=" or "iff" is not good enough in bool now
 }
 
+define is_nonempty[K](s: Set[K]) -> Bool {
+    exists(x: K) {
+        x ∈ s
+    }
+}
+
+theorem is_nonempty_iff_is_not_empty_set[K](s: Set[K]) {
+    is_nonempty(s) iff s != Set[K].empty_set
+} by {
+    is_nonempty(s) implies s != Set[K].empty_set
+}
+
 theorem singleton_set_is_singleton[K](a: Set[K]) {
     forall(x: K) { Set[K].singleton(x).is_singleton }
 
@@ -133,6 +147,15 @@ theorem compl_is_reflect[K](a: Set[K]) {
         (x ∈ a.c.c) iff (x ∈ a)
     }
     a.c.c.contains = a.contains
+}
+
+theorem compl_is_reflect_by_fn[K] {
+    compose(Set[K].c, Set[K].c) = id_map[Set[K]]
+} by {
+    forall(s: Set[K]) {
+        compose(Set[K].c, Set[K].c)(s) = s.c.c
+        compose(Set[K].c, Set[K].c)(s) = id_map(s)
+    }
 }
 
 theorem dual_of_empty_set_and_universal[K] {
@@ -813,6 +836,70 @@ theorem empty_intersection_is_universe[K] {
         x ∈ intersection(Set[Set[K]].empty_set)
     }
     intersection(Set[Set[K]].empty_set).contains = Set[K].universal_set.contains
+}
+
+define elem_in_compl_of_sets[K](sets: Set[Set[K]], s_c: Set[K]) -> Bool {
+    s_c.c ∈ sets
+}
+
+define compl_of_sets[K](sets: Set[Set[K]]) -> Set[Set[K]] {
+    Set[Set[K]].new(elem_in_compl_of_sets(sets))
+}
+
+theorem compl_of_sets_reflect[K](sets: Set[Set[K]]) {
+    compl_of_sets(compl_of_sets(sets)) = sets
+} by {
+    forall(s: Set[K]) {
+        if s ∈ sets {
+            s.c ∈ compl_of_sets(sets)
+            s ∈ compl_of_sets(compl_of_sets(sets))
+            sets.contains(s) = compl_of_sets(compl_of_sets(sets)).contains(s)
+        } else {
+            not s ∈ sets
+            not s.c ∈ compl_of_sets(sets)
+            not s ∈ compl_of_sets(compl_of_sets(sets))
+            sets.contains(s) = compl_of_sets(compl_of_sets(sets)).contains(s)
+        }
+        sets.contains(s) = compl_of_sets(compl_of_sets(sets)).contains(s)
+    }
+    sets.contains = compl_of_sets(compl_of_sets(sets)).contains
+}
+
+theorem union_intersection_compl_dual_general[K](sets: Set[Set[K]]) {
+    union(sets).c = intersection(compl_of_sets(sets))
+} by {
+    forall(x: K) {
+        if x ∈ union(sets).c {
+            x ∉ union(sets)
+            forall(s: Set[K]) {
+                if s ∈ compl_of_sets(sets) {
+                    s.c ∈ sets
+                    x ∉ s.c
+                    x ∈ s
+                }
+            }
+            x ∈ intersection(compl_of_sets(sets))
+        }
+    }
+    union(sets).c ⊆ intersection(compl_of_sets(sets))
+    forall(x: K) {
+        if x ∈ intersection(compl_of_sets(sets)) {
+            forall(s: Set[K]) {
+                if s ∈ sets {
+                    s.c ∈ compl_of_sets(sets)
+                    x ∈ s.c
+                    x ∉ s
+                }
+            }
+            x ∉ union(sets)
+            x ∈ union(sets).c          
+        }
+    }
+    union(sets).c ⊇ intersection(compl_of_sets(sets))
+}
+
+theorem empty_union_is_empty[K] {
+    union(Set[Set[K]].empty_set) = Set[K].empty_set
 }
 
 // todo: (product/sum)_index_of_two

@@ -1,5 +1,5 @@
 from list import List
-from set import Set, constant_false, functional_insert, functional_remove
+from set import Set, constant_false, functional_insert, functional_remove, intersection, union, compl_of_sets, compose
 from nat import ℕ
 
 /// True if a boolean function represents a finite set.
@@ -279,8 +279,452 @@ define list_to_set[T](l: List[T]) -> Set[T] {
     Set[T].new(l.contains)
 }
 
+theorem list_to_set_have_same_contains[T](l: List[T]) {
+    l.contains = list_to_set(l).contains
+}
+
 theorem unique_list_to_set_is_exact[T](l: List[T]) {
     l.is_unique implies list_to_set(l).have_exact_list(l)
+}
+
+theorem exact_list_to_set_is_self[T](s: Set[T], l: List[T]) {
+    s.have_exact_list(l) implies s = list_to_set(l)
+} by {
+    s.contains = list_to_set(l).contains
+}
+
+define intersection_of_list_recursion[K](l: List[Set[K]]) -> Set[K] {
+    match l {
+        List[Set[K]].nil {
+            Set[K].universal_set
+        }
+        List.cons(head, tail) {
+            head ∩ intersection_of_list_recursion(tail)
+        }
+    }
+}
+
+define elem_in_intersection_of_list[K](l: List[Set[K]], x: K) -> Bool {
+    forall(s: Set[K]) {
+        s ∈ l implies x ∈ s
+    }
+}
+
+define intersection_of_list[K](l: List[Set[K]]) -> Set[K] {
+    Set[K].new(elem_in_intersection_of_list(l))
+}
+
+// I want to use
+// define p(contains: Set[K] -> Bool) -> (K -> Bool) {
+//     function(x: K) {
+//         forall(s: Set[K]) {
+//             contains(s) implies s.contains(x)
+//         }
+//     }
+// }
+// and     
+// forall(x: K) {
+//     p(c.contains)(x) = elem_in_intersection_general(c, x)
+// }
+// however, not work
+theorem equivalent_of_intersection_of_list_and_set[K](l: List[Set[K]]) {
+    intersection(list_to_set(l)) = intersection_of_list(l)
+} by {
+    let c = list_to_set(l)
+    c.contains = l.contains
+    forall(x: K) {
+        if x ∈ intersection(c) {
+            forall(s: Set[K]) {
+                if s ∈ l {
+                    s ∈ c
+                    x ∈ s
+                }
+            }
+            x ∈ intersection_of_list(l)
+        }
+    }
+    intersection(c) ⊆ intersection_of_list(l)
+
+    forall(x: K) {
+        if x ∈ intersection_of_list(l) {
+            forall(s: Set[K]) {
+                if s ∈ c {
+                    s ∈ l
+                    x ∈ s
+                }
+            }
+            x ∈ intersection(c)
+        }
+    }
+    intersection_of_list(l) ⊆ intersection(c)
+
+    intersection(c) = intersection_of_list(l)
+}
+
+theorem equivalent_of_intersection_of_exact_list_and_set[K](c: Set[Set[K]], l: List[Set[K]]) {
+    c.have_exact_list(l) implies intersection(c) = intersection_of_list(l)
+} by {
+    list_to_set(l) = c
+}
+
+theorem empty_intersection_is_universe[K] {
+    intersection_of_list(List[Set[K]].nil) = Set[K].universal_set
+} 
+
+theorem intersection_of_list_decomposition[K](head: Set[K], tail: List[Set[K]]) {
+    intersection_of_list(List.cons(head, tail)) = head ∩ intersection_of_list(tail)
+} by {
+    forall(x: K) {
+        if x ∈ intersection_of_list(List.cons(head, tail)) {
+            head ∈ List.cons(head, tail)
+            x ∈ head
+            forall(s: Set[K]) {
+                if s ∈ tail {
+                    s ∈ List.cons(head, tail)
+                    x ∈ s
+                }
+            }            
+            x ∈ intersection_of_list(tail)
+            x ∈ head ∩ intersection_of_list(tail)
+        }
+    }
+    intersection_of_list(List.cons(head, tail)) ⊆ head ∩ intersection_of_list(tail)
+
+    forall(x: K) {
+        if x ∈ head ∩ intersection_of_list(tail) {
+            x ∈ head
+            x ∈ intersection_of_list(tail)
+            forall(s: Set[K]) {
+                if s ∈ List.cons(head, tail) {
+                    if s = head {
+                        x ∈ s
+                    } else {
+                        s ∈ tail
+                        x ∈ s
+                    }
+                    x ∈ s
+                }
+            }
+            x ∈ intersection_of_list(List.cons(head, tail))
+        }
+    }
+    head ∩ intersection_of_list(tail) ⊆ intersection_of_list(List.cons(head, tail))
+
+    intersection_of_list(List.cons(head, tail)) = head ∩ intersection_of_list(tail)
+}
+
+theorem intersection_of_list_recursion_decomposition[K](head: Set[K], tail: List[Set[K]]) {
+    intersection_of_list_recursion(List.cons(head, tail)) = head ∩ intersection_of_list_recursion(tail)
+}
+
+theorem equivalent_of_two_definiton_of_intersection_of_list[K](list: List[Set[K]]) {
+    intersection_of_list_recursion(list) = intersection_of_list(list)
+} by {
+    define p(l: List[Set[K]]) -> Bool {
+        intersection_of_list_recursion(l) = intersection_of_list(l)
+    }
+    p(List[Set[K]].nil) 
+    forall(head: Set[K], tail: List[Set[K]]) {
+        if p(tail) {
+            intersection_of_list_recursion(List.cons(head, tail)) = head ∩ intersection_of_list_recursion(tail)
+
+            intersection_of_list(List.cons(head, tail)) = head ∩ intersection_of_list(tail)
+
+            intersection_of_list_recursion(tail) = intersection_of_list(tail)
+
+            intersection_of_list_recursion(List.cons(head, tail)) = intersection_of_list(List.cons(head, tail))
+
+            p(List.cons(head, tail))
+        }
+    }
+    p(list)
+}
+
+theorem equivalent_of_intersection_of_list_recursion_and_set[K](list: List[Set[K]]) {
+    intersection(list_to_set(list)) = intersection_of_list_recursion(list)
+} 
+
+theorem equivalent_of_intersection_of_exact_list_recursion_and_set[K](c: Set[Set[K]], list: List[Set[K]]) {
+    c.have_exact_list(list) implies intersection(c) = intersection_of_list_recursion(list)
+} 
+
+theorem intersection_of_unique_list[K](list: List[Set[K]]) {
+    intersection_of_list(list.unique) = intersection_of_list(list)
+} by {
+    list.contains = list.unique.contains
+
+    forall(x: K) {
+        if x ∈ intersection_of_list(list.unique) {
+            forall(s: Set[K]) {
+                if s ∈ list {
+                    s ∈ list.unique
+                    x ∈ s
+                }
+            }
+            x ∈ intersection_of_list(list)
+        }
+    }
+    intersection_of_list(list.unique) ⊆ intersection_of_list(list)
+
+    forall(x: K) {
+        if x ∈ intersection_of_list(list) {
+            forall(s: Set[K]) {
+                if s ∈ list.unique {
+                    s ∈ list
+                    x ∈ s
+                }
+            }
+            x ∈ intersection_of_list(list.unique)
+        }
+    }
+    intersection_of_list(list) ⊆ intersection_of_list(list.unique)
+
+    intersection_of_list(list.unique) = intersection_of_list(list)
+}
+
+define union_of_list_recursion[K](l: List[Set[K]]) -> Set[K] {
+    match l {
+        List[Set[K]].nil {
+            Set[K].empty_set
+        }
+        List.cons(head, tail) {
+            head ∪ union_of_list_recursion(tail)
+        }
+    }
+}
+
+define elem_in_union_of_list[K](l: List[Set[K]], x: K) -> Bool {
+    exists(s: Set[K]) {
+        s ∈ l and x ∈ s
+    }
+}
+
+define union_of_list[K](l: List[Set[K]]) -> Set[K] {
+    Set[K].new(elem_in_union_of_list(l))
+}
+
+theorem equivalent_of_union_of_list_and_set[K](l: List[Set[K]]) {
+    union(list_to_set(l)) = union_of_list(l)
+} by {
+    let c = list_to_set(l)
+    c.contains = l.contains
+    forall(x: K) {
+        if x ∈ union(c) {
+            let (s: Set[K]) satisfy {
+                s ∈ c and x ∈ s
+            }
+            s ∈ l
+            s ∈ l and x ∈ s
+            x ∈ union_of_list(l)
+        }
+    }
+    union(c) ⊆ union_of_list(l)
+
+    forall(x: K) {
+        if x ∈ union_of_list(l) {
+            let (s: Set[K]) satisfy {
+                s ∈ l and x ∈ s
+            } 
+            s ∈ c 
+            s ∈ c and x ∈ s
+            x ∈ union(c)
+        }
+    }
+    union_of_list(l) ⊆ union(c)
+
+    union(c) = union_of_list(l)
+}
+
+theorem equivalent_of_union_of_exact_list_and_set[K](c: Set[Set[K]], l: List[Set[K]]) {
+    c.have_exact_list(l) implies union(c) = union_of_list(l)
+}
+
+define compl_of_list[K](l: List[Set[K]]) -> List[Set[K]] {
+    l.map(Set[K].c)
+}
+
+theorem compl_of_list_preserve_compl_count[K](l: List[Set[K]], s: Set[K]) {
+    l.count(s) = compl_of_list(l).count(s.c)
+} by {
+    define p(x: List[Set[K]]) -> Bool {
+        x.count(s) = compl_of_list(x).count(s.c)
+    }
+    List[Set[K]].nil.map(Set[K].c) = List[Set[K]].nil
+    compl_of_list(List[Set[K]].nil) = List[Set[K]].nil
+    p(List[Set[K]].nil)
+    forall(head: Set[K], tail: List[Set[K]]) {
+        List.cons(head, tail).map(Set[K].c) = List.cons(head.c, tail.map(Set[K].c))
+        compl_of_list(List.cons(head, tail)) = List.cons(head.c, compl_of_list(tail))
+        if p(tail) {
+            if s = head {
+                s.c = head.c
+
+                List.cons(head, tail).count(s) = ℕ.1 + tail.count(s)
+
+                compl_of_list(List.cons(head, tail)).count(s.c) = ℕ.1 + compl_of_list(tail).count(s.c)
+
+                p(List.cons(head, tail))
+            } else {
+                s != head
+                s.c != head.c
+
+                List.cons(head, tail).count(s) = tail.count(s)
+
+                compl_of_list(List.cons(head, tail)).count(s.c) = compl_of_list(tail).count(s.c)
+                
+                p(List.cons(head, tail))
+            }
+            p(List.cons(head, tail))
+        }
+    }
+    p(l)
+}
+
+theorem compl_of_list_preserve_unique[K](l: List[Set[K]]) {
+    l.is_unique implies compl_of_list(l).is_unique
+} by {
+    forall(s: Set[K]) {
+        l.count(s.c) <= ℕ.1
+        compl_of_list(l).count(s) <= ℕ.1
+    }
+}
+
+theorem compl_of_list_reflect[K](l: List[Set[K]]) {
+    compl_of_list(compl_of_list(l)) = l
+} by {
+    l.map(Set[K].c).map(Set[K].c) = l.map(compose(Set[K].c, Set[K].c))
+}
+
+theorem equivalent_of_compl_set_to_list[K](a: Set[Set[K]], l: List[Set[K]]) {
+    a.have_exact_list(l) implies compl_of_sets(a).have_exact_list(compl_of_list(l))
+} by {
+    a.contains = l.contains
+    forall(s: Set[K]) {
+        s.c ∈ a iff s.c ∈ l
+        if s ∈ compl_of_sets(a) {
+            s.c ∈ a
+            s.c ∈ l
+            s.c.c ∈ l.map(Set[K].c)
+            s ∈ compl_of_list(l)
+        }
+        if s ∈ compl_of_list(l) {
+            s ∈ l.map(Set[K].c)
+            s.c ∈ l.map(Set[K].c).map(Set[K].c)
+            s.c ∈ l
+            s.c ∈ a
+            s ∈ compl_of_sets(a)
+        }
+        s ∈ compl_of_sets(a) iff s ∈ compl_of_list(l)
+    } 
+    compl_of_sets(a).contains = compl_of_list(l).contains
+    compl_of_list(l).is_unique
+}
+
+theorem equivalent_of_compl_list_to_set[K](l: List[Set[K]]) {
+    list_to_set(compl_of_list(l)) = compl_of_sets(list_to_set(l))
+} by {
+    forall(s: Set[K]) {
+        if s ∈ list_to_set(compl_of_list(l)) {
+            s ∈ compl_of_list(l)
+            s.c ∈ l
+            s.c ∈ list_to_set(l)
+            s ∈ compl_of_sets(list_to_set(l))
+        }
+    }
+    list_to_set(compl_of_list(l)) ⊆ compl_of_sets(list_to_set(l))
+    forall(s: Set[K]) {
+        if s ∈ compl_of_sets(list_to_set(l)) {
+            s.c ∈ list_to_set(l)
+            s.c ∈ l
+            s ∈ compl_of_list(l)
+            s ∈ list_to_set(compl_of_list(l))
+        }
+    }
+    list_to_set(compl_of_list(l)) ⊇ compl_of_sets(list_to_set(l))
+}
+
+theorem union_intersection_compl_dual_general[K](l: List[Set[K]]) {
+    union_of_list(l).c = intersection_of_list(compl_of_list(l))
+} by {
+    union_of_list(l) = union(list_to_set(l))
+    union(list_to_set(l)).c = intersection(compl_of_sets(list_to_set(l)))
+    intersection(compl_of_sets(list_to_set(l))) = intersection(list_to_set(compl_of_list(l)))
+    intersection(list_to_set(compl_of_list(l))) = intersection_of_list(compl_of_list(l))
+}
+
+theorem empty_union_is_empty[K] {
+    union_of_list(List[Set[K]].nil) = Set[K].empty_set
+} 
+
+theorem union_of_list_decomposition[K](head: Set[K], tail: List[Set[K]]) {
+    union_of_list(List.cons(head, tail)) = head ∪ union_of_list(tail)
+} by {
+    intersection_of_list(List.cons(head, tail).map(Set[K].c)) = head.c ∩ intersection_of_list(tail.map(Set[K].c))
+}
+
+theorem union_of_list_recursion_decomposition[K](head: Set[K], tail: List[Set[K]]) {
+    union_of_list_recursion(List.cons(head, tail)) = head ∪ union_of_list_recursion(tail)
+}
+
+theorem equivalent_of_two_definiton_of_union_of_list[K](list: List[Set[K]]) {
+    union_of_list_recursion(list) = union_of_list(list)
+} by {
+    define p(l: List[Set[K]]) -> Bool {
+        union_of_list_recursion(l) = union_of_list(l)
+    }
+    p(List[Set[K]].nil) 
+    forall(head: Set[K], tail: List[Set[K]]) {
+        if p(tail) {
+            union_of_list_recursion(List.cons(head, tail)) = head ∪ union_of_list_recursion(tail)
+
+            union_of_list(List.cons(head, tail)) = head ∪ union_of_list(tail)
+
+            union_of_list_recursion(tail) = union_of_list(tail)
+
+            union_of_list_recursion(List.cons(head, tail)) = union_of_list(List.cons(head, tail))
+
+            p(List.cons(head, tail))
+        }
+    }
+    p(list)
+}
+
+theorem equivalent_of_union_of_list_recursion_and_set[K](list: List[Set[K]]) {
+    union(list_to_set(list)) = union_of_list_recursion(list)
+} 
+
+theorem equivalent_of_union_of_exact_list_recursion_and_set[K](c: Set[Set[K]], list: List[Set[K]]) {
+    c.have_exact_list(list) implies union(c) = union_of_list_recursion(list)
+} 
+
+theorem union_of_unique_list[K](list: List[Set[K]]) {
+    union_of_list(list.unique) = union_of_list(list)
+} by {
+    list.contains = list.unique.contains
+
+    forall(x: K) {
+        if x ∈ union_of_list(list.unique) {
+            let (s: Set[K]) satisfy {
+                s ∈ list.unique and x ∈ s
+            }  
+            s ∈ list 
+            x ∈ union_of_list(list)
+        }
+    }
+    union_of_list(list.unique) ⊆ union_of_list(list)
+
+    forall(x: K) {
+        if x ∈ union_of_list(list) {
+            let (s: Set[K]) satisfy {
+                s ∈ list and x ∈ s
+            } 
+            s ∈ list.unique
+            x ∈ union_of_list(list.unique)
+        }
+    }
+    union_of_list(list) ⊆ union_of_list(list.unique)
+
+    union_of_list(list.unique) = union_of_list(list)
 }
 
 /// A finite set is a `Set` bundled with a finiteness proof.

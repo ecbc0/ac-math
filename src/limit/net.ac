@@ -1,5 +1,5 @@
-from finite_set import Set, List, list_to_set
-from set import intersection, elem_in_intersection_general
+from finite_set import Set, List, list_to_set, intersection_of_list_recursion
+from set import intersection, elem_in_intersection_general, is_nonempty
 from order import Partial_Order, Linear_Order, is_acyclic, is_transitive, is_reflexive, is_antisymmetric, is_nonreflexive, lte_from, lt_from, lte_to_lt_partial_order, Partial_Order_Lte
 from nat import ℕ
 from list.list_base import flatten, max_list
@@ -275,171 +275,6 @@ theorem sets_of_finite_intersection_preserve_subset_two_intersection[K](n: Set[S
     subset_two_intersection(n) implies subset_two_intersection(sets_of_finite_intersection(n))
 }
 
-define intersection_of_list_recursion[K](l: List[Set[K]]) -> Set[K] {
-    match l {
-        List[Set[K]].nil {
-            Set[K].universal_set
-        }
-        List.cons(head, tail) {
-            head ∩ intersection_of_list_recursion(tail)
-        }
-    }
-}
-
-define elem_in_intersection_of_list[K](l: List[Set[K]], x: K) -> Bool {
-    forall(s: Set[K]) {
-        s ∈ l implies x ∈ s
-    }
-}
-
-define intersection_of_list[K](l: List[Set[K]]) -> Set[K] {
-    Set[K].new(elem_in_intersection_of_list(l))
-}
-
-theorem equivalent_of_intersection_of_list_and_set[K](c: Set[Set[K]], l: List[Set[K]]) {
-    c.have_exact_list(l) implies intersection(c) = intersection_of_list(l)
-} by {
-    c.contains = l.contains
-    forall(x: K) {
-        if x ∈ intersection(c) {
-            forall(s: Set[K]) {
-                if s ∈ l {
-                    s ∈ c
-                    x ∈ s
-                }
-            }
-            x ∈ intersection_of_list(l)
-        }
-    }
-    intersection(c) ⊆ intersection_of_list(l)
-
-    forall(x: K) {
-        if x ∈ intersection_of_list(l) {
-            forall(s: Set[K]) {
-                if s ∈ c {
-                    s ∈ l
-                    x ∈ s
-                }
-            }
-            x ∈ intersection(c)
-        }
-    }
-    intersection_of_list(l) ⊆ intersection(c)
-
-    intersection(c) = intersection_of_list(l)
-}
-
-theorem empty_intersection_is_universe[K] {
-    intersection_of_list(List[Set[K]].nil) = Set[K].universal_set
-} 
-
-theorem intersection_of_list_decomposition[K](head: Set[K], tail: List[Set[K]]) {
-    intersection_of_list(List.cons(head, tail)) = head ∩ intersection_of_list(tail)
-} by {
-    forall(x: K) {
-        if x ∈ intersection_of_list(List.cons(head, tail)) {
-            head ∈ List.cons(head, tail)
-            x ∈ head
-            forall(s: Set[K]) {
-                if s ∈ tail {
-                    s ∈ List.cons(head, tail)
-                    x ∈ s
-                }
-            }            
-            x ∈ intersection_of_list(tail)
-            x ∈ head ∩ intersection_of_list(tail)
-        }
-    }
-    intersection_of_list(List.cons(head, tail)) ⊆ head ∩ intersection_of_list(tail)
-
-    forall(x: K) {
-        if x ∈ head ∩ intersection_of_list(tail) {
-            x ∈ head
-            x ∈ intersection_of_list(tail)
-            forall(s: Set[K]) {
-                if s ∈ List.cons(head, tail) {
-                    if s = head {
-                        x ∈ s
-                    } else {
-                        s ∈ tail
-                        x ∈ s
-                    }
-                    x ∈ s
-                }
-            }
-            x ∈ intersection_of_list(List.cons(head, tail))
-        }
-    }
-    head ∩ intersection_of_list(tail) ⊆ intersection_of_list(List.cons(head, tail))
-
-    intersection_of_list(List.cons(head, tail)) = head ∩ intersection_of_list(tail)
-}
-
-theorem intersection_of_list_recursion_decomposition[K](head: Set[K], tail: List[Set[K]]) {
-    intersection_of_list_recursion(List.cons(head, tail)) = head ∩ intersection_of_list_recursion(tail)
-}
-
-theorem equivalent_of_two_definiton_of_intersection_of_list[K](c: Set[Set[K]], list: List[Set[K]]) {
-    intersection_of_list_recursion(list) = intersection_of_list(list)
-} by {
-    define p(l: List[Set[K]]) -> Bool {
-        intersection_of_list_recursion(l) = intersection_of_list(l)
-    }
-    p(List[Set[K]].nil) 
-    forall(head: Set[K], tail: List[Set[K]]) {
-        if p(tail) {
-            intersection_of_list_recursion(List.cons(head, tail)) = head ∩ intersection_of_list_recursion(tail)
-
-            intersection_of_list(List.cons(head, tail)) = head ∩ intersection_of_list(tail)
-
-            intersection_of_list_recursion(tail) = intersection_of_list(tail)
-
-            intersection_of_list_recursion(List.cons(head, tail)) = intersection_of_list(List.cons(head, tail))
-
-            p(List.cons(head, tail))
-        }
-    }
-    p(list)
-}
-
-theorem equivalent_of_intersection_of_list_recursion_and_set[K](c: Set[Set[K]], list: List[Set[K]]) {
-    c.have_exact_list(list) implies intersection(c) = intersection_of_list_recursion(list)
-} 
-
-theorem intersection_of_unique_list[K](list: List[Set[K]]) {
-    intersection_of_list(list.unique) = intersection_of_list(list)
-} by {
-    list.contains = list.unique.contains
-
-    forall(x: K) {
-        if x ∈ intersection_of_list(list.unique) {
-            forall(s: Set[K]) {
-                if s ∈ list {
-                    s ∈ list.unique
-                    x ∈ s
-                }
-            }
-            x ∈ intersection_of_list(list)
-        }
-    }
-    intersection_of_list(list.unique) ⊆ intersection_of_list(list)
-
-    forall(x: K) {
-        if x ∈ intersection_of_list(list) {
-            forall(s: Set[K]) {
-                if s ∈ list.unique {
-                    s ∈ list
-                    x ∈ s
-                }
-            }
-            x ∈ intersection_of_list(list.unique)
-        }
-    }
-    intersection_of_list(list) ⊆ intersection_of_list(list.unique)
-
-    intersection_of_list(list.unique) = intersection_of_list(list)
-}
-
 // helper
 define list_subset_sets[K](n: Set[Set[K]], l: List[Set[K]]) -> Bool {
     forall(s: Set[K]){ s ∈ l implies s ∈ n }
@@ -449,9 +284,10 @@ define subset_intersection_of_list[K](n: Set[Set[K]], l: List[Set[K]]) -> Bool {
     exists(t: Set[K]) { t ∈ n and t ⊆ intersection_of_list_recursion(l) }
 }
 
+/// Also, this prove, for net, subset_two_intersection ==> subset_finite_intersection. So indeed using two intersection or finite intersection to define net is equivalent
 theorem sets_of_finite_intersection_preserve_net_no_empty_lemma[K](n: Set[Set[K]], list: List[Set[K]]) {
     is_net(n)
-    and n != Set[Set[K]].empty_set
+    and is_nonempty(n)
     and list_subset_sets(n, list)
     implies 
     subset_intersection_of_list(n, list) 
@@ -503,7 +339,7 @@ theorem sets_of_finite_intersection_preserve_net_no_empty_lemma[K](n: Set[Set[K]
 }
 
 theorem sets_of_finite_intersection_preserve_net_no_empty[K](n: Set[Set[K]], list: List[Set[K]]) {
-    is_net(n) and n != Set[Set[K]].empty_set implies no_empty(sets_of_finite_intersection(n))
+    is_net(n) and is_nonempty(n) implies no_empty(sets_of_finite_intersection(n))
 } by {
     forall(s: Set[K]) {
         if s ∈ sets_of_finite_intersection(n) {
@@ -530,5 +366,5 @@ theorem sets_of_finite_intersection_preserve_net_no_empty[K](n: Set[Set[K]], lis
 }
 
 theorem sets_of_finite_intersection_preserve_net[K](n: Set[Set[K]]) {
-    is_net(n) and n != Set[Set[K]].empty_set implies is_net(sets_of_finite_intersection(n))
+    is_net(n) and is_nonempty (n) implies is_net(sets_of_finite_intersection(n))
 }

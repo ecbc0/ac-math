@@ -439,7 +439,15 @@ theorem div_by_reciprocal[F: Field](p: F, q: F) {
 }
 
 theorem neg_by_div[F: Field](a: F) {
-    F.1 / (-a) = - (F.1 / a)
+    F.1 / (-a) = -(F.1 / a)
+} by {
+    if a = F.0 {
+        F.1 / (-a) = - (F.1 / a)
+    } else {
+        (-a) ⋅ (-(F.1 / a)) = a ⋅ (F.1 / a)
+        (-a) ⋅ (-(F.1 / a)) = F.1
+        -(F.1 / a) = (-a).reciprocal
+    }
 }
 
 theorem mul_inv_cancels_right[F: Field](a: F) {
