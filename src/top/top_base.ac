@@ -1,5 +1,7 @@
 from limit.net import Set_Net, Set, is_limit
-from set import empty, universe
+from set import empty, universe, union, intersection, compl_of_sets, union_index
+from limit.net import is_net, subset_two_intersection
+from finite_set import list_to_set, List
 
 typeclass X: Point_Net_System {
     net: X -> Set_Net[X]
@@ -206,6 +208,14 @@ define limit_pt[X: Topology](a: Set[X], x: X) -> Bool {
 
 theorem contains_imp_limit_pt[X: Topology](a: Set[X], x: X) {
     x ∈ a implies limit_pt(a, x)
+} by {
+    forall(b: Set[X]) {
+        if b ∈ x.net.sets {
+            x ∈ b
+            x ∈ a ∩ b
+            a ∩ b != empty[X]
+        }
+    }    
 }
 
 // expected param 0 to have typeclass None
@@ -377,12 +387,14 @@ theorem empty_is_open[X: Topology](a: Set[X]) {
     a.is_empty implies a.is_open
 }
 
-from set import union, intersection
+define are_open[X: Topology](n: Set[Set[X]]) -> Bool {
+    forall(s: Set[X]) {
+        s ∈ n implies s.is_open
+    }
+}
 
 theorem union_preserve_open[X: Topology](c: Set[Set[X]]) {
-    forall(s: Set[X]) {
-        s ∈ c implies s.is_open
-    } implies union(c).is_open
+    are_open(c) implies union(c).is_open
 } by {
     forall(x: X) {
         if x ∈ union(c) {
@@ -402,7 +414,56 @@ theorem union_preserve_open[X: Topology](c: Set[Set[X]]) {
     union(c).is_open
 }
 
-from limit.net import is_net, subset_two_intersection
+define are_closed[X: Topology](n: Set[Set[X]]) -> Bool {
+    forall(s: Set[X]) {
+        s ∈ n implies s.is_closed
+    }
+}
+
+theorem are_closed_compl[X: Topology](n: Set[Set[X]]) {
+    are_closed(n) implies are_open(compl_of_sets(n))
+} by {
+    forall(s: Set[X]) {
+        if s ∈ compl_of_sets(n) {
+            s.c ∈ n
+            s.c.is_closed
+            s.is_open
+        }
+    }    
+}
+
+theorem are_open_compl[X: Topology](n: Set[Set[X]]) {
+    are_open(n) implies are_closed(compl_of_sets(n))
+}
+
+theorem intersection_preserve_closed[X: Topology](c: Set[Set[X]]) {
+    are_closed(c) implies intersection(c).is_closed
+} by {
+    forall(s: Set[X]) {
+        if s ∈ compl_of_sets(c) {
+            s.c ∈ c
+            s.c.is_closed
+            s.is_open
+        }
+    }
+    union(compl_of_sets(c)).is_open
+    union(compl_of_sets(c)).c.is_closed
+    union(compl_of_sets(c)).c = intersection(compl_of_sets(compl_of_sets(c)))
+    intersection(compl_of_sets(compl_of_sets(c))) = intersection(c)
+    intersection(c).is_closed
+}
+
+theorem two_intersection_preserve_closed[X: Topology](a1: Set[X], a2: Set[X]) {
+    a1.is_closed and a2.is_closed implies (a1 ∩ a2).is_closed
+} by {
+    a1 ∩ a2 = intersection(list_to_set(List.cons(a1, List.singleton(a2))))
+    forall(s: Set[X]) {
+        if s ∈ list_to_set(List.cons(a1, List.singleton(a2))) {
+            s.is_closed
+        }
+    }
+    are_closed(list_to_set(List.cons(a1, List.singleton(a2))))
+}
 
 theorem two_intersection_preserve_open[X: Topology](a: Set[X], b: Set[X]) {
     a.is_open and b.is_open implies (a ∩ b).is_open
@@ -434,8 +495,6 @@ theorem two_intersection_preserve_open[X: Topology](a: Set[X], b: Set[X]) {
     (a ∩ b) = (a ∩ b).interior
     (a ∩ b).is_open    
 }
-
-from set import union_index
 
 theorem union_index_preserve_open[I, X: Topology](f: I -> Set[X]) {
     forall(i: I) {
@@ -538,4 +597,18 @@ theorem continuous_imp_interior_inv_image_subset_inv_image_interior[X: Topology,
     v.interior.inv_image(f).is_open
 }
 
-// Topology from open set version to net version: supplement all finite intersections to the open sets to get a net at each point. The open sets can be recovered using the construction method of open sets for nets.
+// Topology from open set version to net version: supplement all finite intersections to the open sets to get a net at each point. Then prove two definition of open set is the same
+
+/// Topology converge is not defined by intersection of image of source_net, which have a too weak control of the order relation, say, if you consider the ℝ subset defined as distance of all of intersection of subcollection of source_net, then there are too many arbitrary infinite intersection, while net only assure that it have some element subset finite intersection.  
+/// Topology does have some extra property that concern the intersection of image of source_net, i.e. the theory of compactness
+define converge_to[K, X: Topology](source_net: Set_Net[K], target: X, f: K -> X) -> Bool {
+    is_limit(source_net, target.net, f)
+}
+
+theorem converge_to_definition_expand[K, X: Topology](source_net: Set_Net[K], target: X, f: K -> X) {
+    forall(b: Set[X]) {
+        b ∈ target.net.sets implies exists(a: Set[K]) {
+            a ∈ source_net.sets and a.image(f) ⊆ b
+        }
+    } implies is_limit(source_net, target.net, f)
+}

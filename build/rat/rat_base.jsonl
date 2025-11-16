@@ -428,7 +428,7 @@
 {"goal":"lte_div_pos","proof":["not c > 0 or not a < b or a / c < b / c","not a <= b or a < b or b = a","not a / c < b / c or a / c <= b / c","b / c != a / c or a / c <= b / c","b / c != a / c","b != a","a < b","not a / c < b / c"]}
 {"goal":"mul_div_cancels","proof":["a ⋅ (b ⋅ b.reciprocal) = a ⋅ b ⋅ b.reciprocal","b ⋅ b.reciprocal = 1 or 0 = b","a ⋅ b ⋅ b.reciprocal = (a ⋅ b) / b","a ⋅ 1 = a","b ⋅ b.reciprocal = 1"]}
 {"goal":"ℚ.from_int(a.num) / ℚ.from_int(a.denom) = reduce(a.num, ℤ.1) ⋅ reduce(ℤ.1, a.denom)","proof":["ℚ.from_int(a.num) ⋅ reduce(ℤ.1, ℤ.1) = reduce(a.num ⋅ ℤ.1, ℤ.1)","ℚ.from_int(a.num) ⋅ ℚ.from_int(a.denom).reciprocal = ℚ.from_int(a.num) / ℚ.from_int(a.denom)","reduce(ℚ.from_int(a.denom).denom, ℚ.from_int(a.denom).num) = ℚ.from_int(a.denom).reciprocal","reduce(a.num, ℤ.1) ⋅ reduce(ℤ.1, a.denom) = reduce(ℤ.1, a.denom) ⋅ reduce(a.num, ℤ.1)","ℚ.from_int(a.denom).reciprocal ⋅ ℚ.from_int(a.num) = ℚ.from_int(a.num) ⋅ ℚ.from_int(a.denom).reciprocal","a.num ⋅ ℤ.1 = ℤ.1 ⋅ a.num","ℚ.from_int(a.num) ⋅ 1 = ℚ.from_int(a.num)","ℚ.from_int(a.denom).denom = ℤ.1","ℚ.from_int(a.denom).num = a.denom","ℤ.1 ⋅ a.num = a.num"]}
-{"goal":"div_from_int","proof":["reduce(a.num, ℤ.1) ⋅ reduce(ℤ.1, a.denom) = reduce(a.num ⋅ ℤ.1, ℤ.1 ⋅ a.denom)","reduce(a.num, a.denom) = a","ℤ.1 ⋅ a.denom = a.denom","a.num ⋅ ℤ.1 = a.num"]}
+{"goal":"rat_from_div_int","proof":["reduce(a.num, ℤ.1) ⋅ reduce(ℤ.1, a.denom) = reduce(a.num ⋅ ℤ.1, ℤ.1 ⋅ a.denom)","reduce(a.num, a.denom) = a","a.num ⋅ ℤ.1 = a.num","ℤ.1 ⋅ a.denom = a.denom"]}
 {"goal":"ℚ.from_int(a.num) < ℚ.from_int(n ⋅ a.denom)","proof":["not a.num < n ⋅ a.denom or ℚ.from_int(a.num) < ℚ.from_int(n ⋅ a.denom)"]}
 {"goal":"ℚ.from_int(a.num) < ℚ.from_int(n) ⋅ ℚ.from_int(a.denom)","proof":["ℚ.from_int(n) ⋅ ℚ.from_int(a.denom) = ℚ.from_int(n ⋅ a.denom)"]}
 {"goal":"ℚ.from_int(a.denom) > 0","proof":["ℚ.from_int(a.denom) > 0 = 0 < ℚ.from_int(a.denom)","not 0 < ℚ.from_int(a.denom)","0 < ℚ.from_int(a.denom) = ℚ.from_int(a.denom).is_positive","not ℚ.from_int(a.denom).is_positive","ℚ.from_int(a.denom).num.is_positive = ℚ.from_int(a.denom).is_positive","ℚ.from_int(a.denom).num = a.denom","a.denom.is_positive","not ℚ.from_int(a.denom).num.is_positive"]}
@@ -593,24 +593,37 @@
 {"goal":"from_nat_one","proof":["ℚ.from_int(ℤ.from_nat(ℕ.1)) = ℚ.from_nat(ℕ.1)","ℚ.from_int(ℤ.from_nat(ℕ.1)) != 1"]}
 {"goal":"ℚ.from_nat(a + b) = ℚ.from_int(ℤ.from_nat(a) + ℤ.from_nat(b))","proof":["ℤ.from_nat(a) + ℤ.from_nat(b) = ℤ.from_nat(a + b)","ℚ.from_int(ℤ.from_nat(a + b)) != ℚ.from_nat(a + b)","ℚ.from_int(ℤ.from_nat(a + b)) = ℚ.from_nat(a + b)"]}
 {"goal":"from_nat_add","proof":["ℚ.from_int(ℤ.from_nat(a)) + ℚ.from_int(ℤ.from_nat(b)) = ℚ.from_int(ℤ.from_nat(a) + ℤ.from_nat(b))","ℚ.from_int(ℤ.from_nat(a)) = ℚ.from_nat(a)","ℚ.from_int(ℤ.from_nat(b)) = ℚ.from_nat(b)"]}
-{"goal":"neg_reciprocal_iff","proof":["1 / -a = -1 / a","1 / -1 / a > 0 = -1 / a > 0","-1 / a > 0 = 1 / a < 0","-a > 0 = a < 0","1 / (1 / -a) = -a"]}
-{"goal":"neg_reciprocal_iff","proof":["1 / -a = -1 / a","1 / -1 / a > 0 = -1 / a > 0","-1 / a > 0 = 1 / a < 0","-a > 0 = a < 0","1 / (1 / -a) = -a"]}
-{"goal":"neg_reciprocal_iff","proof":["1 / -a = -1 / a","1 / -1 / a > 0 = -1 / a > 0","-1 / a > 0 = 1 / a < 0","-a > 0 = a < 0","1 / (1 / -a) = -a"]}
-{"goal":"neg_reciprocal_iff","proof":["1 / -a = -1 / a","1 / -1 / a > 0 = -1 / a > 0","-1 / a > 0 = 1 / a < 0","-a > 0 = a < 0","1 / (1 / -a) = -a"]}
-{"goal":"neg_reciprocal_iff","proof":["1 / -a = -1 / a","1 / -1 / a > 0 = -1 / a > 0","-1 / a > 0 = 1 / a < 0","-a > 0 = a < 0","1 / (1 / -a) = -a"]}
-{"goal":"neg_reciprocal_iff","proof":["1 / -a = -1 / a","1 / -1 / a > 0 = -1 / a > 0","-1 / a > 0 = 1 / a < 0","-a > 0 = a < 0","1 / (1 / -a) = -a"]}
-{"goal":"neg_reciprocal_iff","proof":["1 / -a = -1 / a","1 / -1 / a > 0 = -1 / a > 0","-1 / a > 0 = 1 / a < 0","-a > 0 = a < 0","1 / (1 / -a) = -a"]}
-{"goal":"neg_reciprocal_iff","proof":["1 / -a = -1 / a","1 / -1 / a > 0 = -1 / a > 0","-1 / a > 0 = 1 / a < 0","-a > 0 = a < 0","1 / (1 / -a) = -a"]}
-{"goal":"neg_reciprocal_iff","proof":["1 / -a = -1 / a","1 / -1 / a > 0 = -1 / a > 0","-1 / a > 0 = 1 / a < 0","-a > 0 = a < 0","1 / (1 / -a) = -a"]}
-{"goal":"neg_reciprocal_iff","proof":["1 / -a = -1 / a","1 / -1 / a > 0 = -1 / a > 0","-1 / a > 0 = 1 / a < 0","-a > 0 = a < 0","1 / (1 / -a) = -a"]}
-{"goal":"neg_reciprocal_iff","proof":["1 / -a = -1 / a","1 / -1 / a > 0 = -1 / a > 0","-1 / a > 0 = 1 / a < 0","-a > 0 = a < 0","1 / (1 / -a) = -a"]}
-{"goal":"neg_reciprocal_iff","proof":["1 / -a = -1 / a","1 / -1 / a > 0 = -1 / a > 0","-1 / a > 0 = 1 / a < 0","-a > 0 = a < 0","1 / (1 / -a) = -a"]}
-{"goal":"neg_reciprocal_iff","proof":["1 / -a = -1 / a","1 / -1 / a > 0 = -1 / a > 0","-1 / a > 0 = 1 / a < 0","-a > 0 = a < 0","1 / (1 / -a) = -a"]}
-{"goal":"neg_reciprocal_iff","proof":["1 / -a = -1 / a","1 / -1 / a > 0 = -1 / a > 0","-1 / a > 0 = 1 / a < 0","-a > 0 = a < 0","1 / (1 / -a) = -a"]}
-{"goal":"neg_reciprocal_iff","proof":["1 / -a = -1 / a","1 / -1 / a > 0 = -1 / a > 0","-1 / a > 0 = 1 / a < 0","-a > 0 = a < 0","1 / (1 / -a) = -a"]}
-{"goal":"neg_reciprocal_iff","proof":["1 / -a = -1 / a","1 / -1 / a > 0 = -1 / a > 0","-1 / a > 0 = 1 / a < 0","-a > 0 = a < 0","1 / (1 / -a) = -a"]}
-{"goal":"neg_reciprocal_iff","proof":["1 / -a = -1 / a","1 / -1 / a > 0 = -1 / a > 0","-1 / a > 0 = 1 / a < 0","-a > 0 = a < 0","1 / (1 / -a) = -a"]}
-{"goal":"neg_reciprocal_iff","proof":["1 / -a = -1 / a","1 / -1 / a > 0 = -1 / a > 0","-1 / a > 0 = 1 / a < 0","-a > 0 = a < 0","1 / (1 / -a) = -a"]}
+{"goal":"x = a / b","proof":["ℚ.from_int(x.num) / ℚ.from_int(x.denom) = x"]}
+{"goal":"is_reduced(x.num, x.denom)","proof":["is_reduced(x.num, x.denom)"]}
+{"goal":"gcd(p, q) = ℤ.1","proof":["is_reduced(x.num, q)","gcd(x.num, q) != ℤ.1","not is_reduced(x.num, q) or gcd(x.num, q) = ℤ.1"]}
+{"goal":"q > ℤ.0","proof":["not x.denom > ℤ.0","not is_reduced(x.num, x.denom) or x.denom > ℤ.0"]}
+{"goal":"b != 0","proof":["-Add.sub[ℚ](0, b) = Add.sub[ℚ](b, 0)","(0 - b).is_positive = b < 0","0 != b or Add.sub[ℚ](b, 0) = 0","Add.sub[ℚ](b, 0) = 0","q > ℤ.0 = ℤ.0 < q","not b < 0 or 0 != b","not b < 0","0 - b = -b","b.num.is_positive = b.is_positive","ℤ.0 < q = q.is_positive","ℚ.from_int(x.denom).num = x.denom"]}
+{"goal":"a / b^ℕ.2 = 2","proof":[]}
+{"goal":"a / b ⋅ a / b = 2","proof":["x ⋅ a / b != 2","x ⋅ x != 2","ℕ.1.suc != ℕ.1.suc or x ⋅ x^ℕ.1 = x^ℕ.1.suc","x^ℕ.1 = x","x ⋅ x^ℕ.1 != 2","x^ℕ.1.suc = 2","x ⋅ x^ℕ.1 = x^ℕ.1.suc"]}
+{"goal":"(a ⋅ a) / (b ⋅ b) = 2","proof":["(a ⋅ a) / (b ⋅ b) = a / b ⋅ a / b"]}
+{"goal":"a^ℕ.2 / (b^ℕ.2) = 2","proof":["a^ℕ.1 ⋅ a^ℕ.1 = a^(ℕ.1 + ℕ.1)","b^ℕ.1 ⋅ b^ℕ.1 = b^(ℕ.1 + ℕ.1)","a ⋅ a ⋅ (b ⋅ b).reciprocal = (a ⋅ a) / (b ⋅ b)","a^ℕ.2 ⋅ (b^ℕ.2).reciprocal = a^ℕ.2 / (b^ℕ.2)","ℚ.from_int(x.denom)^ℕ.1 = ℚ.from_int(x.denom)","ℚ.from_int(x.num)^ℕ.1 = ℚ.from_int(x.num)"]}
+{"goal":"a^ℕ.2 / (b^ℕ.2) ⋅ b^ℕ.2 = 2 ⋅ b^ℕ.2","proof":["a^ℕ.2 / (b^ℕ.2) != 2"]}
+{"goal":"a^ℕ.2 = 2 ⋅ b^ℕ.2","proof":["a^ℕ.2 / (b^ℕ.2) ⋅ b^ℕ.2 = a^ℕ.2 or b^ℕ.2 = 0","b^ℕ.2 != 0 or 0 = b","b^ℕ.2 != 0","a^ℕ.2 / (b^ℕ.2) ⋅ b^ℕ.2 != a^ℕ.2"]}
+{"goal":"ℚ.from_int(p)^ℕ.2 = ℚ.from_int(ℤ.2) ⋅ ℚ.from_int(q)^ℕ.2","proof":["b^ℕ.2 ⋅ 2 = 2 ⋅ b^ℕ.2","ℚ.from_int(q)^ℕ.2 ⋅ ℚ.from_int(ℤ.2) = ℚ.from_int(ℤ.2) ⋅ ℚ.from_int(q)^ℕ.2"]}
+{"goal":"ℚ.from_int(p) ⋅ ℚ.from_int(p) = ℚ.from_int(ℤ.2) ⋅ (ℚ.from_int(q) ⋅ ℚ.from_int(q))","proof":["ℕ.1.suc != ℕ.1.suc or ℚ.from_int(p) ⋅ ℚ.from_int(p)^ℕ.1 = ℚ.from_int(p)^ℕ.1.suc","ℕ.1.suc != ℕ.1.suc or ℚ.from_int(q) ⋅ ℚ.from_int(q)^ℕ.1 = ℚ.from_int(q)^ℕ.1.suc","b^ℕ.2 + b^ℕ.2 = 2 ⋅ b^ℕ.2","ℚ.from_int(q) ⋅ ℚ.from_int(q) + ℚ.from_int(q) ⋅ ℚ.from_int(q) = 2 ⋅ (ℚ.from_int(q) ⋅ ℚ.from_int(q))","ℕ.1 + ℕ.1 = ℕ.1.suc","ℚ.from_int(x.denom)^ℕ.1 = ℚ.from_int(x.denom)","ℚ.from_int(x.num)^ℕ.1 = ℚ.from_int(x.num)","ℚ.from_int(p) ⋅ ℚ.from_int(p)^ℕ.1 = ℚ.from_int(p)^ℕ.1.suc","ℚ.from_int(q) ⋅ ℚ.from_int(q)^ℕ.1 = ℚ.from_int(q)^ℕ.1.suc"]}
+{"goal":"ℚ.from_int(p^ℕ.2) = ℚ.from_int(ℤ.2 ⋅ q^ℕ.2)","proof":["ℚ.from_int(p) ⋅ ℚ.from_int(p) = ℚ.from_int(p ⋅ p)","ℚ.from_int(q) ⋅ ℚ.from_int(q) = ℚ.from_int(q ⋅ q)","ℚ.from_int(ℤ.2) ⋅ ℚ.from_int(q^ℕ.2) = ℚ.from_int(ℤ.2 ⋅ q^ℕ.2)","p ⋅ p = p^ℕ.2","q ⋅ q = q^ℕ.2"]}
+{"goal":"p^ℕ.2 = ℤ.2 ⋅ q^ℕ.2","proof":["ℚ.from_int(ℤ.2 ⋅ q^ℕ.2) != ℚ.from_int(p^ℕ.2) or ℤ.2 ⋅ q^ℕ.2 = p^ℕ.2"]}
+{"goal":"p^ℕ.2 != ℤ.0","proof":["ℚ.from_int(ℤ.2) ⋅ ℚ.from_int(q) ⋅ ℚ.from_int(q) = ℚ.from_int(ℤ.2) ⋅ (ℚ.from_int(q) ⋅ ℚ.from_int(q))","ℚ.from_int(p) ⋅ ℚ.from_int(p) = ℚ.from_int(p ⋅ p)","2 ⋅ b != 0 or 2 = 0 or 0 = b","(0 ⋅ b ⋅ b) / b = 0 ⋅ b or 0 = b","(2 ⋅ b ⋅ b) / b = 2 ⋅ b or 0 = b","x.num ⋅ x.num = x.num^ℕ.2","ℚ.new(ℤ.0, ℤ.1) = ℚ.from_int(ℤ.0)","0 ⋅ b = 0","(0 ⋅ b ⋅ b) / b = 0 ⋅ b","(2 ⋅ b ⋅ b) / b = 2 ⋅ b","2 ⋅ b != 0 or 2 = 0","2 ⋅ b != 0"]}
+{"goal":"p = ℤ.0 implies p^ℕ.2 = ℤ.0","proof":["ℤ.0^ℕ.2 != ℤ.0","ℤ.0^ℕ.2 = ℤ.0 or ℕ.2 = ℕ.0","ℕ.2 = ℕ.0"]}
+{"goal":"p != ℤ.0","proof":["ℚ.from_int(p) ⋅ ℚ.from_int(p) = ℚ.from_int(p ⋅ p)","ℚ.from_int(q) ⋅ ℚ.from_int(q) = ℚ.from_int(q ⋅ q)","ℤ.from_nat(lib(nat.prime_number).gcd(abs(ℤ.0), abs(q))) = gcd(ℤ.0, q)","lib(int).unit_sign(q) ⋅ q = ℤ.from_nat(abs(q))","lib(int).unit_sign(x.denom) ⋅ ℤ.from_nat(abs(x.denom)) = x.denom","lib(int).unit_sign(ℤ.0) ⋅ ℤ.from_nat(abs(ℤ.0)) = ℤ.0","ℚ.from_int(q) ⋅ ℚ.from_int(q) ⋅ ℚ.from_int(ℤ.2) = ℚ.from_int(ℤ.2) ⋅ (ℚ.from_int(q) ⋅ ℚ.from_int(q))","p ⋅ p = p^ℕ.2","ℤ.0 != p or p.abs = ℤ.0","p.abs = ℤ.0","ℚ.new(q ⋅ q, ℤ.1) = ℚ.from_int(q ⋅ q)","ℚ.new(ℤ.1, ℤ.1) = ℚ.from_int(ℤ.1)","ℚ.new(ℤ.2 ⋅ q^ℕ.2, ℤ.1) = ℚ.from_int(ℤ.2 ⋅ q^ℕ.2)","ℤ.from_nat(abs(p)) = p.abs","ℤ.0 != p or lib(int).unit_sign(p) = ℤ.0","lib(int).unit_sign(p) = ℤ.0","ℤ.0 != p or abs(p) = ℕ.0","abs(p) = ℕ.0","lib(int).unit_sign(q) ⋅ ℤ.1 = lib(int).unit_sign(q)","1 ⋅ 2 = 2","lib(nat.prime_number).gcd(ℕ.0, abs(q)) = abs(q)"]}
+{"goal":"gcd(p^ℕ.2, q) = ℤ.1","proof":["gcd(p, q) != ℤ.1 or gcd(p^ℕ.2, q^ℕ.1) = ℤ.1 or ℤ.0 = p or ℤ.0 = q or ℕ.2 = ℕ.0 or ℕ.1 = ℕ.0","ℕ.1 != ℕ.0 or gcd(p^ℕ.2, q)^ℕ.1 = ℤ.1","q > ℤ.0 = ℤ.0 < q","ℤ.0 < q","not ℤ.0 < q or ℤ.0 != q","gcd(p^ℕ.2, q)^ℕ.1 = gcd(p^ℕ.2, q)","q^ℕ.1 = q","ℤ.0 != q","gcd(p^ℕ.2, q^ℕ.1) != ℤ.1","gcd(p^ℕ.2, q)^ℕ.1 != ℤ.1","ℕ.1 = ℕ.0","ℕ.1 != ℕ.0"]}
+{"goal":"q.divides(p^ℕ.2)","proof":["not q.divides(q ⋅ q) or not (q ⋅ q).divides(p^ℕ.2) or q.divides(p^ℕ.2)","q ⋅ q != q ⋅ q or q.divides(q ⋅ q)","ℤ.2 ⋅ q^ℕ.2 != p^ℕ.2 or (q^ℕ.2).divides(p^ℕ.2)","q ⋅ q = q^ℕ.2","not (q ⋅ q).divides(p^ℕ.2) or not q.divides(q ⋅ q)","q.divides(q ⋅ q)","not (q ⋅ q).divides(p^ℕ.2)","(q^ℕ.2).divides(p^ℕ.2)"]}
+{"goal":"q = ℤ.1","proof":["gcd(q, p^ℕ.2) != ℤ.1 or not q.divides(p^ℕ.2) or -ℤ.1 = q or ℤ.1 = q or ℤ.0 = q","gcd(p^ℕ.2, q) = gcd(q, p^ℕ.2)","gcd(q, p^ℕ.2) = ℤ.1","not q > ℤ.0 or q.abs = q","q > ℤ.0 = ℤ.0 < q","ℤ.0 < q","(-ℤ.1).abs = ℤ.1.abs","not ℤ.0 < q or ℤ.0 != q","ℤ.from_nat(abs(ℤ.1)) = ℤ.1.abs","abs(ℤ.from_nat(ℕ.1)) = ℕ.1","-ℤ.1 = q or ℤ.0 = q","q.abs = q","ℤ.0 != q","-ℤ.1 = q"]}
+{"goal":"p^ℕ.2 = ℤ.2","proof":["q ⋅ q = q^ℕ.2","ℤ.1 ⋅ ℤ.1 = ℤ.1","ℤ.2 ⋅ ℤ.1 = ℤ.2"]}
+{"goal":"n^ℕ.2 = ℕ.2","proof":["abs(p)^ℕ.2 != ℕ.2","abs(p)^ℕ.2 = abs(p^ℕ.2)","abs(ℤ.from_nat(ℕ.2)) = ℕ.2","abs(p^ℕ.2) != ℕ.2","abs(ℤ.2) != ℕ.2"]}
+{"goal":"n = ℕ.1","proof":["ℕ.1 ⋅ abs(p) != n or ℕ.1 <= n or n = ℕ.0","not n <= ℕ.1 or not ℕ.1 < n or ℕ.1 < ℕ.1","not ℕ.1 <= n or ℕ.1 < n or n = ℕ.1","n^ℕ.2 = n ⋅ n","n != ℕ.0 or n ⋅ n = ℕ.0","not ℕ.1 <= n or ℕ.1 < n","ℕ.1 ⋅ abs(p) = abs(p)","not ℕ.1 < ℕ.1","n^ℕ.2 != ℕ.0","ℕ.1 ⋅ abs(p) = n","n ⋅ n != ℕ.0","not ℕ.1 < n or ℕ.1 < ℕ.1","not ℕ.1 < n","not ℕ.1 <= n","n != ℕ.0","n = ℕ.0"]}
+{"goal":"n^ℕ.2 = ℕ.1","proof":["ℕ.1^ℕ.2 != ℕ.1","ℕ.1^ℕ.2 = ℕ.1 ⋅ ℕ.1","ℕ.1 ⋅ ℕ.1 != ℕ.1"]}
+{"goal":"false","proof":["ℕ.2 <= ℕ.1","ℕ.1 + ℕ.1 <= ℕ.1 = ℕ.1 < ℕ.1","not ℕ.1 < ℕ.1","not ℕ.1 + ℕ.1 <= ℕ.1 or ℕ.1 < ℕ.1","ℕ.1 + ℕ.1 <= ℕ.1"]}
+{"goal":"n > ℕ.1","proof":["n <= ℕ.1 or n.is_prime or n.is_composite","let s0: ℕ -> ℕ satisfy { forall(x0: ℕ) { not x0.is_composite or s0(x0).proper_divides(x0) } and forall(x1: ℕ, x2: ℕ) { not x1.proper_divides(x2) or x2.is_composite } }","not n.is_composite or s0(n).proper_divides(n)","not s0(n).proper_divides(n) or ℕ.1 < n","n > ℕ.1 = ℕ.1 < n","not ℕ.1 < n","not s0(n).proper_divides(n)","not n.is_prime or n > ℕ.1","not n.is_prime","not n.is_composite","n.is_composite"]}
+{"goal":"n >= ℕ.2","proof":["ℕ.1 + ℕ.1 <= n = ℕ.1 < n","abs(p) >= ℕ.2 = ℕ.2 <= abs(p)","n > ℕ.1 = ℕ.1 < n"]}
+{"goal":"n^ℕ.2 > ℕ.2","proof":["not n > ℕ.1 or n^ℕ.2 > n","ℕ.1 + ℕ.1 > n = ℕ.1 >= n","ℕ.1 >= n = n <= ℕ.1","n^ℕ.2 > n"]}
+{"goal":"false","proof":["ℕ.2 > ℕ.2","not ℕ.2 < ℕ.2 or not ℕ.2 < ℕ.2","ℕ.2 > ℕ.2 = ℕ.2 < ℕ.2","ℕ.2 < ℕ.2"]}
+{"goal":"square_root_of_two_is_not_rat","proof":[]}
 {"goal":"neg_by_div","proof":["1 / -a = -1 / a"]}
 {"goal":"neg_by_div","proof":["1 / -a = -1 / a"]}
 {"goal":"neg_by_div","proof":["1 / -a = -1 / a"]}
@@ -629,3 +642,61 @@
 {"goal":"neg_by_div","proof":["1 / -a = -1 / a"]}
 {"goal":"neg_by_div","proof":["1 / -a = -1 / a"]}
 {"goal":"neg_by_div","proof":["1 / -a = -1 / a"]}
+{"goal":"neg_by_div","proof":["1 / -a = -1 / a"]}
+{"goal":"neg_by_div","proof":["1 / -a = -1 / a"]}
+{"goal":"neg_by_div","proof":["1 / -a = -1 / a"]}
+{"goal":"neg_by_div","proof":["1 / -a = -1 / a"]}
+{"goal":"neg_by_div","proof":["1 / -a = -1 / a"]}
+{"goal":"neg_by_div","proof":["1 / -a = -1 / a"]}
+{"goal":"neg_by_div","proof":["1 / -a = -1 / a"]}
+{"goal":"neg_by_div","proof":["1 / -a = -1 / a"]}
+{"goal":"neg_by_div","proof":["1 / -a = -1 / a"]}
+{"goal":"neg_by_div","proof":["1 / -a = -1 / a"]}
+{"goal":"neg_by_div","proof":["1 / -a = -1 / a"]}
+{"goal":"neg_by_div","proof":["1 / -a = -1 / a"]}
+{"goal":"neg_by_div","proof":["1 / -a = -1 / a"]}
+{"goal":"neg_by_div","proof":["1 / -a = -1 / a"]}
+{"goal":"neg_by_div","proof":["1 / -a = -1 / a"]}
+{"goal":"neg_by_div","proof":["1 / -a = -1 / a"]}
+{"goal":"neg_by_div","proof":["1 / -a = -1 / a"]}
+{"goal":"neg_by_div","proof":["1 / -a = -1 / a"]}
+{"goal":"neg_by_div","proof":["1 / -a = -1 / a"]}
+{"goal":"neg_by_div","proof":["1 / -a = -1 / a"]}
+{"goal":"neg_reciprocal_iff","proof":["1 / -a = -1 / a","1 / -1 / a > 0 = -1 / a > 0","-1 / a > 0 = 1 / a < 0","-a > 0 = a < 0","1 / (1 / -a) = -a"]}
+{"goal":"neg_reciprocal_iff","proof":["1 / -a = -1 / a","1 / -1 / a > 0 = -1 / a > 0","-1 / a > 0 = 1 / a < 0","-a > 0 = a < 0","1 / (1 / -a) = -a"]}
+{"goal":"neg_reciprocal_iff","proof":["1 / -a = -1 / a","1 / -1 / a > 0 = -1 / a > 0","-1 / a > 0 = 1 / a < 0","-a > 0 = a < 0","1 / (1 / -a) = -a"]}
+{"goal":"neg_reciprocal_iff","proof":["1 / -a = -1 / a","1 / -1 / a > 0 = -1 / a > 0","-1 / a > 0 = 1 / a < 0","-a > 0 = a < 0","1 / (1 / -a) = -a"]}
+{"goal":"neg_reciprocal_iff","proof":["1 / -a = -1 / a","1 / -1 / a > 0 = -1 / a > 0","-1 / a > 0 = 1 / a < 0","-a > 0 = a < 0","1 / (1 / -a) = -a"]}
+{"goal":"neg_reciprocal_iff","proof":["1 / -a = -1 / a","1 / -1 / a > 0 = -1 / a > 0","-1 / a > 0 = 1 / a < 0","-a > 0 = a < 0","1 / (1 / -a) = -a"]}
+{"goal":"neg_reciprocal_iff","proof":["1 / -a = -1 / a","1 / -1 / a > 0 = -1 / a > 0","-1 / a > 0 = 1 / a < 0","-a > 0 = a < 0","1 / (1 / -a) = -a"]}
+{"goal":"neg_reciprocal_iff","proof":["1 / -a = -1 / a","1 / -1 / a > 0 = -1 / a > 0","-1 / a > 0 = 1 / a < 0","-a > 0 = a < 0","1 / (1 / -a) = -a"]}
+{"goal":"neg_reciprocal_iff","proof":["1 / -a = -1 / a","1 / -1 / a > 0 = -1 / a > 0","-1 / a > 0 = 1 / a < 0","-a > 0 = a < 0","1 / (1 / -a) = -a"]}
+{"goal":"neg_reciprocal_iff","proof":["1 / -a = -1 / a","1 / -1 / a > 0 = -1 / a > 0","-1 / a > 0 = 1 / a < 0","-a > 0 = a < 0","1 / (1 / -a) = -a"]}
+{"goal":"neg_reciprocal_iff","proof":["1 / -a = -1 / a","1 / -1 / a > 0 = -1 / a > 0","-1 / a > 0 = 1 / a < 0","-a > 0 = a < 0","1 / (1 / -a) = -a"]}
+{"goal":"neg_reciprocal_iff","proof":["1 / -a = -1 / a","1 / -1 / a > 0 = -1 / a > 0","-1 / a > 0 = 1 / a < 0","-a > 0 = a < 0","1 / (1 / -a) = -a"]}
+{"goal":"neg_reciprocal_iff","proof":["1 / -a = -1 / a","1 / -1 / a > 0 = -1 / a > 0","-1 / a > 0 = 1 / a < 0","-a > 0 = a < 0","1 / (1 / -a) = -a"]}
+{"goal":"neg_reciprocal_iff","proof":["1 / -a = -1 / a","1 / -1 / a > 0 = -1 / a > 0","-1 / a > 0 = 1 / a < 0","-a > 0 = a < 0","1 / (1 / -a) = -a"]}
+{"goal":"neg_reciprocal_iff","proof":["1 / -a = -1 / a","1 / -1 / a > 0 = -1 / a > 0","-1 / a > 0 = 1 / a < 0","-a > 0 = a < 0","1 / (1 / -a) = -a"]}
+{"goal":"neg_reciprocal_iff","proof":["1 / -a = -1 / a","1 / -1 / a > 0 = -1 / a > 0","-1 / a > 0 = 1 / a < 0","-a > 0 = a < 0","1 / (1 / -a) = -a"]}
+{"goal":"neg_reciprocal_iff","proof":["1 / -a = -1 / a","1 / -1 / a > 0 = -1 / a > 0","-1 / a > 0 = 1 / a < 0","-a > 0 = a < 0","1 / (1 / -a) = -a"]}
+{"goal":"neg_reciprocal_iff","proof":["1 / -a = -1 / a","1 / -1 / a > 0 = -1 / a > 0","-1 / a > 0 = 1 / a < 0","-a > 0 = a < 0","1 / (1 / -a) = -a"]}
+{"goal":"neg_reciprocal_iff","proof":["1 / -a = -1 / a","1 / -1 / a > 0 = -1 / a > 0","-1 / a > 0 = 1 / a < 0","-a > 0 = a < 0","1 / (1 / -a) = -a"]}
+{"goal":"neg_reciprocal_iff","proof":["1 / -a = -1 / a","1 / -1 / a > 0 = -1 / a > 0","-1 / a > 0 = 1 / a < 0","-a > 0 = a < 0","1 / (1 / -a) = -a"]}
+{"goal":"neg_reciprocal_iff","proof":["1 / -a = -1 / a","1 / -1 / a > 0 = -1 / a > 0","-1 / a > 0 = 1 / a < 0","-a > 0 = a < 0","1 / (1 / -a) = -a"]}
+{"goal":"neg_reciprocal_iff","proof":["1 / -a = -1 / a","1 / -1 / a > 0 = -1 / a > 0","-1 / a > 0 = 1 / a < 0","-a > 0 = a < 0","1 / (1 / -a) = -a"]}
+{"goal":"neg_reciprocal_iff","proof":["1 / -a = -1 / a","1 / -1 / a > 0 = -1 / a > 0","-1 / a > 0 = 1 / a < 0","-a > 0 = a < 0","1 / (1 / -a) = -a"]}
+{"goal":"neg_reciprocal_iff","proof":["1 / -a = -1 / a","1 / -1 / a > 0 = -1 / a > 0","-1 / a > 0 = 1 / a < 0","-a > 0 = a < 0","1 / (1 / -a) = -a"]}
+{"goal":"neg_reciprocal_iff","proof":["1 / -a = -1 / a","1 / -1 / a > 0 = -1 / a > 0","-1 / a > 0 = 1 / a < 0","-a > 0 = a < 0","1 / (1 / -a) = -a"]}
+{"goal":"neg_reciprocal_iff","proof":["1 / -a = -1 / a","1 / -1 / a > 0 = -1 / a > 0","-1 / a > 0 = 1 / a < 0","-a > 0 = a < 0","1 / (1 / -a) = -a"]}
+{"goal":"neg_reciprocal_iff","proof":["1 / -a = -1 / a","1 / -1 / a > 0 = -1 / a > 0","-1 / a > 0 = 1 / a < 0","-a > 0 = a < 0","1 / (1 / -a) = -a"]}
+{"goal":"neg_reciprocal_iff","proof":["1 / -a = -1 / a","1 / -1 / a > 0 = -1 / a > 0","-1 / a > 0 = 1 / a < 0","-a > 0 = a < 0","1 / (1 / -a) = -a"]}
+{"goal":"neg_reciprocal_iff","proof":["1 / -a = -1 / a","1 / -1 / a > 0 = -1 / a > 0","-1 / a > 0 = 1 / a < 0","-a > 0 = a < 0","1 / (1 / -a) = -a"]}
+{"goal":"neg_reciprocal_iff","proof":["1 / -a = -1 / a","1 / -1 / a > 0 = -1 / a > 0","-1 / a > 0 = 1 / a < 0","-a > 0 = a < 0","1 / (1 / -a) = -a"]}
+{"goal":"neg_reciprocal_iff","proof":["1 / -a = -1 / a","1 / -1 / a > 0 = -1 / a > 0","-1 / a > 0 = 1 / a < 0","-a > 0 = a < 0","1 / (1 / -a) = -a"]}
+{"goal":"neg_reciprocal_iff","proof":["1 / -a = -1 / a","1 / -1 / a > 0 = -1 / a > 0","-1 / a > 0 = 1 / a < 0","-a > 0 = a < 0","1 / (1 / -a) = -a"]}
+{"goal":"neg_reciprocal_iff","proof":["1 / -a = -1 / a","1 / -1 / a > 0 = -1 / a > 0","-1 / a > 0 = 1 / a < 0","-a > 0 = a < 0","1 / (1 / -a) = -a"]}
+{"goal":"neg_reciprocal_iff","proof":["1 / -a = -1 / a","1 / -1 / a > 0 = -1 / a > 0","-1 / a > 0 = 1 / a < 0","-a > 0 = a < 0","1 / (1 / -a) = -a"]}
+{"goal":"neg_reciprocal_iff","proof":["1 / -a = -1 / a","1 / -1 / a > 0 = -1 / a > 0","-1 / a > 0 = 1 / a < 0","-a > 0 = a < 0","1 / (1 / -a) = -a"]}
+{"goal":"neg_reciprocal_iff","proof":["1 / -a = -1 / a","1 / -1 / a > 0 = -1 / a > 0","-1 / a > 0 = 1 / a < 0","-a > 0 = a < 0","1 / (1 / -a) = -a"]}
+{"goal":"neg_reciprocal_iff","proof":["1 / -a = -1 / a","1 / -1 / a > 0 = -1 / a > 0","-1 / a > 0 = 1 / a < 0","-a > 0 = a < 0","1 / (1 / -a) = -a"]}
+{"goal":"neg_reciprocal_iff","proof":["1 / -a = -1 / a","1 / -1 / a > 0 = -1 / a > 0","-1 / a > 0 = 1 / a < 0","-a > 0 = a < 0","1 / (1 / -a) = -a"]}

@@ -1,0 +1,252 @@
+from top.top_base import Topology, Set, are_closed, are_open, is_net, intersection, union
+from set import is_nonempty, compl_of_sets
+from limit.net import sets_of_finite_intersection, no_empty, subset_two_intersection, subset_two_intersection_helper, net_subset_finite_intersection, set_intersect_sets
+
+define is_compact[X: Topology](s: Set[X]) -> Bool {
+    forall(n: Set[Set[X]]) {
+        is_nonempty(n) and is_net(n) and are_closed(n) and set_intersect_sets(n, s) implies is_nonempty(s ∩ intersection(n))
+    }
+}
+
+define is_compact_finite_intersection[X: Topology](s: Set[X]) -> Bool {
+    forall(n: Set[Set[X]]) {
+        is_nonempty(n) and are_closed(n) and set_intersect_sets(sets_of_finite_intersection(n), s) implies is_nonempty(s ∩ intersection(n))
+    }
+}
+
+theorem is_compact_imp_is_compact_finite_intersection[X: Topology](s: Set[X]) {
+    is_compact(s) implies is_compact_finite_intersection(s)
+} by {
+    forall(n: Set[Set[X]]) {
+        if are_closed(n) and set_intersect_sets(sets_of_finite_intersection(n), s) {
+            forall(t: Set[X]) {
+                if t ∈ sets_of_finite_intersection(n) {
+                    is_nonempty(s ∩ t)
+                    s ∩ t ⊆ t
+                    is_nonempty(t)
+                }
+            }
+            no_empty(sets_of_finite_intersection(n))
+            forall(t: Set[X]) {
+                if t ∈ sets_of_finite_intersection(n) {
+                    let c: Set[Set[X]] satisfy {
+                        c ⊆ n and c.is_finite and t = intersection(c)
+                    }
+                    are_closed(c)
+                    intersection(c).is_closed
+                    t.is_closed
+                }
+            }
+            are_closed(sets_of_finite_intersection(n))
+            is_net(sets_of_finite_intersection(n))
+            is_nonempty(s ∩ intersection(sets_of_finite_intersection(n)))
+            intersection(sets_of_finite_intersection(n)) = intersection(n)
+            is_nonempty(s ∩ intersection(n))
+        }
+    }
+}
+
+theorem is_compact_finite_intersection_imp_is_compact[X: Topology](s: Set[X]) {
+    is_compact_finite_intersection(s) implies is_compact(s) 
+} by {
+    forall(n: Set[Set[X]]) {
+        if is_nonempty(n) and is_net(n) and are_closed(n) and set_intersect_sets(n, s) {
+            forall(t: Set[X]) {
+                if t ∈ sets_of_finite_intersection(n) {
+                    let c: Set[Set[X]] satisfy {
+                        c ⊆ n and c.is_finite and t = intersection(c)
+                    }
+                    is_nonempty(n) and is_net(n) and c ⊆ n and c.is_finite
+                    net_subset_finite_intersection(n, c)
+                    let u: Set[X] satisfy {
+                        u ∈ n and u ⊆ intersection(c)
+                    }
+                    u ⊆ t
+                    s ∩ u != Set[X].empty_set
+                    s ∩ u ⊆ s ∩ t
+                    s ∩ t != Set[X].empty_set
+                }
+            }
+            set_intersect_sets(sets_of_finite_intersection(n), s)
+            is_nonempty(s ∩ intersection(sets_of_finite_intersection(n)))
+            intersection(n) = intersection(sets_of_finite_intersection(n))
+            is_nonempty(s ∩ intersection(n))
+        }
+    }    
+}
+
+define set_cover_by_one_of_sets[K](s: Set[K], n: Set[Set[K]]) -> Bool {
+    exists(t: Set[K]) {
+        t ∈ n and s ⊆ t
+    }
+}
+
+define is_set_of_finite_union[K](n: Set[Set[K]], s: Set[K]) -> Bool {
+    exists(c: Set[Set[K]]) {
+        c ⊆ n and c.is_finite and s = union(c)
+    }
+}
+
+define sets_of_finite_union[K](n: Set[Set[K]]) -> Set[Set[K]] {
+    Set[Set[K]].new(is_set_of_finite_union(n))
+}
+
+define is_compact_finite_open_cover[X: Topology](s: Set[X]) -> Bool {
+    forall(n: Set[Set[X]]) {
+        is_nonempty(n) and are_open(n) and s ⊆ union(n) implies set_cover_by_one_of_sets(s, sets_of_finite_union(n))
+    }
+}
+
+theorem sets_of_finite_intersection_union_dual[K](n: Set[Set[K]]) {
+    sets_of_finite_intersection(compl_of_sets(n)) = compl_of_sets(sets_of_finite_union(n))
+} by {
+    forall(s: Set[K]) {
+        if s ∈ sets_of_finite_intersection(compl_of_sets(n)) {
+            let c: Set[Set[K]] satisfy {
+                c ⊆ compl_of_sets(n) and c.is_finite and s = intersection(c)
+            }
+            s = union(compl_of_sets(c)).c
+            forall(t: Set[K]) {
+                if t ∈ compl_of_sets(c) {
+                    t.c ∈ c
+                    t.c ∈ compl_of_sets(n)
+                    t ∈ n
+                }
+            }
+            compl_of_sets(c) ⊆ n
+            union(compl_of_sets(c)) ∈ sets_of_finite_union(n)
+            s ∈ compl_of_sets(sets_of_finite_union(n))
+        }
+    }
+    sets_of_finite_intersection(compl_of_sets(n)) ⊆ compl_of_sets(sets_of_finite_union(n))
+
+    forall(s: Set[K]) {
+        if s ∈ compl_of_sets(sets_of_finite_union(n)) {
+            s.c ∈ sets_of_finite_union(n)
+            let c: Set[Set[K]] satisfy {
+                c ⊆ n and c.is_finite and s.c = union(c)
+            }
+            s = union(c).c
+            s = intersection(compl_of_sets(c))
+            forall(t: Set[K]) {
+                if t ∈ compl_of_sets(c) {
+                    t.c ∈ c
+                    t.c ∈ n
+                    t ∈ compl_of_sets(n)
+                }
+            }
+            compl_of_sets(c) ⊆ compl_of_sets(n)
+            compl_of_sets(c).is_finite
+            intersection(compl_of_sets(c)) ∈ sets_of_finite_intersection(compl_of_sets(n))
+            s ∈ sets_of_finite_intersection(compl_of_sets(n))
+        }
+    }
+    sets_of_finite_intersection(compl_of_sets(n)) ⊇ compl_of_sets(sets_of_finite_union(n))    
+}
+
+theorem is_compact_finite_intersection_imp_is_compact_finite_open_cover[X: Topology](s: Set[X]) {
+    is_compact_finite_intersection(s) implies is_compact_finite_open_cover(s)
+} by {
+    forall(n: Set[Set[X]]) {
+        if is_nonempty(n) and are_open(n) and s ⊆ union(n) {
+            is_nonempty(n)
+            let sc: Set[X] satisfy { sc ∈ n }
+            sc.c ∈ compl_of_sets(n)
+            is_nonempty(compl_of_sets(n))
+            are_closed(compl_of_sets(n))
+            s ∩ union(n).c = Set[X].empty_set
+            s ∩ intersection(compl_of_sets(n)) = Set[X].empty_set
+            not is_nonempty(s ∩ intersection(compl_of_sets(n)))
+            not set_intersect_sets(sets_of_finite_intersection(compl_of_sets(n)), s)
+            let t: Set[X] satisfy {
+                t ∈ sets_of_finite_intersection(compl_of_sets(n)) and not is_nonempty(t ∩ s)
+            }
+            sets_of_finite_intersection(compl_of_sets(n)) = compl_of_sets(sets_of_finite_union(n))
+            t ∩ s = Set[X].empty_set
+            s ⊆ t.c
+            t ∈ compl_of_sets(sets_of_finite_union(n))
+            t.c ∈ sets_of_finite_union(n)
+            set_cover_by_one_of_sets(s, sets_of_finite_union(n))
+        }
+    }    
+}
+
+theorem is_compact_finite_open_cover_imp_is_compact_finite_intersection[X: Topology](s: Set[X]) {
+    is_compact_finite_open_cover(s) implies is_compact_finite_intersection(s)
+} by {
+    forall(n: Set[Set[X]]) {
+        if is_nonempty(n) and are_closed(n) and set_intersect_sets(sets_of_finite_intersection(n), s) {
+            is_nonempty(n)
+            let sc: Set[X] satisfy { sc ∈ n }
+            sc.c ∈ compl_of_sets(n)
+            is_nonempty(compl_of_sets(n))
+            are_open(compl_of_sets(n))
+            forall(t: Set[X]) {
+                if t ∈ sets_of_finite_union(compl_of_sets(n)) {
+                    t ∈ compl_of_sets(sets_of_finite_intersection(n))
+                    t.c ∈ sets_of_finite_intersection(n)
+                    s ∩ t.c != Set[X].empty_set
+                    not s ⊆ t
+                }
+            }
+            not set_cover_by_one_of_sets(s, sets_of_finite_union(compl_of_sets(n)))
+            not s ⊆ union(compl_of_sets(n))
+            s ∩ union(compl_of_sets(n)).c != Set[X].empty_set
+            union(compl_of_sets(n)).c = intersection(n)
+            s ∩ intersection(n) != Set[X].empty_set
+        }
+    }    
+}
+
+define elem_in_to_closure[X: Topology](n: Set[Set[X]], s_cl: Set[X]) -> Bool {
+    exists(s: Set[X]) {
+        s ∈ n and s_cl = s.closure
+    }
+}
+
+define to_closure[X: Topology](n: Set[Set[X]]) -> Set[Set[X]] {
+    Set[Set[X]].new(elem_in_to_closure(n))
+}
+
+theorem to_closure_preserve_net[X: Topology](n: Set[Set[X]]) {
+    is_net(n) implies is_net(to_closure(n))
+} by {
+    forall(s: Set[X]) {
+        if s ∈ to_closure(n) {
+            let t: Set[X] satisfy {
+                t ∈ n and s = t.closure
+            }
+            is_nonempty(t)
+            s ⊆ s.closure
+            is_nonempty(s)
+        }
+    }
+    no_empty(to_closure(n))
+
+    forall(a1: Set[X], a2: Set[X]) {
+        if a1 ∈ to_closure(n) and a2 ∈ to_closure(n) {
+            let s1: Set[X] satisfy {
+                s1 ∈ n and a1 = s1.closure
+            }
+            elem_in_to_closure(n, a2)
+            let s2: Set[X] satisfy {
+                s2 ∈ n and a2 = s2.closure
+            }
+            let s: Set[X] satisfy {
+                s ∈ n and s ⊆ s1 ∩ s2
+            }
+            s1 ⊆ s1.closure
+            s2 ⊆ s2.closure
+            s1 ∩ s2 ⊆ s1.closure ∩ s2.closure
+            s ⊆ s1.closure ∩ s2.closure
+            s.closure ⊆ (s1.closure ∩ s2.closure).closure
+            (s1.closure ∩ s2.closure).is_closed
+            (s1.closure ∩ s2.closure).closure = s1.closure ∩ s2.closure
+            s.closure ∈ to_closure(n)
+            s.closure ⊆ a1 ∩ a2
+            s.closure ∈ to_closure(n) and s.closure ⊆ a1 ∩ a2 
+        }
+    }
+    subset_two_intersection_helper(to_closure(n))
+    subset_two_intersection(to_closure(n))
+}

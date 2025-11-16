@@ -727,6 +727,10 @@ theorem union_of_unique_list[K](list: List[Set[K]]) {
     union_of_list(list.unique) = union_of_list(list)
 }
 
+theorem two_intersection_from_general[K](a1: Set[K], a2: Set[K]) {
+    a1 ∩ a2 = intersection(list_to_set(List.cons(a1, List.singleton(a2))))
+} 
+
 /// A finite set is a `Set` bundled with a finiteness proof.
 structure Finite_Set[T] {
     /// The underlying set.

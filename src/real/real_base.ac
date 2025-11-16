@@ -1368,7 +1368,26 @@ instance ℝ: Add {
 }
 
 attributes ℝ {
-    let 1 = ℝ.from_rat(ℚ.1)
+    /// The real one.
+    let 1: ℝ = ℝ.from_rat(ℚ.1)
+    /// The real two.
+    let 2: ℝ = ℝ.from_rat(ℚ.2)
+    /// The real three.
+    let 3: ℝ = ℝ.from_rat(ℚ.3)
+    /// The real four.
+    let 4: ℝ = ℝ.from_rat(ℚ.4)
+    /// The real five.
+    let 5: ℝ = ℝ.from_rat(ℚ.5)
+    /// The real six.
+    let 6: ℝ = ℝ.from_rat(ℚ.6)
+    /// The real seven.
+    let 7: ℝ = ℝ.from_rat(ℚ.7)
+    /// The real eight.
+    let 8: ℝ = ℝ.from_rat(ℚ.8)
+    /// The real nine.
+    let 9: ℝ = ℝ.from_rat(ℚ.9)
+    /// The real ten.
+    let 10: ℝ = ℝ.from_rat(ℚ.10)
 
     /// The sign of this ℝ number as a unit value (`-1` for negative, `1` for non-negative).
     define unit_sign(self) -> ℝ {
@@ -3932,3 +3951,65 @@ theorem field_reciprocal_left(f: ℝ) {
 }
 
 instance ℝ: Ordered_Field
+
+theorem lt_limit_to_lte_add(a: ℝ, b: ℝ) {
+    forall(ε: ℝ) {
+        ε > 0 implies a < b + ε
+    } implies a <= b
+} by {
+    if a > b {
+        let ε = a - b
+        ε > 0
+        b + ε = a
+        a < a
+        false
+    }
+}
+
+theorem lt_limit_to_lte_sub(a: ℝ, b: ℝ) {
+    forall(ε: ℝ) {
+        ε > 0 implies a - ε < b
+    } implies a <= b
+} by {
+    forall(ε: ℝ) {
+        ε > 0 implies a < b + ε
+    }
+}
+
+theorem two_is_pos {
+    2 > 0
+}
+
+theorem half_is_pos {
+    1/2 > 0
+}
+
+theorem one_plus_one_eq_two(r: ℝ) {
+    1 + 1 = 2
+}
+
+theorem times_two(r: ℝ) {
+    r + r = 2 ⋅ r
+} by {
+    if r = 0 {
+        r + r = 2 ⋅ r
+    } else {
+        r != 0
+        (r + r) ⋅ 1/r = 2 ⋅ (r ⋅ 1/r)
+        1 + 1 = 2
+    }
+}
+
+theorem times_two_half(r: ℝ) {
+    r/2 + r/2 = r
+} by {
+    2 != 0
+    2 ⋅ r/2 = r
+}
+
+theorem half_lt_one {
+    1/2 < 1
+} by {
+    1/2 > 0
+    1/2 < 1/2 + 1/2
+}

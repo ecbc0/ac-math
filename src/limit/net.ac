@@ -1,4 +1,4 @@
-from finite_set import Set, List, list_to_set, intersection_of_list_recursion
+from finite_set import Set, List, list_to_set, intersection_of_list_recursion, intersection_of_list
 from set import intersection, elem_in_intersection_general, is_nonempty
 from order import Partial_Order, Linear_Order, is_acyclic, is_transitive, is_reflexive, is_antisymmetric, is_nonreflexive, lte_from, lt_from, lte_to_lt_partial_order, Partial_Order_Lte
 from nat import ℕ
@@ -29,6 +29,25 @@ theorem subset_two_intersection_helper[K](sets: Set[Set[K]]) {
             b ∈ sets and b ⊆ a1 ∩ a2
         }
     } implies subset_two_intersection(sets) 
+}
+
+theorem subset_two_intersection_helper_imp_by[T](sets: Set[Set[T]]) {
+    subset_two_intersection(sets) implies (
+        forall(a1: Set[T], a2: Set[T]) {
+            a1 ∈ sets and a2 ∈ sets implies exists(b: Set[T]) {
+                b ∈ sets and b ⊆ a1 and b ⊆ a2
+            }
+        } 
+    )
+} by {
+    forall(a1: Set[T], a2: Set[T]) {
+        if a1 ∈ sets and a2 ∈ sets { 
+            let (b: Set[T]) satisfy {
+                b ∈ sets and b ⊆ a1 ∩ a2
+            }
+            b ∈ sets and b ⊆ a1 and b ⊆ a2
+        }
+    } 
 }
 
 define is_net[K](sets: Set[Set[K]]) -> Bool {
@@ -73,22 +92,23 @@ typeclass N: Net extends Partial_Order {
     }
 }
 
-attributes N: Net {
-    define finer(self, other: N) -> Bool {
-        forall(b: N) {
-            exists(a: N) {
-                a <= b
-            }
-        }
-    }
+// // to define finer we need two differnt Net instance extends a same Partial_Order instance ... and dependent type? 
+// attributes N: Net {
+//     define finer[M: Net] -> Bool {
+//         forall(b: M) {
+//             exists(a) {
+//                 a <= b
+//             }
+//         }
+//     }
 
-    define same_limit(self, other: N) -> Bool {
-        self.finer(other) and other.finer(self)
-    }
-}
+//     define same_limit(self, other: N) -> Bool {
+//         self.finer(other) and other.finer(self)
+//     }
+// }
 
 // Alternative, you can use "image of net" and then use finer
-define is_limit[K: Net, L: Net](source_net: K, target_net: L, f: K -> L) -> Bool {
+define is_net_limit[K: Net, L: Net](f: K -> L) -> Bool {
     forall(b: L) {
         exists(a: K) {
             f(a) <= b
@@ -96,11 +116,38 @@ define is_limit[K: Net, L: Net](source_net: K, target_net: L, f: K -> L) -> Bool
     }
 }
 
+define have_common_pt[K](n: Set[Set[K]], x: K) -> Bool {
+    forall(s: Set[K]) {
+        s ∈ n implies x ∈ s
+        // Alternative: use intersection to define
+    }
+}
+
 attributes Set_Net[K] {
     define have_common_pt(self, x: K) -> Bool {
-        forall(a: Set[K]) {
-            a ∈ self.sets implies x ∈ a
-            // Alternative: use intersection to define
+        have_common_pt(self.sets, x)
+    }
+}
+
+attributes Set_Net[K] {
+    define finer(self, other: Set_Net[K]) -> Bool {
+        forall(b: Set[K]) {
+            b ∈ other.sets implies exists(a: Set[K]) {
+                a ∈ self.sets and a ⊆ b
+            }
+        }
+    }
+
+    define same_limit(self, other: Set_Net[K]) -> Bool {
+        self.finer(other) and other.finer(self)
+    }
+}
+
+// Alternative, you can use "image of net" and then use finer
+define is_limit[K, L](source_net: Set_Net[K], target_net: Set_Net[L], f: K -> L) -> Bool {
+    forall(b: Set[L]) {
+        b ∈ target_net.sets implies exists(a: Set[K]) {
+            a ∈ source_net.sets and a.image(f) ⊆ b
         }
     }
 }
@@ -367,4 +414,141 @@ theorem sets_of_finite_intersection_preserve_net_no_empty[K](n: Set[Set[K]], lis
 
 theorem sets_of_finite_intersection_preserve_net[K](n: Set[Set[K]]) {
     is_net(n) and is_nonempty (n) implies is_net(sets_of_finite_intersection(n))
+}
+
+theorem net_subset_finite_intersection[K](n: Set[Set[K]], c: Set[Set[K]]) {
+    is_nonempty(n) and is_net(n) and c ⊆ n and c.is_finite implies exists(t: Set[K]) { t ∈ n and t ⊆ intersection(c) }
+} by {
+    let l: List[Set[K]] satisfy {
+        c.have_exact_list(l)
+    }
+    list_subset_sets(n, l)
+    let (t: Set[K]) satisfy { t ∈ n and t ⊆ intersection_of_list_recursion(l) }
+    intersection_of_list_recursion(l) = intersection(c)
+}
+
+theorem sets_of_finite_intersection_superset[K](n: Set[Set[K]]) {
+    sets_of_finite_intersection(n) ⊇ n
+} by {
+    forall(s: Set[K]) {
+        if s ∈ n {
+            let l = List[Set[K]].singleton(s)
+            intersection_of_list(l) = s
+            intersection(list_to_set(l)) = intersection_of_list(l) 
+            forall(t: Set[K]) {
+                if t = s {
+                    t ∈ l
+                    t ∈ list_to_set(l)
+                    list_to_set(l).contains(t) = Set[Set[K]].singleton(s).contains(t)
+                } else {
+                    t ∉ l
+                    t ∉ list_to_set(l)
+                    list_to_set(l).contains(t) = Set[Set[K]].singleton(s).contains(t)
+                }
+                list_to_set(l).contains(t) = Set[Set[K]].singleton(s).contains(t)
+            }
+            list_to_set(l).contains = Set[Set[K]].singleton(s).contains
+            list_to_set(l) = Set[Set[K]].singleton(s)
+            list_to_set(l) ⊆ n
+            list_to_set(l).have_super_list(l)
+            list_to_set(l).is_finite
+            intersection(list_to_set(l)) = s
+            s ∈ sets_of_finite_intersection(n)
+        }
+    }
+}
+
+theorem sets_of_finite_intersection_preserve_intersection[K](n: Set[Set[K]]) {
+    intersection(sets_of_finite_intersection(n)) = intersection(n)
+} by {
+    sets_of_finite_intersection(n) ⊇ n
+    intersection(sets_of_finite_intersection(n)) ⊆ intersection(n)
+
+    forall(x: K) {
+        if x ∈ intersection(n) {
+            forall(s: Set[K]) {
+                if s ∈ sets_of_finite_intersection(n) {
+                    let c: Set[Set[K]] satisfy {
+                        c ⊆ n and c.is_finite and s = intersection(c)
+                    }
+                    intersection(n) ⊆ intersection(c)
+                    x ∈ s
+                }
+            }
+            x ∈ intersection(sets_of_finite_intersection(n))
+        }
+    }
+    intersection(sets_of_finite_intersection(n)) ⊇ intersection(n)
+}
+
+theorem net_from_sets_of_finite_intersection[K](n: Set[Set[K]]) {
+    no_empty(sets_of_finite_intersection(n)) implies is_net(sets_of_finite_intersection(n))
+} by {
+    forall(a1: Set[K], a2: Set[K]) {
+        if a1 ∈ sets_of_finite_intersection(n) and a2 ∈ sets_of_finite_intersection(n) {
+            let a = a1 ∩ a2
+            a ⊆ a1
+            a ⊆ a2
+            a ∈ sets_of_finite_intersection(n)
+        }
+    }
+    subset_two_intersection(sets_of_finite_intersection(n))
+}
+
+define set_intersect_sets[K](n: Set[Set[K]], s: Set[K]) -> Bool {
+    forall(t: Set[K]) {
+        t ∈ n implies is_nonempty(s ∩ t)
+    }
+}
+
+define elem_in_net_intersect_set[K](n: Set[Set[K]], s: Set[K], sub: Set[K]) -> Bool {
+    set_intersect_sets(n, s) and exists(t: Set[K]) {
+        t ∈ n and sub = s ∩ t
+    }
+}
+
+define net_intersect_set[K](n: Set[Set[K]], s: Set[K]) -> Set[Set[K]] {
+    Set[Set[K]].new(elem_in_net_intersect_set(n, s))
+}
+
+theorem net_intersect_set_is_net[K](n: Set[Set[K]], s: Set[K]) {
+    is_net(n) and set_intersect_sets(n, s) implies is_net(net_intersect_set(n, s))
+} by {
+    forall(sub: Set[K]) {
+        if sub ∈ net_intersect_set(n, s) {
+            set_intersect_sets(n, s)
+            let (t: Set[K]) satisfy {
+                t ∈ n and sub = s ∩ t
+            }
+            is_nonempty(s ∩ t)
+            is_nonempty(sub)
+        }
+    }
+    no_empty(net_intersect_set(n, s))
+
+    forall(a1: Set[K], a2: Set[K]) {
+        if a1 ∈ net_intersect_set(n, s) and a2 ∈ net_intersect_set(n, s) {
+            let (t1: Set[K]) satisfy {
+                t1 ∈ n and a1 = s ∩ t1
+            }
+            elem_in_net_intersect_set(n, s, a2)
+            let (t2: Set[K]) satisfy {
+                t2 ∈ n and a2 = s ∩ t2
+            }
+            let t: Set[K] satisfy {
+                t ∈ n and t ⊆ t1 ∩ t2
+            }
+            a1 ∩ a2 = (s ∩ t1) ∩ (s ∩ t2)
+            (s ∩ t1) ∩ (s ∩ t2) = (s ∩ s) ∩ t1 ∩ t2
+            (s ∩ s) ∩ t1 ∩ t2 = s ∩ (t1 ∩ t2)
+            a1 ∩ a2 = s ∩ (t1 ∩ t2)
+            let a = s ∩ t
+            a ∈ net_intersect_set(n, s)
+            s ∩ t ⊆ s ∩ (t1 ∩ t2)
+            a ⊆ a1 ∩ a2
+            a ∈ net_intersect_set(n, s) and a ⊆ a1 ∩ a2
+        }
+    }
+    subset_two_intersection_helper(net_intersect_set(n, s))
+    subset_two_intersection(net_intersect_set(n, s))
 }

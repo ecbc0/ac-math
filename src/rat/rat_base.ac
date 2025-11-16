@@ -1751,6 +1751,7 @@ theorem from_nat_add(a: ℕ, b: ℕ) {
     ℚ.from_nat(a + b) = ℚ.from_int(ℤ.from_nat(a) + ℤ.from_nat(b))
 }
 
+// The "algebraic integer" method
 theorem square_root_of_two_is_not_rat(x: ℚ) {
     not x^(ℕ.2) = 2
 } by {

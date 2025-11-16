@@ -246,8 +246,8 @@
 {"goal":"f(ℕ.0)","proof":["a^ℕ.0 > 0 = f(ℕ.0)","not a^ℕ.0 > 0","1 > 0 = 0 < 1","0 < 1 = 1.is_positive","a^ℕ.0 = 1","not 1 > 0","not 0 < 1","not 1.is_positive"]}
 {"goal":"f(n)","proof":["let s0: (ℕ -> Bool) -> ℕ satisfy { forall(x0: ℕ -> Bool, x1: ℕ) { not x0(ℕ.0) or x0(s0(x0)) or x0(x1) } and forall(x2: ℕ -> Bool, x3: ℕ) { not x2(s0(x2).suc) or not x2(ℕ.0) or x2(x3) } }","a^s0(f) > 0 = f(s0(f))","a^s0(f).suc > 0 = f(s0(f).suc)","s0(f).suc != s0(f).suc or a ⋅ a^s0(f) = a^s0(f).suc","not a > 0 or a ⋅ a^s0(f) > 0 = a^s0(f) > 0","not f(s0(f).suc) or not f(ℕ.0) or f(n)","not f(s0(f).suc)","not f(ℕ.0) or f(s0(f)) or f(n)","f(s0(f))","a ⋅ a^s0(f) = a^s0(f).suc","a ⋅ a^s0(f) > 0 = a^s0(f) > 0"]}
 {"goal":"pos_pow","proof":["a^n > 0 = f(n)"]}
-{"goal":"sq_eq_mul","proof":["a^ℕ.1 ⋅ a^ℕ.1 = a^(ℕ.1 + ℕ.1)","a^ℕ.1 = a"]}
-{"goal":"sq_pos","proof":["not a < 0 or not a < 0 or a ⋅ a > 0","not a > 0 or a^ℕ.2 > 0","not a > 0","a > 0 or a < 0 or 0 = a","a < 0","a^ℕ.2 = a ⋅ a","not a ⋅ a > 0"]}
+{"goal":"square_eq_mul","proof":["a^ℕ.1 ⋅ a^ℕ.1 = a^(ℕ.1 + ℕ.1)","a^ℕ.1 = a"]}
+{"goal":"square_pos","proof":["not a < 0 or not a < 0 or a ⋅ a > 0","not a > 0 or a^ℕ.2 > 0","not a > 0","a > 0 or a < 0 or 0 = a","a < 0","a ⋅ a = a^ℕ.2","not a ⋅ a > 0"]}
 {"goal":"from_nat(abs(a)) = a","proof":["not a >= 0 or from_nat(abs(a)) = a","not a >= 0","a >= 0 = 0 <= a","not 0 <= a","a > 0 = 0 < a","0 < a","not 0 < a or 0 <= a"]}
 {"goal":"a.abs = a","proof":["not lib(order).Partial_Order.gt[ℤ](a, 0) or a.abs = a","not lib(order).Partial_Order.gt[ℤ](a, 0)","0 < a = lib(order).Partial_Order.gt[ℤ](a, 0)","a > 0 = 0 < a"]}
 {"goal":"abs_by_from_nat(a)","proof":["from_nat(abs(a)) != a.abs or abs_by_from_nat(a)","from_nat(abs(a)) = a.abs","from_nat(abs(a)) != a.abs"]}
@@ -323,3 +323,30 @@
 {"goal":"0 <= m","proof":["not 0 < m or 0 <= m","not 0 < m","m.is_positive or m.is_negative or 0 = m","0 < m = m.is_positive","not m.is_positive","0 = m","0 != m or 0 <= m"]}
 {"goal":"division_theorem(m, n)","proof":["let (s0: (ℤ, ℤ) -> ℤ, s1: (ℤ, ℤ) -> ℤ) satisfy { forall(x0: ℤ, x1: ℤ) { not 0 <= x0 or not x1.is_positive or 0 <= s1(x0, x1) } and forall(x2: ℤ, x3: ℤ) { not 0 <= x2 or not x3.is_positive or s1(x2, x3) < x3 } and forall(x4: ℤ, x5: ℤ) { not 0 <= x4 or not x5.is_positive or s0(x4, x5) ⋅ x5 + s1(x4, x5) = x4 } }","s0(m, n) ⋅ n + s1(m, n) != m or not 0 <= s1(m, n) or not s1(m, n) < n or division_theorem(m, n)","not 0 <= m or not n.is_positive or s0(m, n) ⋅ n + s1(m, n) = m","not 0 <= m or not n.is_positive or s1(m, n) < n","not 0 <= m or not n.is_positive or 0 <= s1(m, n)","s0(m, n) ⋅ n + s1(m, n) != m or not 0 <= s1(m, n) or not s1(m, n) < n","not n.is_positive or 0 <= s1(m, n)","0 <= s1(m, n)","not n.is_positive or s1(m, n) < n","s1(m, n) < n","not 0 <= m or s0(m, n) ⋅ n + s1(m, n) = m","s0(m, n) ⋅ n + s1(m, n) = m"]}
 {"goal":"division_theorem","proof":["let (s0: (ℤ, ℤ) -> ℤ, s1: (ℤ, ℤ) -> ℤ) satisfy { forall(x0: ℤ, x1: ℤ) { not x0.is_positive or not division_theorem(x1, x0) or 0 <= s1(x1, x0) } and forall(x2: ℤ, x3: ℤ) { not x2.is_positive or not division_theorem(x3, x2) or s1(x3, x2) < x2 } and forall(x4: ℤ, x5: ℤ) { not x4.is_positive or not division_theorem(x5, x4) or s0(x5, x4) ⋅ x4 + s1(x5, x4) = x5 } and forall(x6: ℤ, x7: ℤ) { x6.is_positive or division_theorem(x7, x6) } and forall(x8: ℤ, x9: ℤ, x10: ℤ, x11: ℤ) { x8 ⋅ x9 + x10 != x11 or not 0 <= x10 or not x10 < x9 or division_theorem(x11, x9) } }","s0(m, n) ⋅ n + s1(m, n) != m or not 0 <= s1(m, n) or not s1(m, n) < n","not n.is_positive or not division_theorem(m, n) or s1(m, n) < n","not n.is_positive or not division_theorem(m, n) or 0 <= s1(m, n)","not n.is_positive or not division_theorem(m, n) or s0(m, n) ⋅ n + s1(m, n) = m","0 <= s1(m, n)","s1(m, n) < n","s0(m, n) ⋅ n + s1(m, n) = m"]}
+{"goal":"a^ℕ.0 = 1","proof":["ℕ.0 != ℕ.0 or a^ℕ.0 = 1"]}
+{"goal":"ℕ.1 >= ℕ.0","proof":["ℕ.1 >= ℕ.0 = ℕ.0 <= ℕ.1","not ℕ.0 <= ℕ.1","ℕ.1 - ℕ.1 <= ℕ.1"]}
+{"goal":"abs(1) = ℕ.1","proof":["abs(from_nat(ℕ.1)) = ℕ.1","abs(from_nat(ℕ.1)) != abs(1)","from_nat(ℕ.1) != 1"]}
+{"goal":"abs(a)^ℕ.0 = ℕ.1","proof":["ℕ.0 != ℕ.0 or abs(a)^ℕ.0 = ℕ.1"]}
+{"goal":"f(ℕ.0)","proof":["abs(a)^ℕ.0 != abs(a^ℕ.0) or f(ℕ.0)","abs(a)^ℕ.0 != abs(a^ℕ.0)"]}
+{"goal":"abs(a^x) = abs(a)^x","proof":["not f(x) or abs(a)^x = abs(a^x)"]}
+{"goal":"abs(a^x.suc) = abs(a)^x.suc","proof":["x.suc != x.suc or a ⋅ a^x = a^x.suc","x.suc != x.suc or abs(a) ⋅ abs(a)^x = abs(a)^x.suc","abs(a) ⋅ abs(a^x) = abs(a ⋅ a^x)","abs(a) ⋅ abs(a)^x = abs(a)^x.suc","a ⋅ a^x = a^x.suc"]}
+{"goal":"f(x.suc)","proof":["abs(a)^x.suc != abs(a^x.suc) or f(x.suc)"]}
+{"goal":"f(n)","proof":["let s0: (ℕ -> Bool) -> ℕ satisfy { forall(x0: ℕ -> Bool, x1: ℕ) { not x0(ℕ.0) or x0(s0(x0)) or x0(x1) } and forall(x2: ℕ -> Bool, x3: ℕ) { not x2(s0(x2).suc) or not x2(ℕ.0) or x2(x3) } }","not f(s0(f)) or f(s0(f).suc)","not f(s0(f).suc) or not f(ℕ.0) or f(n)","not f(s0(f).suc)","not f(ℕ.0) or f(s0(f)) or f(n)","not f(s0(f))","f(s0(f))"]}
+{"goal":"abs_pow_comm","proof":["not f(n) or abs(a)^n = abs(a^n)"]}
+{"goal":"abs(p).divides(abs(a^n))","proof":["not p.divides(a^n) or abs(p).divides(abs(a^n))"]}
+{"goal":"abs(p).divides(abs(a)^n)","proof":["abs(a)^n = abs(a^n)"]}
+{"goal":"abs(p).divides(abs(a))","proof":["not abs(p).divides(abs(a)^n) or not abs(p).is_prime or abs(p).divides(abs(a)) or ℕ.0 = n","not abs(p).is_prime","abs(p).is_prime = p.is_prime"]}
+{"goal":"p.divides(a)","proof":["not abs(p).divides(abs(a)) or p.divides(a)","not abs(p).divides(abs(a))","not p.abs.divides(a.abs) or abs(p.abs).divides(abs(a.abs))","from_nat(abs(a)) = a.abs","from_nat(abs(p)) = p.abs","abs(from_nat(abs(a))) = abs(a)","abs(from_nat(abs(p))) = abs(p)","abs(p.abs).divides(abs(a.abs))"]}
+{"goal":"prime_divide_power","proof":[]}
+{"goal":"nat_relative_prime(abs(a), abs(b))","proof":["nat_relative_prime(abs(a), abs(b)) = relative_prime(a, b)"]}
+{"goal":"nat_relative_prime(abs(a)^n, abs(b)^m)","proof":["not nat_relative_prime(abs(a), abs(b)) or nat_relative_prime(abs(a)^n, abs(b)^m) or n = ℕ.0 or m = ℕ.0"]}
+{"goal":"relative_prime(a^n, b^m)","proof":["abs(a)^n = abs(a^n)","abs(b)^m = abs(b^m)","nat_relative_prime(abs(a^n), abs(b^m)) = relative_prime(a^n, b^m)"]}
+{"goal":"power_preserve_relative_prime","proof":[]}
+{"goal":"power_preserve_gcd_one","proof":["not relative_prime(a, b) or relative_prime(a^n, b^m) or n = ℕ.0 or m = ℕ.0","gcd(a, b) != 1 or relative_prime(a, b) or 0 = a or 0 = b","not relative_prime(a^n, b^m) or gcd(a^n, b^m) = 1","not relative_prime(a^n, b^m)","relative_prime(a, b)","not relative_prime(a, b)"]}
+{"goal":"nat_gcd(abs(a), abs(b)) = ℕ.1","proof":["from_nat(nat_gcd(abs(a), abs(b))) = gcd(a, b)","abs(from_nat(nat_gcd(abs(a), abs(b)))) = nat_gcd(abs(a), abs(b))","abs(from_nat(ℕ.1)) = ℕ.1"]}
+{"goal":"abs(a) != ℕ.0","proof":["abs(a) != ℕ.0 or 0 = a"]}
+{"goal":"abs(a).divides(abs(b))","proof":["not a.divides(b) or abs(a).divides(abs(b))"]}
+{"goal":"abs(a) = ℕ.1","proof":["nat_gcd(abs(a), abs(b)) != ℕ.1 or not abs(a).divides(abs(b)) or abs(a) = ℕ.1 or abs(a) = ℕ.0"]}
+{"goal":"gcd_one_and_divide_imp_one","proof":["not is_unit(a) or -1 = a or 1 = a","not is_unit(a)","abs(a) != ℕ.1 or is_unit(a)"]}
+{"goal":"sq_eq_mul","proof":["a^ℕ.1 ⋅ a^ℕ.1 = a^(ℕ.1 + ℕ.1)","a^ℕ.1 = a"]}
+{"goal":"sq_pos","proof":["not a < 0 or not a < 0 or a ⋅ a > 0","not a > 0 or a^ℕ.2 > 0","not a > 0","a > 0 or a < 0 or 0 = a","a < 0","a^ℕ.2 = a ⋅ a","not a ⋅ a > 0"]}

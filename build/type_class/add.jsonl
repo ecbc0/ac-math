@@ -57,3 +57,277 @@
 {"goal":"A.0 = a + a","proof":["a + -a != A.0","a + -a = a - a","a - a != A.0","a != a or a - a = A.0"]}
 {"goal":"false","proof":[]}
 {"goal":"fix_neg","proof":[]}
+{"goal":"a.zpow(ℤ.neg_suc(l)).reciprocal = a.reciprocal.zpow(ℤ.neg_suc(l))","proof":["not f(l) or a.reciprocal.zpow(ℤ.pos_suc(l)) = a.zpow(ℤ.neg_suc(l))","ℤ.neg_suc(l) != ℤ.neg_suc(l) or (a.reciprocal^l.suc).reciprocal = a.reciprocal.zpow(ℤ.neg_suc(l))","ℤ.pos_suc(l) != ℤ.pos_suc(l) or a.reciprocal.zpow(ℤ.pos_suc(l)) = a.reciprocal^l.suc","a.reciprocal.zpow(ℤ.pos_suc(l)) = a.reciprocal^l.suc","(a.reciprocal^l.suc).reciprocal = a.reciprocal.zpow(ℤ.neg_suc(l))","(a.reciprocal^l.suc).reciprocal != a.zpow(ℤ.neg_suc(l)).reciprocal","a.reciprocal^l.suc != a.zpow(ℤ.neg_suc(l))","a.reciprocal.zpow(ℤ.pos_suc(l)) = a.zpow(ℤ.neg_suc(l))","a.reciprocal.zpow(ℤ.pos_suc(l)) != a.zpow(ℤ.neg_suc(l))"]}
+{"goal":"-a ⋅ -F.1 / a = a ⋅ F.1 / a","proof":["-a ⋅ -F.1 / a = a ⋅ F.1 / a"]}
+{"goal":"-a ⋅ -F.1 / a = a ⋅ F.1 / a","proof":["-a ⋅ -F.1 / a = a ⋅ F.1 / a"]}
+{"goal":"-a ⋅ -F.1 / a = a ⋅ F.1 / a","proof":["-a ⋅ -F.1 / a = a ⋅ F.1 / a"]}
+{"goal":"-a ⋅ -F.1 / a = a ⋅ F.1 / a","proof":["-a ⋅ -F.1 / a = a ⋅ F.1 / a"]}
+{"goal":"-a ⋅ -F.1 / a = a ⋅ F.1 / a","proof":["-a ⋅ -F.1 / a = a ⋅ F.1 / a"]}
+{"goal":"-a ⋅ -F.1 / a = a ⋅ F.1 / a","proof":["-a ⋅ -F.1 / a = a ⋅ F.1 / a"]}
+{"goal":"-a ⋅ -F.1 / a = a ⋅ F.1 / a","proof":["-a ⋅ -F.1 / a = a ⋅ F.1 / a"]}
+{"goal":"-a ⋅ -F.1 / a = a ⋅ F.1 / a","proof":["-a ⋅ -F.1 / a = a ⋅ F.1 / a"]}
+{"goal":"-a ⋅ -F.1 / a = a ⋅ F.1 / a","proof":["-a ⋅ -F.1 / a = a ⋅ F.1 / a"]}
+{"goal":"-a ⋅ -F.1 / a = a ⋅ F.1 / a","proof":["-a ⋅ -F.1 / a = a ⋅ F.1 / a"]}
+{"goal":"-a ⋅ -F.1 / a = a ⋅ F.1 / a","proof":["-a ⋅ -F.1 / a = a ⋅ F.1 / a"]}
+{"goal":"-a ⋅ -F.1 / a = a ⋅ F.1 / a","proof":["-a ⋅ -F.1 / a = a ⋅ F.1 / a"]}
+{"goal":"-a ⋅ -F.1 / a = a ⋅ F.1 / a","proof":["-a ⋅ -F.1 / a = a ⋅ F.1 / a"]}
+{"goal":"-a ⋅ -F.1 / a = a ⋅ F.1 / a","proof":["-a ⋅ -F.1 / a = a ⋅ F.1 / a"]}
+{"goal":"-a ⋅ -F.1 / a = a ⋅ F.1 / a","proof":["-a ⋅ -F.1 / a = a ⋅ F.1 / a"]}
+{"goal":"-a ⋅ -F.1 / a = a ⋅ F.1 / a","proof":["-a ⋅ -F.1 / a = a ⋅ F.1 / a"]}
+{"goal":"-a ⋅ -F.1 / a = a ⋅ F.1 / a","proof":["-a ⋅ -F.1 / a = a ⋅ F.1 / a"]}
+{"goal":"-a ⋅ -F.1 / a = a ⋅ F.1 / a","proof":["-a ⋅ -F.1 / a = a ⋅ F.1 / a"]}
+{"goal":"-a ⋅ -F.1 / a = a ⋅ F.1 / a","proof":["-a ⋅ -F.1 / a = a ⋅ F.1 / a"]}
+{"goal":"mul_div_swap","proof":["a ⋅ c.reciprocal ⋅ b = a ⋅ (c.reciprocal ⋅ b)","a ⋅ c.reciprocal = a / c","b ⋅ c.reciprocal = b / c","c.reciprocal ⋅ b = b ⋅ c.reciprocal"]}
+{"goal":"F.0.zpow(n) = F.0.pow(k.suc)","proof":["ℤ.pos_suc(k) != n or F.0^k.suc = F.0.zpow(n)"]}
+{"goal":"a.reciprocal ⋅ b.reciprocal = (a ⋅ b).reciprocal","proof":["a ⋅ b ⋅ (a.reciprocal ⋅ b.reciprocal) != F.1 or a.reciprocal ⋅ b.reciprocal = (a ⋅ b).reciprocal"]}
+{"goal":"recip_mul","proof":[]}
+{"goal":"ℤ.from_nat(l - k) = n - m","proof":["not k <= l or ℤ.from_nat(l - k) = lib(int.int_base).sub_nat(l, k)","ℤ.from_nat(l) + -ℤ.from_nat(k) = lib(int.int_base).sub_nat(l, k)","n + -m = n - m","ℤ.from_nat(l - k) = lib(int.int_base).sub_nat(l, k)"]}
+{"goal":"use_from_nat_pow","proof":["let s0: (F, ℤ) -> ℕ satisfy { forall(x0: ℤ, x1: F) { not x0 >= ℤ.0 or ℤ.from_nat(s0(x1, x0)) = x0 } and forall(x2: ℤ, x3: F) { not x2 >= ℤ.0 or x3^s0(x3, x2) = x3.zpow(x2) } }","not k >= ℤ.0 or a^s0(a, k) = a.zpow(k)","not k >= ℤ.0 or ℤ.from_nat(s0(a, k)) = k","ℤ.from_nat(s0(a, k)) != ℤ.from_nat(n) or s0(a, k) = n","ℤ.from_nat(s0(a, k)) = k","a^s0(a, k) = a.zpow(k)","a^s0(a, k) != a^n","s0(a, k) != n","ℤ.from_nat(s0(a, k)) = ℤ.from_nat(n)"]}
+{"goal":"a.zpow(n ⋅ m) = a.pow(l ⋅ k)","proof":["not ℤ.from_nat(l ⋅ k) >= ℤ.0 or ℤ.from_nat(l ⋅ k) != ℤ.from_nat(l ⋅ k) or a.zpow(ℤ.from_nat(l ⋅ k)) = a^(l ⋅ k)","ℤ.from_nat(l) ⋅ ℤ.from_nat(k) = ℤ.from_nat(l ⋅ k)","ℤ.from_nat(l ⋅ k) >= ℤ.0","a.zpow(ℤ.from_nat(l ⋅ k)) = a^(l ⋅ k)"]}
+{"goal":"a.reciprocal.pow(l.suc) = a.reciprocal.pow(l) ⋅ a.reciprocal","proof":["l.suc != l.suc or a.reciprocal ⋅ a.reciprocal^l = a.reciprocal^l.suc","a.reciprocal ⋅ a.reciprocal^l = a.reciprocal^l ⋅ a.reciprocal","a.reciprocal ⋅ a.reciprocal^l = a.reciprocal^l.suc"]}
+{"goal":"(a ⋅ b).reciprocal = a.reciprocal ⋅ b.reciprocal","proof":["a.reciprocal ⋅ b.reciprocal != F.0"]}
+{"goal":"F.1 / (F.1 / p) = p","proof":["F.1 / (F.1 / p) = p or F.0 = p"]}
+{"goal":"pow_inverse","proof":[]}
+{"goal":"l <= k","proof":["ℤ.from_nat(l) <= ℤ.from_nat(k) = l <= k","not ℤ.from_nat(l) <= ℤ.from_nat(k)","not n <= ℤ.from_nat(k)","not n <= m","n > m != n <= m","n > m = m < n","not m < n or m <= n","not m < n","n > m or n <= m","not n > m","n > m"]}
+{"goal":"sub_div_distrib","proof":["a ⋅ c.reciprocal - b ⋅ c.reciprocal = (a - b) ⋅ c.reciprocal","(a - b) ⋅ c.reciprocal = (a - b) / c","a ⋅ c.reciprocal = a / c","b ⋅ c.reciprocal = b / c"]}
+{"goal":"pow_add_nonnegative","proof":["let s0: ℕ satisfy { ℤ.from_nat(s0) = m }","let s1: ℕ satisfy { ℤ.from_nat(s1) = n }","lib(int.int_base).sub_nat(n.pos_part + m.pos_part, n.neg_part + m.neg_part) = n + m","not ℤ.from_nat(l + k) >= ℤ.0 or ℤ.from_nat(l + k) != ℤ.from_nat(l + k) or a.zpow(ℤ.from_nat(l + k)) = a^(l + k)","a^l ⋅ a^k = a^(l + k)","ℤ.from_nat(n.pos_part + m.pos_part) + -ℤ.from_nat(n.neg_part + m.neg_part) = lib(int.int_base).sub_nat(n.pos_part + m.pos_part, n.neg_part + m.neg_part)","m.neg_part + n.neg_part = n.neg_part + m.neg_part","ℕ.0 != ℕ.0 or ℤ.from_nat(ℕ.0) = ℤ.0","ℤ.0 != ℤ.0 or -ℤ.0 = ℤ.0","ℤ.from_nat(l + k) + ℤ.0 = ℤ.from_nat(l + k)","ℤ.from_nat(l + k) >= ℤ.0","ℤ.from_nat(s0).neg_part = ℕ.0","ℤ.from_nat(s1).neg_part = ℕ.0","ℤ.from_nat(k).pos_part = k","ℤ.from_nat(l).pos_part = l","ℕ.0 + n.neg_part = n.neg_part","-ℤ.0 = ℤ.0","ℤ.from_nat(ℕ.0) = ℤ.0","a.zpow(ℤ.from_nat(l + k)) = a^(l + k)"]}
+{"goal":"(a.pow(l.suc) ⋅ a).reciprocal = a.pow(l.suc).reciprocal ⋅ a.reciprocal","proof":["(a^l.suc).reciprocal ⋅ a.reciprocal = (a^l.suc ⋅ a).reciprocal"]}
+{"goal":"a.zpow(n) ⋅ a.zpow(m) = a.zpow(m) ⋅ a.reciprocal.zpow(-n)","proof":["a.reciprocal.zpow(-n) ⋅ a.zpow(m) = a.zpow(m) ⋅ a.reciprocal.zpow(-n)"]}
+{"goal":"a.zpow(-n) = a.reciprocal.zpow(ℤ.pos_suc(k))","proof":["a.reciprocal.zpow(ℤ.pos_suc(k)) != a.zpow(ℤ.neg_suc(k))","a.reciprocal.zpow(ℤ.pos_suc(k)) = a.zpow(ℤ.neg_suc(k))"]}
+{"goal":"one_pow","proof":["let (s0: ℤ -> ℕ, s1: ℤ -> ℕ) satisfy { forall(x0: ℤ) { ℤ.pos_suc(s1(x0)) = x0 or ℤ.neg_suc(s0(x0)) = x0 or ℤ.0 = x0 } }","ℤ.neg_suc(s0(n)) != n or (F.1^s0(n).suc).reciprocal = F.1.zpow(n)","ℤ.pos_suc(s1(n)) != n or F.1^s1(n).suc = F.1.zpow(n)","ℤ.pos_suc(s1(n)) = n or ℤ.neg_suc(s0(n)) = n or ℤ.0 = n","F.1.zpow(n) != F.1.reciprocal","ℤ.0 != n or F.1.zpow(n) = F.1","ℤ.0 != n","F.1^s0(n).suc = F.1","F.1^s1(n).suc = F.1","F.1^s1(n).suc != F.1.zpow(n)","ℤ.pos_suc(s1(n)) != n","ℤ.neg_suc(s0(n)) = n","(F.1^s0(n).suc).reciprocal != F.1.zpow(n)","ℤ.neg_suc(s0(n)) != n"]}
+{"goal":"a / b ⋅ b / a = (a ⋅ b) / (a ⋅ b)","proof":["(a ⋅ b) / (b ⋅ a) != (a ⋅ b) / (a ⋅ b)","b ⋅ a != a ⋅ b","b ⋅ a = a ⋅ b"]}
+{"goal":"inverse_inverse","proof":["lib(list.list_base).List.cons(a, lib(list.list_base).List.nil[F]) != lib(list.list_base).List.singleton(a) or ℕ.1 + lib(list.list_base).List.nil[F].find_first_idx(a.reciprocal.reciprocal) = lib(list.list_base).List.singleton(a).find_first_idx(a.reciprocal.reciprocal) or a.reciprocal.reciprocal = a","lib(list.list_base).List.cons(a.reciprocal.reciprocal, lib(list.list_base).List.nil[F]) != lib(list.list_base).List.singleton(a.reciprocal.reciprocal) or lib(list.list_base).List.cons(a.reciprocal.reciprocal, lib(list.list_base).List.nil[F] ∖ a) = lib(list.list_base).List.singleton(a.reciprocal.reciprocal) ∖ a or a.reciprocal.reciprocal = a","lib(list.list_base).List.cons(a, lib(list.list_base).List.nil[F]) != lib(list.list_base).List.cons(a, lib(list.list_base).List.nil[F]) or a != a or lib(list.list_base).List.cons(a, lib(list.list_base).List.nil[F]) ∖ a = lib(list.list_base).List.nil[F] ∖ a","let s0: ℕ satisfy { true }","s0 + ℕ.0 != s0 + ℕ.0 or lib(int.int_base).sub_nat(s0 + ℕ.0, s0) = ℤ.from_nat(ℕ.0)","s0 + ℕ.1 != s0 + ℕ.1 or lib(int.int_base).sub_nat(s0 + ℕ.1, s0) = ℤ.from_nat(ℕ.1)","a.reciprocal ⋅ a != F.1 or a.reciprocal.reciprocal = a","a.reciprocal ⋅ a != F.1","a.reciprocal ⋅ a = F.1 or F.0 = a","lib(list.list_base).List.singleton(a).map(F.reciprocal) = lib(list.list_base).List.singleton(a.reciprocal)","lib(list.list_base).List.singleton(a.reciprocal).map(F.reciprocal) = lib(list.list_base).List.singleton(a.reciprocal.reciprocal)","lib(list.list_base).List.nil[F] != lib(list.list_base).List.nil[F] or lib(list.list_base).List.nil[F].find_first_idx(a.reciprocal.reciprocal) = ℕ.0","lib(list.list_base).List.nil[F] != lib(list.list_base).List.nil[F] or lib(list.list_base).List.nil[F] ∖ a = lib(list.list_base).List.nil[F]","lib(list.list_base).List.cons(a, lib(list.list_base).List.nil[F]) = lib(list.list_base).List.singleton(a)","lib(list.list_base).List.cons(a.reciprocal, lib(list.list_base).List.nil[F]) = lib(list.list_base).List.singleton(a.reciprocal)","lib(list.list_base).List.cons(a.reciprocal.reciprocal, lib(list.list_base).List.nil[F]) = lib(list.list_base).List.singleton(a.reciprocal.reciprocal)","ℕ.0 != ℕ.0 or ℤ.from_nat(ℕ.0) = ℤ.0","ℕ.1 + ℕ.0 = ℕ.1","ℤ.from_nat(ℕ.0) = ℤ.0","lib(list.list_base).List.nil[F] ∖ a = lib(list.list_base).List.nil[F]","lib(list.list_base).List.nil[F].find_first_idx(a.reciprocal.reciprocal) = ℕ.0","lib(int.int_base).sub_nat(s0 + ℕ.0, s0) = ℤ.from_nat(ℕ.0)","lib(int.int_base).sub_nat(s0 + ℕ.1, s0) = ℤ.from_nat(ℕ.1)","a != a or lib(list.list_base).List.cons(a, lib(list.list_base).List.nil[F]) ∖ a = lib(list.list_base).List.nil[F] ∖ a","lib(list.list_base).List.cons(a.reciprocal.reciprocal, lib(list.list_base).List.nil[F]) != lib(list.list_base).List.singleton(a.reciprocal.reciprocal) or lib(list.list_base).List.cons(a.reciprocal.reciprocal, lib(list.list_base).List.nil[F] ∖ a) = lib(list.list_base).List.singleton(a.reciprocal.reciprocal) ∖ a","lib(list.list_base).List.cons(a, lib(list.list_base).List.nil[F]) != lib(list.list_base).List.singleton(a) or ℕ.1 + lib(list.list_base).List.nil[F].find_first_idx(a.reciprocal.reciprocal) = lib(list.list_base).List.singleton(a).find_first_idx(a.reciprocal.reciprocal)","lib(list.list_base).List.cons(a, lib(list.list_base).List.nil[F]) ∖ a = lib(list.list_base).List.nil[F] ∖ a","ℕ.1 + lib(list.list_base).List.nil[F].find_first_idx(a.reciprocal.reciprocal) = lib(list.list_base).List.singleton(a).find_first_idx(a.reciprocal.reciprocal)","lib(list.list_base).List.cons(a.reciprocal.reciprocal, lib(list.list_base).List.nil[F] ∖ a) = lib(list.list_base).List.singleton(a.reciprocal.reciprocal) ∖ a","F.0 = a"]}
+{"goal":"a.reciprocal ⋅ a ⋅ b = a.reciprocal ⋅ F.1","proof":["a.reciprocal ⋅ (a ⋅ b) = a.reciprocal ⋅ a ⋅ b"]}
+{"goal":"l.suc > n","proof":["n < l + ℕ.1 = n <= l","l >= n = n <= l","l.suc > n = n < l.suc","l + ℕ.1 = ℕ.1 + l","ℕ.1 + l = l.suc"]}
+{"goal":"div_reciprocal","proof":["a ⋅ b ⋅ F.1 / (a ⋅ b) != a / b ⋅ b / a"]}
+{"goal":"a.reciprocal ⋅ b.reciprocal = F.0","proof":["F.0 ⋅ b.reciprocal != F.0","a ⋅ b.reciprocal != F.0","F.0 != a or a ⋅ b.reciprocal = F.0"]}
+{"goal":"a.reciprocal ⋅ b.reciprocal = F.0","proof":["a.reciprocal ⋅ F.0 != F.0","a.reciprocal ⋅ b != F.0","F.0 != b or a.reciprocal ⋅ b = F.0"]}
+{"goal":"mul_cancels_right","proof":[]}
+{"goal":"(a ⋅ b) / b = a ⋅ F.1","proof":["a ⋅ b / b != a ⋅ F.1","b / b != F.1","b ⋅ F.1 / b = F.1 or F.0 = b","b ⋅ F.1 / b = b / b","b ⋅ F.1 / b = F.1","b ⋅ F.1 / b != F.1"]}
+{"goal":"a.zpow(n).zpow(m) = a.reciprocal.zpow(-n).zpow(-m).reciprocal","proof":["a.reciprocal.zpow(-n).zpow(-m).reciprocal = a.reciprocal.zpow(-n).zpow(--m)","a.reciprocal.zpow(-n) = a.zpow(--n)","--m = m","--n = n"]}
+{"goal":"F.1 / (F.1 / q) = q","proof":["F.1 / (F.1 / q) = q or F.0 = q"]}
+{"goal":"a / b ⋅ b / a = (a ⋅ b) / (b ⋅ a)","proof":["a / b ⋅ b / a = (a ⋅ b) / (b ⋅ a)"]}
+{"goal":"zero_pow_nonnegative","proof":[]}
+{"goal":"reciprocal_inverts","proof":["F.1 / a ⋅ a = F.1 or F.0 = a","F.1 / a ⋅ a != F.1 or (F.1 / a).reciprocal = a","F.1 / (F.1 / a) = (F.1 / a).reciprocal","(F.1 / a).reciprocal != a","F.1 / a ⋅ a = F.1","F.1 / a ⋅ a != F.1"]}
+{"goal":"a.zpow(ℤ.neg_suc(l.suc)).reciprocal = a.reciprocal.zpow(ℤ.neg_suc(l.suc))","proof":["ℤ.neg_suc(l.suc) != ℤ.neg_suc(l.suc) or (a.reciprocal^l.suc.suc).reciprocal = a.reciprocal.zpow(ℤ.neg_suc(l.suc))","ℤ.neg_suc(l.suc) != ℤ.neg_suc(l.suc) or (a^l.suc.suc).reciprocal = a.zpow(ℤ.neg_suc(l.suc))","(a.reciprocal^l.suc.suc).reciprocal = a.reciprocal.zpow(ℤ.neg_suc(l.suc))","(a^l.suc.suc).reciprocal = a.zpow(ℤ.neg_suc(l.suc))"]}
+{"goal":"n - l = (n - l.suc).suc","proof":["not l.suc <= n or n - l.suc + l.suc = n","(n - l.suc).suc + l != n or (n - l.suc).suc = n - l","n - l.suc + l.suc = (n - l.suc).suc + l","(n - l.suc).suc + l != n","n - l.suc + l.suc = n","n - l.suc + l.suc != n"]}
+{"goal":"k = ℤ.from_nat(ℕ.0)","proof":["ℤ.from_nat(ℕ.0) != ℤ.0","ℕ.0 != ℕ.0 or -ℤ.from_nat(ℕ.0) = ℤ.0","-ℤ.from_nat(ℕ.0) != ℤ.0 or ℤ.from_nat(ℕ.0) = ℤ.0","-ℤ.from_nat(ℕ.0) = ℤ.0","-ℤ.from_nat(ℕ.0) != ℤ.0"]}
+{"goal":"F.1 / -a = -F.1 / a","proof":["F.1 / -a = (-a).reciprocal","F.1 / a = a.reciprocal","F.0 - a = -a","F.0 - a.reciprocal = -a.reciprocal","a - F.0 = a"]}
+{"goal":"f(m)","proof":["let s0: (ℕ -> Bool) -> ℕ satisfy { forall(x0: ℕ -> Bool, x1: ℕ) { not x0(ℕ.0) or x0(s0(x0)) or x0(x1) } and forall(x2: ℕ -> Bool, x3: ℕ) { not x2(s0(x2).suc) or not x2(ℕ.0) or x2(x3) } }","not f(s0(f)) or f(s0(f).suc)","not f(s0(f).suc) or not f(ℕ.0) or f(m)","not f(s0(f).suc)","not f(ℕ.0) or f(s0(f)) or f(m)","not f(s0(f))","f(s0(f))"]}
+{"goal":"not n > ℤ.0","proof":["ℤ.0 > ℤ.0","ℤ.0 > n","not n < ℤ.0 or not ℤ.0 < n","n > ℤ.0 = ℤ.0 < n","ℤ.0 > n = n < ℤ.0","ℤ.0 < n","n < ℤ.0","not n < ℤ.0"]}
+{"goal":"not n > ℤ.0","proof":["not n < ℤ.0 or not ℤ.0 < n","n > ℤ.0 = ℤ.0 < n","ℤ.0 < n","not n < ℤ.0","n < ℤ.0 = n.is_negative","not n.is_negative","ℤ.neg_suc(k) != n or n.is_negative"]}
+{"goal":"(b - a) / (a ⋅ b) = b / (a ⋅ b) - a / (a ⋅ b)","proof":["b / (a ⋅ b) - a / (a ⋅ b) = (b - a) / (a ⋅ b)"]}
+{"goal":"a.zpow(n) ⋅ a.reciprocal.zpow(m) = a.reciprocal.pow(k) ⋅ a.reciprocal.reciprocal.pow(l)","proof":["not ℤ.from_nat(k) >= ℤ.0 or ℤ.from_nat(k) != ℤ.from_nat(k) or a.reciprocal.zpow(ℤ.from_nat(k)) = a.reciprocal^k","not ℤ.from_nat(l) >= ℤ.0 or ℤ.from_nat(l) != ℤ.from_nat(l) or a.zpow(ℤ.from_nat(l)) = a^l","a.reciprocal.reciprocal.zpow(n) ⋅ a.reciprocal.zpow(m) = a.reciprocal.zpow(m) ⋅ a.reciprocal.reciprocal.zpow(n)","a.reciprocal.reciprocal^l ⋅ a.reciprocal^k = a.reciprocal^k ⋅ a.reciprocal.reciprocal^l","a.reciprocal.reciprocal = a","ℤ.from_nat(k) >= ℤ.0","ℤ.from_nat(l) >= ℤ.0","a.reciprocal.zpow(ℤ.from_nat(k)) = a.reciprocal^k","a.zpow(ℤ.from_nat(l)) = a^l"]}
+{"goal":"a.zpow(n) ⋅ a.reciprocal.zpow(m) = a.reciprocal.pow(k - l)","proof":["not l <= k or a.reciprocal^k ⋅ a.reciprocal.reciprocal^l = a.reciprocal^(k - l) or a.reciprocal = F.0","a.reciprocal^k ⋅ a.reciprocal.reciprocal^l != a.reciprocal^(k - l)"]}
+{"goal":"r / q = r ⋅ F.1 / q","proof":["r ⋅ F.1 / q = r / q"]}
+{"goal":"a.pow(n) ⋅ a.reciprocal.pow(l.suc) = a.pow(n) ⋅ a.reciprocal.pow(l) ⋅ a.reciprocal","proof":["a^n ⋅ a.reciprocal^l ⋅ a.reciprocal = a^n ⋅ (a.reciprocal^l ⋅ a.reciprocal)"]}
+{"goal":"inverses_eq","proof":["F.1 / q != F.1 / p or F.0 = p or F.0 = q or q = p"]}
+{"goal":"a / b ⋅ c / d = a ⋅ c ⋅ (F.1 / b ⋅ F.1 / d)","proof":["a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d) = a ⋅ (F.1 / b ⋅ (c ⋅ F.1 / d))","a ⋅ c ⋅ (F.1 / b ⋅ F.1 / d) = a ⋅ (c ⋅ (F.1 / b ⋅ F.1 / d))","c ⋅ d.reciprocal ⋅ F.1 / b = c ⋅ (d.reciprocal ⋅ F.1 / b)","c ⋅ F.1 / d = c / d","c ⋅ d.reciprocal = c / d","F.1 / b ⋅ (c ⋅ F.1 / d) = c ⋅ F.1 / d ⋅ F.1 / b","F.1 / b ⋅ (c ⋅ F.1 / d) ⋅ a = a ⋅ (F.1 / b ⋅ (c ⋅ F.1 / d))","F.1 / d ⋅ F.1 / b = F.1 / b ⋅ F.1 / d","c ⋅ (F.1 / b ⋅ F.1 / d) ⋅ a = a ⋅ (c ⋅ (F.1 / b ⋅ F.1 / d))","F.1 / d = d.reciprocal"]}
+{"goal":"mul_inv_cancels_left","proof":["a ⋅ F.1 / a = F.1 or F.0 = a","F.1 / a ⋅ a = a ⋅ F.1 / a","a ⋅ F.1 / a = F.1","a ⋅ F.1 / a != F.1"]}
+{"goal":"exists(k0: ℕ) { m = ℤ.from_nat(k0) }","proof":["let s0: F satisfy { true }","let s1: (F, ℤ) -> ℕ satisfy { forall(x0: ℤ, x1: F) { not x0 >= ℤ.0 or ℤ.from_nat(s1(x1, x0)) = x0 } and forall(x2: ℤ, x3: F) { not x2 >= ℤ.0 or x3^s1(x3, x2) = x3.zpow(x2) } }","ℤ.from_nat(s1(s0, m)) != m","not m >= ℤ.0 or ℤ.from_nat(s1(s0, m)) = m"]}
+{"goal":"exists(k0: ℕ) { m = ℤ.from_nat(k0) }","proof":["ℤ.from_nat(lib(int.int_base).abs(m)) != m","not m >= ℤ.0 or ℤ.from_nat(lib(int.int_base).abs(m)) = m"]}
+{"goal":"exists(k0: ℕ) { m = ℤ.from_nat(k0) }","proof":["ℤ.from_nat(lib(int.int_base).abs(m)) != m","not m >= ℤ.0 or ℤ.from_nat(lib(int.int_base).abs(m)) = m"]}
+{"goal":"F.0.zpow(-n).reciprocal = F.0.zpow(n)","proof":["F.0.reciprocal.zpow(n) = F.0.zpow(-n)"]}
+{"goal":"a / b ⋅ b = a","proof":["a ⋅ F.1 != a","a ⋅ F.1 = a"]}
+{"goal":"a.reciprocal.zpow(n) = a.reciprocal.reciprocal.zpow(ℤ.pos_suc(k))","proof":["a.reciprocal.reciprocal.zpow(ℤ.pos_suc(k)) = a.reciprocal.zpow(ℤ.neg_suc(k))"]}
+{"goal":"a.zpow(n) ⋅ a.reciprocal.zpow(m) = a.reciprocal.zpow(m - n)","proof":["not ℤ.from_nat(lib(nat.nat_base).bounded_sub(k, l)) >= ℤ.0 or ℤ.from_nat(lib(nat.nat_base).bounded_sub(k, l)) != ℤ.from_nat(lib(nat.nat_base).bounded_sub(k, l)) or a.reciprocal.zpow(ℤ.from_nat(lib(nat.nat_base).bounded_sub(k, l))) = a.reciprocal^lib(nat.nat_base).bounded_sub(k, l)","not l <= k or ℤ.from_nat(k - l) = lib(int.int_base).sub_nat(k, l)","ℤ.from_nat(k) + -ℤ.from_nat(l) = lib(int.int_base).sub_nat(k, l)","m + -n = m - n","k - l = lib(nat.nat_base).bounded_sub(k, l)","ℤ.from_nat(lib(nat.nat_base).bounded_sub(k, l)) >= ℤ.0","a.reciprocal.zpow(ℤ.from_nat(lib(nat.nat_base).bounded_sub(k, l))) = a.reciprocal^lib(nat.nat_base).bounded_sub(k, l)","ℤ.from_nat(k - l) = lib(int.int_base).sub_nat(k, l)"]}
+{"goal":"k > ℤ.0","proof":["k > ℤ.0 or k < ℤ.0 or ℤ.0 = k","k < ℤ.0","not ℤ.0 <= k or ℤ.0 < k or ℤ.0 = k","not k < ℤ.0 or not ℤ.0 < k","k >= ℤ.0 = ℤ.0 <= k","ℤ.0 <= k","not ℤ.0 < k","ℤ.0 < k"]}
+{"goal":"a.pow(l.suc) ⋅ a.reciprocal = a.pow(l)","proof":["not f(l) or a^l.suc ⋅ a.reciprocal = a^l"]}
+{"goal":"pow_pow","proof":[]}
+{"goal":"a ⋅ (c ⋅ c.reciprocal) = b ⋅ (c ⋅ c.reciprocal)","proof":["a ⋅ c ⋅ c.reciprocal = a ⋅ (c ⋅ c.reciprocal)","b ⋅ c ⋅ c.reciprocal = b ⋅ (c ⋅ c.reciprocal)"]}
+{"goal":"a.zpow(k) = a.pow(ℕ.0)","proof":["ℤ.0 != k or a.zpow(k) = F.1","ℕ.0 != ℕ.0 or a^ℕ.0 = F.1","a^ℕ.0 = F.1","a.zpow(k) != F.1"]}
+{"goal":"a.zpow(n) ⋅ a.zpow(m) = a.zpow(n + m)","proof":["not n >= ℤ.0 or not m >= ℤ.0 or a.zpow(n) ⋅ a.zpow(m) = a.zpow(n + m)"]}
+{"goal":"a.zpow(n) ⋅ a.zpow(m) = a.zpow(n + m)","proof":["a.zpow(n - -m) != a.zpow(n + m)","n - -m != n + m","n + --m = n - -m","-(ℤ.0 - m) = m - ℤ.0","ℤ.0 - m = -m","m ⋅ ℤ.1 = m","m ⋅ ℤ.1 - ℤ.0 = m ⋅ ℤ.1"]}
+{"goal":"a.zpow(n) ⋅ a.zpow(m) = a.zpow(n + m)","proof":["a.zpow(m - -n) != a.zpow(n + m)","m - -n != n + m","m + --n = m - -n","-(ℤ.0 - n) = n - ℤ.0","m + n = n + m","ℤ.0 - n = -n","n ⋅ ℤ.1 = n","n ⋅ ℤ.1 - ℤ.0 = n ⋅ ℤ.1"]}
+{"goal":"a.zpow(n) ⋅ a.zpow(m) = a.zpow(n + m)","proof":["-n + -m = -(n + m)","a.reciprocal.zpow(-n + -m) = a.zpow(-(-n + -m))","--(n + m) = n + m"]}
+{"goal":"a.zpow(n).zpow(m) = a.zpow(n).zpow(-m).reciprocal","proof":["a.zpow(n).zpow(-m).reciprocal = a.zpow(n).zpow(--m)","a.zpow(n).zpow(--m) != a.zpow(n).zpow(m)","--m != m","m + -m != ℤ.0 or --m = m","m + -m = ℤ.0"]}
+{"goal":"a.reciprocal != F.0","proof":["a.reciprocal.reciprocal = a"]}
+{"goal":"-n >= ℤ.0","proof":["-n >= ℤ.0 = ℤ.0 <= -n","n >= ℤ.0 = ℤ.0 <= n","not ℤ.0 <= -n","not ℤ.0 <= n","not ℤ.0 < n or ℤ.0 <= n","ℤ.0 <= -n != (-n).is_negative","ℤ.0 < n = n.is_positive","(-n).is_negative = n.is_positive","ℤ.0 <= -n or (-n).is_negative","(-n).is_negative","n.is_positive","not ℤ.0 < n","ℤ.0 < n"]}
+{"goal":"-n >= ℤ.0","proof":["-n >= ℤ.0 = ℤ.0 <= -n","n >= ℤ.0 = ℤ.0 <= n","not ℤ.0 <= -n","not ℤ.0 <= n","not ℤ.0 < n or ℤ.0 <= n","ℤ.0 <= -n != (-n).is_negative","ℤ.0 < n = n.is_positive","(-n).is_negative = n.is_positive","ℤ.0 <= -n or (-n).is_negative","(-n).is_negative","n.is_positive","not ℤ.0 < n","ℤ.0 < n"]}
+{"goal":"-n = ℤ.neg_suc(k)","proof":["ℤ.pos_suc(k) != n or -n = ℤ.neg_suc(k)"]}
+{"goal":"pow_nat_sub_inverse","proof":["not f(m) or a^n ⋅ a.reciprocal^m = a^(n - m) or m > n","m > n","not m <= n or not n < m or n < n","m > n = n < m","n < m","not n < n","not n < m or n < n"]}
+{"goal":"a.zpow(n).zpow(m) = a.reciprocal.zpow(-n ⋅ -m).reciprocal","proof":["not -n >= ℤ.0 or not -m >= ℤ.0 or a.reciprocal.zpow(-n).zpow(-m) = a.reciprocal.zpow(-n ⋅ -m)","a.reciprocal.zpow(-n).zpow(-m).reciprocal != a.reciprocal.zpow(-n ⋅ -m).reciprocal","a.reciprocal.zpow(-n).zpow(-m) != a.reciprocal.zpow(-n ⋅ -m)"]}
+{"goal":"a.zpow(n) ⋅ a.reciprocal.zpow(m) = a.pow(l - k)","proof":["a^l ⋅ a.reciprocal^k != a^(l - k)","not k <= l or a^l ⋅ a.reciprocal^k = a^(l - k) or F.0 = a"]}
+{"goal":"recip_diff","proof":[]}
+{"goal":"(a ⋅ b).reciprocal = F.0","proof":["F.0.reciprocal != F.0"]}
+{"goal":"(a ⋅ b).reciprocal = F.0","proof":["F.0.reciprocal != F.0"]}
+{"goal":"recip_recip_raw","proof":["a.reciprocal.reciprocal = a"]}
+{"goal":"a ⋅ b ⋅ b.reciprocal = F.0","proof":["F.0 ⋅ b.reciprocal != F.0","F.0 != F.0 or F.0 ⋅ b.reciprocal = F.0"]}
+{"goal":"a.pow(x.suc) = a.pow(x) ⋅ a","proof":["x.suc != x.suc or a ⋅ a^x = a^x.suc","a^x ⋅ a = a ⋅ a^x","a ⋅ a^x != a^x.suc"]}
+{"goal":"-n = ℤ.pos_suc(k)","proof":["ℤ.neg_suc(k) != n or -n = ℤ.pos_suc(k)"]}
+{"goal":"a ⋅ b ⋅ a.reciprocal ⋅ b.reciprocal = a ⋅ a.reciprocal ⋅ b ⋅ b.reciprocal","proof":["a ⋅ a.reciprocal ⋅ b != a ⋅ b ⋅ a.reciprocal","a ⋅ a.reciprocal ⋅ b = a ⋅ (a.reciprocal ⋅ b)","a ⋅ b ⋅ a.reciprocal = a ⋅ (b ⋅ a.reciprocal)","a.reciprocal ⋅ b = b ⋅ a.reciprocal","a.reciprocal ⋅ b ⋅ a = a ⋅ (a.reciprocal ⋅ b)","b ⋅ a.reciprocal ⋅ a = a ⋅ (b ⋅ a.reciprocal)"]}
+{"goal":"F.1 / (a ⋅ b) = F.1 / a ⋅ F.1 / b","proof":["F.1 / a ⋅ F.1 / b != F.0","F.1 / F.0 = F.0","F.1 / a != F.0 or F.1 / a ⋅ F.1 / b = F.0","F.1 / a = F.0","F.1 / a != F.0"]}
+{"goal":"F.1 / (a ⋅ b) = F.1 / a ⋅ F.1 / b","proof":["F.1 / a ⋅ F.1 / b != F.0","F.1 / F.0 = F.0","F.1 / b != F.0 or F.1 / a ⋅ F.1 / b = F.0","F.1 / b = F.0","F.1 / b != F.0"]}
+{"goal":"F.1 / (a ⋅ b) = F.1 / a ⋅ F.1 / b","proof":["a.reciprocal ⋅ b.reciprocal = (a ⋅ b).reciprocal","(a.reciprocal ⋅ a) / a = a.reciprocal or F.0 = a","(b.reciprocal ⋅ b) / b = b.reciprocal or F.0 = b","a.reciprocal ⋅ a = F.1 or F.0 = a","b.reciprocal ⋅ b = F.1 or F.0 = b","a.reciprocal ⋅ a = F.1","b.reciprocal ⋅ b = F.1","(a.reciprocal ⋅ a) / a = a.reciprocal","(b.reciprocal ⋅ b) / b = b.reciprocal","F.1 / (a ⋅ b) = (a ⋅ b).reciprocal"]}
+{"goal":"-n = ℤ.0","proof":["ℤ.0 + n != ℤ.0 or -n = ℤ.0","ℤ.0 + n != ℤ.0","ℤ.0 + n != n","ℤ.0 + n - n = ℤ.0","ℤ.0 + n - n != ℤ.0 or ℤ.0 + n = n"]}
+{"goal":"-a ⋅ -F.1 / a = F.1","proof":["a ⋅ F.1 / a != F.1","a ⋅ F.1 / a = a / a","a / a != F.1","a ⋅ a.reciprocal = a / a","a ⋅ a.reciprocal = F.1 or F.0 = a","a ⋅ a.reciprocal != F.1","a ⋅ a.reciprocal = F.1"]}
+{"goal":"a / b ⋅ b = a ⋅ (b.reciprocal ⋅ b)","proof":["a ⋅ b.reciprocal ⋅ b = a ⋅ (b.reciprocal ⋅ b)"]}
+{"goal":"mul_inv_cancels_right","proof":["a ⋅ F.1 / a = a / a","a / a != F.1","a ⋅ a.reciprocal = a / a","a ⋅ a.reciprocal = F.1 or F.0 = a","a ⋅ a.reciprocal != F.1","a ⋅ a.reciprocal = F.1"]}
+{"goal":"add_div_distrib","proof":["a ⋅ c.reciprocal + b ⋅ c.reciprocal = (a + b) ⋅ c.reciprocal","(a + b) ⋅ c.reciprocal = (a + b) / c","a ⋅ c.reciprocal = a / c","b ⋅ c.reciprocal = b / c"]}
+{"goal":"a != F.0","proof":["F.0 != a or a ⋅ b = F.0","a ⋅ b = F.0"]}
+{"goal":"a != F.0","proof":[]}
+{"goal":"a != F.0","proof":[]}
+{"goal":"a.zpow(-n) = F.0","proof":["F.0.zpow(-n) != F.0","F.0.zpow(-n) = F.0 or -n = ℤ.0","-n != ℤ.0 or ℤ.0 = n","-n = ℤ.0","-n != ℤ.0"]}
+{"goal":"(a ⋅ b) / b = a ⋅ b / b","proof":["a ⋅ b ⋅ b.reciprocal = a ⋅ (b ⋅ b.reciprocal)","a ⋅ b ⋅ b.reciprocal = (a ⋅ b) / b","b ⋅ b.reciprocal = b / b","a ⋅ b ⋅ b.reciprocal != a ⋅ b / b"]}
+{"goal":"(a ⋅ b).reciprocal = F.0.reciprocal","proof":["a ⋅ b != F.0","F.0 != a or a ⋅ b = F.0"]}
+{"goal":"(a ⋅ b).reciprocal = F.0.reciprocal","proof":["a ⋅ b != F.0","F.0 != b or a ⋅ b = F.0"]}
+{"goal":"a ⋅ b ⋅ (a.reciprocal ⋅ b.reciprocal) = F.1","proof":["F.1 ⋅ F.1 != F.1","F.1 ⋅ F.1 = F.1"]}
+{"goal":"-m >= ℤ.0","proof":["-m >= ℤ.0 = ℤ.0 <= -m","m >= ℤ.0 = ℤ.0 <= m","not ℤ.0 <= -m","not ℤ.0 <= m","not ℤ.0 < m or ℤ.0 <= m","ℤ.0 <= -m != (-m).is_negative","ℤ.0 < m = m.is_positive","(-m).is_negative = m.is_positive","ℤ.0 <= -m or (-m).is_negative","(-m).is_negative","m.is_positive","not ℤ.0 < m","ℤ.0 < m"]}
+{"goal":"-m >= ℤ.0","proof":["-m >= ℤ.0 = ℤ.0 <= -m","m >= ℤ.0 = ℤ.0 <= m","not ℤ.0 <= -m","not ℤ.0 <= m","not ℤ.0 < m or ℤ.0 <= m","ℤ.0 <= -m != (-m).is_negative","ℤ.0 < m = m.is_positive","(-m).is_negative = m.is_positive","ℤ.0 <= -m or (-m).is_negative","(-m).is_negative","m.is_positive","not ℤ.0 < m","ℤ.0 < m"]}
+{"goal":"-m >= ℤ.0","proof":["-(ℤ.0 - m) = m - ℤ.0","-m >= ℤ.0 = ℤ.0 <= -m","not ℤ.0 <= -m","not ℤ.0 < -m or ℤ.0 <= -m","not ℤ.0 < -m","ℤ.0 - m = -m","ℤ.0 < -m = (-m).is_positive","(--m).is_negative = (-m).is_positive","m ⋅ ℤ.1 = m","m ⋅ ℤ.1 - ℤ.0 = m ⋅ ℤ.1"]}
+{"goal":"a.zpow(n) = F.1","proof":["a.zpow(ℤ.0) != F.1","ℤ.0 != ℤ.0 or a.zpow(ℤ.0) = F.1"]}
+{"goal":"m.is_negative","proof":["ℤ.from_nat(lib(int.int_base).abs(m)) = m or m.is_negative","ℤ.from_nat(lib(int.int_base).abs(m)) = m","ℤ.from_nat(lib(int.int_base).abs(m)) >= ℤ.0"]}
+{"goal":"f(ℕ.0)","proof":["a.reciprocal.zpow(ℤ.pos_suc(ℕ.0)) != a.zpow(ℤ.neg_suc(ℕ.0)) or f(ℕ.0)","ℤ.neg_suc(ℕ.0) != ℤ.neg_suc(ℕ.0) or (a^ℕ.0.suc).reciprocal = a.zpow(ℤ.neg_suc(ℕ.0))","ℤ.pos_suc(ℕ.0) != ℤ.pos_suc(ℕ.0) or a.reciprocal.zpow(ℤ.pos_suc(ℕ.0)) = a.reciprocal^ℕ.0.suc","a.reciprocal^ℕ.1 = a.reciprocal","a^ℕ.1 = a","a.reciprocal.zpow(ℤ.pos_suc(ℕ.0)) != a.zpow(ℤ.neg_suc(ℕ.0))","a.reciprocal.zpow(ℤ.pos_suc(ℕ.0)) = a.reciprocal^ℕ.0.suc","(a^ℕ.0.suc).reciprocal = a.zpow(ℤ.neg_suc(ℕ.0))"]}
+{"goal":"f(ℕ.0)","proof":["a^ℕ.0.suc ⋅ a.reciprocal != a^ℕ.0 or f(ℕ.0)","a ⋅ a.reciprocal = F.1 or F.0 = a","ℕ.0 != ℕ.0 or a^ℕ.0 = F.1","a^ℕ.1 = a","a^ℕ.0 = F.1","a ⋅ a.reciprocal = F.1","a^ℕ.0.suc ⋅ a.reciprocal != a^ℕ.0"]}
+{"goal":"f(ℕ.0)","proof":["a^n ⋅ a.reciprocal^ℕ.0 != a^(n - ℕ.0) or f(ℕ.0)","ℕ.0 != ℕ.0 or a.reciprocal^ℕ.0 = F.1","a^n ⋅ F.1 = a^n","n - ℕ.0 = n","a.reciprocal^ℕ.0 = F.1","a^n ⋅ a.reciprocal^ℕ.0 != a^(n - ℕ.0)"]}
+{"goal":"f(ℕ.0)","proof":["a^ℕ.0 = F.0 or f(ℕ.0)","a^ℕ.0 = F.0","ℕ.0 != ℕ.0 or a^ℕ.0 = F.1","a^ℕ.0 = F.1"]}
+{"goal":"a / b ⋅ b = a ⋅ b.reciprocal ⋅ b","proof":["a ⋅ b.reciprocal != a / b","a ⋅ b.reciprocal = a / b"]}
+{"goal":"mul_cancels_div","proof":[]}
+{"goal":"a.zpow(-n) = F.1","proof":["a.zpow(ℤ.0) != F.1","ℤ.0 != ℤ.0 or a.zpow(ℤ.0) = F.1"]}
+{"goal":"a.zpow(-n) = F.1","proof":["a.reciprocal.zpow(n) = a.zpow(-n)","a.reciprocal.zpow(n) != F.1","ℤ.0 != n or a.reciprocal.zpow(n) = F.1"]}
+{"goal":"a.zpow(-n) = a.zpow(n).reciprocal","proof":["a.zpow(n).reciprocal != F.1","a.zpow(n) ⋅ F.1 != F.1 or a.zpow(n).reciprocal = F.1","a.zpow(n) ⋅ F.1 = a.zpow(n)","a.zpow(n) ⋅ F.1 != F.1","a.zpow(n) ⋅ F.1 = F.1"]}
+{"goal":"a.zpow(-n) = a.zpow(n).reciprocal","proof":["a.zpow(n).reciprocal != F.0","F.0.reciprocal != F.0"]}
+{"goal":"f(x.suc)","proof":["a^x.suc = F.0 or f(x.suc)","a^x != F.0 or not f(x)","a^x.suc = F.0","a^x ⋅ a != F.0 or a^x = F.0 or F.0 = a","a^x ⋅ a = F.0","a^x != F.0","a^x = F.0"]}
+{"goal":"pow_inverse_nat","proof":["let s0: (ℕ -> Bool) -> ℕ satisfy { forall(x0: ℕ -> Bool, x1: ℕ) { not x0(ℕ.0) or x0(s0(x0)) or x0(x1) } and forall(x2: ℕ -> Bool, x3: ℕ) { not x2(s0(x2).suc) or not x2(ℕ.0) or x2(x3) } }","not f(s0(f)) or f(s0(f).suc)","not f(k) or a.reciprocal.zpow(ℤ.pos_suc(k)) = a.zpow(ℤ.neg_suc(k))","not f(k)","not f(s0(f).suc) or not f(ℕ.0) or f(k)","not f(ℕ.0) or f(s0(f)) or f(k)","f(s0(f)) or f(k)","f(s0(f))","not f(s0(f).suc)","f(s0(f).suc)"]}
+{"goal":"neg_by_div","proof":["F.1 / -a != (-a).reciprocal","F.1 / -a = (-a).reciprocal"]}
+{"goal":"a.zpow(-n) = a.reciprocal.zpow(n)","proof":["a.zpow(-n) != F.1"]}
+{"goal":"a.zpow(-n) = a.reciprocal.zpow(n)","proof":["a.reciprocal.zpow(ℤ.pos_suc(k)) != a.zpow(-n)"]}
+{"goal":"a.zpow(-n) = a.reciprocal.zpow(n)","proof":["a.reciprocal.zpow(n) != a.zpow(ℤ.pos_suc(k))"]}
+{"goal":"l.suc <= n","proof":["l + ℕ.1 <= n = l < n","n < l or l < n or l = n","l >= n = n <= l","not n <= l","not n < l or n <= l","l != n or n <= l","l + ℕ.1 = l.suc","not l + ℕ.1 <= n","not l < n","l != n","not n < l","n < l"]}
+{"goal":"a ⋅ b ⋅ (a.reciprocal ⋅ b.reciprocal) = F.1 ⋅ F.1","proof":["a ⋅ b ⋅ a.reciprocal ⋅ b.reciprocal = a ⋅ b ⋅ (a.reciprocal ⋅ b.reciprocal)","b ⋅ b.reciprocal = F.1 or F.0 = b","F.1 ⋅ b = b ⋅ F.1","F.1 ⋅ F.1 = F.1","b ⋅ F.1 = b","b ⋅ b.reciprocal = F.1"]}
+{"goal":"inverse_not_zero","proof":["a.reciprocal.reciprocal = a"]}
+{"goal":"a.reciprocal.zpow(n) = a.zpow(ℤ.pos_suc(k))","proof":["a.reciprocal.reciprocal = a"]}
+{"goal":"a.zpow(n) ⋅ a.zpow(m) = a.zpow(m - -n)","proof":["not m >= ℤ.0 or not -n >= ℤ.0 or a.zpow(m) ⋅ a.reciprocal.zpow(-n) = a.zpow(m - -n) or F.0 = a","a.zpow(m) ⋅ a.reciprocal.zpow(-n) != a.zpow(m - -n)"]}
+{"goal":"a = b","proof":["-a ⋅ -F.1 = a ⋅ F.1","-b ⋅ -F.1 = b ⋅ F.1","-a ⋅ -F.1 = --a","-b ⋅ -F.1 = --b","--a = a","--b = b"]}
+{"goal":"inverse_dist","proof":["F.0 = b","F.0 != b or a ⋅ b = F.0","b.reciprocal != F.0 or a.reciprocal ⋅ b.reciprocal = F.0","a ⋅ b = F.0","b.reciprocal = F.0","a.reciprocal ⋅ b.reciprocal = F.0"]}
+{"goal":"a.zpow(n) ⋅ a.zpow(-n) = a.zpow(n + -n)","proof":["a.zpow(n) ⋅ a.zpow(-n) = a.zpow(n + -n) or F.0 = a"]}
+{"goal":"a.zpow(n) ⋅ a.zpow(m) = a.pow(l) ⋅ a.pow(k)","proof":["not ℤ.from_nat(k) >= ℤ.0 or ℤ.from_nat(k) != ℤ.from_nat(k) or a.zpow(ℤ.from_nat(k)) = a^k","not ℤ.from_nat(l) >= ℤ.0 or ℤ.from_nat(l) != ℤ.from_nat(l) or a.zpow(ℤ.from_nat(l)) = a^l","a.zpow(m) ⋅ a.zpow(n) = a.zpow(n) ⋅ a.zpow(m)","a^k ⋅ a^l = a^l ⋅ a^k","ℤ.from_nat(k) >= ℤ.0","ℤ.from_nat(l) >= ℤ.0","a.zpow(ℤ.from_nat(k)) = a^k","a.zpow(ℤ.from_nat(l)) = a^l"]}
+{"goal":"F.1 / (a ⋅ b) = F.0","proof":["F.1 / F.0 != F.0","F.1 / F.0 = F.0.reciprocal","F.0.reciprocal != F.0"]}
+{"goal":"F.1 / (a ⋅ b) = F.0","proof":["F.1 / F.0 != F.0","F.1 / F.0 = F.0.reciprocal","F.0.reciprocal != F.0"]}
+{"goal":"a.zpow(n) = F.0","proof":["F.0.zpow(n) != F.0","F.0.zpow(n) = F.0 or ℤ.0 = n"]}
+{"goal":"a.reciprocal.zpow(n) = F.1","proof":["a.reciprocal.zpow(ℤ.0) != F.1","ℤ.0 != ℤ.0 or a.reciprocal.zpow(ℤ.0) = F.1"]}
+{"goal":"r ⋅ F.1 / p = r ⋅ F.1 / q","proof":[]}
+{"goal":"a.zpow(n) ⋅ a.zpow(m) = a.reciprocal.zpow(-n) ⋅ a.reciprocal.zpow(-m)","proof":["a.reciprocal.zpow(-m) = a.zpow(--m)","a.reciprocal.zpow(-n) = a.zpow(--n)","lib(type_class.ring).scalar_mul(a.zpow(--n), a.reciprocal.zpow(-m)) = a.zpow(--n) ⋅ a.reciprocal.zpow(-m)","lib(type_class.ring).scalar_mul(a.zpow(n), a.zpow(m)) = a.zpow(n) ⋅ a.zpow(m)","--m = m","--n = n"]}
+{"goal":"exists(k0: ℕ) { n = ℤ.from_nat(k0) }","proof":["let s0: F satisfy { true }","let s1: (F, ℤ) -> ℕ satisfy { forall(x0: ℤ, x1: F) { not x0 >= ℤ.0 or ℤ.from_nat(s1(x1, x0)) = x0 } and forall(x2: ℤ, x3: F) { not x2 >= ℤ.0 or x3^s1(x3, x2) = x3.zpow(x2) } }","ℤ.from_nat(s1(s0, n)) != n","not n >= ℤ.0 or ℤ.from_nat(s1(s0, n)) = n"]}
+{"goal":"exists(k0: ℕ) { n = ℤ.from_nat(k0) }","proof":["ℤ.from_nat(lib(int.int_base).abs(n)) != n","not n >= ℤ.0 or ℤ.from_nat(lib(int.int_base).abs(n)) = n"]}
+{"goal":"exists(k0: ℕ) { n = ℤ.from_nat(k0) }","proof":["ℤ.from_nat(lib(int.int_base).abs(n)) != n","not n >= ℤ.0 or ℤ.from_nat(lib(int.int_base).abs(n)) = n"]}
+{"goal":"n < ℤ.0","proof":["n > ℤ.0 or n < ℤ.0 or ℤ.0 = n"]}
+{"goal":"a / b ⋅ c / d = a ⋅ c ⋅ F.1 / (b ⋅ d)","proof":["a ⋅ c ⋅ (F.1 / b ⋅ F.1 / d) != a / b ⋅ c / d"]}
+{"goal":"a.pow(n) ⋅ a.reciprocal.pow(l.suc) = a.pow(n - l) ⋅ a.reciprocal","proof":["not f(l) or a^n ⋅ a.reciprocal^l = a^(n - l) or l > n","l >= n = n <= l","not n <= l","l > n = n < l","not n < l or n <= l","not n < l","a^n ⋅ a.reciprocal^l ⋅ a.reciprocal != a^(n - l) ⋅ a.reciprocal","a^n ⋅ a.reciprocal^l != a^(n - l)","not l > n","l > n"]}
+{"goal":"a / (a ⋅ b) = F.1 / b","proof":["a / (a ⋅ b) = F.1 / b or F.0 = b or F.0 = a","a / (a ⋅ b) = F.1 / b or F.0 = a or F.0 = b"]}
+{"goal":"F.1.reciprocal = F.1","proof":["-F.1 ⋅ -F.1 = F.1 ⋅ F.1","F.1 ⋅ F.1 != F.1 or F.1.reciprocal = F.1","F.1 ⋅ F.1 != F.1","-F.1 ⋅ -F.1 = --F.1","F.1 + F.0 = F.0 + F.1","F.1 + F.0 = F.1","--(F.0 + F.1) = F.0 + F.1"]}
+{"goal":"F.0.zpow(-n) = F.0","proof":["not -n > ℤ.0 or F.0.zpow(-n) = F.0"]}
+{"goal":"a.reciprocal ⋅ b.reciprocal = a.reciprocal ⋅ F.0","proof":["b.reciprocal != F.0","F.0.reciprocal != F.0"]}
+{"goal":"a.zpow(n) ⋅ a.zpow(m) = a.reciprocal.zpow(-n + -m)","proof":["not -n >= ℤ.0 or not -m >= ℤ.0 or a.reciprocal.zpow(-n) ⋅ a.reciprocal.zpow(-m) = a.reciprocal.zpow(-n + -m)","a.reciprocal.zpow(-n) ⋅ a.reciprocal.zpow(-m) != a.reciprocal.zpow(-n + -m)"]}
+{"goal":"a.pow(l.suc).reciprocal = a.reciprocal.pow(l.suc)","proof":["ℤ.neg_suc(l) != ℤ.neg_suc(l) or (a.reciprocal^l.suc).reciprocal = a.reciprocal.zpow(ℤ.neg_suc(l))","ℤ.neg_suc(l) != ℤ.neg_suc(l) or (a^l.suc).reciprocal = a.zpow(ℤ.neg_suc(l))","(a.reciprocal^l.suc).reciprocal.reciprocal = a.reciprocal^l.suc","a.zpow(ℤ.neg_suc(l)).reciprocal.reciprocal = a.zpow(ℤ.neg_suc(l))","(a.reciprocal^l.suc).reciprocal = a.reciprocal.zpow(ℤ.neg_suc(l))","(a^l.suc).reciprocal = a.zpow(ℤ.neg_suc(l))"]}
+{"goal":"a.zpow(n) ⋅ a.zpow(m) = a.reciprocal.zpow(-n) ⋅ a.zpow(m)","proof":["a.reciprocal.zpow(-n) = a.zpow(--n)","a.zpow(--n) ⋅ a.zpow(m) != a.zpow(n) ⋅ a.zpow(m)","a.zpow(--n) != a.zpow(n)","--n != n","n + -n != ℤ.0 or --n = n","n + -n = ℤ.0"]}
+{"goal":"a ⋅ b = F.0","proof":["F.0 != a or a ⋅ b = F.0"]}
+{"goal":"a ⋅ b = F.0","proof":["F.0 != b or a ⋅ b = F.0"]}
+{"goal":"a.zpow(n) ⋅ a.zpow(m) = a.zpow(n) ⋅ a.reciprocal.zpow(-m)","proof":["a.reciprocal.zpow(-m) = a.zpow(--m)","a.zpow(n) ⋅ a.zpow(--m) != a.zpow(n) ⋅ a.zpow(m)","a.zpow(--m) != a.zpow(m)","--m != m","m + -m != ℤ.0 or --m = m","m + -m = ℤ.0"]}
+{"goal":"F.1 / p = F.1 / q","proof":["((F.0 + p.reciprocal) ⋅ r) / r = F.0 + p.reciprocal or F.0 = r","((F.0 + q.reciprocal) ⋅ r) / r = F.0 + q.reciprocal or F.0 = r","r ⋅ p.reciprocal = r / p","F.1 / p ⋅ r = r ⋅ F.1 / p","F.1 / q ⋅ r = r ⋅ F.1 / q","F.1 / p = p.reciprocal","F.1 / q = q.reciprocal","F.0 + p.reciprocal = p.reciprocal","F.0 + q.reciprocal = q.reciprocal","((F.0 + p.reciprocal) ⋅ r) / r = F.0 + p.reciprocal","((F.0 + q.reciprocal) ⋅ r) / r = F.0 + q.reciprocal"]}
+{"goal":"r / p = r ⋅ F.1 / p","proof":["r ⋅ F.1 / p = r / p"]}
+{"goal":"a.zpow(n) ⋅ a.reciprocal.zpow(m) = a.zpow(n - m)","proof":["a.zpow(n - m) != a^(l - k)","not n - m >= ℤ.0 or ℤ.from_nat(l - k) != n - m or a.zpow(n - m) = a^(l - k)","ℤ.from_nat(l - k) >= ℤ.0","not n - m >= ℤ.0"]}
+{"goal":"a.zpow(n) ⋅ a.reciprocal.zpow(m) = a.zpow(n - m)","proof":["a.reciprocal.zpow(m - n) != a.zpow(n - m)","a.reciprocal.zpow(m - n) = a.zpow(-(m - n))","-(m - n) = n - m"]}
+{"goal":"a.zpow(n).zpow(m) = a.zpow(n ⋅ m)","proof":["not n >= ℤ.0 or not m >= ℤ.0 or a.zpow(n).zpow(m) = a.zpow(n ⋅ m)"]}
+{"goal":"a.zpow(n).zpow(m) = a.zpow(n ⋅ m)","proof":["a.zpow(n ⋅ -m).reciprocal = a.zpow(-(n ⋅ -m))","n ⋅ -m = -(n ⋅ m)","--(n ⋅ m) = n ⋅ m"]}
+{"goal":"a.zpow(n).zpow(m) = a.zpow(n ⋅ m)","proof":["-n ⋅ m = -(n ⋅ m)","a.reciprocal.zpow(-n ⋅ m) = a.zpow(-(-n ⋅ m))","--(n ⋅ m) = n ⋅ m"]}
+{"goal":"a.zpow(n).zpow(m) = a.zpow(n ⋅ m)","proof":["a.reciprocal.zpow(-n).zpow(-m).reciprocal = a.reciprocal.zpow(-n).zpow(--m)","a.reciprocal.zpow(-n).zpow(m).reciprocal = a.reciprocal.zpow(-n).zpow(-m)","a.zpow(-n ⋅ -m).reciprocal = a.zpow(-(-n ⋅ -m))","-n ⋅ -m = n ⋅ m","a.reciprocal.zpow(-n ⋅ -m) = a.zpow(-(-n ⋅ -m))","-(ℤ.0 - m) = m - ℤ.0","ℤ.0 - m = -m","m ⋅ ℤ.1 = m","m ⋅ ℤ.1 - ℤ.0 = m ⋅ ℤ.1","a.reciprocal.zpow(-n ⋅ -m).reciprocal.reciprocal = a.reciprocal.zpow(-n ⋅ -m)","a.zpow(n ⋅ m).reciprocal.reciprocal = a.zpow(n ⋅ m)"]}
+{"goal":"mul_fractions","proof":["a ⋅ c ⋅ F.1 / (b ⋅ d) = (a ⋅ c) / (b ⋅ d)"]}
+{"goal":"-F.1 / a = (-a).reciprocal","proof":["-a ⋅ -F.1 / a != F.1 or -F.1 / a = (-a).reciprocal"]}
+{"goal":"-F.1 / a = (-a).reciprocal","proof":["-a ⋅ -F.1 / a != F.1 or -F.1 / a = (-a).reciprocal"]}
+{"goal":"-F.1 / a = (-a).reciprocal","proof":["-a ⋅ -F.1 / a != F.1 or -F.1 / a = (-a).reciprocal"]}
+{"goal":"-F.1 / a = (-a).reciprocal","proof":["-a ⋅ -F.1 / a != F.1 or -F.1 / a = (-a).reciprocal"]}
+{"goal":"-F.1 / a = (-a).reciprocal","proof":["-a ⋅ -F.1 / a != F.1 or -F.1 / a = (-a).reciprocal"]}
+{"goal":"-F.1 / a = (-a).reciprocal","proof":["-a ⋅ -F.1 / a != F.1 or -F.1 / a = (-a).reciprocal"]}
+{"goal":"-F.1 / a = (-a).reciprocal","proof":["-a ⋅ -F.1 / a != F.1 or -F.1 / a = (-a).reciprocal"]}
+{"goal":"-F.1 / a = (-a).reciprocal","proof":["-a ⋅ -F.1 / a != F.1 or -F.1 / a = (-a).reciprocal"]}
+{"goal":"-F.1 / a = (-a).reciprocal","proof":["-a ⋅ -F.1 / a != F.1 or -F.1 / a = (-a).reciprocal"]}
+{"goal":"-F.1 / a = (-a).reciprocal","proof":["-a ⋅ -F.1 / a != F.1 or -F.1 / a = (-a).reciprocal"]}
+{"goal":"-F.1 / a = (-a).reciprocal","proof":["-a ⋅ -F.1 / a != F.1 or -F.1 / a = (-a).reciprocal"]}
+{"goal":"-F.1 / a = (-a).reciprocal","proof":["-a ⋅ -F.1 / a != F.1 or -F.1 / a = (-a).reciprocal"]}
+{"goal":"-F.1 / a = (-a).reciprocal","proof":["-a ⋅ -F.1 / a != F.1 or -F.1 / a = (-a).reciprocal"]}
+{"goal":"-F.1 / a = (-a).reciprocal","proof":["-a ⋅ -F.1 / a != F.1 or -F.1 / a = (-a).reciprocal"]}
+{"goal":"-F.1 / a = (-a).reciprocal","proof":["-a ⋅ -F.1 / a != F.1 or -F.1 / a = (-a).reciprocal"]}
+{"goal":"-F.1 / a = (-a).reciprocal","proof":["-a ⋅ -F.1 / a != F.1 or -F.1 / a = (-a).reciprocal"]}
+{"goal":"-F.1 / a = (-a).reciprocal","proof":["-a ⋅ -F.1 / a != F.1 or -F.1 / a = (-a).reciprocal"]}
+{"goal":"-F.1 / a = (-a).reciprocal","proof":["-a ⋅ -F.1 / a != F.1 or -F.1 / a = (-a).reciprocal"]}
+{"goal":"-F.1 / a = (-a).reciprocal","proof":["-a ⋅ -F.1 / a != F.1 or -F.1 / a = (-a).reciprocal"]}
+{"goal":"a ⋅ b ⋅ F.1 / (a ⋅ b) = F.1","proof":["a ⋅ b ⋅ F.1 / (a ⋅ b) = F.1 or a ⋅ b = F.0"]}
+{"goal":"pow_nat_times_inverse","proof":["let s0: (ℕ -> Bool) -> ℕ satisfy { forall(x0: ℕ -> Bool, x1: ℕ) { not x0(ℕ.0) or x0(s0(x0)) or x0(x1) } and forall(x2: ℕ -> Bool, x3: ℕ) { not x2(s0(x2).suc) or not x2(ℕ.0) or x2(x3) } }","not f(s0(f)) or f(s0(f).suc)","not f(n) or a^n.suc ⋅ a.reciprocal = a^n","not f(n)","not f(s0(f).suc) or not f(ℕ.0) or f(n)","not f(ℕ.0) or f(s0(f)) or f(n)","f(s0(f)) or f(n)","f(s0(f))","not f(s0(f).suc)","f(s0(f).suc)"]}
+{"goal":"mul_div_cancels","proof":["a ⋅ F.1 != a","a ⋅ F.1 = a"]}
+{"goal":"a ⋅ F.1 = b ⋅ F.1","proof":["b != a","-a ⋅ -F.1 = a ⋅ F.1","-b ⋅ -F.1 = b ⋅ F.1","c ⋅ c.reciprocal = F.1 or F.0 = c","F.1 ⋅ a = a ⋅ F.1","F.1 ⋅ b = b ⋅ F.1","c ⋅ c.reciprocal ⋅ a = a ⋅ (c ⋅ c.reciprocal)","c ⋅ c.reciprocal ⋅ b = b ⋅ (c ⋅ c.reciprocal)","-a ⋅ -F.1 = --a","-b ⋅ -F.1 = --b","--a = a","--b = b","c ⋅ c.reciprocal = F.1"]}
+{"goal":"mul_not_zero","proof":[]}
+{"goal":"a / b ⋅ b = a ⋅ F.1","proof":["b.reciprocal ⋅ b = F.1 or F.0 = b","a ⋅ (b.reciprocal ⋅ b) != a ⋅ F.1","b.reciprocal ⋅ b = F.1","b.reciprocal ⋅ b != F.1"]}
+{"goal":"a.zpow(n) ⋅ a.reciprocal.zpow(m) = a.pow(l) ⋅ a.reciprocal.pow(k)","proof":["not ℤ.from_nat(k) >= ℤ.0 or ℤ.from_nat(k) != ℤ.from_nat(k) or a.reciprocal.zpow(ℤ.from_nat(k)) = a.reciprocal^k","not ℤ.from_nat(l) >= ℤ.0 or ℤ.from_nat(l) != ℤ.from_nat(l) or a.zpow(ℤ.from_nat(l)) = a^l","a.reciprocal.zpow(m) = a.zpow(-m)","a.reciprocal^k ⋅ a^l = a^l ⋅ a.reciprocal^k","a.zpow(n) ⋅ a.zpow(-m) = a.zpow(-m) ⋅ a.zpow(n)","ℤ.from_nat(k) >= ℤ.0","ℤ.from_nat(l) >= ℤ.0","a.reciprocal.zpow(ℤ.from_nat(k)) = a.reciprocal^k","a.zpow(ℤ.from_nat(l)) = a^l"]}
+{"goal":"a ⋅ a.reciprocal ⋅ b = a.reciprocal","proof":["-(a ⋅ a.reciprocal) ⋅ -b = a ⋅ a.reciprocal ⋅ b","-(a.reciprocal ⋅ a) ⋅ -b = a.reciprocal ⋅ a ⋅ b","a.reciprocal ⋅ a = a ⋅ a.reciprocal","a.reciprocal ⋅ F.1 = a.reciprocal"]}
+{"goal":"a ⋅ b ⋅ a.reciprocal ⋅ b.reciprocal = F.1 ⋅ b ⋅ b.reciprocal","proof":["a ⋅ a.reciprocal = F.1 or F.0 = a","a ⋅ a.reciprocal = F.1"]}
+{"goal":"a.pow(l.suc.suc).reciprocal = a.reciprocal.pow(l.suc.suc)","proof":["l.suc.suc != l.suc.suc or a.reciprocal ⋅ a.reciprocal^l.suc = a.reciprocal^l.suc.suc","(a^l.suc).reciprocal ⋅ a.reciprocal = a.reciprocal ⋅ (a^l.suc).reciprocal","a.reciprocal ⋅ a.reciprocal^l.suc = a.reciprocal^l.suc.suc"]}
+{"goal":"a / a ⋅ b / c = (a ⋅ b) / (a ⋅ c)","proof":["a / a ⋅ b / c = (a ⋅ b) / (a ⋅ c)"]}
+{"goal":"zero_recip","proof":["let s0: F satisfy { true }","not zero_recip(s0) or F.1 / F.0 = F.0","not zero_recip(s0)","F.1 / F.0 != F.0 or zero_recip(s0)","F.1 ⋅ F.0.reciprocal = F.1 / F.0","F.1 ⋅ F.0.reciprocal != F.0","F.0.reciprocal != F.0 or F.1 ⋅ F.0.reciprocal = F.0","F.0.reciprocal != F.0"]}
+{"goal":"f(l.suc)","proof":["a.reciprocal.zpow(ℤ.pos_suc(l.suc)) != a.zpow(ℤ.neg_suc(l.suc)) or f(l.suc)","ℤ.neg_suc(l.suc) != ℤ.neg_suc(l.suc) or (a^l.suc.suc).reciprocal = a.zpow(ℤ.neg_suc(l.suc))","ℤ.pos_suc(l.suc) != ℤ.pos_suc(l.suc) or a.reciprocal.zpow(ℤ.pos_suc(l.suc)) = a.reciprocal^l.suc.suc","a.reciprocal.zpow(ℤ.pos_suc(l.suc)) = a.reciprocal^l.suc.suc","(a^l.suc.suc).reciprocal = a.zpow(ℤ.neg_suc(l.suc))","a.reciprocal.zpow(ℤ.pos_suc(l.suc)) != a.zpow(ℤ.neg_suc(l.suc))"]}
+{"goal":"f(l.suc)","proof":["a^l.suc.suc ⋅ a.reciprocal != a^l.suc or f(l.suc)"]}
+{"goal":"f(l.suc)","proof":["not l.suc > n or f(l.suc)"]}
+{"goal":"f(l.suc)","proof":["a^n ⋅ a.reciprocal^l.suc != a^(n - l.suc) or f(l.suc)"]}
+{"goal":"pow_sub_inverse","proof":[]}
+{"goal":"F.1 / b ⋅ F.1 / d = F.1 / (b ⋅ d)","proof":["F.1 / b ⋅ F.1 / d = F.1 / (b ⋅ d)"]}
+{"goal":"pow_add","proof":[]}
+{"goal":"exists(k0: ℕ) { k = ℤ.pos_suc(k0) }","proof":["let (s0: ℤ -> ℕ, s1: ℤ -> ℕ) satisfy { forall(x0: ℤ) { ℤ.pos_suc(s1(x0)) = x0 or ℤ.neg_suc(s0(x0)) = x0 or ℤ.0 = x0 } }","ℤ.pos_suc(s1(k)) != k","ℤ.pos_suc(s1(k)) = k or ℤ.neg_suc(s0(k)) = k or ℤ.0 = k","ℤ.neg_suc(s0(k)) = k","k > ℤ.0 = ℤ.0 < k","ℤ.0 < k","ℤ.0 < k = k.is_positive","k.is_positive","ℤ.neg_suc(s0(k)) != k or k.is_negative","not k.is_positive or not k.is_negative","k.is_negative","not k.is_negative"]}
+{"goal":"a ⋅ c ⋅ c.reciprocal = b ⋅ c ⋅ c.reciprocal","proof":["b ⋅ c != a ⋅ c"]}
+{"goal":"pow_not_zero","proof":["let s0: (ℕ -> Bool) -> ℕ satisfy { forall(x0: ℕ -> Bool, x1: ℕ) { not x0(ℕ.0) or x0(s0(x0)) or x0(x1) } and forall(x2: ℕ -> Bool, x3: ℕ) { not x2(s0(x2).suc) or not x2(ℕ.0) or x2(x3) } }","not f(s0(f)) or f(s0(f).suc)","a^n != F.0 or not f(n)","not f(n)","not f(s0(f).suc) or not f(ℕ.0) or f(n)","not f(ℕ.0) or f(s0(f)) or f(n)","f(s0(f)) or f(n)","f(s0(f))","not f(s0(f).suc)","f(s0(f).suc)"]}
+{"goal":"div_by_reciprocal","proof":["p ⋅ q.reciprocal = p / q","F.1 / q = q.reciprocal"]}
+{"goal":"a / b ⋅ c / d = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","proof":["-(a ⋅ F.1 / b) ⋅ -(c ⋅ F.1 / d) = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","-a / b ⋅ -c / d = a / b ⋅ c / d","a ⋅ F.1 / b = a / b","c ⋅ F.1 / d = c / d"]}
+{"goal":"a / b ⋅ c / d = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","proof":["-(a ⋅ F.1 / b) ⋅ -(c ⋅ F.1 / d) = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","-a / b ⋅ -c / d = a / b ⋅ c / d","a ⋅ F.1 / b = a / b","c ⋅ F.1 / d = c / d"]}
+{"goal":"a / b ⋅ c / d = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","proof":["-(a ⋅ F.1 / b) ⋅ -(c ⋅ F.1 / d) = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","-a / b ⋅ -c / d = a / b ⋅ c / d","a ⋅ F.1 / b = a / b","c ⋅ F.1 / d = c / d"]}
+{"goal":"a / b ⋅ c / d = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","proof":["-(a ⋅ F.1 / b) ⋅ -(c ⋅ F.1 / d) = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","-a / b ⋅ -c / d = a / b ⋅ c / d","a ⋅ F.1 / b = a / b","c ⋅ F.1 / d = c / d"]}
+{"goal":"a / b ⋅ c / d = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","proof":["-(a ⋅ F.1 / b) ⋅ -(c ⋅ F.1 / d) = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","-a / b ⋅ -c / d = a / b ⋅ c / d","a ⋅ F.1 / b = a / b","c ⋅ F.1 / d = c / d"]}
+{"goal":"a / b ⋅ c / d = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","proof":["-(a ⋅ F.1 / b) ⋅ -(c ⋅ F.1 / d) = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","-a / b ⋅ -c / d = a / b ⋅ c / d","a ⋅ F.1 / b = a / b","c ⋅ F.1 / d = c / d"]}
+{"goal":"a / b ⋅ c / d = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","proof":["-(a ⋅ F.1 / b) ⋅ -(c ⋅ F.1 / d) = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","-a / b ⋅ -c / d = a / b ⋅ c / d","a ⋅ F.1 / b = a / b","c ⋅ F.1 / d = c / d"]}
+{"goal":"a / b ⋅ c / d = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","proof":["-(a ⋅ F.1 / b) ⋅ -(c ⋅ F.1 / d) = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","-a / b ⋅ -c / d = a / b ⋅ c / d","a ⋅ F.1 / b = a / b","c ⋅ F.1 / d = c / d"]}
+{"goal":"a / b ⋅ c / d = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","proof":["-(a ⋅ F.1 / b) ⋅ -(c ⋅ F.1 / d) = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","-a / b ⋅ -c / d = a / b ⋅ c / d","a ⋅ F.1 / b = a / b","c ⋅ F.1 / d = c / d"]}
+{"goal":"a / b ⋅ c / d = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","proof":["-(a ⋅ F.1 / b) ⋅ -(c ⋅ F.1 / d) = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","-a / b ⋅ -c / d = a / b ⋅ c / d","a ⋅ F.1 / b = a / b","c ⋅ F.1 / d = c / d"]}
+{"goal":"a / b ⋅ c / d = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","proof":["-(a ⋅ F.1 / b) ⋅ -(c ⋅ F.1 / d) = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","-a / b ⋅ -c / d = a / b ⋅ c / d","a ⋅ F.1 / b = a / b","c ⋅ F.1 / d = c / d"]}
+{"goal":"a / b ⋅ c / d = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","proof":["-(a ⋅ F.1 / b) ⋅ -(c ⋅ F.1 / d) = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","-a / b ⋅ -c / d = a / b ⋅ c / d","a ⋅ F.1 / b = a / b","c ⋅ F.1 / d = c / d"]}
+{"goal":"a / b ⋅ c / d = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","proof":["-(a ⋅ F.1 / b) ⋅ -(c ⋅ F.1 / d) = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","-a / b ⋅ -c / d = a / b ⋅ c / d","a ⋅ F.1 / b = a / b","c ⋅ F.1 / d = c / d"]}
+{"goal":"a / b ⋅ c / d = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","proof":["-(a ⋅ F.1 / b) ⋅ -(c ⋅ F.1 / d) = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","-a / b ⋅ -c / d = a / b ⋅ c / d","a ⋅ F.1 / b = a / b","c ⋅ F.1 / d = c / d"]}
+{"goal":"a / b ⋅ c / d = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","proof":["-(a ⋅ F.1 / b) ⋅ -(c ⋅ F.1 / d) = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","-a / b ⋅ -c / d = a / b ⋅ c / d","a ⋅ F.1 / b = a / b","c ⋅ F.1 / d = c / d"]}
+{"goal":"a / b ⋅ c / d = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","proof":["-(a ⋅ F.1 / b) ⋅ -(c ⋅ F.1 / d) = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","-a / b ⋅ -c / d = a / b ⋅ c / d","a ⋅ F.1 / b = a / b","c ⋅ F.1 / d = c / d"]}
+{"goal":"a / b ⋅ c / d = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","proof":["-(a ⋅ F.1 / b) ⋅ -(c ⋅ F.1 / d) = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","-a / b ⋅ -c / d = a / b ⋅ c / d","a ⋅ F.1 / b = a / b","c ⋅ F.1 / d = c / d"]}
+{"goal":"a / b ⋅ c / d = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","proof":["-(a ⋅ F.1 / b) ⋅ -(c ⋅ F.1 / d) = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","-a / b ⋅ -c / d = a / b ⋅ c / d","a ⋅ F.1 / b = a / b","c ⋅ F.1 / d = c / d"]}
+{"goal":"a / b ⋅ c / d = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","proof":["-(a ⋅ F.1 / b) ⋅ -(c ⋅ F.1 / d) = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","-a / b ⋅ -c / d = a / b ⋅ c / d","a ⋅ F.1 / b = a / b","c ⋅ F.1 / d = c / d"]}
+{"goal":"use_from_nat_pow_exists","proof":["let s0: (F, ℤ) -> ℕ satisfy { forall(x0: ℤ, x1: F) { not x0 >= ℤ.0 or not use_from_nat_pow_exists(x1, x0) or ℤ.from_nat(s0(x1, x0)) = x0 } and forall(x2: ℤ, x3: F) { not x2 >= ℤ.0 or not use_from_nat_pow_exists(x3, x2) or x3^s0(x3, x2) = x3.zpow(x2) } and forall(x4: ℤ, x5: F) { x4 >= ℤ.0 or use_from_nat_pow_exists(x5, x4) } and forall(x6: F, x7: ℤ, x8: ℕ) { x6.zpow(x7) != x6^x8 or ℤ.from_nat(x8) != x7 or use_from_nat_pow_exists(x6, x7) } }","a^s0(a, k) != a.zpow(k) or ℤ.from_nat(s0(a, k)) != k","not k >= ℤ.0 or not use_from_nat_pow_exists(a, k) or ℤ.from_nat(s0(a, k)) = k","not k >= ℤ.0 or not use_from_nat_pow_exists(a, k) or a^s0(a, k) = a.zpow(k)","ℤ.from_nat(s0(a, k)) = k","a^s0(a, k) = a.zpow(k)","a^s0(a, k) != a.zpow(k)"]}
+{"goal":"F.0.zpow(n) = F.0","proof":["F.0^k.suc != F.0","F.0^k.suc = F.0 or k.suc = ℕ.0","k.suc != ℕ.0"]}
+{"goal":"F.0.zpow(n) = F.0","proof":["not n > ℤ.0 or F.0.zpow(n) = F.0"]}
+{"goal":"F.0.zpow(n) = F.0","proof":["F.0.zpow(-n).reciprocal != F.0","F.0.reciprocal != F.0"]}
+{"goal":"a.pow(n) ⋅ a.reciprocal.pow(l.suc) = a.pow(n - l.suc)","proof":["a^(ℕ.0 + (n - l.suc)).suc ⋅ a.reciprocal = a^(ℕ.0 + (n - l.suc)) or F.0 = a","n - l.suc = lib(nat.nat_base).bounded_sub(n, l.suc)","ℕ.0 + lib(nat.nat_base).bounded_sub(n, l.suc) = lib(nat.nat_base).bounded_sub(n, l.suc)","a^(ℕ.0 + (n - l.suc)).suc ⋅ a.reciprocal = a^(ℕ.0 + (n - l.suc))"]}
+{"goal":"a.zpow(n).zpow(m) = a.reciprocal.zpow(-n).zpow(m)","proof":["a.reciprocal.zpow(-n) = a.zpow(--n)","a.zpow(--n).zpow(m) != a.zpow(n).zpow(m)","a.zpow(--n) != a.zpow(n)","--n != n","n + -n != ℤ.0 or --n = n","n + -n = ℤ.0"]}
+{"goal":"a.zpow(k) = a.pow(n)","proof":["ℤ.pos_suc(pred) != k or a^pred.suc = a.zpow(k)","a^pred.suc != a.zpow(k)"]}
+{"goal":"b / (a ⋅ b) = F.1 / a","proof":["b / (b ⋅ a) = F.1 / a or F.0 = a or F.0 = b","b / (b ⋅ a) = F.1 / a or F.0 = b or F.0 = a","b ⋅ a = a ⋅ b","b / (b ⋅ a) != F.1 / a"]}
+{"goal":"false","proof":[]}
+{"goal":"false","proof":[]}
+{"goal":"false","proof":["a ⋅ b ⋅ b.reciprocal = a ⋅ (b ⋅ b.reciprocal)","b ⋅ b.reciprocal = F.1 or F.0 = b","a ⋅ F.1 = a","a ⋅ (b ⋅ b.reciprocal) = F.0","a ⋅ F.1 != F.0","b ⋅ b.reciprocal = F.1"]}
+{"goal":"use_from_nat_pow_exists(a, k)","proof":["a.zpow(k) != a^ℕ.0 or ℤ.from_nat(ℕ.0) != k or use_from_nat_pow_exists(a, k)"]}
+{"goal":"use_from_nat_pow_exists(a, k)","proof":["a.zpow(k) != a^n or ℤ.from_nat(n) != k or use_from_nat_pow_exists(a, k)"]}
+{"goal":"pow_inverse_2","proof":["a.zpow(n) ⋅ a.zpow(-n) != F.1 or a.zpow(n).reciprocal = a.zpow(-n)","ℤ.0 != ℤ.0 or a.zpow(ℤ.0) = F.1","n + -n = ℤ.0","a.zpow(n) ⋅ a.zpow(-n) = a.zpow(ℤ.0)","a.zpow(ℤ.0) = F.1","a.zpow(n) ⋅ a.zpow(-n) != F.1","a.zpow(n) ⋅ a.zpow(-n) = F.1"]}
+{"goal":"F.1 ⋅ b = a.reciprocal","proof":["a ⋅ a.reciprocal = F.1 or F.0 = a","a ⋅ a.reciprocal ⋅ b != F.1 ⋅ b","a ⋅ a.reciprocal = F.1","a ⋅ a.reciprocal != F.1"]}
+{"goal":"a.pow(l.suc.suc) = a.pow(l.suc) ⋅ a","proof":["l.suc.suc != l.suc.suc or a ⋅ a^l.suc = a^l.suc.suc","a^l.suc ⋅ a = a ⋅ a^l.suc","a ⋅ a^l.suc != a^l.suc.suc"]}
+{"goal":"cancel_left_num_denom","proof":["a ⋅ a.reciprocal = a / a","a ⋅ a.reciprocal = F.1 or F.0 = a","b / c ⋅ a / a = a / a ⋅ b / c","b / c ⋅ F.1 = b / c","a ⋅ a.reciprocal = F.1"]}
+{"goal":"reciprocal_eq","proof":[]}
+{"goal":"k <= l","proof":["ℤ.from_nat(k) <= ℤ.from_nat(l) = k <= l"]}
+{"goal":"a.zpow(n) ⋅ a.reciprocal.zpow(m) = a.reciprocal.zpow(m) ⋅ a.reciprocal.reciprocal.zpow(n)","proof":["a.reciprocal.zpow(m) ⋅ a.zpow(n) = a.zpow(n) ⋅ a.reciprocal.zpow(m)","a.reciprocal.reciprocal = a"]}
+{"goal":"-n > ℤ.0","proof":["ℤ.0 - n > ℤ.0 = ℤ.0 > n","ℤ.0 > n = n < ℤ.0","ℤ.0 - n = -n"]}
+{"goal":"cancel_to_reciprocal","proof":["(a ⋅ F.1) / (a ⋅ b) = F.1 / b or F.0 = a","a ⋅ F.1 = a","(a ⋅ F.1) / (a ⋅ b) != F.1 / b"]}
+{"goal":"a.pow(l.suc.suc) ⋅ a.reciprocal = a.pow(l.suc)","proof":["l.suc != l.suc or a ⋅ a^l = a^l.suc","l.suc.suc != l.suc.suc or a ⋅ a^l.suc = a^l.suc.suc","a ⋅ a^l.suc ⋅ a.reciprocal = a ⋅ (a^l.suc ⋅ a.reciprocal)","a ⋅ a^l = a^l.suc","a ⋅ a^l.suc = a^l.suc.suc"]}
+{"goal":"field_reciprocal_left","proof":["f ⋅ f.reciprocal = F.1 or F.0 = f","f.reciprocal ⋅ f = f ⋅ f.reciprocal","f ⋅ f.reciprocal = F.1","f ⋅ f.reciprocal != F.1"]}
+{"goal":"recip_recip","proof":["F.1 / a = a.reciprocal","F.1 / a.reciprocal = a.reciprocal.reciprocal","F.1 / a.reciprocal != a","a.reciprocal.reciprocal != a","a.reciprocal.reciprocal = a"]}
+{"goal":"a.zpow(n).zpow(m) = a.zpow(n ⋅ -m).reciprocal","proof":["not n >= ℤ.0 or not -m >= ℤ.0 or a.zpow(n).zpow(-m) = a.zpow(n ⋅ -m)","a.zpow(n).zpow(-m).reciprocal != a.zpow(n ⋅ -m).reciprocal","a.zpow(n).zpow(-m) != a.zpow(n ⋅ -m)"]}
+{"goal":"pow_pow_nonnegative","proof":["a.zpow(n).zpow(m) != a^(l ⋅ k)","a^l^k = a^(l ⋅ k)"]}
+{"goal":"F.1 / (a ⋅ b) ⋅ (a ⋅ b) = F.1","proof":["a ⋅ b != F.0 or F.0 = a or F.0 = b","F.1 / (a ⋅ b) ⋅ (a ⋅ b) = F.1 or a ⋅ b = F.0","a ⋅ b = F.0"]}
+{"goal":"a.zpow(n).zpow(m) = a.reciprocal.zpow(-n ⋅ m)","proof":["not -n >= ℤ.0 or not m >= ℤ.0 or a.reciprocal.zpow(-n).zpow(m) = a.reciprocal.zpow(-n ⋅ m)","a.reciprocal.zpow(-n).zpow(m) != a.reciprocal.zpow(-n ⋅ m)"]}
+{"goal":"zero_pow","proof":[]}
+{"goal":"a / b ⋅ b / a = a ⋅ b ⋅ F.1 / (a ⋅ b)","proof":["a ⋅ b ⋅ F.1 / (a ⋅ b) != (a ⋅ b) / (a ⋅ b)","a ⋅ b ⋅ F.1 / (a ⋅ b) = (a ⋅ b) / (a ⋅ b)"]}
+{"goal":"reciprocal_by_div","proof":["F.1 ⋅ a.reciprocal = F.1 / a","a.reciprocal ⋅ F.1 = F.1 ⋅ a.reciprocal","F.1 ⋅ a.reciprocal != a.reciprocal","a.reciprocal ⋅ F.1 = a.reciprocal"]}
+{"goal":"a.zpow(n).zpow(m) = a.pow(l).pow(k)","proof":["not ℤ.from_nat(k) >= ℤ.0 or ℤ.from_nat(k) != ℤ.from_nat(k) or (a^l).zpow(ℤ.from_nat(k)) = a^l^k","not ℤ.from_nat(l) >= ℤ.0 or ℤ.from_nat(l) != ℤ.from_nat(l) or a.zpow(ℤ.from_nat(l)) = a^l","ℤ.from_nat(k) >= ℤ.0","ℤ.from_nat(l) >= ℤ.0","(a^l).zpow(ℤ.from_nat(k)) = a^l^k","a.zpow(ℤ.from_nat(l)) = a^l"]}
+{"goal":"k = ℤ.from_nat(n)","proof":["ℤ.from_nat(pred.suc) != k"]}
+{"goal":"unique_inverse","proof":["F.1 ⋅ b != b","F.1 ⋅ b = b ⋅ F.1","b ⋅ F.1 != b","b ⋅ F.1 = b"]}
+{"goal":"a.zpow(n) ⋅ a.zpow(m) = a.zpow(n - -m)","proof":["-m >= ℤ.0 = ℤ.0 <= -m","m >= ℤ.0 = ℤ.0 <= m","not ℤ.0 <= m","not ℤ.0 < m or ℤ.0 <= m","ℤ.0 <= -m != (-m).is_negative","ℤ.0 < m = m.is_positive","(-m).is_negative = m.is_positive","not (-m).is_negative or m.is_positive","ℤ.0 <= -m or (-m).is_negative","not ℤ.0 < m","not m.is_positive","a.zpow(n) ⋅ a.reciprocal.zpow(-m) != a.zpow(n - -m)","not -m >= ℤ.0","not ℤ.0 <= -m","not (-m).is_negative","(-m).is_negative"]}
+{"goal":"a.reciprocal ⋅ b.reciprocal = F.0 ⋅ b.reciprocal","proof":["a.reciprocal != F.0","F.0.reciprocal != F.0"]}

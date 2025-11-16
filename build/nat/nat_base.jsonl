@@ -194,6 +194,10 @@
 {"goal":"lte_mul_both_right","proof":["not b <= c or a ⋅ b <= a ⋅ c","a ⋅ b = b ⋅ a","a ⋅ c = c ⋅ a","not a ⋅ b <= c ⋅ a","a ⋅ b <= a ⋅ c"]}
 {"goal":"gt_mul_both_right","proof":["not c < b or c ⋅ a < b ⋅ a or 0 = a","b > c = c < b","b ⋅ a > c ⋅ a = c ⋅ a < b ⋅ a","not c ⋅ a < b ⋅ a","c < b","not c < b"]}
 {"goal":"gte_mul_both_right","proof":["not c <= b or c ⋅ a <= b ⋅ a","b >= c = c <= b","b ⋅ a >= c ⋅ a = c ⋅ a <= b ⋅ a","not c ⋅ a <= b ⋅ a","c <= b","not c <= b"]}
+{"goal":"a ⋅ c <= b ⋅ c","proof":["not a <= b or a ⋅ c <= b ⋅ c"]}
+{"goal":"b ⋅ c < b ⋅ d","proof":["not c < d or b ⋅ c < b ⋅ d or b = 0","b = 0","a <= 0","not a <= 0 or 0 = a"]}
+{"goal":"right_lte_left_lt_mul_lt","proof":["not a ⋅ c < b ⋅ c or not b ⋅ c < b ⋅ d or a ⋅ c < b ⋅ d","not a ⋅ c <= b ⋅ c or a ⋅ c < b ⋅ c or b ⋅ c = a ⋅ c","not b ⋅ c < b ⋅ d or not a ⋅ c < b ⋅ c","not a ⋅ c < b ⋅ c","b ⋅ c = a ⋅ c"]}
+{"goal":"left_lte_right_lt_mul_lt","proof":["not a <= b or not c < d or a ⋅ c < b ⋅ d or 0 = a or 0 = c","not a < b or a ⋅ c < b ⋅ c or 0 = c","not c <= d or c < d or d = c","not a < b or a <= b","not c < d or not a <= b","a <= b","not c < d","d = c","not a ⋅ c < b ⋅ c"]}
 {"goal":"a ⋅ c <= a ⋅ b","proof":["not c <= b or a ⋅ c <= a ⋅ b","not c <= b","b >= c = c <= b"]}
 {"goal":"false","proof":["not a ⋅ c <= a ⋅ b or a ⋅ c < a ⋅ b or a ⋅ c = a ⋅ b","not a ⋅ c < a ⋅ b or not a ⋅ b < a ⋅ c","not a ⋅ b < a ⋅ b","not a ⋅ c < a ⋅ b","a ⋅ c = a ⋅ b"]}
 {"goal":"lt_cancel_mul","proof":["b < c or c < b or c = b","b >= c = c <= b","not c <= b","not c < b or c <= b","c != b or c <= b","c != b","not c < b","c < b"]}
@@ -326,7 +330,24 @@
 {"goal":"a^b != 1","proof":["a ⋅ a^b_pred = 1","a ⋅ a^b_pred != 1 or 1 = a"]}
 {"goal":"false","proof":["not a · c <= a · b or a · c < a · b or a · c = a · b","not a · c < a · b or not a · b < a · c","not a · b < a · b","not a · c < a · b","a · c = a · b"]}
 {"goal":"pow_eq_one_imp","proof":[]}
-{"goal":"sq_eq_mul","proof":["a^1 ⋅ a^1 = a^(1 + 1)","a^1 = a"]}
+{"goal":"f(0)","proof":["0 != 0 or f(0)"]}
+{"goal":"a^m.suc = a^m ⋅ a","proof":["m.suc != m.suc or a ⋅ a^m = a^m.suc","a ⋅ a^m = a^m ⋅ a","a ⋅ a^m != a^m.suc"]}
+{"goal":"b^m.suc = b^m ⋅ b","proof":["m.suc != m.suc or b ⋅ b^m = b^m.suc","b ⋅ b^m = b^m ⋅ b","b ⋅ b^m != b^m.suc"]}
+{"goal":"a^m < b^m","proof":["not a < b or not f(m) or a^m < b^m or m = 0","not f(m) or a^m < b^m or m = 0"]}
+{"goal":"a < b","proof":[]}
+{"goal":"a^m.suc = 0","proof":["0 != a or a^m ⋅ a = 0","a^m ⋅ a != 0"]}
+{"goal":"b^m.suc != 0","proof":["b^m.suc != 0 or b = 0","b = 0","a < 0","a < a","not a < a or not a < a"]}
+{"goal":"a^m.suc < b^m.suc","proof":["not 0 < b^m.suc","b^m.suc < 0 or 0 < b^m.suc or b^m.suc = 0","not b^m.suc < 0"]}
+{"goal":"a != 0","proof":[]}
+{"goal":"a^m != 0","proof":["a^m != 0 or 0 = a"]}
+{"goal":"a^m ⋅ a < b^m ⋅ b","proof":["not a <= b or not a^m < b^m or a^m ⋅ a < b^m ⋅ b or 0 = a or a^m = 0","not a <= b or not a^m < b^m or a^m ⋅ a < b^m ⋅ b or a^m = 0 or 0 = a","not a <= b","not a < b or a <= b"]}
+{"goal":"a^m.suc < b^m.suc","proof":[]}
+{"goal":"a^m.suc < b^m.suc","proof":[]}
+{"goal":"f(m.suc)","proof":["not a^m.suc < b^m.suc or f(m.suc)","b > a = a < b","b^m.suc > a^m.suc = a^m.suc < b^m.suc","m + 1 = 1 + m","1 + m = m.suc","a^1 = a","b^1 = b","0 + 1 = 1","not a^m.suc < b^m.suc","m = 0"]}
+{"goal":"f(n)","proof":["let s0: (ℕ -> Bool) -> ℕ satisfy { forall(x0: ℕ -> Bool, x1: ℕ) { not x0(0) or x0(s0(x0)) or x0(x1) } and forall(x2: ℕ -> Bool, x3: ℕ) { not x2(s0(x2).suc) or not x2(0) or x2(x3) } }","not f(s0(f)) or f(s0(f).suc)","not f(s0(f).suc) or not f(0) or f(n)","not f(s0(f).suc)","not f(0) or f(s0(f)) or f(n)","not f(s0(f))","f(s0(f))"]}
+{"goal":"power_increase","proof":["not a < b or not f(n) or a^n < b^n or 0 = n","not f(n) or a^n < b^n or 0 = n"]}
+{"goal":"square_eq_mul","proof":["a^1 ⋅ a^1 = a^(1 + 1)","a^1 = a"]}
+{"goal":"square_gt","proof":["not 1 < a or a < a ⋅ a or 0 = a","a^2 = a ⋅ a","a > 1 = 1 < a","a^2 > a = a < a^2","not a < a^2","not a < a ⋅ a","1 < a","not 1 < 0","0 = a"]}
 {"goal":"true_below(f, 0)","proof":["let s0: (ℕ -> Bool, ℕ) -> ℕ satisfy { forall(x0: ℕ -> Bool, x1: ℕ, x2: ℕ) { not true_below(x0, x1) or not x2 < x1 or x0(x2) } and forall(x3: ℕ -> Bool, x4: ℕ) { s0(x3, x4) < x4 or true_below(x3, x4) } and forall(x5: ℕ -> Bool, x6: ℕ) { not x5(s0(x5, x6)) or true_below(x5, x6) } }","s0(f, 0) < 0 or true_below(f, 0)","s0(f, 0) < 0","not s0(f, 0) < 0"]}
 {"goal":"g(0)","proof":["true_below(f, 0) = g(0)"]}
 {"goal":"true_below(f, x)","proof":["true_below(f, x) = g(x)"]}
@@ -369,3 +390,11 @@
 {"goal":"nine_sub_one","proof":["8 + 1 != 9 or 9 - 1 = 8","8 + 1 != 9","8 + 1 = 1 + 8","1 + 8 != 9"]}
 {"goal":"ten_sub_one","proof":["9 + 1 != 10 or 10 - 1 = 9","9 + 1 != 10","9 + 1 = 1 + 9","1 + 9 != 10"]}
 {"goal":"nat_power_set_uncountable","proof":[]}
+{"goal":"sq_eq_mul","proof":["a^1 ⋅ a^1 = a^(1 + 1)","a^1 = a"]}
+{"goal":"right_lte_left_lt_mul_both_right","proof":["not a ⋅ c < b ⋅ c or not b ⋅ c < b ⋅ d or a ⋅ c < b ⋅ d","not a ⋅ c <= b ⋅ c or a ⋅ c < b ⋅ c or b ⋅ c = a ⋅ c","not b ⋅ c < b ⋅ d or not a ⋅ c < b ⋅ c","not a ⋅ c < b ⋅ c","b ⋅ c = a ⋅ c"]}
+{"goal":"right_lte_left_lt_mul_both_right","proof":["not a ⋅ c < c ⋅ b or not c ⋅ b < b ⋅ d or a ⋅ c < b ⋅ d","b ⋅ c = c ⋅ b","a ⋅ c < c ⋅ b","c ⋅ b < b ⋅ d","not c ⋅ b < b ⋅ d or not a ⋅ c < c ⋅ b"]}
+{"goal":"f(m.suc)","proof":["not a^m.suc < b^m.suc or f(m.suc)"]}
+{"goal":"left_lt_right_lt_mul_lt","proof":["not a <= b or not c < d or a ⋅ c < b ⋅ d or 0 = a or 0 = c","not a <= b","not a < b or a <= b"]}
+{"goal":"left_right_lt_lt","proof":["not a <= b or not c < d or a + c < b + d","not a <= b","not a < b or a <= b"]}
+{"goal":"left_lte_right_lt_mul_both_right","proof":["not a <= b or not c < d or a ⋅ c < b ⋅ d or 0 = a or 0 = c","not a < b or a ⋅ c < b ⋅ c or 0 = c","not c <= d or c < d or d = c","not a < b or a <= b","not c < d or not a <= b","a <= b","not c < d","d = c","not a ⋅ c < b ⋅ c"]}
+{"goal":"a^m ⋅ a < b^m ⋅ b","proof":["not a <= b or not a^m < b^m or a^m ⋅ a < b^m ⋅ b","not a <= b","not a < b or a <= b"]}

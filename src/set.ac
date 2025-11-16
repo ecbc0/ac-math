@@ -793,6 +793,16 @@ theorem sets_subset_imp_union_subset[K](c1: Set[Set[K]], c2: Set[Set[K]]) {
     }
 }
 
+theorem union_subset[K](c: Set[Set[K]], s: Set[K]) {
+    s ∈ c implies s ⊆ union(c)
+}
+
+theorem superset_union[K](c: Set[Set[K]], s: Set[K]) {
+    forall(t: Set[K]) {
+        t ∈ c implies s ⊇ t
+    } implies s ⊇ union(c)
+}
+
 define elem_in_intersection_general[K](c: Set[Set[K]], x: K) -> Bool {
     forall(s: Set[K]) {
         s ∈ c implies x ∈ s
@@ -819,6 +829,20 @@ theorem sets_subset_imp_intersection_superset[K](c1: Set[Set[K]], c2: Set[Set[K]
     }
 }
 
+theorem intersection_superset[K](c: Set[Set[K]], s: Set[K]) {
+    s ∈ c implies s ⊇ intersection(c)
+}
+
+theorem subset_intersection[K](c: Set[Set[K]], s: Set[K]) {
+    forall(t: Set[K]) {
+        t ∈ c implies s ⊆ t
+    } implies s ⊆ intersection(c)
+} by {
+    forall(x: K) {
+        x ∈ s implies x ∈ intersection(c)
+    }
+}
+
 theorem empty_intersection_is_universe[K] {
     intersection(Set[Set[K]].empty_set) = Set[K].universal_set
 } by {
@@ -838,8 +862,8 @@ theorem empty_intersection_is_universe[K] {
     intersection(Set[Set[K]].empty_set).contains = Set[K].universal_set.contains
 }
 
-define elem_in_compl_of_sets[K](sets: Set[Set[K]], s_c: Set[K]) -> Bool {
-    s_c.c ∈ sets
+define elem_in_compl_of_sets[K](sets: Set[Set[K]], s: Set[K]) -> Bool {
+    s.c ∈ sets
 }
 
 define compl_of_sets[K](sets: Set[Set[K]]) -> Set[Set[K]] {
@@ -900,6 +924,51 @@ theorem union_intersection_compl_dual_general[K](sets: Set[Set[K]]) {
 
 theorem empty_union_is_empty[K] {
     union(Set[Set[K]].empty_set) = Set[K].empty_set
+}
+
+define intersection_with_one[K](c: Set[Set[K]], s: Set[K]) -> Set[K] {
+    Set[K].new(
+        function(x: K) {
+            forall(t: Set[K]) {
+                t ∈ c implies x ∈ s ∩ t
+            }
+        }
+    )
+}
+
+theorem intersection_comm_one[K](c: Set[Set[K]], s: Set[K]) {
+    is_nonempty(c) implies intersection_with_one(c, s) = s ∩ intersection(c)
+} by {
+    forall(x: K) {
+        if x ∈ intersection_with_one(c, s) {
+            let u: Set[K] satisfy { u ∈ c }
+            x ∈ s ∩ u
+            x ∈ s
+            forall(t: Set[K]) {
+                if t ∈ c {
+                    x ∈ s ∩ t
+                    x ∈ t
+                }
+            }
+            x ∈ intersection(c)
+            x ∈ s and x ∈ intersection(c)
+        }
+    }
+    intersection_with_one(c, s) ⊆ s ∩ intersection(c)
+
+    forall(x: K) {
+        if x ∈ s ∩ intersection(c) {
+            forall(t: Set[K]) {
+                if t ∈ c {
+                    x ∈ s
+                    x ∈ t
+                    x ∈ s ∩ t
+                }
+            }
+            x ∈ intersection_with_one(c, s)
+        }
+    }
+    intersection_with_one(c, s) ⊇ s ∩ intersection(c)    
 }
 
 // todo: (product/sum)_index_of_two
@@ -1206,6 +1275,18 @@ theorem inv_image_preserve_union[K, L](a: Set[L], b: Set[L], f: K -> L) {
 
 theorem image_of_inv_image_subset[K, L](f: K -> L, b: Set[L]) {
     b.inv_image(f).image(f) ⊆ b
+} 
+
+theorem image_preserve_subset[K, L](f: K -> L, a: Set[K], b: Set[K]) {
+    a ⊆ b implies a.image(f) ⊆ b.image(f)
+} 
+
+theorem inv_image_preserve_subset[K, L](f: K -> L, a: Set[L], b: Set[L]) {
+    a ⊆ b implies a.inv_image(f) ⊆ b.inv_image(f)
+} 
+
+theorem image_preserve_nomempty[K, L](f: K -> L, a: Set[K], b: Set[K]) {
+    is_nonempty(a) implies is_nonempty(a.image(f))
 } 
 
 theorem in_singleton[K](x: K, y: K) {

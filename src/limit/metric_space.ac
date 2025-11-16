@@ -1,0 +1,668 @@
+from real import ℝ
+from real.real_completeness import inf, sup, have_lower_bound, have_upper_bound, directly_closely_gt_inf_directly, have_inf, have_sup
+numerals ℝ
+from set import Set, intersection, is_nonempty
+from limit.net import Set_Net, no_empty, subset_two_intersection, is_net, subset_two_intersection_helper, subset_two_intersection_helper_imp_by, is_limit
+from top.top_base import Point_Net_System, Topology, converge_to
+from util import id_map
+
+/// A metric space is a set equipped with a distance function that satisfies specific axioms.
+/// The distance function must be non-negative, symmetric, and satisfy the triangle inequality.
+typeclass M: Distance_Space {
+    /// Every metric space must have a distance function
+    distance: (M, M) -> ℝ
+
+    /// Rule: the distance from a point to itself is zero
+    self_distance_is_zero(x: M) {
+        x.distance(x) = 0
+    }
+
+    /// Rule: distance must be symmetric
+    symmetric(x: M, y: M) {
+        x.distance(y) = y.distance(x)
+    }
+
+    /// Rule: distance must satisfy the triangle inequality
+    triangle(x: M, y: M, z: M) {
+        x.distance(z) <= x.distance(y) + y.distance(z)
+    }
+}
+
+theorem distance_non_negative[M: Distance_Space](x: M, y: M) {
+    x.distance(y) >= 0
+} by {
+    x.distance(x) <= x.distance(y) + y.distance(x)
+    0 <= x.distance(y) + x.distance(y)
+    if x.distance(y) < 0 {
+        x.distance(y) + x.distance(y) < 0
+        false
+    }
+    0 <= x.distance(y)
+}
+
+typeclass M: Metric_Space extends Distance_Space {
+    /// Rule: distance zero means the points are equal  
+    /// Cannot use in measure and integral without quotient measure zero, and quotient may introduce incovenience to code writting
+    dist_zero_imp_eq(x: M, y: M) {
+        x.distance(y) = 0 implies x = y
+    }
+}
+
+/// The discrete metric assigns distance 0 to identical elements and distance 1 to distinct elements.
+define discrete[T](x: T, y: T) -> ℝ {
+    if x = y {
+        0
+    } else {
+        1
+    }
+}
+
+theorem zero_lte_discrete[T](x: T, y: T) {
+    0 <= discrete(x, y)
+} by {
+    if x = y {
+        0 <= discrete(x, y)
+    } else {
+        0 <= discrete(x, y)
+    }
+}
+
+theorem discrete_self_distance_is_zero[T](x: T) {
+    discrete(x, x) = 0
+}
+
+theorem discrete_dist_zero_imp_eq[T](x: T, y: T) {
+    discrete(x, y) = 0 implies x = y
+}
+
+theorem discrete_symmetric[T](x: T, y: T) {
+    discrete(x, y) = discrete(y, x)
+} by {
+    if x = y {
+        discrete(x, y) = discrete(y, x)
+    } else {
+        discrete(x, y) = discrete(y, x)
+    }
+}
+
+theorem discrete_triangle[T](x: T, y: T, z: T) {
+    discrete(x, z) <= discrete(x, y) + discrete(y, z)
+} by {
+    if x = y {
+        discrete(x, z) <= discrete(x, y) + discrete(y, z)
+    } else {
+        discrete(x, y) = 1
+        0 <= discrete(y, z)
+        if x = z {
+            discrete(x, z) <= discrete(x, y) + discrete(y, z)
+        } else {
+            discrete(x, z) <= discrete(x, y) + discrete(y, z)
+        }
+    }
+}
+
+/// A simple enumeration type used as an example of a metric space with the discrete metric.
+inductive Color {
+    /// Red means nothing. It's just different from green and blue.
+    red
+
+    /// Green is not red or blue.
+    green
+
+    /// Blue is not red or green.
+    blue
+}
+
+instance Color: Distance_Space {
+    let distance: (Color, Color) -> ℝ = discrete
+}
+
+theorem color_dist_zero_imp_eq(x: Color, y: Color) {
+    x.distance(y) = 0 implies x = y
+} by {
+    discrete(x, y) = 0 implies x = y
+}
+
+instance Color: Metric_Space 
+
+define elem_in_ball[M: Distance_Space](x: M, r: ℝ, y: M) -> Bool {
+    x.distance(y) < r
+}
+
+attributes M: Distance_Space {
+    define ball(self, radius: ℝ) -> Set[M] {
+        Set[M].new(elem_in_ball(self, radius))
+    }
+}
+
+theorem self_in_ball[M: Distance_Space](x: M, r: ℝ) {
+    r > 0 implies x ∈ x.ball(r)
+}
+
+define elem_in_ball_net[M: Distance_Space](x: M, s: Set[M]) -> Bool {
+    exists(r: ℝ) {
+        r > 0 and s = x.ball(r)
+    }
+}
+
+attributes M: Distance_Space {
+    define ball_net(self) -> Set[Set[M]] {
+        Set[Set[M]].new(elem_in_ball_net(self))
+    }
+}
+
+theorem radius_lt_imp_subset[M: Distance_Space](x: M, r1: ℝ, r2: ℝ) {
+    r1 > 0 and r1 <= r2 implies x.ball(r1) ⊆ x.ball(r2) 
+} by {
+    forall(y: M) {
+        if y ∈ x.ball(r1) {
+            x.distance(y) < r1
+            x.distance(y) < r2
+            y ∈ x.ball(r2)
+        }
+    }
+}
+
+theorem ball_net_is_net[M: Distance_Space](x: M) {
+    is_net(x.ball_net)
+} by {
+    forall(s: Set[M]) {
+        if s ∈ x.ball_net {
+            let r: ℝ satisfy {
+                r > 0 and s = x.ball(r)
+            }
+            x ∈ s
+            s != Set[M].empty_set
+        }
+    }
+    no_empty(x.ball_net)
+    forall(a1: Set[M], a2: Set[M]) {
+        if a1 ∈ x.ball_net and a2 ∈ x.ball_net {
+            let r1: ℝ satisfy {
+                r1 > 0 and a1 = x.ball(r1)
+            }
+            elem_in_ball_net(x, a2)
+            let r2: ℝ satisfy {
+                r2 > 0 and a2 = x.ball(r2)
+            }
+            let r: ℝ satisfy {
+                r = r1.min(r2)
+            }
+            r <= r1
+            r <= r2
+            r > 0
+            x.ball(r) ⊆ x.ball(r1)
+            x.ball(r) ⊆ a1
+            x.ball(r) ⊆ x.ball(r2)
+            x.ball(r) ⊆ a2
+            x.ball(r) ⊆ a1 ∩ a2
+            x.ball(r) ∈ x.ball_net
+            x.ball(r) ∈ x.ball_net and x.ball(r) ⊆ a1 ∩ a2
+        }
+    }
+    subset_two_intersection_helper(x.ball_net)
+    subset_two_intersection(x.ball_net)
+}
+
+theorem point_net[M: Distance_Space](x: M) {
+    Set_Net.new(x.ball_net).have_common_pt(x)
+} by {
+    forall(s: Set[M]) {
+        if s ∈ Set_Net.new(x.ball_net).sets {
+            s ∈ x.ball_net
+            let r: ℝ satisfy {
+                r > 0 and s = x.ball(r)
+            }
+            x.distance(x) = 0
+            x.distance(x) < r
+            x ∈ s
+        }
+    }
+}
+
+typeclass M: Distance_Net_System extends Distance_Space, Point_Net_System {
+    net_from_ball(x: M) {
+        M.net(x) = Set_Net.new(M.ball_net(x))
+    }
+}
+
+theorem ball_in_net[M: Distance_Net_System](x: M, r: ℝ) {
+    r > 0 implies x.ball(r) ∈ x.net.sets
+} by {
+    x.net.sets = x.ball_net
+}
+
+theorem choose_ball[M: Distance_Net_System](s: Set[M], x: M) {
+    s ∈ x.net.sets implies exists(r: ℝ) {
+        r > 0 and s = x.ball(r)
+    }
+} by {
+    x.net.sets = x.ball_net
+}
+
+define elem_in_dist_set[M: Distance_Space](s: Set[M], r: ℝ) -> Bool {
+    exists(x: M, y: M) {
+        x ∈ s and y ∈ s and r = x.distance(y)
+    }
+}
+
+define dist_set[M: Distance_Space](s: Set[M]) -> Set[ℝ] {
+    Set[ℝ].new(elem_in_dist_set(s))
+}
+
+define dist[M: Distance_Space](s: Set[M]) -> ℝ {
+    sup(dist_set(s))
+}
+
+theorem dist_set_gte_zero[M: Distance_Space](s: Set[M]) {
+    forall(r: ℝ) {
+        r ∈ dist_set(s) implies r >= 0
+    }
+} by {
+    forall(r: ℝ) {
+        if r ∈ dist_set(s) {
+            let (x: M, y: M) satisfy {
+                x ∈ s and y ∈ s and x.distance(y) = r
+            }
+            r >= 0
+        } 
+    }
+}
+
+theorem no_empty_imp_dist_set_contains_zero[M: Distance_Space](s: Set[M]) {
+    is_nonempty(s) implies 0 ∈ dist_set(s)
+} by {
+    let x: M satisfy { x ∈ s }
+    0 = x.distance(x)
+}
+
+theorem no_empty_imp_dist_set_non_empty[M: Distance_Space](s: Set[M]) {
+    is_nonempty(s) implies is_nonempty(dist_set(s))
+} 
+
+theorem dist_gte_zero[M: Distance_Space](s: Set[M]) {
+    have_sup(dist_set(s)) implies dist(s) >= 0
+} by {
+    let r: ℝ satisfy {
+        r ∈ dist_set(s)
+    }
+    r <= dist(s)
+    r >= 0 
+}
+
+theorem subset_to_dist_set_subset[M: Distance_Space](s1: Set[M], s2: Set[M]) {
+    s1 ⊆ s2 implies dist_set(s1) ⊆ dist_set(s2)
+} by {
+    forall(r: ℝ) {
+        if r ∈ dist_set(s1) {
+            elem_in_dist_set(s1, r)
+            let (x: M, y: M) satisfy {
+                x ∈ s1 and y ∈ s1 and x.distance(y) = r
+            }
+            x ∈ s2
+            y ∈ s2
+            r ∈ dist_set(s2)
+        }
+    }
+}
+
+theorem subset_to_dist_lte[M: Distance_Space](s1: Set[M], s2: Set[M]) {
+    s1 ⊆ s2 and have_sup(dist_set(s1)) and have_sup(dist_set(s2)) implies dist(s1) <= dist(s2)
+} by {
+    forall(r: ℝ) {
+        if r ∈ dist_set(s1) {
+            elem_in_dist_set(s1, r)
+            let (x: M, y: M) satisfy {
+                x ∈ s1 and y ∈ s1 and x.distance(y) = r
+            }
+            x ∈ s2
+            y ∈ s2
+            r ∈ dist_set(s2)
+        }
+    }
+    dist_set(s1) ⊆ dist_set(s2)
+}
+
+theorem dist_control_helper[M: Distance_Space](s: Set[M], r: ℝ) {
+    is_nonempty(s) and r > 0 and forall(x: M, y: M) {
+        x ∈ s and y ∈ s implies x.distance(y) < r
+    } implies have_sup(dist_set(s)) and dist(s) <= r
+} by {
+    forall(d: ℝ) {
+        if d ∈ dist_set(s) {
+            elem_in_dist_set(s, d)
+            let (x: M, y: M) satisfy {
+                x ∈ s and y ∈ s and d = x.distance(y)
+            }
+            d < r
+        }
+    }
+    r.is_set_upper_bound(dist_set(s))
+    have_sup(dist_set(s))
+    sup(dist_set(s)) <= r
+    dist(s) <= r
+}
+
+define elem_in_distance_from[M: Distance_Space](s: Set[M], x: M, r: ℝ) -> Bool {
+    exists(y: M) {
+        y ∈ s and x.distance(y) = r
+    }
+}
+
+define distance_from[M: Distance_Space](s: Set[M], x: M) -> Set[ℝ] {
+    Set[ℝ].new(elem_in_distance_from(s, x))
+}
+
+theorem distance_from_gte_zero[M: Distance_Space](s: Set[M], x: M) {
+    forall(r: ℝ) {
+        r ∈ distance_from(s, x) implies r >= 0
+    }
+}
+
+theorem distance_from_have_lower_bound[M: Distance_Space](s: Set[M], x: M) {
+    have_lower_bound(distance_from(s, x))
+} by {
+    0.is_set_lower_bound(distance_from(s, x))
+}
+
+theorem non_empty_imp_distance_from_non_empty[M: Distance_Space](s: Set[M], x: M) {
+    is_nonempty(s) implies is_nonempty(distance_from(s, x))
+} by {
+    let y: M satisfy {
+        y ∈ s
+    }
+    x.distance(y) ∈ distance_from(s, x)
+}
+
+theorem non_empty_imp_have_inf[M: Distance_Space](s: Set[M], x: M) {
+    is_nonempty(s) implies have_inf(distance_from(s, x))
+}
+
+theorem distance_from_inf_gte_zero[M: Distance_Space](s: Set[M], x: M) {
+    inf(distance_from(s, x)) >= 0
+} by {
+    0.is_set_lower_bound(distance_from(s, x))
+}
+
+theorem subset_to_distance_from_subset[M: Distance_Space](s1: Set[M], s2: Set[M], x: M) {
+    s1 ⊆ s2 implies distance_from(s1, x) ⊆ distance_from(s2, x)
+} by {
+    forall(r: ℝ) {
+        if r ∈ distance_from(s1, x) {
+            let y: M satisfy {
+                y ∈ s1 and x.distance(y) = r
+            }
+            y ∈ s2
+            r ∈ distance_from(s2, x)
+        }
+    }
+}
+
+theorem interior_have_non_zero_distance_from_inf[M: Distance_Net_System](a: Set[M], x: M) {
+    x ∈ a.interior and is_nonempty(a.c) implies inf(distance_from(a.c, x)) > 0
+} by {
+    have_inf(distance_from(a.c, x))
+    let s: Set[M] satisfy {
+        s ∈ x.net.sets and s ⊆ a
+    }
+    let r: ℝ satisfy {
+        r > 0 and s = x.ball(r)
+    }
+    if inf(distance_from(a.c, x)) = 0 {
+        inf(distance_from(a.c, x)) < r
+        directly_closely_gt_inf_directly(distance_from(a.c, x), r)
+        let ε: ℝ satisfy {
+            ε ∈ distance_from(a.c, x) and ε < r
+        }
+        elem_in_distance_from(a.c, x, ε)
+        let y: M satisfy {
+            y ∈ a.c and x.distance(y) = ε
+        }
+        ε < r
+        y ∈ x.ball(r)
+        y ∈ a
+        false
+    }
+    inf(distance_from(a.c, x)) != 0
+    inf(distance_from(a.c, x)) >= 0
+    inf(distance_from(a.c, x)) > 0
+}
+
+theorem distance_lt_inf_distance_from_compl_imp_in[M: Distance_Net_System](a: Set[M], x: M, y: M) {
+    x.distance(y) < inf(distance_from(a.c, x)) implies y ∈ a
+} by {
+    if not y ∈ a {
+        y ∈ a.c
+        x.distance(y) ∈ distance_from(a.c, x)
+        x.distance(y) >= inf(distance_from(a.c, x))
+        false
+    }
+}
+
+theorem not_in_imp_distance_gte_inf_distance_from_compl[M: Distance_Net_System](a: Set[M], x: M, y: M) {
+    y ∉ a implies x.distance(y) >= inf(distance_from(a.c, x))
+}
+
+theorem net_limit_split_of_interior_boundary[M: Distance_Net_System](a: Set[M], x: M) {
+    x ∈ a.interior implies exists(b: Set[M]) {
+        b ∈ x.net.sets and b ⊆ a.interior
+    }
+}
+by {
+    if x ∈ a.interior {
+        let b: Set[M] satisfy { 
+            b ∈ x.net.sets and b ⊆ a 
+        }
+        b ∈ x.ball_net
+        let r: ℝ satisfy {
+            r > 0 and b = x.ball(r)
+        }
+        forall(y: M) {
+            if y ∈ b {
+                y ∈ x.ball(r)
+                x.distance(y) < r
+                let r1 = r - x.distance(y)
+                r1 > 0
+                y.ball(r1) ∈ y.ball_net
+                y.ball_net = y.net.sets
+                y.ball(r1) ∈ y.net.sets
+                forall(z: M) {
+                    if z ∈ y.ball(r1) {
+                        y.distance(z) < r1
+                        x.distance(z) <= x.distance(y) + y.distance(z)
+                        x.distance(y) + y.distance(z) < x.distance(y) + r1
+                        x.distance(z) < x.distance(y) + r1
+                        x.distance(y) + r1 = r
+                        x.distance(z) < r
+                        z ∈ x.ball(r)
+                        z ∈ b
+                    }
+                }
+                y.ball(r1) ⊆ b
+                y ∈ a.interior
+            }
+        }
+        b ⊆ a.interior
+        b ∈ x.net.sets and b ⊆ a.interior
+    }
+}
+
+define is_bounded[M: Distance_Space](s: Set[M]) -> Bool {
+    have_sup(dist_set(s))
+}
+
+define is_elem_bounded[M: Distance_Space](n: Set[Set[M]]) -> Bool {
+    forall(s: Set[M]) {
+        s ∈ n implies is_bounded(s)
+    }
+}
+
+theorem ball_is_bounded[M: Distance_Space](x: M, r: ℝ) {
+    r > 0 implies is_bounded(x.ball(r))
+} by {
+    forall(y: M, z: M) {
+        if y ∈ x.ball(r) and z ∈ x.ball(r) {
+            x.distance(y) < r
+            x.distance(z) < r
+            y.distance(z) <= x.distance(y) + x.distance(z)
+            y.distance(z) < r + r
+        }
+    }
+    r + r > 0
+    is_nonempty(x.ball(r))
+    have_sup(dist_set(x.ball(r)))
+}
+
+typeclass Distance_Top extends Distance_Net_System, Topology
+
+/// also called Cauchy net
+define is_dist_vanish_net[K, M: Distance_Space](n: Set_Net[K], f: K -> M) -> Bool {
+    forall(ε: ℝ) {
+        ε > 0 implies exists(s: Set[K]) {
+            s ∈ n.sets and is_bounded(s.image(f)) and dist(s.image(f)) < ε
+        }
+    }
+}
+
+define elme_in_zero_dist_class[M: Distance_Space](x: M, y: M) -> Bool {
+    x.distance(y) = 0
+}
+
+attributes M: Distance_Space {
+    define zero_dist_class(self) -> Set[M] {
+        Set[M].new(elme_in_zero_dist_class(self))
+    }
+}
+
+theorem zero_dist_class_is_zero_dist_class[M: Distance_Space](x: M, y: M, z: M) {
+    y ∈ x.zero_dist_class and z ∈ x.zero_dist_class implies y.distance(z) = 0
+} by {
+    y.distance(z) <= x.distance(y) + x.distance(z)
+    x.distance(y) = 0 
+    x.distance(z) = 0
+    y.distance(z) <= 0
+    y.distance(z) = 0
+}
+
+theorem distance_space_converge_to_definition_expand_ball_imp[K, M: Distance_Top](source_net: Set_Net[K], target: M, f: K -> M) {
+    converge_to(source_net, target, f) implies (
+        forall(ε: ℝ) { 
+            ε > 0 implies exists(a: Set[K]) { 
+                a ∈ source_net.sets and a.image(f) ⊆ target.ball(ε) 
+            } 
+        }
+    )
+} by {
+    forall(ε: ℝ) {
+        if ε > 0 {
+            target.ball(ε) ∈ target.net.sets
+            is_limit(source_net, target.net, f)
+            let a: Set[K] satisfy {
+                a ∈ source_net.sets and a.image(f) ⊆ target.ball(ε)
+            }
+        }
+    }
+}
+
+theorem distance_space_converge_to_definition_expand_ball_imp_by[K, M: Distance_Top](source_net: Set_Net[K], target: M, f: K -> M) {
+    forall(ε: ℝ) { 
+        ε > 0 implies exists(a: Set[K]) { 
+            a ∈ source_net.sets and a.image(f) ⊆ target.ball(ε) 
+        } 
+    } implies converge_to(source_net, target, f) 
+} by {
+    forall(b: Set[M]) {
+        if b ∈ target.net.sets {
+            let ε: ℝ satisfy {
+                ε > 0 and b = target.ball(ε)
+            }
+            let (a: Set[K]) satisfy { 
+                a ∈ source_net.sets and a.image(f) ⊆ target.ball(ε)
+            }
+            a ∈ source_net.sets and a.image(f) ⊆ b
+        }
+    }
+    is_limit(source_net, target.net, f)
+}
+
+theorem dist_vanish_net_if_converge[K, M: Distance_Top](n: Set_Net[K], x: M, y: M, f: K -> M) {
+    is_dist_vanish_net(n, f) and converge_to(n, x, f) and converge_to(n, y, f) implies x.distance(y) = 0
+} by {
+    forall(ε: ℝ) {
+        if ε > 0 {
+            ε/2 > 0
+            let (ax: Set[K]) satisfy {
+                ax ∈ n.sets and ax.image(f) ⊆ x.ball(ε/2)
+            }
+            distance_space_converge_to_definition_expand_ball_imp(n, y, f)
+            let (ay: Set[K]) satisfy {
+                ay ∈ n.sets and ay.image(f) ⊆ y.ball(ε/2)
+            }
+            is_net(n.sets)
+            subset_two_intersection(n.sets)
+            subset_two_intersection_helper_imp_by(n.sets)
+            ax ∈ n.sets and ay ∈ n.sets
+            let a: Set[K] satisfy {
+                a ∈ n.sets and a ⊆ ax and a ⊆ ay
+            }
+            is_nonempty(a)
+            is_nonempty(a.image(f))
+            a ⊆ ax
+            a.image(f) ⊆ ax.image(f)
+            a ⊆ ay
+            a.image(f) ⊆ ay.image(f)
+            let z: M satisfy { z ∈ a.image(f) }
+            z ∈ x.ball(ε/2)
+            z ∈ y.ball(ε/2)
+            x.distance(z) < ε/2
+            y.distance(z) < ε/2
+            x.distance(y) <= x.distance(z) + y.distance(z)
+            x.distance(z) + y.distance(z) < ε/2 + ε/2
+            ε/2 + ε/2 = ε
+            x.distance(y) < ε
+        }
+    }
+    x.distance(y) <= 0
+    x.distance(y) = 0
+}
+
+theorem converge_to_zero_class_imp_dist_vanish_net[K, M: Distance_Top](n: Set_Net[K], x: M, f: K -> M) {
+    converge_to(n, x, f) implies is_dist_vanish_net(n, f)
+} by {
+    forall(ε: ℝ) {
+        if ε > 0 {
+            let r: ℝ satisfy { 0 < r and r < ε }
+            r/2 > 0
+            distance_space_converge_to_definition_expand_ball_imp(n, x, f)
+            let (s: Set[K]) satisfy {
+                s ∈ n.sets and s.image(f) ⊆ x.ball(r/2)
+            }
+            forall(y: M, z: M) {
+                if y ∈ s.image(f) and z ∈ s.image(f) {
+                    y ∈ x.ball(r/2)
+                    z ∈ x.ball(r/2)
+                    x.distance(y) < r/2
+                    x.distance(z) < r/2
+                    y.distance(z) <= x.distance(y) + x.distance(z)
+                    x.distance(y) + x.distance(z) < r/2 + r/2
+                    y.distance(z) < r
+                }
+            }
+            is_nonempty(s)
+            is_nonempty(s.image(f))
+            dist_control_helper(s.image(f), r)
+            have_sup(dist_set(s.image(f)))
+            dist(s.image(f)) <= r
+            dist(s.image(f)) < ε
+            s ∈ n.sets and is_bounded(s.image(f)) and dist(s.image(f)) < ε
+        }
+    }
+}
+
+typeclass M: Complete_Distance_Space extends Distance_Space {
+    dist_vanish_net_converge {
+        forall(n: Set_Net[M]) {
+            is_dist_vanish_net(n, id_map[M]) implies is_nonempty(intersection(n.sets))
+        }
+    }
+}
