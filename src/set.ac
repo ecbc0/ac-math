@@ -1285,9 +1285,24 @@ theorem inv_image_preserve_subset[K, L](f: K -> L, a: Set[L], b: Set[L]) {
     a ⊆ b implies a.inv_image(f) ⊆ b.inv_image(f)
 } 
 
-theorem image_preserve_nomempty[K, L](f: K -> L, a: Set[K], b: Set[K]) {
+theorem image_preserve_nomempty[K, L](f: K -> L, a: Set[K]) {
     is_nonempty(a) implies is_nonempty(a.image(f))
 } 
+
+theorem intersection_image_subset_image_intersection[K, L](f: K -> L, a: Set[K], b: Set[K]) {
+    (a ∩ b).image(f) ⊆ a.image(f) ∩ b.image(f)
+} by {
+    forall(y: L) {
+        if y ∈ (a ∩ b).image(f) {
+            let x: K satisfy { x ∈ a ∩ b and y = f(x) }
+            x ∈ a
+            y ∈ a.image(f)
+            x ∈ b 
+            y ∈ b.image(f)
+            y ∈ a.image(f) ∩ b.image(f)
+        }
+    }
+}
 
 theorem in_singleton[K](x: K, y: K) {
     y ∈ Set[K].singleton(x) iff y = x

@@ -390,11 +390,11 @@
 {"goal":"nine_sub_one","proof":["8 + 1 != 9 or 9 - 1 = 8","8 + 1 != 9","8 + 1 = 1 + 8","1 + 8 != 9"]}
 {"goal":"ten_sub_one","proof":["9 + 1 != 10 or 10 - 1 = 9","9 + 1 != 10","9 + 1 = 1 + 9","1 + 9 != 10"]}
 {"goal":"nat_power_set_uncountable","proof":[]}
-{"goal":"sq_eq_mul","proof":["a^1 ⋅ a^1 = a^(1 + 1)","a^1 = a"]}
+{"goal":"f(m.suc)","proof":["not a^m.suc < b^m.suc or f(m.suc)"]}
+{"goal":"a^m ⋅ a < b^m ⋅ b","proof":["not a <= b or not a^m < b^m or a^m ⋅ a < b^m ⋅ b","not a <= b","not a < b or a <= b"]}
+{"goal":"left_right_lt_lt","proof":["not a <= b or not c < d or a + c < b + d","not a <= b","not a < b or a <= b"]}
 {"goal":"right_lte_left_lt_mul_both_right","proof":["not a ⋅ c < b ⋅ c or not b ⋅ c < b ⋅ d or a ⋅ c < b ⋅ d","not a ⋅ c <= b ⋅ c or a ⋅ c < b ⋅ c or b ⋅ c = a ⋅ c","not b ⋅ c < b ⋅ d or not a ⋅ c < b ⋅ c","not a ⋅ c < b ⋅ c","b ⋅ c = a ⋅ c"]}
 {"goal":"right_lte_left_lt_mul_both_right","proof":["not a ⋅ c < c ⋅ b or not c ⋅ b < b ⋅ d or a ⋅ c < b ⋅ d","b ⋅ c = c ⋅ b","a ⋅ c < c ⋅ b","c ⋅ b < b ⋅ d","not c ⋅ b < b ⋅ d or not a ⋅ c < c ⋅ b"]}
-{"goal":"f(m.suc)","proof":["not a^m.suc < b^m.suc or f(m.suc)"]}
 {"goal":"left_lt_right_lt_mul_lt","proof":["not a <= b or not c < d or a ⋅ c < b ⋅ d or 0 = a or 0 = c","not a <= b","not a < b or a <= b"]}
-{"goal":"left_right_lt_lt","proof":["not a <= b or not c < d or a + c < b + d","not a <= b","not a < b or a <= b"]}
 {"goal":"left_lte_right_lt_mul_both_right","proof":["not a <= b or not c < d or a ⋅ c < b ⋅ d or 0 = a or 0 = c","not a < b or a ⋅ c < b ⋅ c or 0 = c","not c <= d or c < d or d = c","not a < b or a <= b","not c < d or not a <= b","a <= b","not c < d","d = c","not a ⋅ c < b ⋅ c"]}
-{"goal":"a^m ⋅ a < b^m ⋅ b","proof":["not a <= b or not a^m < b^m or a^m ⋅ a < b^m ⋅ b","not a <= b","not a < b or a <= b"]}
+{"goal":"sq_eq_mul","proof":["a^1 ⋅ a^1 = a^(1 + 1)","a^1 = a"]}

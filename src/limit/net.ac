@@ -31,7 +31,7 @@ theorem subset_two_intersection_helper[K](sets: Set[Set[K]]) {
     } implies subset_two_intersection(sets) 
 }
 
-theorem subset_two_intersection_helper_imp_by[T](sets: Set[Set[T]]) {
+theorem subset_two_intersection_helper_imp_by_ver_logic[T](sets: Set[Set[T]]) {
     subset_two_intersection(sets) implies (
         forall(a1: Set[T], a2: Set[T]) {
             a1 ∈ sets and a2 ∈ sets implies exists(b: Set[T]) {
@@ -50,6 +50,17 @@ theorem subset_two_intersection_helper_imp_by[T](sets: Set[Set[T]]) {
     } 
 }
 
+theorem subset_two_intersection_helper_imp_by[T](sets: Set[Set[T]]) {
+    subset_two_intersection(sets) implies (
+        forall(a1: Set[T], a2: Set[T]) {
+            a1 ∈ sets and a2 ∈ sets implies exists(b: Set[T]) {
+                b ∈ sets and b ⊆ a1 ∩ a2
+            }
+        } 
+    )
+} 
+
+/// Topology doesn't seem to provide a sufficient motivation for using the concept of a net, but the definitions of measure and integral should.
 define is_net[K](sets: Set[Set[K]]) -> Bool {
     no_empty(sets) and subset_two_intersection(sets)
 }
@@ -150,6 +161,98 @@ define is_limit[K, L](source_net: Set_Net[K], target_net: Set_Net[L], f: K -> L)
             a ∈ source_net.sets and a.image(f) ⊆ b
         }
     }
+}
+
+define elem_in_image_of_sets[K, L](n: Set[Set[K]], f: K -> L, b: Set[L]) -> Bool {
+    exists(a: Set[K]) { 
+        a ∈ n and b = a.image(f)
+    }
+}
+
+define image_of_sets[K, L](n: Set[Set[K]], f: K -> L) -> Set[Set[L]] {
+    Set[Set[L]].new(elem_in_image_of_sets(n, f))
+}
+
+theorem image_of_sets_preserve_no_empty[K, L](n: Set[Set[K]], f: K -> L) {
+    no_empty(n) implies no_empty(image_of_sets(n, f))
+} by {
+    forall(b: Set[L]) {
+        if b ∈ image_of_sets(n, f) {
+            let (a: Set[K]) satisfy { 
+                a ∈ n and b = a.image(f)
+            }
+            is_nonempty(a)
+            is_nonempty(a.image(f))
+            is_nonempty(b)
+        }
+    }
+}
+
+theorem image_of_sets_preserve_subset_two_intersection[K, L](n: Set[Set[K]], f: K -> L) {
+    subset_two_intersection(n) implies subset_two_intersection(image_of_sets(n, f))
+} by {
+    forall(b1: Set[L], b2: Set[L]) {
+        if b1 ∈ image_of_sets(n, f) and b2 ∈ image_of_sets(n, f) {
+            let a1: Set[K] satisfy { a1 ∈ n and b1 = a1.image(f) }
+            elem_in_image_of_sets(n, f, b2)
+            let a2: Set[K] satisfy { a2 ∈ n and b2 = a2.image(f) }
+            subset_two_intersection_helper_imp_by(n)
+            let a: Set[K] satisfy { a ∈ n and a ⊆ a1 ∩ a2 }
+            a.image(f) ⊆ (a1 ∩ a2).image(f)
+            (a1 ∩ a2).image(f) ⊆ a1.image(f) ∩ a2.image(f)
+            let b = a.image(f)
+            b ∈ image_of_sets(n, f)
+            b ⊆ b1 ∩ b2
+            b ∈ image_of_sets(n, f) and b ⊆ b1 ∩ b2
+        }
+    }
+    subset_two_intersection_helper(image_of_sets(n, f))
+}
+
+theorem image_of_sets_preserve_nets[K, L](n: Set[Set[K]], f: K -> L) {
+    is_net(n) implies is_net(image_of_sets(n, f))
+}
+
+define image_of_net[K, L](n: Set_Net[K], f: K -> L) -> Set_Net[L] {
+    Set_Net[L].new(image_of_sets(n.sets, f))
+}
+
+theorem image_of_net_expand[K, L](n: Set_Net[K], f: K -> L) {
+    image_of_net(n, f).sets = image_of_sets(n.sets, f)
+}
+
+theorem is_limit_imp_image_of_net_finer[K, L](source_net: Set_Net[K], target_net: Set_Net[L], f: K -> L) {
+    is_limit(source_net, target_net, f) implies image_of_net(source_net, f).finer(target_net)
+} by {
+    forall(b: Set[L]) {
+        if b ∈ target_net.sets {
+            let (a: Set[K]) satisfy {
+                a ∈ source_net.sets and a.image(f) ⊆ b
+            }
+            a.image(f) ∈ image_of_sets(source_net.sets, f)
+            a.image(f) ∈ image_of_net(source_net, f).sets
+            a.image(f) ∈ image_of_net(source_net, f).sets and a.image(f) ⊆ b
+        } 
+    }    
+}
+
+theorem image_of_net_finer_imp_is_limit[K, L](source_net: Set_Net[K], target_net: Set_Net[L], f: K -> L) {
+    image_of_net(source_net, f).finer(target_net) implies is_limit(source_net, target_net, f)
+} by {
+    forall(b: Set[L]) {
+        if b ∈ target_net.sets {
+            let a_image: Set[L] satisfy { 
+                a_image ∈ image_of_net(source_net, f).sets and a_image ⊆ b
+            }
+            a_image ∈ image_of_sets(source_net.sets, f)
+            elem_in_image_of_sets(source_net.sets, f, a_image)
+            let a: Set[K] satisfy {
+                a ∈ source_net.sets and a_image = a.image(f)
+            }
+            a.image(f) ⊆ b
+            a ∈ source_net.sets and a.image(f) ⊆ b
+        } 
+    }    
 }
 
 theorem gte_trans(a: ℕ, b: ℕ, c: ℕ) { a >= b and b >= c implies a >= c } 

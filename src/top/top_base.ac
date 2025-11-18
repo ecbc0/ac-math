@@ -1,5 +1,5 @@
 from limit.net import Set_Net, Set, is_limit
-from set import empty, universe, union, intersection, compl_of_sets, union_index
+from set import empty, universe, union, intersection, compl_of_sets, union_index, is_nonempty
 from limit.net import is_net, subset_two_intersection
 from finite_set import list_to_set, List
 
@@ -225,6 +225,10 @@ attributes Set[X: Topology] {
     }    
 }
 
+theorem closure_contains_limit_pt[X: Topology](a: Set[X], x: X) {
+    limit_pt(a, x) implies x ∈ a.closure
+}
+
 theorem subset_closure[X: Topology](a: Set[X]) {
     a ⊆ a.closure
 } by {
@@ -232,6 +236,12 @@ theorem subset_closure[X: Topology](a: Set[X]) {
         x ∈ a implies limit_pt(a, x)
         x ∈ a implies x ∈ a.closure
     }
+}
+
+theorem closure_preserve_nonempty[X: Topology](a: Set[X], b: Set[X]) {
+    is_nonempty(a) implies is_nonempty(a.closure)
+} by {
+    a ⊆ a.closure
 }
 
 theorem closure_is_not_exterior[X: Topology](a: Set[X]) {
@@ -307,6 +317,10 @@ theorem closure_is_closed[X: Topology](a: Set[X]) {
             a.closure.contains(x) = a.closure.closure.contains(x)
         }
     }
+}
+
+theorem closed_contains_limit_pt[X: Topology](a: Set[X], x: X) {
+    limit_pt(a, x) and a.is_closed implies x ∈ a
 }
 
 theorem closure_preserve_subset[X: Topology](a: Set[X], b: Set[X]) {

@@ -2,7 +2,7 @@ from real import ℝ
 from real.real_completeness import inf, sup, have_lower_bound, have_upper_bound, directly_closely_gt_inf_directly, have_inf, have_sup
 numerals ℝ
 from set import Set, intersection, is_nonempty
-from limit.net import Set_Net, no_empty, subset_two_intersection, is_net, subset_two_intersection_helper, subset_two_intersection_helper_imp_by, is_limit
+from limit.net import Set_Net, no_empty, subset_two_intersection, is_net, subset_two_intersection_helper, subset_two_intersection_helper_imp_by_ver_logic, is_limit
 from top.top_base import Point_Net_System, Topology, converge_to
 from util import id_map
 
@@ -600,7 +600,7 @@ theorem dist_vanish_net_if_converge[K, M: Distance_Top](n: Set_Net[K], x: M, y: 
             }
             is_net(n.sets)
             subset_two_intersection(n.sets)
-            subset_two_intersection_helper_imp_by(n.sets)
+            subset_two_intersection_helper_imp_by_ver_logic(n.sets)
             ax ∈ n.sets and ay ∈ n.sets
             let a: Set[K] satisfy {
                 a ∈ n.sets and a ⊆ ax and a ⊆ ay

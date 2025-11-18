@@ -348,5 +348,5 @@
 {"goal":"abs(a).divides(abs(b))","proof":["not a.divides(b) or abs(a).divides(abs(b))"]}
 {"goal":"abs(a) = ℕ.1","proof":["nat_gcd(abs(a), abs(b)) != ℕ.1 or not abs(a).divides(abs(b)) or abs(a) = ℕ.1 or abs(a) = ℕ.0"]}
 {"goal":"gcd_one_and_divide_imp_one","proof":["not is_unit(a) or -1 = a or 1 = a","not is_unit(a)","abs(a) != ℕ.1 or is_unit(a)"]}
-{"goal":"sq_eq_mul","proof":["a^ℕ.1 ⋅ a^ℕ.1 = a^(ℕ.1 + ℕ.1)","a^ℕ.1 = a"]}
 {"goal":"sq_pos","proof":["not a < 0 or not a < 0 or a ⋅ a > 0","not a > 0 or a^ℕ.2 > 0","not a > 0","a > 0 or a < 0 or 0 = a","a < 0","a^ℕ.2 = a ⋅ a","not a ⋅ a > 0"]}
+{"goal":"sq_eq_mul","proof":["a^ℕ.1 ⋅ a^ℕ.1 = a^(ℕ.1 + ℕ.1)","a^ℕ.1 = a"]}

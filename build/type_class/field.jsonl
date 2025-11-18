@@ -219,42 +219,13 @@
 {"goal":"a / b ⋅ b / a = a ⋅ b ⋅ F.1 / (a ⋅ b)","proof":["a ⋅ b ⋅ F.1 / (a ⋅ b) != (a ⋅ b) / (a ⋅ b)","a ⋅ b ⋅ F.1 / (a ⋅ b) = (a ⋅ b) / (a ⋅ b)"]}
 {"goal":"a ⋅ b ⋅ F.1 / (a ⋅ b) = F.1","proof":["a ⋅ b ⋅ F.1 / (a ⋅ b) = F.1 or a ⋅ b = F.0"]}
 {"goal":"div_reciprocal","proof":["a ⋅ b ⋅ F.1 / (a ⋅ b) != a / b ⋅ b / a"]}
-{"goal":"a^(b + x.suc) = a^b ⋅ a^x.suc","proof":["(b + x).suc != (b + x).suc or a ⋅ a^(b + x) = a^(b + x).suc","x.suc != x.suc or a ⋅ a^x = a^x.suc","a ⋅ a^x ⋅ a^b = a ⋅ (a^x ⋅ a^b)","x.suc != x.suc or b + x.suc = (b + x).suc","a^b ⋅ a^x.suc = a^x.suc ⋅ a^b","a^x ⋅ a^b = a^b ⋅ a^x","b + x.suc = (b + x).suc","a ⋅ a^(b + x) = a^(b + x).suc","a ⋅ a^x = a^x.suc"]}
-{"goal":"a^(b + x) = a^b ⋅ a^x","proof":["not f(x) or a^b ⋅ a^x = a^(b + x)"]}
-{"goal":"a^(b ⋅ x) = a^b^x","proof":["not f(x) or a^(b ⋅ x) = a^b^x"]}
-{"goal":"one_pow[M](n)","proof":["let s0: (ℕ -> Bool) -> ℕ satisfy { forall(x0: ℕ -> Bool, x1: ℕ) { not x0(ℕ.0) or x0(s0(x0)) or x0(x1) } and forall(x2: ℕ -> Bool, x3: ℕ) { not x2(s0(x2).suc) or not x2(ℕ.0) or x2(x3) } }","M.1^s0(one_pow[M]).suc != M.1 or one_pow[M](s0(one_pow[M]).suc)","not one_pow[M](s0(one_pow[M])) or M.1^s0(one_pow[M]) = M.1","s0(one_pow[M]).suc != s0(one_pow[M]).suc or M.1 ⋅ M.1^s0(one_pow[M]) = M.1^s0(one_pow[M]).suc","not one_pow[M](s0(one_pow[M]).suc) or not one_pow[M](ℕ.0) or one_pow[M](n)","not one_pow[M](s0(one_pow[M]).suc)","not one_pow[M](ℕ.0) or one_pow[M](s0(one_pow[M])) or one_pow[M](n)","one_pow[M](s0(one_pow[M]))","M.1 ⋅ M.1 = M.1","M.1 ⋅ M.1^s0(one_pow[M]) = M.1^s0(one_pow[M]).suc","M.1^s0(one_pow[M]) = M.1","M.1^s0(one_pow[M]).suc != M.1"]}
-{"goal":"pow_one","proof":[]}
-{"goal":"a ⋅ M.1 = a","proof":["a ⋅ M.1 = a"]}
+{"goal":"a ⋅ a^ℕ.0 = a ⋅ M.1","proof":["a^ℕ.0 != M.1","ℕ.0 != ℕ.0 or a^ℕ.0 = M.1"]}
+{"goal":"pow_mul","proof":["not f(c) or a^(b ⋅ c) = a^b^c"]}
+{"goal":"a^ℕ.1 = a","proof":[]}
 {"goal":"f(x.suc)","proof":["a^b ⋅ a^x.suc != a^(b + x.suc) or f(x.suc)"]}
 {"goal":"f(x.suc)","proof":["a^(b ⋅ x.suc) != a^b^x.suc or f(x.suc)"]}
-{"goal":"a ⋅ a^ℕ.0 = a ⋅ M.1","proof":["a^ℕ.0 != M.1","ℕ.0 != ℕ.0 or a^ℕ.0 = M.1"]}
-{"goal":"a^(b ⋅ x.suc) = a^b^x.suc","proof":["a^(b ⋅ x) ⋅ a^b = a^(b ⋅ x + b)","a^b^x ⋅ a^b^ℕ.1 = a^b^(x + ℕ.1)","x.suc != x.suc or b ⋅ x + b = b ⋅ x.suc","x + ℕ.1 = x.suc","a^b^ℕ.1 = a^b","b ⋅ x + b = b ⋅ x.suc"]}
-{"goal":"a^ℕ.0.suc = a ⋅ a^ℕ.0","proof":["ℕ.0.suc != ℕ.0.suc or a ⋅ a^ℕ.0 = a^ℕ.0.suc"]}
 {"goal":"one_pow[M](ℕ.0)","proof":["M.1^ℕ.0 != M.1 or one_pow[M](ℕ.0)","M.1^ℕ.0 != M.1","ℕ.0 != ℕ.0 or M.1^ℕ.0 = M.1"]}
-{"goal":"a / b ⋅ c / d = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","proof":["-(a ⋅ F.1 / b) ⋅ -(c ⋅ F.1 / d) = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","-a / b ⋅ -c / d = a / b ⋅ c / d","a ⋅ F.1 / b = a / b","c ⋅ F.1 / d = c / d"]}
-{"goal":"a / b ⋅ c / d = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","proof":["-(a ⋅ F.1 / b) ⋅ -(c ⋅ F.1 / d) = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","-a / b ⋅ -c / d = a / b ⋅ c / d","a ⋅ F.1 / b = a / b","c ⋅ F.1 / d = c / d"]}
-{"goal":"a / b ⋅ c / d = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","proof":["-(a ⋅ F.1 / b) ⋅ -(c ⋅ F.1 / d) = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","-a / b ⋅ -c / d = a / b ⋅ c / d","a ⋅ F.1 / b = a / b","c ⋅ F.1 / d = c / d"]}
-{"goal":"a / b ⋅ c / d = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","proof":["-(a ⋅ F.1 / b) ⋅ -(c ⋅ F.1 / d) = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","-a / b ⋅ -c / d = a / b ⋅ c / d","a ⋅ F.1 / b = a / b","c ⋅ F.1 / d = c / d"]}
-{"goal":"a / b ⋅ c / d = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","proof":["-(a ⋅ F.1 / b) ⋅ -(c ⋅ F.1 / d) = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","-a / b ⋅ -c / d = a / b ⋅ c / d","a ⋅ F.1 / b = a / b","c ⋅ F.1 / d = c / d"]}
-{"goal":"a / b ⋅ c / d = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","proof":["-(a ⋅ F.1 / b) ⋅ -(c ⋅ F.1 / d) = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","-a / b ⋅ -c / d = a / b ⋅ c / d","a ⋅ F.1 / b = a / b","c ⋅ F.1 / d = c / d"]}
-{"goal":"a / b ⋅ c / d = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","proof":["-(a ⋅ F.1 / b) ⋅ -(c ⋅ F.1 / d) = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","-a / b ⋅ -c / d = a / b ⋅ c / d","a ⋅ F.1 / b = a / b","c ⋅ F.1 / d = c / d"]}
-{"goal":"a / b ⋅ c / d = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","proof":["-(a ⋅ F.1 / b) ⋅ -(c ⋅ F.1 / d) = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","-a / b ⋅ -c / d = a / b ⋅ c / d","a ⋅ F.1 / b = a / b","c ⋅ F.1 / d = c / d"]}
-{"goal":"a / b ⋅ c / d = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","proof":["-(a ⋅ F.1 / b) ⋅ -(c ⋅ F.1 / d) = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","-a / b ⋅ -c / d = a / b ⋅ c / d","a ⋅ F.1 / b = a / b","c ⋅ F.1 / d = c / d"]}
-{"goal":"a / b ⋅ c / d = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","proof":["-(a ⋅ F.1 / b) ⋅ -(c ⋅ F.1 / d) = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","-a / b ⋅ -c / d = a / b ⋅ c / d","a ⋅ F.1 / b = a / b","c ⋅ F.1 / d = c / d"]}
-{"goal":"a / b ⋅ c / d = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","proof":["-(a ⋅ F.1 / b) ⋅ -(c ⋅ F.1 / d) = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","-a / b ⋅ -c / d = a / b ⋅ c / d","a ⋅ F.1 / b = a / b","c ⋅ F.1 / d = c / d"]}
-{"goal":"a / b ⋅ c / d = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","proof":["-(a ⋅ F.1 / b) ⋅ -(c ⋅ F.1 / d) = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","-a / b ⋅ -c / d = a / b ⋅ c / d","a ⋅ F.1 / b = a / b","c ⋅ F.1 / d = c / d"]}
-{"goal":"a / b ⋅ c / d = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","proof":["-(a ⋅ F.1 / b) ⋅ -(c ⋅ F.1 / d) = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","-a / b ⋅ -c / d = a / b ⋅ c / d","a ⋅ F.1 / b = a / b","c ⋅ F.1 / d = c / d"]}
-{"goal":"a / b ⋅ c / d = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","proof":["-(a ⋅ F.1 / b) ⋅ -(c ⋅ F.1 / d) = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","-a / b ⋅ -c / d = a / b ⋅ c / d","a ⋅ F.1 / b = a / b","c ⋅ F.1 / d = c / d"]}
-{"goal":"a / b ⋅ c / d = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","proof":["-(a ⋅ F.1 / b) ⋅ -(c ⋅ F.1 / d) = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","-a / b ⋅ -c / d = a / b ⋅ c / d","a ⋅ F.1 / b = a / b","c ⋅ F.1 / d = c / d"]}
-{"goal":"a / b ⋅ c / d = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","proof":["-(a ⋅ F.1 / b) ⋅ -(c ⋅ F.1 / d) = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","-a / b ⋅ -c / d = a / b ⋅ c / d","a ⋅ F.1 / b = a / b","c ⋅ F.1 / d = c / d"]}
-{"goal":"a / b ⋅ c / d = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","proof":["-(a ⋅ F.1 / b) ⋅ -(c ⋅ F.1 / d) = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","-a / b ⋅ -c / d = a / b ⋅ c / d","a ⋅ F.1 / b = a / b","c ⋅ F.1 / d = c / d"]}
-{"goal":"a / b ⋅ c / d = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","proof":["-(a ⋅ F.1 / b) ⋅ -(c ⋅ F.1 / d) = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","-a / b ⋅ -c / d = a / b ⋅ c / d","a ⋅ F.1 / b = a / b","c ⋅ F.1 / d = c / d"]}
-{"goal":"a / b ⋅ c / d = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","proof":["-(a ⋅ F.1 / b) ⋅ -(c ⋅ F.1 / d) = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","-a / b ⋅ -c / d = a / b ⋅ c / d","a ⋅ F.1 / b = a / b","c ⋅ F.1 / d = c / d"]}
-{"goal":"f(c)","proof":["let s0: (ℕ -> Bool) -> ℕ satisfy { forall(x0: ℕ -> Bool, x1: ℕ) { not x0(ℕ.0) or x0(s0(x0)) or x0(x1) } and forall(x2: ℕ -> Bool, x3: ℕ) { not x2(s0(x2).suc) or not x2(ℕ.0) or x2(x3) } }","not f(s0(f)) or f(s0(f).suc)","not f(s0(f).suc) or not f(ℕ.0) or f(c)","not f(s0(f).suc)","not f(ℕ.0) or f(s0(f)) or f(c)","not f(s0(f))","f(s0(f))"]}
-{"goal":"f(c)","proof":["let s0: (ℕ -> Bool) -> ℕ satisfy { forall(x0: ℕ -> Bool, x1: ℕ) { not x0(ℕ.0) or x0(s0(x0)) or x0(x1) } and forall(x2: ℕ -> Bool, x3: ℕ) { not x2(s0(x2).suc) or not x2(ℕ.0) or x2(x3) } }","not f(s0(f)) or f(s0(f).suc)","not f(s0(f).suc) or not f(ℕ.0) or f(c)","not f(s0(f).suc)","not f(ℕ.0) or f(s0(f)) or f(c)","not f(s0(f))","f(s0(f))"]}
-{"goal":"a^ℕ.1 = a^ℕ.0.suc","proof":["ℕ.0.suc != ℕ.1"]}
-{"goal":"f(ℕ.0)","proof":["a^b ⋅ a^ℕ.0 != a^(b + ℕ.0) or f(ℕ.0)","ℕ.0 != ℕ.0 or a^ℕ.0 = M.1","a^b ⋅ M.1 = a^b","b + ℕ.0 = b","a^ℕ.0 = M.1","a^b ⋅ a^ℕ.0 != a^(b + ℕ.0)"]}
-{"goal":"f(ℕ.0)","proof":["a^(b ⋅ ℕ.0) != a^b^ℕ.0 or f(ℕ.0)","b ⋅ ℕ.0 != ℕ.0 or a^(b ⋅ ℕ.0) = M.1","ℕ.0 != ℕ.0 or a^b^ℕ.0 = M.1","b ⋅ ℕ.0 = ℕ.0","a^b^ℕ.0 = M.1","a^(b ⋅ ℕ.0) != a^b^ℕ.0","a^(b ⋅ ℕ.0) != M.1"]}
+{"goal":"a^(b + x.suc) = a^b ⋅ a^x.suc","proof":["(b + x).suc != (b + x).suc or a ⋅ a^(b + x) = a^(b + x).suc","x.suc != x.suc or a ⋅ a^x = a^x.suc","a ⋅ a^x ⋅ a^b = a ⋅ (a^x ⋅ a^b)","x.suc != x.suc or b + x.suc = (b + x).suc","a^b ⋅ a^x.suc = a^x.suc ⋅ a^b","a^x ⋅ a^b = a^b ⋅ a^x","b + x.suc = (b + x).suc","a ⋅ a^(b + x) = a^(b + x).suc","a ⋅ a^x = a^x.suc"]}
 {"goal":"-a ⋅ -F.1 / a = a ⋅ F.1 / a","proof":["-a ⋅ -F.1 / a = a ⋅ F.1 / a"]}
 {"goal":"-a ⋅ -F.1 / a = a ⋅ F.1 / a","proof":["-a ⋅ -F.1 / a = a ⋅ F.1 / a"]}
 {"goal":"-a ⋅ -F.1 / a = a ⋅ F.1 / a","proof":["-a ⋅ -F.1 / a = a ⋅ F.1 / a"]}
@@ -274,7 +245,7 @@
 {"goal":"-a ⋅ -F.1 / a = a ⋅ F.1 / a","proof":["-a ⋅ -F.1 / a = a ⋅ F.1 / a"]}
 {"goal":"-a ⋅ -F.1 / a = a ⋅ F.1 / a","proof":["-a ⋅ -F.1 / a = a ⋅ F.1 / a"]}
 {"goal":"-a ⋅ -F.1 / a = a ⋅ F.1 / a","proof":["-a ⋅ -F.1 / a = a ⋅ F.1 / a"]}
-{"goal":"one_pow","proof":["not one_pow[M](n) or M.1^n = M.1"]}
+{"goal":"-a ⋅ -F.1 / a = a ⋅ F.1 / a","proof":["-a ⋅ -F.1 / a = a ⋅ F.1 / a"]}
 {"goal":"pow_add","proof":[]}
 {"goal":"-F.1 / a = (-a).reciprocal","proof":["-a ⋅ -F.1 / a != F.1 or -F.1 / a = (-a).reciprocal"]}
 {"goal":"-F.1 / a = (-a).reciprocal","proof":["-a ⋅ -F.1 / a != F.1 or -F.1 / a = (-a).reciprocal"]}
@@ -295,5 +266,37 @@
 {"goal":"-F.1 / a = (-a).reciprocal","proof":["-a ⋅ -F.1 / a != F.1 or -F.1 / a = (-a).reciprocal"]}
 {"goal":"-F.1 / a = (-a).reciprocal","proof":["-a ⋅ -F.1 / a != F.1 or -F.1 / a = (-a).reciprocal"]}
 {"goal":"-F.1 / a = (-a).reciprocal","proof":["-a ⋅ -F.1 / a != F.1 or -F.1 / a = (-a).reciprocal"]}
-{"goal":"pow_mul","proof":["not f(c) or a^(b ⋅ c) = a^b^c"]}
-{"goal":"a^ℕ.1 = a","proof":[]}
+{"goal":"-F.1 / a = (-a).reciprocal","proof":["-a ⋅ -F.1 / a != F.1 or -F.1 / a = (-a).reciprocal"]}
+{"goal":"pow_one","proof":[]}
+{"goal":"f(ℕ.0)","proof":["a^b ⋅ a^ℕ.0 != a^(b + ℕ.0) or f(ℕ.0)","ℕ.0 != ℕ.0 or a^ℕ.0 = M.1","a^b ⋅ M.1 = a^b","b + ℕ.0 = b","a^ℕ.0 = M.1","a^b ⋅ a^ℕ.0 != a^(b + ℕ.0)"]}
+{"goal":"f(ℕ.0)","proof":["a^(b ⋅ ℕ.0) != a^b^ℕ.0 or f(ℕ.0)","b ⋅ ℕ.0 != ℕ.0 or a^(b ⋅ ℕ.0) = M.1","ℕ.0 != ℕ.0 or a^b^ℕ.0 = M.1","b ⋅ ℕ.0 = ℕ.0","a^b^ℕ.0 = M.1","a^(b ⋅ ℕ.0) != a^b^ℕ.0","a^(b ⋅ ℕ.0) != M.1"]}
+{"goal":"a^ℕ.1 = a^ℕ.0.suc","proof":["ℕ.0.suc != ℕ.1"]}
+{"goal":"a ⋅ M.1 = a","proof":["a ⋅ M.1 = a"]}
+{"goal":"a^(b + x) = a^b ⋅ a^x","proof":["not f(x) or a^b ⋅ a^x = a^(b + x)"]}
+{"goal":"a^(b ⋅ x) = a^b^x","proof":["not f(x) or a^(b ⋅ x) = a^b^x"]}
+{"goal":"a^ℕ.0.suc = a ⋅ a^ℕ.0","proof":["ℕ.0.suc != ℕ.0.suc or a ⋅ a^ℕ.0 = a^ℕ.0.suc"]}
+{"goal":"f(c)","proof":["let s0: (ℕ -> Bool) -> ℕ satisfy { forall(x0: ℕ -> Bool, x1: ℕ) { not x0(ℕ.0) or x0(s0(x0)) or x0(x1) } and forall(x2: ℕ -> Bool, x3: ℕ) { not x2(s0(x2).suc) or not x2(ℕ.0) or x2(x3) } }","not f(s0(f)) or f(s0(f).suc)","not f(s0(f).suc) or not f(ℕ.0) or f(c)","not f(s0(f).suc)","not f(ℕ.0) or f(s0(f)) or f(c)","not f(s0(f))","f(s0(f))"]}
+{"goal":"f(c)","proof":["let s0: (ℕ -> Bool) -> ℕ satisfy { forall(x0: ℕ -> Bool, x1: ℕ) { not x0(ℕ.0) or x0(s0(x0)) or x0(x1) } and forall(x2: ℕ -> Bool, x3: ℕ) { not x2(s0(x2).suc) or not x2(ℕ.0) or x2(x3) } }","not f(s0(f)) or f(s0(f).suc)","not f(s0(f).suc) or not f(ℕ.0) or f(c)","not f(s0(f).suc)","not f(ℕ.0) or f(s0(f)) or f(c)","not f(s0(f))","f(s0(f))"]}
+{"goal":"a / b ⋅ c / d = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","proof":["-(a ⋅ F.1 / b) ⋅ -(c ⋅ F.1 / d) = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","-a / b ⋅ -c / d = a / b ⋅ c / d","a ⋅ F.1 / b = a / b","c ⋅ F.1 / d = c / d"]}
+{"goal":"a / b ⋅ c / d = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","proof":["-(a ⋅ F.1 / b) ⋅ -(c ⋅ F.1 / d) = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","-a / b ⋅ -c / d = a / b ⋅ c / d","a ⋅ F.1 / b = a / b","c ⋅ F.1 / d = c / d"]}
+{"goal":"a / b ⋅ c / d = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","proof":["-(a ⋅ F.1 / b) ⋅ -(c ⋅ F.1 / d) = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","-a / b ⋅ -c / d = a / b ⋅ c / d","a ⋅ F.1 / b = a / b","c ⋅ F.1 / d = c / d"]}
+{"goal":"a / b ⋅ c / d = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","proof":["-(a ⋅ F.1 / b) ⋅ -(c ⋅ F.1 / d) = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","-a / b ⋅ -c / d = a / b ⋅ c / d","a ⋅ F.1 / b = a / b","c ⋅ F.1 / d = c / d"]}
+{"goal":"a / b ⋅ c / d = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","proof":["-(a ⋅ F.1 / b) ⋅ -(c ⋅ F.1 / d) = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","-a / b ⋅ -c / d = a / b ⋅ c / d","a ⋅ F.1 / b = a / b","c ⋅ F.1 / d = c / d"]}
+{"goal":"a / b ⋅ c / d = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","proof":["-(a ⋅ F.1 / b) ⋅ -(c ⋅ F.1 / d) = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","-a / b ⋅ -c / d = a / b ⋅ c / d","a ⋅ F.1 / b = a / b","c ⋅ F.1 / d = c / d"]}
+{"goal":"a / b ⋅ c / d = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","proof":["-(a ⋅ F.1 / b) ⋅ -(c ⋅ F.1 / d) = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","-a / b ⋅ -c / d = a / b ⋅ c / d","a ⋅ F.1 / b = a / b","c ⋅ F.1 / d = c / d"]}
+{"goal":"a / b ⋅ c / d = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","proof":["-(a ⋅ F.1 / b) ⋅ -(c ⋅ F.1 / d) = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","-a / b ⋅ -c / d = a / b ⋅ c / d","a ⋅ F.1 / b = a / b","c ⋅ F.1 / d = c / d"]}
+{"goal":"a / b ⋅ c / d = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","proof":["-(a ⋅ F.1 / b) ⋅ -(c ⋅ F.1 / d) = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","-a / b ⋅ -c / d = a / b ⋅ c / d","a ⋅ F.1 / b = a / b","c ⋅ F.1 / d = c / d"]}
+{"goal":"a / b ⋅ c / d = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","proof":["-(a ⋅ F.1 / b) ⋅ -(c ⋅ F.1 / d) = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","-a / b ⋅ -c / d = a / b ⋅ c / d","a ⋅ F.1 / b = a / b","c ⋅ F.1 / d = c / d"]}
+{"goal":"a / b ⋅ c / d = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","proof":["-(a ⋅ F.1 / b) ⋅ -(c ⋅ F.1 / d) = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","-a / b ⋅ -c / d = a / b ⋅ c / d","a ⋅ F.1 / b = a / b","c ⋅ F.1 / d = c / d"]}
+{"goal":"a / b ⋅ c / d = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","proof":["-(a ⋅ F.1 / b) ⋅ -(c ⋅ F.1 / d) = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","-a / b ⋅ -c / d = a / b ⋅ c / d","a ⋅ F.1 / b = a / b","c ⋅ F.1 / d = c / d"]}
+{"goal":"a / b ⋅ c / d = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","proof":["-(a ⋅ F.1 / b) ⋅ -(c ⋅ F.1 / d) = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","-a / b ⋅ -c / d = a / b ⋅ c / d","a ⋅ F.1 / b = a / b","c ⋅ F.1 / d = c / d"]}
+{"goal":"a / b ⋅ c / d = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","proof":["-(a ⋅ F.1 / b) ⋅ -(c ⋅ F.1 / d) = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","-a / b ⋅ -c / d = a / b ⋅ c / d","a ⋅ F.1 / b = a / b","c ⋅ F.1 / d = c / d"]}
+{"goal":"a / b ⋅ c / d = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","proof":["-(a ⋅ F.1 / b) ⋅ -(c ⋅ F.1 / d) = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","-a / b ⋅ -c / d = a / b ⋅ c / d","a ⋅ F.1 / b = a / b","c ⋅ F.1 / d = c / d"]}
+{"goal":"a / b ⋅ c / d = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","proof":["-(a ⋅ F.1 / b) ⋅ -(c ⋅ F.1 / d) = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","-a / b ⋅ -c / d = a / b ⋅ c / d","a ⋅ F.1 / b = a / b","c ⋅ F.1 / d = c / d"]}
+{"goal":"a / b ⋅ c / d = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","proof":["-(a ⋅ F.1 / b) ⋅ -(c ⋅ F.1 / d) = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","-a / b ⋅ -c / d = a / b ⋅ c / d","a ⋅ F.1 / b = a / b","c ⋅ F.1 / d = c / d"]}
+{"goal":"a / b ⋅ c / d = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","proof":["-(a ⋅ F.1 / b) ⋅ -(c ⋅ F.1 / d) = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","-a / b ⋅ -c / d = a / b ⋅ c / d","a ⋅ F.1 / b = a / b","c ⋅ F.1 / d = c / d"]}
+{"goal":"a / b ⋅ c / d = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","proof":["-(a ⋅ F.1 / b) ⋅ -(c ⋅ F.1 / d) = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","-a / b ⋅ -c / d = a / b ⋅ c / d","a ⋅ F.1 / b = a / b","c ⋅ F.1 / d = c / d"]}
+{"goal":"a / b ⋅ c / d = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","proof":["-(a ⋅ F.1 / b) ⋅ -(c ⋅ F.1 / d) = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","-a / b ⋅ -c / d = a / b ⋅ c / d","a ⋅ F.1 / b = a / b","c ⋅ F.1 / d = c / d"]}
+{"goal":"one_pow[M](n)","proof":["let s0: (ℕ -> Bool) -> ℕ satisfy { forall(x0: ℕ -> Bool, x1: ℕ) { not x0(ℕ.0) or x0(s0(x0)) or x0(x1) } and forall(x2: ℕ -> Bool, x3: ℕ) { not x2(s0(x2).suc) or not x2(ℕ.0) or x2(x3) } }","M.1^s0(one_pow[M]).suc != M.1 or one_pow[M](s0(one_pow[M]).suc)","not one_pow[M](s0(one_pow[M])) or M.1^s0(one_pow[M]) = M.1","s0(one_pow[M]).suc != s0(one_pow[M]).suc or M.1 ⋅ M.1^s0(one_pow[M]) = M.1^s0(one_pow[M]).suc","not one_pow[M](s0(one_pow[M]).suc) or not one_pow[M](ℕ.0) or one_pow[M](n)","not one_pow[M](s0(one_pow[M]).suc)","not one_pow[M](ℕ.0) or one_pow[M](s0(one_pow[M])) or one_pow[M](n)","one_pow[M](s0(one_pow[M]))","M.1 ⋅ M.1 = M.1","M.1 ⋅ M.1^s0(one_pow[M]) = M.1^s0(one_pow[M]).suc","M.1^s0(one_pow[M]) = M.1","M.1^s0(one_pow[M]).suc != M.1"]}
+{"goal":"a^(b ⋅ x.suc) = a^b^x.suc","proof":["a^(b ⋅ x) ⋅ a^b = a^(b ⋅ x + b)","a^b^x ⋅ a^b^ℕ.1 = a^b^(x + ℕ.1)","x.suc != x.suc or b ⋅ x + b = b ⋅ x.suc","x + ℕ.1 = x.suc","a^b^ℕ.1 = a^b","b ⋅ x + b = b ⋅ x.suc"]}
+{"goal":"one_pow","proof":["not one_pow[M](n) or M.1^n = M.1"]}
