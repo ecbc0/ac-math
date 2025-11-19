@@ -491,7 +491,7 @@ define is_bounded[M: Distance_Space](s: Set[M]) -> Bool {
     have_sup(dist_set(s))
 }
 
-define is_elem_bounded[M: Distance_Space](n: Set[Set[M]]) -> Bool {
+define are_bounded[M: Distance_Space](n: Set[Set[M]]) -> Bool {
     forall(s: Set[M]) {
         s ∈ n implies is_bounded(s)
     }

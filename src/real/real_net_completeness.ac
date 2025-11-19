@@ -429,18 +429,18 @@ define is_bounded(s: Set[ℝ]) -> Bool {
     have_inf(s) and have_sup(s)
 }
 
-define is_elem_bounded(c: Set[Set[ℝ]]) -> Bool {
+define are_bounded(c: Set[Set[ℝ]]) -> Bool {
     forall(s: Set[ℝ]) {
         s ∈ c implies is_bounded(s)
     }
 }
 
-theorem closed_intervals_is_elem_bounded(c: Set[Set[ℝ]]) {
-    are_closed_intervals(c) implies is_elem_bounded(c)
+theorem closed_intervals_are_bounded(c: Set[Set[ℝ]]) {
+    are_closed_intervals(c) implies are_bounded(c)
 }
 
 theorem net_imp_lower_lte_upper(c: Set[Set[ℝ]]) {
-    is_net(c) and is_elem_bounded(c) implies lower_lte_upper(c)
+    is_net(c) and are_bounded(c) implies lower_lte_upper(c)
 } by {
     let ls = lower_end_point(c)
     let us = upper_end_point(c)
@@ -472,7 +472,7 @@ theorem net_imp_lower_lte_upper(c: Set[Set[ℝ]]) {
 }
 
 theorem lower_lte_upper_imp_lower_end_point_have_upper_bound(c: Set[Set[ℝ]]) {
-    is_nonempty(c) and is_elem_bounded(c) and lower_lte_upper(c) implies have_upper_bound(lower_end_point(c))
+    is_nonempty(c) and are_bounded(c) and lower_lte_upper(c) implies have_upper_bound(lower_end_point(c))
 } by {
     let s: Set[ℝ] satisfy { s ∈ c }
     sup(s) ∈ upper_end_point(c)
@@ -486,7 +486,7 @@ theorem lower_lte_upper_imp_lower_end_point_have_upper_bound(c: Set[Set[ℝ]]) {
 }
 
 theorem lower_lte_upper_imp_upper_end_point_have_lower_bound(c: Set[Set[ℝ]]) {
-    is_nonempty(c) and is_elem_bounded(c) and lower_lte_upper(c) implies have_lower_bound(upper_end_point(c))
+    is_nonempty(c) and are_bounded(c) and lower_lte_upper(c) implies have_lower_bound(upper_end_point(c))
 } by {
     let s: Set[ℝ] satisfy { s ∈ c }
     inf(s) ∈ lower_end_point(c)
@@ -500,29 +500,29 @@ theorem lower_lte_upper_imp_upper_end_point_have_lower_bound(c: Set[Set[ℝ]]) {
 }
 
 theorem lower_lte_upper_imp_lower_end_point_is_nonempty(c: Set[Set[ℝ]]) {
-    is_nonempty(c) and is_elem_bounded(c) implies is_nonempty(lower_end_point(c))
+    is_nonempty(c) and are_bounded(c) implies is_nonempty(lower_end_point(c))
 } by {
     let s: Set[ℝ] satisfy { s ∈ c }
     inf(s) ∈ lower_end_point(c)
 }
 
 theorem lower_lte_upper_intervals_upper_end_point_is_nonempty(c: Set[Set[ℝ]]) {
-    is_nonempty(c) and is_elem_bounded(c) implies is_nonempty(upper_end_point(c))
+    is_nonempty(c) and are_bounded(c) implies is_nonempty(upper_end_point(c))
 } by {
     let s: Set[ℝ] satisfy { s ∈ c }
     sup(s) ∈ upper_end_point(c)
 }
 
 theorem lower_lte_upper_imp_lower_end_point_have_sup(c: Set[Set[ℝ]]) {
-    is_nonempty(c) and is_elem_bounded(c) and lower_lte_upper(c) implies have_sup(lower_end_point(c))
+    is_nonempty(c) and are_bounded(c) and lower_lte_upper(c) implies have_sup(lower_end_point(c))
 }
 
 theorem lower_lte_upper_imp_upper_end_point_have_inf(c: Set[Set[ℝ]]) {
-    is_nonempty(c) and is_elem_bounded(c) and lower_lte_upper(c) implies have_inf(upper_end_point(c))
+    is_nonempty(c) and are_bounded(c) and lower_lte_upper(c) implies have_inf(upper_end_point(c))
 }
 
 theorem lower_lte_upper_imp_lower_sup_lte_upper_inf(c: Set[Set[ℝ]]) {
-    is_nonempty(c) and is_elem_bounded(c) and lower_lte_upper(c) implies (
+    is_nonempty(c) and are_bounded(c) and lower_lte_upper(c) implies (
         sup(lower_end_point(c)) <= inf(upper_end_point(c))
     )
 } by {
@@ -551,7 +551,7 @@ theorem closed_interval_intersection(c: Set[Set[ℝ]]) {
     let us = upper_end_point(c)
     let a = sup(ls)
     let b = inf(us)
-    is_elem_bounded(c)
+    are_bounded(c)
     a <= b
     forall(s: Set[ℝ]) {
         if s ∈ c {
@@ -627,7 +627,7 @@ theorem closed_interval_net_is_lower_lte_upper_intervals(n: Set[Set[ℝ]]) {
 }
 
 theorem bounded_net_intersection_contains_lower_end_point_sup(n: Set[Set[ℝ]]) {
-    is_net(n) and are_closed(n) and is_elem_bounded(n) implies sup(lower_end_point(n)) ∈ intersection(n)
+    is_net(n) and are_closed(n) and are_bounded(n) implies sup(lower_end_point(n)) ∈ intersection(n)
 } by {
     lower_lte_upper(n)
     let ls = lower_end_point(n)
@@ -696,7 +696,7 @@ theorem bounded_net_intersection_contains_lower_end_point_sup(n: Set[Set[ℝ]]) 
 }
 
 theorem bounded_net_intersection_theorem(n: Set[Set[ℝ]]) {
-    is_net(n) and are_closed(n) and is_elem_bounded(n) implies is_nonempty(intersection(n))
+    is_net(n) and are_closed(n) and are_bounded(n) implies is_nonempty(intersection(n))
 }
 
 theorem real_bounded_closed_set_is_compact(s: Set[ℝ]) {
@@ -723,7 +723,7 @@ theorem real_bounded_closed_set_is_compact(s: Set[ℝ]) {
                 }
             }
             are_closed(net_intersect_set(n, s))
-            is_elem_bounded(net_intersect_set(n, s))
+            are_bounded(net_intersect_set(n, s))
             is_nonempty(intersection(net_intersect_set(n, s)))
             forall(x: ℝ) {
                 if x ∈ intersection(net_intersect_set(n, s)) {
