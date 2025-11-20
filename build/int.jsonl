@@ -58,8 +58,11 @@
 {"goal":"a ⋅ b ⋅ -c = a ⋅ (b ⋅ from_nat(abs(-c)))","proof":["a ⋅ b.mul_nat(abs(-c)) = (a ⋅ b).mul_nat(abs(-c))","a ⋅ b ⋅ from_nat(abs(-c)) = (a ⋅ b).mul_nat(abs(-c))","b ⋅ from_nat(abs(-c)) = b.mul_nat(abs(-c))"]}
 {"goal":"a ⋅ b ⋅ c = a ⋅ (b ⋅ c)","proof":["not -c > 0 or b.mul_nat(abs(-c)) = b ⋅ -c","a ⋅ -(b ⋅ c) = -(a ⋅ (b ⋅ c))","a ⋅ b ⋅ -c = -(a ⋅ b ⋅ c)","b ⋅ -c = -(b ⋅ c)","b ⋅ from_nat(abs(-c)) = b.mul_nat(abs(-c))","a ⋅ (b ⋅ c) = b ⋅ c ⋅ a","0 - -(a ⋅ (b ⋅ c)) = --(a ⋅ (b ⋅ c))","0 - -(a ⋅ b ⋅ c) = --(a ⋅ b ⋅ c)","--(a ⋅ b ⋅ c) = a ⋅ b ⋅ c","--(b ⋅ c ⋅ a) = b ⋅ c ⋅ a","b.mul_nat(abs(-c)) = b ⋅ -c"]}
 {"goal":"mul_assoc","proof":[]}
-{"goal":"forall(x0: ℤ, x1: ℤ, x2: ℤ) { x0 ⋅ (x1 ⋅ x2) = x0 ⋅ x1 ⋅ x2 } and forall(x3: ℤ, x4: ℤ) { x3 ⋅ x4 = x4 ⋅ x3 } and forall(x5: ℤ) { x5 ⋅ 1 = x5 }","proof":["let (s0: ℤ, s1: ℤ, s2: ℤ, s3: ℤ, s4: ℤ, s5: ℤ) satisfy { s0 ⋅ (s1 ⋅ s2) != s0 ⋅ s1 ⋅ s2 or s4 ⋅ s3 != s3 ⋅ s4 or s5 ⋅ 1 != s5 }","s0 ⋅ (s1 ⋅ s2) = s0 ⋅ s1 ⋅ s2","s4 ⋅ s3 = s3 ⋅ s4","s5 ⋅ 1 = 1 ⋅ s5","s5 ⋅ 1 != s5","1 ⋅ s5 != s5","1 ⋅ s5 = s5"]}
-{"goal":"forall(x0: ℤ, x1: ℤ, x2: ℤ) { Mul.mul[ℤ](x0, lib(type_class.add).Add.add[ℤ](x1, x2)) = lib(type_class.add).Add.add[ℤ](Mul.mul[ℤ](x0, x1), Mul.mul[ℤ](x0, x2)) } and forall(x3: ℤ) { Mul.mul[ℤ](x3, lib(type_class.add).Add.0[ℤ]) = lib(type_class.add).Add.0[ℤ] }","proof":["let (s0: ℤ, s1: ℤ, s2: ℤ, s3: ℤ) satisfy { s0 ⋅ s1 + s0 ⋅ s2 != s0 ⋅ (s1 + s2) or s3 ⋅ 0 != 0 }","s0 ⋅ s1 + s0 ⋅ s2 = s0 ⋅ (s1 + s2)","s3 ⋅ 0 != 0","0 != 0 or s3 ⋅ 0 = 0"]}
+{"goal":"forall(x0: ℤ, x1: ℤ, x2: ℤ) { x0 ⋅ (x1 ⋅ x2) = x0 ⋅ x1 ⋅ x2 }","proof":["let (s0: ℤ, s1: ℤ, s2: ℤ) satisfy { s0 ⋅ (s1 ⋅ s2) != s0 ⋅ s1 ⋅ s2 }","s0 ⋅ (s1 ⋅ s2) = s0 ⋅ s1 ⋅ s2"]}
+{"goal":"forall(x0: ℤ, x1: ℤ) { x0 ⋅ x1 = x1 ⋅ x0 }","proof":["let (s0: ℤ, s1: ℤ) satisfy { s1 ⋅ s0 != s0 ⋅ s1 }","s1 ⋅ s0 = s0 ⋅ s1"]}
+{"goal":"forall(x0: ℤ) { x0 ⋅ 1 = x0 }","proof":["let s0: ℤ satisfy { s0 ⋅ 1 != s0 }","s0 ⋅ 1 = 1 ⋅ s0","1 ⋅ s0 != s0","1 ⋅ s0 = s0"]}
+{"goal":"forall(x0: ℤ, x1: ℤ, x2: ℤ) { Mul.mul[ℤ](x0, lib(type_class.add).Add.add[ℤ](x1, x2)) = lib(type_class.add).Add.add[ℤ](Mul.mul[ℤ](x0, x1), Mul.mul[ℤ](x0, x2)) }","proof":["let (s0: ℤ, s1: ℤ, s2: ℤ) satisfy { s0 ⋅ s1 + s0 ⋅ s2 != s0 ⋅ (s1 + s2) }","s0 ⋅ s1 + s0 ⋅ s2 = s0 ⋅ (s1 + s2)"]}
+{"goal":"forall(x0: ℤ) { Mul.mul[ℤ](x0, lib(type_class.add).Add.0[ℤ]) = lib(type_class.add).Add.0[ℤ] }","proof":["let s0: ℤ satisfy { s0 ⋅ 0 != 0 }","0 != 0 or s0 ⋅ 0 = 0"]}
 {"goal":"nonpos_lt_pos","proof":["not a < 0 or not 0 < b or a < b","not a <= 0 or a < 0 or 0 = a","b > 0 = 0 < b","b > a = a < b","not b > a","0 < b","not 0 < b or not a < 0","not a < 0","0 = a"]}
 {"goal":"neg_lt_nonneg","proof":["not a < 0 or not 0 < b or a < b","not 0 <= b or 0 < b or 0 = b","b >= 0 = 0 <= b","0 <= b","not 0 < b or not a < 0","not 0 < b","0 = b"]}
 {"goal":"nonpos_lte_nonneg","proof":["not b >= 0 or not a < 0 or a < b","not a <= 0 or a < 0 or 0 = a","b >= a = a <= b","not b >= a","not a < b or a <= b","not a < b","a < 0 or 0 = a","not a < 0","0 = a"]}
@@ -348,5 +351,3 @@
 {"goal":"abs(a).divides(abs(b))","proof":["not a.divides(b) or abs(a).divides(abs(b))"]}
 {"goal":"abs(a) = ℕ.1","proof":["nat_gcd(abs(a), abs(b)) != ℕ.1 or not abs(a).divides(abs(b)) or abs(a) = ℕ.1 or abs(a) = ℕ.0"]}
 {"goal":"gcd_one_and_divide_imp_one","proof":["not is_unit(a) or -1 = a or 1 = a","not is_unit(a)","abs(a) != ℕ.1 or is_unit(a)"]}
-{"goal":"sq_pos","proof":["not a < 0 or not a < 0 or a ⋅ a > 0","not a > 0 or a^ℕ.2 > 0","not a > 0","a > 0 or a < 0 or 0 = a","a < 0","a^ℕ.2 = a ⋅ a","not a ⋅ a > 0"]}
-{"goal":"sq_eq_mul","proof":["a^ℕ.1 ⋅ a^ℕ.1 = a^(ℕ.1 + ℕ.1)","a^ℕ.1 = a"]}

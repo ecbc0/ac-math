@@ -3976,6 +3976,34 @@ theorem lt_limit_to_lte_sub(a: ℝ, b: ℝ) {
     }
 }
 
+theorem lte_limit_to_lte_add(a: ℝ, b: ℝ) {
+    forall(ε: ℝ) {
+        ε > 0 implies a <= b + ε
+    } implies a <= b
+} by {
+    if a > b {
+        let ε = a - b
+        ε > 0
+        b + ε = a
+        let r: ℝ satisfy { 0 < r and r < ε }
+        b + r < b + ε
+        b + r < a
+        a <= b + r
+        a < a
+        false
+    }
+}
+
+theorem lte_limit_to_lte_sub(a: ℝ, b: ℝ) {
+    forall(ε: ℝ) {
+        ε > 0 implies a - ε <= b
+    } implies a <= b
+} by {
+    forall(ε: ℝ) {
+        ε > 0 implies a <= b + ε
+    }
+}
+
 theorem two_is_pos {
     2 > 0
 }

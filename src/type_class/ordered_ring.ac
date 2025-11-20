@@ -258,6 +258,29 @@ theorem lte_abs[A: Ordered_Add](a: A) { a <= abs(a) } by {
     }
 }
 
+theorem control_abs[A: Ordered_Add](a: A, r: A) { 
+    r >= A.0 and a <= r and -a <= r implies a.abs <= r 
+} by {
+    if r = A.0 {
+        a <= A.0
+        -a <= A.0
+        a >= -r
+        a >= A.0
+        a = A.0
+        a.abs = A.0
+        a.abs <= r
+    } else {
+        r > A.0
+        if a > A.0 {
+            a.abs = a
+            a.abs <= r
+        } else {
+            a.abs = -a
+            a.abs <= r
+        }
+    }
+}
+
 theorem abs_add_nonneg[A: Ordered_Add](a: A, b: A) {
     a >= A.0 and b >= A.0 implies abs(a + b) = abs(a) + abs(b)
 }

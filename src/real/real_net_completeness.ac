@@ -1,9 +1,9 @@
 
 from real.real_completeness import ℝ, inf, sup, is_nonempty, have_lower_bound, have_upper_bound, directly_closely_lt_sup, directly_closely_gt_inf, intersection, have_inf, have_sup
-from limit.metric_space import Distance_Space, Metric_Space, Point_Net_System, Topology, Distance_Net_System, Distance_Top
+from limit.metric_space import Distance_Space, Metric_Space, Point_Net_System, Topology, Distance_Net_System, Distance_Top, is_dist_vanish_net, is_bounded, are_bounded, dist_set, dist, elem_in_dist_set, Metric_Top, Complete_Distance_Top, Complete_Metric_Top
 from limit.net import Set, Set_Net, no_empty, subset_two_intersection, is_net, set_intersect_sets, net_intersect_set, elem_in_net_intersect_set
 from top.top_base import limit_pt, are_closed
-from top.compact import is_compact
+from top.compact import is_compact, to_closure_net
 from set import elem_in_intersection_general
 numerals ℝ
 
@@ -187,6 +187,7 @@ instance ℝ: Point_Net_System {
 instance ℝ: Distance_Net_System
 instance ℝ: Topology
 instance ℝ: Distance_Top
+instance ℝ: Metric_Top
 
 theorem inf_in_closed_set(s: Set[ℝ]) {
     s.is_closed and have_inf(s) implies inf(s) ∈ s
@@ -425,14 +426,77 @@ theorem closed_interval_chain_imp_lower_lte_upper(c: Set[Set[ℝ]]) {
     }
 }
 
-define is_bounded(s: Set[ℝ]) -> Bool {
-    have_inf(s) and have_sup(s)
+theorem bounded_imp_have_lower_upper_bound(s: Set[ℝ]) {
+    is_nonempty(s) and is_bounded(s) implies have_lower_bound(s) and have_upper_bound(s)
+} by {
+    let r: ℝ satisfy {
+        r = sup(dist_set(s))
+    }
+    let x: ℝ satisfy { x ∈ s }
+    forall(y: ℝ) {
+        if y ∈ s {
+            x - y <= x.distance(y)
+            y - x <= x.distance(y)
+            x.distance(y) ∈ dist_set(s)
+            x.distance(y) <= r
+            x - y <= r
+            y >= x - r
+            y - x <= r
+            y <= x + r
+            x - r <= y and y <= x + r
+        }
+    }
+    (x - r).is_set_lower_bound(s)
+    (x + r).is_set_upper_bound(s)
 }
 
-define are_bounded(c: Set[Set[ℝ]]) -> Bool {
-    forall(s: Set[ℝ]) {
-        s ∈ c implies is_bounded(s)
+theorem bounded_imp_have_inf_sup(s: Set[ℝ]) {
+    is_nonempty(s) and is_bounded(s) implies have_inf(s) and have_sup(s)
+}
+
+theorem have_lower_upper_bound_imp_bounded(s: Set[ℝ]) {
+    is_nonempty(s) and have_lower_bound(s) and have_upper_bound(s) implies is_bounded(s) 
+} by {
+    let l: ℝ satisfy { l.is_set_lower_bound(s) }
+    let u: ℝ satisfy { u.is_set_upper_bound(s) }
+    l <= u
+    forall(r: ℝ) {
+        if r ∈ dist_set(s) {
+            elem_in_dist_set(s, r)
+            let (x: ℝ, y: ℝ) satisfy {
+                x ∈ s and y ∈ s and r = x.distance(y)
+            }
+            x >= l
+            x <= u
+            y >= l
+            y <= u
+            if x >= y {
+                x - y >= 0
+                (x - y).abs = x - y
+                -y <= -l
+                x + -y <= u + -l
+                x - y <= u - l
+                (x - y).abs <= u - l
+            } else {
+                x < y
+                y - x > 0
+                (x - y).abs = y - x
+                -x <= -l
+                y + -x <= u + -l
+                y - x <= u - l
+                (x - y).abs <= u - l
+            }
+            (x - y).abs <= u - l
+            x.distance(y) <= u - l
+            r <= u - l
+        }
     }
+    (u - l).is_set_upper_bound(dist_set(s))
+    have_sup(dist_set(s))
+}
+
+theorem have_inf_sup_imp_bounded(s: Set[ℝ]) {
+    is_nonempty(s) and have_inf(s) and have_sup(s) implies is_bounded(s) 
 }
 
 theorem closed_intervals_are_bounded(c: Set[Set[ℝ]]) {
@@ -710,11 +774,13 @@ theorem real_bounded_closed_set_is_compact(s: Set[ℝ]) {
                     let (t: Set[ℝ]) satisfy {
                         t ∈ n and sub = s ∩ t
                     }
+                    is_nonempty(sub)
                     t.is_closed
                     (s ∩ t).is_closed
                     sub.is_closed
 
                     sub ⊆ s
+                    is_nonempty(s)
                     have_inf(sub)
                     have_sup(sub)
                     is_bounded(sub)
@@ -753,3 +819,44 @@ theorem real_bounded_closed_set_is_compact(s: Set[ℝ]) {
         } 
     }
 }
+
+/// also called "Cauchy net/sequence converge"
+theorem real_dist_vanish_net_converge(n: Set_Net[ℝ]) {
+    is_dist_vanish_net(n) implies exists(x: ℝ) { n.finer(x.net) }
+} by {
+    is_dist_vanish_net(to_closure_net(n))
+    is_net(to_closure_net(n).sets)
+    are_closed(to_closure_net(n).sets)
+    are_bounded(to_closure_net(n).sets)
+    is_nonempty(intersection(to_closure_net(n).sets))
+    let x: ℝ satisfy { x ∈ intersection(to_closure_net(n).sets) }
+    forall(b: Set[ℝ]) {
+        if b ∈ x.net.sets {
+            let ε: ℝ satisfy { ε > 0 and b = x.ball(ε) }
+            let a: Set[ℝ] satisfy {
+                a ∈ n.sets and dist(a) < ε
+            }
+            a.closure ∈ to_closure_net(n).sets
+            x ∈ a.closure
+            is_nonempty(a)
+            dist(a) = dist(a.closure)
+            dist(a.closure) < ε
+            forall(y: ℝ) {
+                if y ∈ a {
+                    y ∈ a.closure
+                    x.distance(y) ∈ dist_set(a.closure)
+                    x.distance(y) <= sup(dist_set(a.closure))
+                    x.distance(y) <= dist(a.closure)
+                    x.distance(y) < ε
+                    y ∈ x.ball(ε)
+                }
+            }
+            a ⊆ x.ball(ε)
+            a ⊆ b
+            a ∈ n.sets and a ⊆ b
+        }
+    }
+}
+
+instance ℝ: Complete_Distance_Top
+instance ℝ: Complete_Metric_Top

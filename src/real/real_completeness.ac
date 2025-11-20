@@ -44,6 +44,19 @@ theorem uniqueness_of_greatest_lower_bound(u1: ℝ, u2: ℝ, s: Set[ℝ]) {
     u1.is_set_greatest_lower_bound(s) and u2.is_set_greatest_lower_bound(s) implies u1 = u2
 }
 
+theorem lower_lte_upper_bound(s: Set[ℝ], l: ℝ, u: ℝ) {
+    is_nonempty(s) and l.is_set_lower_bound(s) and u.is_set_upper_bound(s) implies l <= u
+} by {
+    let x: ℝ satisfy { x ∈ s }
+    l <= x
+    x <= u
+    l <= u
+}
+
+theorem greatest_lower_lte_least_upper_bound(s: Set[ℝ], l: ℝ, u: ℝ) {
+    is_nonempty(s) and l.is_set_greatest_lower_bound(s) and u.is_set_least_upper_bound(s) implies l <= u
+}
+
 // The supremum condition on s is that it's nonempty, and has
 // an upper bound.
 // sup_cut is the Dedekind cut that will be the supremum of s.
