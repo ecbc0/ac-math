@@ -193,7 +193,7 @@ theorem inf_in_closed_set(s: Set[ℝ]) {
     s.is_closed and have_inf(s) implies inf(s) ∈ s
 } by {
     forall(t: Set[ℝ]) {
-        if t ∈ inf(s).net.sets {
+        if t ∈ inf(s).net {
             let ε: ℝ satisfy {
                 ε > 0 and t = inf(s).ball(ε)
             }
@@ -219,7 +219,7 @@ theorem sup_in_closed_set(s: Set[ℝ]) {
     s.is_closed and have_sup(s) implies sup(s) ∈ s
 } by {
     forall(t: Set[ℝ]) {
-        if t ∈ sup(s).net.sets {
+        if t ∈ sup(s).net {
             let ε: ℝ satisfy {
                 ε > 0 and t = sup(s).ball(ε)
             }
@@ -250,7 +250,7 @@ theorem inf_closure(a: Set[ℝ]) {
             forall(ε: ℝ) {
                 if ε > 0 {
                     x.ball_net = x.net.sets
-                    x.ball(ε) ∈ x.net.sets
+                    x.ball(ε) ∈ x.net
                     is_nonempty(x.ball(ε) ∩ a)
                     let y: ℝ satisfy { y ∈ x.ball(ε) ∩ a }
                     y ∈ x.ball(ε)
@@ -284,7 +284,7 @@ theorem sup_closure(a: Set[ℝ]) {
             forall(ε: ℝ) {
                 if ε > 0 {
                     x.ball_net = x.net.sets
-                    x.ball(ε) ∈ x.net.sets
+                    x.ball(ε) ∈ x.net
                     is_nonempty(x.ball(ε) ∩ a)
                     let y: ℝ satisfy { y ∈ x.ball(ε) ∩ a }
                     y ∈ x.ball(ε)
@@ -831,14 +831,16 @@ theorem real_dist_vanish_net_converge(n: Set_Net[ℝ]) {
     is_nonempty(intersection(to_closure_net(n).sets))
     let x: ℝ satisfy { x ∈ intersection(to_closure_net(n).sets) }
     forall(b: Set[ℝ]) {
-        if b ∈ x.net.sets {
+        if b ∈ x.net {
             let ε: ℝ satisfy { ε > 0 and b = x.ball(ε) }
             let a: Set[ℝ] satisfy {
-                a ∈ n.sets and dist(a) < ε
+                a ∈ n and dist(a) < ε
             }
             a.closure ∈ to_closure_net(n).sets
+            a.closure ∈ to_closure_net(n)
             x ∈ a.closure
             is_nonempty(a)
+            is_nonempty(a.closure)
             dist(a) = dist(a.closure)
             dist(a.closure) < ε
             forall(y: ℝ) {
@@ -853,7 +855,7 @@ theorem real_dist_vanish_net_converge(n: Set_Net[ℝ]) {
             }
             a ⊆ x.ball(ε)
             a ⊆ b
-            a ∈ n.sets and a ⊆ b
+            a ∈ n and a ⊆ b
         }
     }
 }

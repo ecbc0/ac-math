@@ -94,6 +94,36 @@ structure Set_Net[K] {
     subset_two_intersection(n)
 }
 
+attributes Set_Net[K] {
+    define contains(self, s: Set[K]) -> Bool {
+        self.sets.contains(s)
+    }
+}
+
+theorem equivalent_of_contains[K](n: Set_Net[K], s: Set[K]) {
+    s ∈ n iff s ∈ n.sets
+} 
+
+theorem net_contains_imp_nonempty[K](n: Set_Net[K], s: Set[K]) {
+    s ∈ n implies is_nonempty(s)
+} 
+
+theorem net_contains_imp_subset_two_intersection[K](n: Set_Net[K], a1: Set[K], a2: Set[K]) {
+    a1 ∈ n and a2 ∈ n implies exists(b: Set[K]) {
+        b ∈ n and b ⊆ a1 ∩ a2
+    }
+} by {
+    is_net(n.sets)
+    a1 ∈ n.sets
+    a2 ∈ n.sets
+    subset_two_intersection_helper_imp_by(n.sets)
+    let (b: Set[K]) satisfy {
+        b ∈ n.sets and b ⊆ a1 ∩ a2
+    }
+    b ∈ n
+    b ∈ n and b ⊆ a1 ∩ a2
+}
+
 typeclass N: Net extends Partial_Order {
     directed(a: N, b: N) {
         exists(c: N) {
@@ -143,8 +173,8 @@ attributes Set_Net[K] {
 attributes Set_Net[K] {
     define finer(self, other: Set_Net[K]) -> Bool {
         forall(b: Set[K]) {
-            b ∈ other.sets implies exists(a: Set[K]) {
-                a ∈ self.sets and a ⊆ b
+            b ∈ other implies exists(a: Set[K]) {
+                a ∈ self and a ⊆ b
             }
         }
     }
@@ -157,8 +187,8 @@ attributes Set_Net[K] {
 // Alternative, you can use "image of net" and then use finer
 define is_limit[K, L](source_net: Set_Net[K], target_net: Set_Net[L], f: K -> L) -> Bool {
     forall(b: Set[L]) {
-        b ∈ target_net.sets implies exists(a: Set[K]) {
-            a ∈ source_net.sets and a.image(f) ⊆ b
+        b ∈ target_net implies exists(a: Set[K]) {
+            a ∈ source_net and a.image(f) ⊆ b
         }
     }
 }
@@ -225,13 +255,14 @@ theorem is_limit_imp_image_of_net_finer[K, L](source_net: Set_Net[K], target_net
     is_limit(source_net, target_net, f) implies image_of_net(source_net, f).finer(target_net)
 } by {
     forall(b: Set[L]) {
-        if b ∈ target_net.sets {
+        if b ∈ target_net {
             let (a: Set[K]) satisfy {
-                a ∈ source_net.sets and a.image(f) ⊆ b
+                a ∈ source_net and a.image(f) ⊆ b
             }
             a.image(f) ∈ image_of_sets(source_net.sets, f)
             a.image(f) ∈ image_of_net(source_net, f).sets
-            a.image(f) ∈ image_of_net(source_net, f).sets and a.image(f) ⊆ b
+            a.image(f) ∈ image_of_net(source_net, f)
+            a.image(f) ∈ image_of_net(source_net, f) and a.image(f) ⊆ b
         } 
     }    
 }
@@ -240,17 +271,17 @@ theorem image_of_net_finer_imp_is_limit[K, L](source_net: Set_Net[K], target_net
     image_of_net(source_net, f).finer(target_net) implies is_limit(source_net, target_net, f)
 } by {
     forall(b: Set[L]) {
-        if b ∈ target_net.sets {
+        if b ∈ target_net {
             let a_image: Set[L] satisfy { 
-                a_image ∈ image_of_net(source_net, f).sets and a_image ⊆ b
+                a_image ∈ image_of_net(source_net, f) and a_image ⊆ b
             }
             a_image ∈ image_of_sets(source_net.sets, f)
             elem_in_image_of_sets(source_net.sets, f, a_image)
             let a: Set[K] satisfy {
-                a ∈ source_net.sets and a_image = a.image(f)
+                a ∈ source_net and a_image = a.image(f)
             }
             a.image(f) ⊆ b
-            a ∈ source_net.sets and a.image(f) ⊆ b
+            a ∈ source_net and a.image(f) ⊆ b
         } 
     }    
 }

@@ -11,21 +11,25 @@ typeclass X: Point_Net_System {
     }
 }
 
+theorem contains_common_pt[X: Point_Net_System](x: X, s: Set[X]) {
+    s ∈ x.net implies x ∈ s
+}
+
 define elem_in_interior[X: Point_Net_System](a: Set[X], x: X) -> Bool {
     exists(b: Set[X]) {
-        b ∈ X.net(x).sets and b ⊆ a
+        b ∈ X.net(x) and b ⊆ a
     }
 } 
 
 define elem_in_exterior[X: Point_Net_System](a: Set[X], x: X) -> Bool {
     exists(b: Set[X]) {
-        b ∈ X.net(x).sets and b ⊆ a.c
+        b ∈ X.net(x) and b ⊆ a.c
     }
 } 
 
 define elem_in_boundary[X: Point_Net_System](a: Set[X], x: X) -> Bool {
     forall(b: Set[X]) {
-        b ∈ X.net(x).sets implies a ∩ b != empty[X] and a.c ∩ b != empty[X]
+        b ∈ X.net(x) implies a ∩ b != empty[X] and a.c ∩ b != empty[X]
     }
 } 
 
@@ -45,7 +49,7 @@ attributes Set[X: Point_Net_System] {
 
 theorem boundary_helper[X: Point_Net_System](a: Set[X], x: X) {
     forall(b: Set[X]) {
-        b ∈ X.net(x).sets implies a ∩ b != empty[X] and a.c ∩ b != empty[X]
+        b ∈ X.net(x) implies a ∩ b != empty[X] and a.c ∩ b != empty[X]
     } implies x ∈ a.boundary    
 }
 
@@ -56,13 +60,13 @@ theorem boundary_is_not_interior_or_exterior[X: Point_Net_System](a: Set[X]) {
         if x ∈ a.boundary {
             if x ∈ a.interior {
                 let b: Set[X] satisfy {
-                    b ∈ x.net.sets and b ⊆ a
+                    b ∈ x.net and b ⊆ a
                 }
                 false
             }
             if x ∈ a.exterior {
                 let b: Set[X] satisfy {
-                    b ∈ x.net.sets and b ⊆ a.c
+                    b ∈ x.net and b ⊆ a.c
                 }
                 false
             }
@@ -79,7 +83,7 @@ theorem boundary_is_not_interior_or_exterior[X: Point_Net_System](a: Set[X]) {
             not x ∈ a.interior
             not x ∈ a.exterior
             forall(b: Set[X]) {
-                if b ∈ x.net.sets {
+                if b ∈ x.net {
                     not b ⊆ a
                     not b ⊆ a.c
                     a ∩ b != empty[X]
@@ -99,7 +103,7 @@ theorem interior_subset[X: Point_Net_System](a: Set[X]) {
     forall(x: X) {
         if x ∈ a.interior {
             let (b: Set[X]) satisfy {
-                    b ∈ X.net(x).sets and b ⊆ a
+                b ∈ X.net(x) and b ⊆ a
             }
             x ∈ b
             x ∈ a
@@ -113,7 +117,7 @@ theorem exterior_subset[X: Point_Net_System](a: Set[X]) {
     forall(x: X) {
         if x ∈ a.exterior {
             let (b: Set[X]) satisfy {
-                    b ∈ X.net(x).sets and b ⊆ a.c
+                    b ∈ X.net(x) and b ⊆ a.c
             }
             x ∈ b
             x ∈ a.c
@@ -136,16 +140,16 @@ theorem boundary_is_compl_boundary[X: Point_Net_System](a: Set[X]) {
     forall(x: X) {
         if x ∈ a.c.boundary {
             forall(b: Set[X]) {
-                b ∈ x.net.sets implies a.c ∩ b != empty[X] and a.c.c ∩ b != empty[X]
-                b ∈ x.net.sets implies a ∩ b != empty[X] and a.c ∩ b != empty[X]
+                b ∈ x.net implies a.c ∩ b != empty[X] and a.c.c ∩ b != empty[X]
+                b ∈ x.net implies a ∩ b != empty[X] and a.c ∩ b != empty[X]
             }
             x ∈ a.boundary            
         }
         if x ∈ a.boundary {
             forall(b: Set[X]) {
-                b ∈ x.net.sets implies a ∩ b != empty[X] and a.c ∩ b != empty[X]
+                b ∈ x.net implies a ∩ b != empty[X] and a.c ∩ b != empty[X]
 
-                b ∈ x.net.sets implies a.c ∩ b != empty[X] and a.c.c ∩ b != empty[X]
+                b ∈ x.net implies a.c ∩ b != empty[X] and a.c.c ∩ b != empty[X]
             }
             x ∈ a.c.boundary
         } 
@@ -159,7 +163,7 @@ theorem interior_is_compl_exterior[X: Point_Net_System](a: Set[X]) {
     forall(x: X) {
         if x ∈ a.c.exterior {
             let b: Set[X] satisfy {
-                b ∈ x.net.sets and b ⊆ a.c.c
+                b ∈ x.net and b ⊆ a.c.c
             }
             b ⊆ a
             x ∈ a.interior
@@ -171,7 +175,7 @@ theorem interior_is_compl_exterior[X: Point_Net_System](a: Set[X]) {
     forall(x: X) {
         if x ∈ a.interior {
             let b: Set[X] satisfy {
-                b ∈ x.net.sets and b ⊆ a
+                b ∈ x.net and b ⊆ a
             }
             b ⊆ a.c.c
             x ∈ a.c.exterior
@@ -189,20 +193,20 @@ theorem exterior_is_compl_interior[X: Point_Net_System](a: Set[X]) {
 typeclass X: Topology extends Point_Net_System {
     net_limit_split_of_interior_boundary(a: Set[X], x: X) {
         x ∈ a.interior implies exists(b: Set[X]) {
-            b ∈ x.net.sets and b ⊆ a.interior
+            b ∈ x.net and b ⊆ a.interior
         }
     }
 }
 
 theorem net_limit_split_of_exterior_boundary[X: Topology](a: Set[X], x: X) {
     x ∈ a.exterior implies exists(b: Set[X]) {
-        b ∈ x.net.sets and b ⊆ a.exterior
+        b ∈ x.net and b ⊆ a.exterior
     }
 }
 
 define limit_pt[X: Topology](a: Set[X], x: X) -> Bool {
     forall(b: Set[X]) {
-        b ∈ x.net.sets implies a ∩ b != empty[X]
+        b ∈ x.net implies a ∩ b != empty[X]
     }
 }
 
@@ -210,7 +214,7 @@ theorem contains_imp_limit_pt[X: Topology](a: Set[X], x: X) {
     x ∈ a implies limit_pt(a, x)
 } by {
     forall(b: Set[X]) {
-        if b ∈ x.net.sets {
+        if b ∈ x.net {
             x ∈ b
             x ∈ a ∩ b
             a ∩ b != empty[X]
@@ -251,7 +255,7 @@ theorem closure_is_not_exterior[X: Topology](a: Set[X]) {
         if x ∈ a.closure {
             if x ∈ a.exterior {
                 let b: Set[X] satisfy {
-                    b ∈ x.net.sets and b ⊆ a.c
+                    b ∈ x.net and b ⊆ a.c
                 }
                 a ∩ b = empty[X]
                 false
@@ -265,8 +269,8 @@ theorem closure_is_not_exterior[X: Topology](a: Set[X]) {
         if x ∈ a.exterior.c {
             not x ∈ a.exterior
             forall(b: Set[X]) {
-                b ∈ x.net.sets implies not b ⊆ a.c
-                b ∈ x.net.sets implies a ∩ b != empty[X]
+                b ∈ x.net implies not b ⊆ a.c
+                b ∈ x.net implies a ∩ b != empty[X]
             }
             x ∈ a.closure
         }
@@ -309,7 +313,7 @@ theorem closure_is_closed[X: Topology](a: Set[X]) {
             x ∉ a.closure
             x ∈ a.exterior
             let b: Set[X] satisfy {
-                b ∈ x.net.sets and b ⊆ a.exterior
+                b ∈ x.net and b ⊆ a.exterior
             }
             b ∩ a.closure = empty[X]
             x ∉ a.closure.closure
@@ -329,7 +333,7 @@ theorem closure_preserve_subset[X: Topology](a: Set[X], b: Set[X]) {
     forall(x: X) {
         if x ∈ a.closure {
             forall(c: Set[X]) {
-                if c ∈ x.net.sets {
+                if c ∈ x.net {
                     a ∩ c != empty[X]
                     b ∩ c != empty[X]
                 }
@@ -385,7 +389,7 @@ theorem interior_preserve_subset[X: Topology](a: Set[X], b: Set[X]) {
     forall(x: X) {
         if x ∈ a.interior {
             let s: Set[X] satisfy {
-                s ∈ x.net.sets and s ⊆ a
+                s ∈ x.net and s ⊆ a
             }
             s ⊆ b
             x ∈ b.interior
@@ -416,8 +420,9 @@ theorem union_preserve_open[X: Topology](c: Set[Set[X]]) {
                 x ∈ s and s ∈ c and s.is_open
             }
             s.interior = s
+            elem_in_interior(s, x)
             let b: Set[X] satisfy {
-                b ∈ x.net.sets and b ⊆ s
+                b ∈ x.net and b ⊆ s
             }
             b ⊆ union(c)
             x ∈ union(c).interior
@@ -488,18 +493,18 @@ theorem two_intersection_preserve_open[X: Topology](a: Set[X], b: Set[X]) {
             a.interior = a
             x ∈ a.interior
             let sa: Set[X] satisfy {
-                sa ∈ x.net.sets and sa ⊆ a
+                sa ∈ x.net and sa ⊆ a
             }
             x ∈ b
             b.interior = b
             x ∈ b.interior
             let sb: Set[X] satisfy {
-                sb ∈ x.net.sets and sb ⊆ b
+                sb ∈ x.net and sb ⊆ b
             }
             is_net(x.net.sets)
             subset_two_intersection(x.net.sets)
             let s: Set[X] satisfy {
-                s ∈ x.net.sets and s ⊆ sa ∩ sb
+                s ∈ x.net and s ⊆ sa ∩ sb
             }
             sa ∩ sb ⊆ a ∩ b
             x ∈ (a ∩ b).interior
@@ -521,8 +526,9 @@ theorem union_index_preserve_open[I, X: Topology](f: I -> Set[X]) {
                 x ∈ f(i) and f(i).is_open
             }
             f(i).interior = f(i)
+            elem_in_interior(f(i), x)
             let b: Set[X] satisfy {
-                b ∈ x.net.sets and b ⊆ f(i)
+                b ∈ x.net and b ⊆ f(i)
             }
             b ⊆ union_index(f)
             x ∈ union_index(f).interior
@@ -621,8 +627,8 @@ define converge_to[K, X: Topology](source_net: Set_Net[K], target: X, f: K -> X)
 
 theorem converge_to_definition_expand[K, X: Topology](source_net: Set_Net[K], target: X, f: K -> X) {
     forall(b: Set[X]) {
-        b ∈ target.net.sets implies exists(a: Set[K]) {
-            a ∈ source_net.sets and a.image(f) ⊆ b
+        b ∈ target.net implies exists(a: Set[K]) {
+            a ∈ source_net and a.image(f) ⊆ b
         }
     } implies is_limit(source_net, target.net, f)
 }

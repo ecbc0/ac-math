@@ -2,7 +2,7 @@ from real import ℝ
 from real.real_completeness import inf, sup, have_lower_bound, have_upper_bound, directly_closely_gt_inf_directly, have_inf, have_sup
 numerals ℝ
 from set import Set, intersection, is_nonempty
-from limit.net import Set_Net, no_empty, subset_two_intersection, is_net, subset_two_intersection_helper, subset_two_intersection_helper_imp_by_ver_logic, is_limit, image_of_net
+from limit.net import Set_Net, no_empty, subset_two_intersection, is_net, subset_two_intersection_helper, subset_two_intersection_helper_imp_by_ver_logic, is_limit, image_of_net, net_contains_imp_subset_two_intersection
 from top.top_base import Point_Net_System, Topology, converge_to
 from util import id_map
 from top.compact import common_limit_pt, to_closure, to_closure_net
@@ -210,7 +210,8 @@ theorem point_net[M: Distance_Space](x: M) {
     Set_Net.new(x.ball_net).have_common_pt(x)
 } by {
     forall(s: Set[M]) {
-        if s ∈ Set_Net.new(x.ball_net).sets {
+        if s ∈ Set_Net.new(x.ball_net) {
+            s ∈ Set_Net.new(x.ball_net).sets
             s ∈ x.ball_net
             let r: ℝ satisfy {
                 r > 0 and s = x.ball(r)
@@ -229,16 +230,18 @@ typeclass M: Distance_Net_System extends Distance_Space, Point_Net_System {
 }
 
 theorem ball_in_net[M: Distance_Net_System](x: M, r: ℝ) {
-    r > 0 implies x.ball(r) ∈ x.net.sets
+    r > 0 implies x.ball(r) ∈ x.net
 } by {
     x.net.sets = x.ball_net
+    x.ball(r) ∈ x.net.sets
 }
 
 theorem choose_ball[M: Distance_Net_System](s: Set[M], x: M) {
-    s ∈ x.net.sets implies exists(r: ℝ) {
+    s ∈ x.net implies exists(r: ℝ) {
         r > 0 and s = x.ball(r)
     }
 } by {
+    s ∈ x.net.sets
     x.net.sets = x.ball_net
 }
 
@@ -413,7 +416,7 @@ theorem interior_have_non_zero_distance_from_inf[M: Distance_Net_System](a: Set[
 } by {
     have_inf(distance_from(a.c, x))
     let s: Set[M] satisfy {
-        s ∈ x.net.sets and s ⊆ a
+        s ∈ x.net and s ⊆ a
     }
     let r: ℝ satisfy {
         r > 0 and s = x.ball(r)
@@ -455,13 +458,13 @@ theorem not_in_imp_distance_gte_inf_distance_from_compl[M: Distance_Net_System](
 
 theorem net_limit_split_of_interior_boundary[M: Distance_Net_System](a: Set[M], x: M) {
     x ∈ a.interior implies exists(b: Set[M]) {
-        b ∈ x.net.sets and b ⊆ a.interior
+        b ∈ x.net and b ⊆ a.interior
     }
 }
 by {
     if x ∈ a.interior {
         let b: Set[M] satisfy { 
-            b ∈ x.net.sets and b ⊆ a 
+            b ∈ x.net and b ⊆ a 
         }
         b ∈ x.ball_net
         let r: ℝ satisfy {
@@ -475,7 +478,7 @@ by {
                 r1 > 0
                 y.ball(r1) ∈ y.ball_net
                 y.ball_net = y.net.sets
-                y.ball(r1) ∈ y.net.sets
+                y.ball(r1) ∈ y.net
                 forall(z: M) {
                     if z ∈ y.ball(r1) {
                         y.distance(z) < r1
@@ -493,7 +496,7 @@ by {
             }
         }
         b ⊆ a.interior
-        b ∈ x.net.sets and b ⊆ a.interior
+        b ∈ x.net and b ⊆ a.interior
     }
 }
 
@@ -530,7 +533,7 @@ typeclass Metric_Top extends Distance_Top, Metric_Space
 define is_dist_vanish_net[M: Distance_Space](n: Set_Net[M]) -> Bool {
     are_bounded(n.sets) and forall(ε: ℝ) {
         ε > 0 implies exists(s: Set[M]) {
-            s ∈ n.sets and dist(s) < ε
+            s ∈ n and dist(s) < ε
         }
     }
 }
@@ -559,17 +562,17 @@ theorem distance_space_finer_definition_expand_ball_imp[M: Distance_Top](n: Set_
     n.finer(x.net) implies (
         forall(ε: ℝ) { 
             ε > 0 implies exists(a: Set[M]) { 
-                a ∈ n.sets and a ⊆ x.ball(ε) 
+                a ∈ n and a ⊆ x.ball(ε) 
             } 
         }
     )
 } by {
     forall(ε: ℝ) {
         if ε > 0 {
-            x.ball(ε) ∈ x.net.sets
+            x.ball(ε) ∈ x.net
             n.finer(x.net)
             let a: Set[M] satisfy {
-                a ∈ n.sets and a ⊆ x.ball(ε)
+                a ∈ n and a ⊆ x.ball(ε)
             }
         }
     }
@@ -578,19 +581,19 @@ theorem distance_space_finer_definition_expand_ball_imp[M: Distance_Top](n: Set_
 theorem distance_space_finer_definition_expand_ball_imp_by[M: Distance_Top](n: Set_Net[M], x: M) {
     forall(ε: ℝ) { 
         ε > 0 implies exists(a: Set[M]) { 
-            a ∈ n.sets and a ⊆ x.ball(ε) 
+            a ∈ n and a ⊆ x.ball(ε) 
         } 
     } implies n.finer(x.net) 
 } by {
     forall(b: Set[M]) {
-        if b ∈ x.net.sets {
+        if b ∈ x.net {
             let ε: ℝ satisfy {
                 ε > 0 and b = x.ball(ε)
             }
             let (a: Set[M]) satisfy { 
-                a ∈ n.sets and a ⊆ x.ball(ε)
+                a ∈ n and a ⊆ x.ball(ε)
             }
-            a ∈ n.sets and a ⊆ b
+            a ∈ n and a ⊆ b
         }
     }
     n.finer(x.net) 
@@ -600,17 +603,17 @@ theorem distance_space_converge_to_definition_expand_ball_imp[K, M: Distance_Top
     converge_to(source_net, target, f) implies (
         forall(ε: ℝ) { 
             ε > 0 implies exists(a: Set[K]) { 
-                a ∈ source_net.sets and a.image(f) ⊆ target.ball(ε) 
+                a ∈ source_net and a.image(f) ⊆ target.ball(ε) 
             } 
         }
     )
 } by {
     forall(ε: ℝ) {
         if ε > 0 {
-            target.ball(ε) ∈ target.net.sets
+            target.ball(ε) ∈ target.net
             is_limit(source_net, target.net, f)
             let a: Set[K] satisfy {
-                a ∈ source_net.sets and a.image(f) ⊆ target.ball(ε)
+                a ∈ source_net and a.image(f) ⊆ target.ball(ε)
             }
         }
     }
@@ -619,19 +622,19 @@ theorem distance_space_converge_to_definition_expand_ball_imp[K, M: Distance_Top
 theorem distance_space_converge_to_definition_expand_ball_imp_by[K, M: Distance_Top](source_net: Set_Net[K], target: M, f: K -> M) {
     forall(ε: ℝ) { 
         ε > 0 implies exists(a: Set[K]) { 
-            a ∈ source_net.sets and a.image(f) ⊆ target.ball(ε) 
+            a ∈ source_net and a.image(f) ⊆ target.ball(ε) 
         } 
     } implies converge_to(source_net, target, f) 
 } by {
     forall(b: Set[M]) {
-        if b ∈ target.net.sets {
+        if b ∈ target.net {
             let ε: ℝ satisfy {
                 ε > 0 and b = target.ball(ε)
             }
             let (a: Set[K]) satisfy { 
-                a ∈ source_net.sets and a.image(f) ⊆ target.ball(ε)
+                a ∈ source_net and a.image(f) ⊆ target.ball(ε)
             }
-            a ∈ source_net.sets and a.image(f) ⊆ b
+            a ∈ source_net and a.image(f) ⊆ b
         }
     }
     is_limit(source_net, target.net, f)
@@ -644,18 +647,19 @@ theorem dist_vanish_net_if_finer[M: Distance_Top](n: Set_Net[M], x: M, y: M) {
         if ε > 0 {
             ε/2 > 0
             let (ax: Set[M]) satisfy {
-                ax ∈ n.sets and ax ⊆ x.ball(ε/2)
+                ax ∈ n and ax ⊆ x.ball(ε/2)
             }
             distance_space_finer_definition_expand_ball_imp(n, y)
             let (ay: Set[M]) satisfy {
-                ay ∈ n.sets and ay ⊆ y.ball(ε/2)
+                ay ∈ n and ay ⊆ y.ball(ε/2)
             }
             is_net(n.sets)
             subset_two_intersection(n.sets)
             subset_two_intersection_helper_imp_by_ver_logic(n.sets)
-            ax ∈ n.sets and ay ∈ n.sets
+            ax ∈ n and ay ∈ n
+            net_contains_imp_subset_two_intersection(n, ax, ay)
             let a: Set[M] satisfy {
-                a ∈ n.sets and a ⊆ ax and a ⊆ ay
+                a ∈ n and a ⊆ ax and a ⊆ ay
             }
             is_nonempty(a)
             let z: M satisfy { z ∈ a }
@@ -687,7 +691,7 @@ theorem finer_imp_dist_vanish_net[M: Distance_Top](n: Set_Net[M], x: M) {
             r/2 > 0
             distance_space_finer_definition_expand_ball_imp(n, x)
             let (s: Set[M]) satisfy {
-                s ∈ n.sets and s ⊆ x.ball(r/2)
+                s ∈ n and s ⊆ x.ball(r/2)
             }
             forall(y: M, z: M) {
                 if y ∈ s and z ∈ s {
@@ -705,7 +709,7 @@ theorem finer_imp_dist_vanish_net[M: Distance_Top](n: Set_Net[M], x: M) {
             have_sup(dist_set(s))
             dist(s) <= r
             dist(s) < ε
-            s ∈ n.sets and dist(s) < ε
+            s ∈ n and dist(s) < ε
         }
     }
 }
@@ -742,8 +746,8 @@ theorem closure_preserve_bounded[M: Distance_Top](s: Set[M]) {
                     }
                     let ux = x.ball(ε/2)
                     let uy = y.ball(ε/2)
-                    ux ∈ x.net.sets
-                    uy ∈ y.net.sets
+                    ux ∈ x.net
+                    uy ∈ y.net
                     is_nonempty(ux ∩ s)
                     is_nonempty(uy ∩ s)
                     let x0: M satisfy { x0 ∈ ux ∩ s }
@@ -804,7 +808,7 @@ theorem to_closure_preserve_dist_vanish_net[M: Distance_Top](n: Set_Net[M]) {
     forall(ε: ℝ) {
         if ε > 0 {
             let s: Set[M] satisfy {
-                s ∈ n.sets and dist(s) < ε
+                s ∈ n and dist(s) < ε
             }
             is_nonempty(s)
             is_bounded(s)

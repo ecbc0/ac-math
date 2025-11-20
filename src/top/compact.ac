@@ -4,7 +4,7 @@ from limit.net import sets_of_finite_intersection, no_empty, subset_two_intersec
 
 define common_limit_pt[X: Topology](n: Set[Set[X]], x: X) -> Bool {
     forall(u: Set[X]) {
-        u ∈ x.net.sets implies set_intersect_sets(n, u)
+        u ∈ x.net implies set_intersect_sets(n, u)
     }
 }
 
@@ -125,7 +125,7 @@ theorem is_compact_imp_is_compact_intersection[X: Topology](s: Set[X]) {
             forall(a: Set[X]) {
                 if a ∈ n {
                     forall(u: Set[X]) {
-                        if u ∈ x.net.sets {
+                        if u ∈ x.net {
                             is_nonempty(u ∩ a) 
                         }
                     }
@@ -155,7 +155,7 @@ theorem is_compact_intersection_imp_is_compact[X: Topology](s: Set[X]) {
             let x: X satisfy { x ∈ s ∩ intersection(to_closure(n)) }
             x ∈ s
             forall(u: Set[X]) {
-                if u ∈ x.net.sets {
+                if u ∈ x.net {
                     forall(a: Set[X]) {
                         if a ∈ n {
                             a.closure ∈ to_closure(n)
