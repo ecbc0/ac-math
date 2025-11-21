@@ -1,0 +1,102 @@
+from type_class.add import Add
+from real import ℝ
+from limit.metric_space import Distance_Space
+
+// Temporarily not consider dimension, waiting for dependent type
+
+/// Temporarily just use ℝ, ignore ℂ, ℂ' and other field or division algebra
+typeclass V: Vec extends Add {
+    scal: (ℝ, V) -> V
+
+    vec_distrib(a: ℝ, v1: V, v2: V) {
+        Vec.scal(a, v1 + v2) = Vec.scal(a, v1) + Vec.scal(a, v2)
+    }
+
+    scal_distrib(a1: ℝ, a2: ℝ, v: V) {
+        Vec.scal(a1 + a2, v) = Vec.scal(a1, v) + Vec.scal(a2, v)
+    }
+
+    unit_scal(v: V) {
+        Vec.scal(ℝ.1, v) = v
+    }
+
+    zero_scal(v: V) {
+        Vec.scal(ℝ.0, v) = V.0
+    }
+    
+    scal_assco(a1: ℝ, a2: ℝ, v: V) {
+        Vec.scal(a1, Vec.scal(a2, v)) = Vec.scal(a1 ⋅ a2, v)
+    }
+}
+
+let scal[V] = Vec.scal[V]
+
+theorem add_neg_is_scal_reverse[V: Vec](v: V) {
+    scal(-ℝ.1, v) = -v
+} by {
+    scal(-ℝ.1, v) + v = scal(-ℝ.1, v) + scal(ℝ.1, v)
+    scal(-ℝ.1, v) + scal(ℝ.1, v) = scal(-ℝ.1 + ℝ.1, v)
+    scal(-ℝ.1 + ℝ.1, v) = scal(ℝ.0, v)
+}
+
+// example of non quadratic norm: L^1 integral space
+typeclass V: Norm_Vec extends Vec {
+    norm: V -> ℝ
+
+    zero_norm {
+        (V.0).norm = ℝ.0 
+    }
+
+    scal_norm(a: ℝ, v: V) {
+        scal(a, v).norm = a.abs ⋅ v.norm
+    }
+
+    norm_triangle(v: V, w: V) {
+        (v + w).norm <= v.norm + w.norm
+    }
+}
+
+theorem neg_norm[V: Norm_Vec](v: V) {
+    (-v).norm = v.norm
+} by {
+    (-ℝ.1).abs = ℝ.1
+}
+
+theorem norm_gte_zero[V: Norm_Vec](v: V) {
+    v.norm >= ℝ.0
+} by {
+    (v + -v).norm = ℝ.0
+    (v + -v).norm <= v.norm + (-v).norm
+    ℝ.0 <= v.norm + v.norm
+    if v.norm < ℝ.0 {
+        v.norm + v.norm < ℝ.0
+        false
+    }
+}
+
+attributes V: Norm_Vec {
+    define norm_dist(self, other: V) -> ℝ {
+        (self - other).norm
+    }
+}
+
+theorem self_distance_is_zero[V: Norm_Vec](x: V) {
+    x.norm_dist(x) = ℝ.0
+}
+
+theorem distance_symmetric[V: Norm_Vec](x: V, y: V) {
+    x.norm_dist(y) = y.norm_dist(x)
+} 
+
+theorem distance_triangle[V: Norm_Vec](x: V, y: V, z: V) {
+    x.norm_dist(z) <= x.norm_dist(y) + y.norm_dist(z)
+} by {
+    (x - z) = (x - y) + (y - z)
+    (x - z).norm <= (x - y).norm + (y - z).norm
+}
+
+typeclass Norm_Distance extends Norm_Vec, Distance_Space {
+    norm_distance {
+        Norm_Vec.norm_dist = Distance_Space.distance
+    }
+}
