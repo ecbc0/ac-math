@@ -2,7 +2,7 @@ from real import ℝ
 from real.real_completeness import inf, sup, have_lower_bound, have_upper_bound, directly_closely_gt_inf_directly, have_inf, have_sup
 numerals ℝ
 from set import Set, intersection, is_nonempty
-from limit.net import Set_Net, no_empty, subset_two_intersection, is_net, subset_two_intersection_helper, subset_two_intersection_helper_imp_by_ver_logic, is_limit, image_of_net, net_contains_imp_subset_two_intersection
+from limit.net import Net, no_empty, subset_two_intersection, is_net, subset_two_intersection_helper, subset_two_intersection_helper_imp_by_ver_logic, is_limit, image_of_net, net_contains_imp_subset_two_intersection
 from top.top_base import Point_Net_System, Topology, converge_to
 from util import id_map
 from top.compact import common_limit_pt, to_closure, to_closure_net
@@ -207,11 +207,11 @@ theorem ball_net_is_net[M: Distance_Space](x: M) {
 }
 
 theorem point_net[M: Distance_Space](x: M) {
-    Set_Net.new(x.ball_net).have_common_pt(x)
+    Net.new(x.ball_net).have_common_pt(x)
 } by {
     forall(s: Set[M]) {
-        if s ∈ Set_Net.new(x.ball_net) {
-            s ∈ Set_Net.new(x.ball_net).sets
+        if s ∈ Net.new(x.ball_net) {
+            s ∈ Net.new(x.ball_net).sets
             s ∈ x.ball_net
             let r: ℝ satisfy {
                 r > 0 and s = x.ball(r)
@@ -225,7 +225,7 @@ theorem point_net[M: Distance_Space](x: M) {
 
 typeclass M: Distance_Net_System extends Distance_Space, Point_Net_System {
     net_from_ball(x: M) {
-        M.net(x) = Set_Net.new(M.ball_net(x))
+        M.net(x) = Net.new(M.ball_net(x))
     }
 }
 
@@ -530,7 +530,7 @@ typeclass Distance_Top extends Distance_Net_System, Topology
 typeclass Metric_Top extends Distance_Top, Metric_Space
 
 /// also called Cauchy net
-define is_dist_vanish_net[M: Distance_Space](n: Set_Net[M]) -> Bool {
+define is_dist_vanish_net[M: Distance_Space](n: Net[M]) -> Bool {
     are_bounded(n.sets) and forall(ε: ℝ) {
         ε > 0 implies exists(s: Set[M]) {
             s ∈ n and dist(s) < ε
@@ -558,7 +558,7 @@ theorem zero_dist_class_is_zero_dist_class[M: Distance_Space](x: M, y: M, z: M) 
     y.distance(z) = 0
 }
 
-theorem distance_space_finer_definition_expand_ball_imp[M: Distance_Top](n: Set_Net[M], x: M) {
+theorem distance_space_finer_definition_expand_ball_imp[M: Distance_Top](n: Net[M], x: M) {
     n.finer(x.net) implies (
         forall(ε: ℝ) { 
             ε > 0 implies exists(a: Set[M]) { 
@@ -578,7 +578,7 @@ theorem distance_space_finer_definition_expand_ball_imp[M: Distance_Top](n: Set_
     }
 }
 
-theorem distance_space_finer_definition_expand_ball_imp_by[M: Distance_Top](n: Set_Net[M], x: M) {
+theorem distance_space_finer_definition_expand_ball_imp_by[M: Distance_Top](n: Net[M], x: M) {
     forall(ε: ℝ) { 
         ε > 0 implies exists(a: Set[M]) { 
             a ∈ n and a ⊆ x.ball(ε) 
@@ -599,7 +599,7 @@ theorem distance_space_finer_definition_expand_ball_imp_by[M: Distance_Top](n: S
     n.finer(x.net) 
 }
 
-theorem distance_space_converge_to_definition_expand_ball_imp[K, M: Distance_Top](source_net: Set_Net[K], target: M, f: K -> M) {
+theorem distance_space_converge_to_definition_expand_ball_imp[K, M: Distance_Top](source_net: Net[K], target: M, f: K -> M) {
     converge_to(source_net, target, f) implies (
         forall(ε: ℝ) { 
             ε > 0 implies exists(a: Set[K]) { 
@@ -619,7 +619,7 @@ theorem distance_space_converge_to_definition_expand_ball_imp[K, M: Distance_Top
     }
 }
 
-theorem distance_space_converge_to_definition_expand_ball_imp_by[K, M: Distance_Top](source_net: Set_Net[K], target: M, f: K -> M) {
+theorem distance_space_converge_to_definition_expand_ball_imp_by[K, M: Distance_Top](source_net: Net[K], target: M, f: K -> M) {
     forall(ε: ℝ) { 
         ε > 0 implies exists(a: Set[K]) { 
             a ∈ source_net and a.image(f) ⊆ target.ball(ε) 
@@ -640,7 +640,7 @@ theorem distance_space_converge_to_definition_expand_ball_imp_by[K, M: Distance_
     is_limit(source_net, target.net, f)
 }
 
-theorem dist_vanish_net_if_finer[M: Distance_Top](n: Set_Net[M], x: M, y: M) {
+theorem dist_vanish_net_if_finer[M: Distance_Top](n: Net[M], x: M, y: M) {
     is_dist_vanish_net(n) and n.finer(x.net) and n.finer(y.net) implies x.distance(y) = 0
 } by {
     forall(ε: ℝ) {
@@ -677,12 +677,12 @@ theorem dist_vanish_net_if_finer[M: Distance_Top](n: Set_Net[M], x: M, y: M) {
     x.distance(y) = 0    
 }
 
-theorem dist_vanish_net_if_converge[K, M: Distance_Top](n: Set_Net[K], x: M, y: M, f: K -> M) {
+theorem dist_vanish_net_if_converge[K, M: Distance_Top](n: Net[K], x: M, y: M, f: K -> M) {
     is_dist_vanish_net(image_of_net(n, f)) and converge_to(n, x, f) and converge_to(n, y, f) implies x.distance(y) = 0
 } 
 
 /// also called "converge net/sequence is Cauchy net/sequence"
-theorem finer_imp_dist_vanish_net[M: Distance_Top](n: Set_Net[M], x: M) {
+theorem finer_imp_dist_vanish_net[M: Distance_Top](n: Net[M], x: M) {
     are_bounded(n.sets) and n.finer(x.net) implies is_dist_vanish_net(n)
 } by {
     forall(ε: ℝ) {
@@ -714,17 +714,17 @@ theorem finer_imp_dist_vanish_net[M: Distance_Top](n: Set_Net[M], x: M) {
     }
 }
 
-theorem converge_to_imp_dist_vanish_net[K, M: Distance_Top](n: Set_Net[K], x: M, f: K -> M) {
+theorem converge_to_imp_dist_vanish_net[K, M: Distance_Top](n: Net[K], x: M, f: K -> M) {
     are_bounded(image_of_net(n, f).sets) and converge_to(n, x, f) implies is_dist_vanish_net(image_of_net(n, f))
 } 
 
-define dist_vanish_net_finer[M: Distance_Top](n: Set_Net[M]) -> Bool {
+define dist_vanish_net_finer[M: Distance_Top](n: Net[M]) -> Bool {
     is_dist_vanish_net(n) implies exists(x: M) { n.finer(x.net) }
 }
 
 typeclass M: Complete_Distance_Top extends Distance_Top {
     /// also called "Cauchy net/sequence converge"
-    complete(n: Set_Net[M]) {
+    complete(n: Net[M]) {
         dist_vanish_net_finer[M](n)
     }
 }
@@ -799,7 +799,7 @@ theorem to_closure_preserve_are_bounded[M: Distance_Top](n: Set[Set[M]]) {
     }
 }
 
-theorem to_closure_preserve_dist_vanish_net[M: Distance_Top](n: Set_Net[M]) {
+theorem to_closure_preserve_dist_vanish_net[M: Distance_Top](n: Net[M]) {
     is_dist_vanish_net(n) implies is_dist_vanish_net(to_closure_net(n))
 } by {
     are_bounded(n.sets)

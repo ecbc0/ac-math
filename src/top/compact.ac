@@ -1,6 +1,6 @@
 from top.top_base import Topology, Set, are_closed, are_open, is_net, intersection, union, limit_pt
 from set import is_nonempty, compl_of_sets
-from limit.net import sets_of_finite_intersection, no_empty, subset_two_intersection, subset_two_intersection_helper, net_subset_finite_intersection, set_intersect_sets, Set_Net
+from limit.net import sets_of_finite_intersection, no_empty, subset_two_intersection, subset_two_intersection_helper, net_subset_finite_intersection, set_intersect_sets, Net
 
 define common_limit_pt[X: Topology](n: Set[Set[X]], x: X) -> Bool {
     forall(u: Set[X]) {
@@ -8,7 +8,7 @@ define common_limit_pt[X: Topology](n: Set[Set[X]], x: X) -> Bool {
     }
 }
 
-// Alternative: use function from net space to topology space instead of using Set_Net or is_net in topology (they are equivalent by "image_net", but need an "extra" source_net)
+// Alternative: use function from net space to topology space instead of using Net or is_net in topology (they are equivalent by "image_net", but need an "extra" source_net)
 
 define is_compact[X: Topology](s: Set[X]) -> Bool {
     forall(n: Set[Set[X]]) {
@@ -74,14 +74,14 @@ theorem to_closure_preserve_net[X: Topology](n: Set[Set[X]]) {
     subset_two_intersection(to_closure(n))
 }
 
-define to_closure_net[X: Topology](n: Set_Net[X]) -> Set_Net[X] {
-    Set_Net[X].new(to_closure(n.sets))
+define to_closure_net[X: Topology](n: Net[X]) -> Net[X] {
+    Net[X].new(to_closure(n.sets))
 }
 
-theorem to_closure_net_set[X: Topology](n: Set_Net[X]) {
+theorem to_closure_net_set[X: Topology](n: Net[X]) {
     to_closure_net(n).sets = to_closure(n.sets)
 } by {
-    to_closure_net(n) = Set_Net[X].new(to_closure(n.sets))
+    to_closure_net(n) = Net[X].new(to_closure(n.sets))
 }
 
 theorem to_closure_are_closed[X: Topology](n: Set[Set[X]]) {

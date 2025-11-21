@@ -65,7 +65,7 @@ define is_net[K](sets: Set[Set[K]]) -> Bool {
     no_empty(sets) and subset_two_intersection(sets)
 }
 
-structure Set_Net[K] {
+structure Net[K] {
     sets: Set[Set[K]]
 } constraint {
     is_net(sets)
@@ -94,21 +94,21 @@ structure Set_Net[K] {
     subset_two_intersection(n)
 }
 
-attributes Set_Net[K] {
+attributes Net[K] {
     define contains(self, s: Set[K]) -> Bool {
         self.sets.contains(s)
     }
 }
 
-theorem equivalent_of_contains[K](n: Set_Net[K], s: Set[K]) {
+theorem equivalent_of_contains[K](n: Net[K], s: Set[K]) {
     s ∈ n iff s ∈ n.sets
 } 
 
-theorem net_contains_imp_nonempty[K](n: Set_Net[K], s: Set[K]) {
+theorem net_contains_imp_nonempty[K](n: Net[K], s: Set[K]) {
     s ∈ n implies is_nonempty(s)
 } 
 
-theorem net_contains_imp_subset_two_intersection[K](n: Set_Net[K], a1: Set[K], a2: Set[K]) {
+theorem net_contains_imp_subset_two_intersection[K](n: Net[K], a1: Set[K], a2: Set[K]) {
     a1 ∈ n and a2 ∈ n implies exists(b: Set[K]) {
         b ∈ n and b ⊆ a1 ∩ a2
     }
@@ -124,7 +124,7 @@ theorem net_contains_imp_subset_two_intersection[K](n: Set_Net[K], a1: Set[K], a
     b ∈ n and b ⊆ a1 ∩ a2
 }
 
-typeclass N: Net extends Partial_Order {
+typeclass N: Directed extends Partial_Order {
     directed(a: N, b: N) {
         exists(c: N) {
             c <= a and c <= b
@@ -134,8 +134,8 @@ typeclass N: Net extends Partial_Order {
 }
 
 // // to define finer we need two differnt Net instance extends a same Partial_Order instance ... and dependent type? 
-// attributes N: Net {
-//     define finer[M: Net] -> Bool {
+// attributes N: Directed {
+//     define finer[M: Directed] -> Bool {
 //         forall(b: M) {
 //             exists(a) {
 //                 a <= b
@@ -149,7 +149,7 @@ typeclass N: Net extends Partial_Order {
 // }
 
 // Alternative, you can use "image of net" and then use finer
-define is_net_limit[K: Net, L: Net](f: K -> L) -> Bool {
+define is_net_limit[K: Directed, L: Directed](f: K -> L) -> Bool {
     forall(b: L) {
         exists(a: K) {
             f(a) <= b
@@ -164,14 +164,14 @@ define have_common_pt[K](n: Set[Set[K]], x: K) -> Bool {
     }
 }
 
-attributes Set_Net[K] {
+attributes Net[K] {
     define have_common_pt(self, x: K) -> Bool {
         have_common_pt(self.sets, x)
     }
 }
 
-attributes Set_Net[K] {
-    define finer(self, other: Set_Net[K]) -> Bool {
+attributes Net[K] {
+    define finer(self, other: Net[K]) -> Bool {
         forall(b: Set[K]) {
             b ∈ other implies exists(a: Set[K]) {
                 a ∈ self and a ⊆ b
@@ -179,13 +179,13 @@ attributes Set_Net[K] {
         }
     }
 
-    define same_limit(self, other: Set_Net[K]) -> Bool {
+    define same_limit(self, other: Net[K]) -> Bool {
         self.finer(other) and other.finer(self)
     }
 }
 
 // Alternative, you can use "image of net" and then use finer
-define is_limit[K, L](source_net: Set_Net[K], target_net: Set_Net[L], f: K -> L) -> Bool {
+define is_limit[K, L](source_net: Net[K], target_net: Net[L], f: K -> L) -> Bool {
     forall(b: Set[L]) {
         b ∈ target_net implies exists(a: Set[K]) {
             a ∈ source_net and a.image(f) ⊆ b
@@ -243,15 +243,15 @@ theorem image_of_sets_preserve_nets[K, L](n: Set[Set[K]], f: K -> L) {
     is_net(n) implies is_net(image_of_sets(n, f))
 }
 
-define image_of_net[K, L](n: Set_Net[K], f: K -> L) -> Set_Net[L] {
-    Set_Net[L].new(image_of_sets(n.sets, f))
+define image_of_net[K, L](n: Net[K], f: K -> L) -> Net[L] {
+    Net[L].new(image_of_sets(n.sets, f))
 }
 
-theorem image_of_net_expand[K, L](n: Set_Net[K], f: K -> L) {
+theorem image_of_net_expand[K, L](n: Net[K], f: K -> L) {
     image_of_net(n, f).sets = image_of_sets(n.sets, f)
 }
 
-theorem is_limit_imp_image_of_net_finer[K, L](source_net: Set_Net[K], target_net: Set_Net[L], f: K -> L) {
+theorem is_limit_imp_image_of_net_finer[K, L](source_net: Net[K], target_net: Net[L], f: K -> L) {
     is_limit(source_net, target_net, f) implies image_of_net(source_net, f).finer(target_net)
 } by {
     forall(b: Set[L]) {
@@ -267,7 +267,7 @@ theorem is_limit_imp_image_of_net_finer[K, L](source_net: Set_Net[K], target_net
     }    
 }
 
-theorem image_of_net_finer_imp_is_limit[K, L](source_net: Set_Net[K], target_net: Set_Net[L], f: K -> L) {
+theorem image_of_net_finer_imp_is_limit[K, L](source_net: Net[K], target_net: Net[L], f: K -> L) {
     image_of_net(source_net, f).finer(target_net) implies is_limit(source_net, target_net, f)
 } by {
     forall(b: Set[L]) {
@@ -302,7 +302,7 @@ theorem gte_partial_order {
     is_antisymmetric(ℕ.gte)   
 }
 
-// // ℕ is linear order, so we can directly use it, without using set_net. But, will there be conflict on symbol `<=`? 
+// // ℕ is linear order, and n <-> {n, n + 1, ...} one-one correspond, so we can directly use it as Directed, without using Net. But, will there be conflict on symbol `<=`? 
 // instance ℕ: Partial_Order_Lte {
 //     let lte = ℕ.gte
 // }
@@ -635,21 +635,21 @@ define set_intersect_sets[K](n: Set[Set[K]], s: Set[K]) -> Bool {
     }
 }
 
-define elem_in_net_intersect_set[K](n: Set[Set[K]], s: Set[K], sub: Set[K]) -> Bool {
+define elem_in_subnet[K](n: Set[Set[K]], s: Set[K], sub: Set[K]) -> Bool {
     set_intersect_sets(n, s) and exists(t: Set[K]) {
         t ∈ n and sub = s ∩ t
     }
 }
 
-define net_intersect_set[K](n: Set[Set[K]], s: Set[K]) -> Set[Set[K]] {
-    Set[Set[K]].new(elem_in_net_intersect_set(n, s))
+define subnet[K](n: Set[Set[K]], s: Set[K]) -> Set[Set[K]] {
+    Set[Set[K]].new(elem_in_subnet(n, s))
 }
 
-theorem net_intersect_set_is_net[K](n: Set[Set[K]], s: Set[K]) {
-    is_net(n) and set_intersect_sets(n, s) implies is_net(net_intersect_set(n, s))
+theorem subnet_is_net[K](n: Set[Set[K]], s: Set[K]) {
+    is_net(n) and set_intersect_sets(n, s) implies is_net(subnet(n, s))
 } by {
     forall(sub: Set[K]) {
-        if sub ∈ net_intersect_set(n, s) {
+        if sub ∈ subnet(n, s) {
             set_intersect_sets(n, s)
             let (t: Set[K]) satisfy {
                 t ∈ n and sub = s ∩ t
@@ -658,14 +658,14 @@ theorem net_intersect_set_is_net[K](n: Set[Set[K]], s: Set[K]) {
             is_nonempty(sub)
         }
     }
-    no_empty(net_intersect_set(n, s))
+    no_empty(subnet(n, s))
 
     forall(a1: Set[K], a2: Set[K]) {
-        if a1 ∈ net_intersect_set(n, s) and a2 ∈ net_intersect_set(n, s) {
+        if a1 ∈ subnet(n, s) and a2 ∈ subnet(n, s) {
             let (t1: Set[K]) satisfy {
                 t1 ∈ n and a1 = s ∩ t1
             }
-            elem_in_net_intersect_set(n, s, a2)
+            elem_in_subnet(n, s, a2)
             let (t2: Set[K]) satisfy {
                 t2 ∈ n and a2 = s ∩ t2
             }
@@ -677,12 +677,12 @@ theorem net_intersect_set_is_net[K](n: Set[Set[K]], s: Set[K]) {
             (s ∩ s) ∩ t1 ∩ t2 = s ∩ (t1 ∩ t2)
             a1 ∩ a2 = s ∩ (t1 ∩ t2)
             let a = s ∩ t
-            a ∈ net_intersect_set(n, s)
+            a ∈ subnet(n, s)
             s ∩ t ⊆ s ∩ (t1 ∩ t2)
             a ⊆ a1 ∩ a2
-            a ∈ net_intersect_set(n, s) and a ⊆ a1 ∩ a2
+            a ∈ subnet(n, s) and a ⊆ a1 ∩ a2
         }
     }
-    subset_two_intersection_helper(net_intersect_set(n, s))
-    subset_two_intersection(net_intersect_set(n, s))
+    subset_two_intersection_helper(subnet(n, s))
+    subset_two_intersection(subnet(n, s))
 }

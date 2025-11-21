@@ -1,10 +1,10 @@
-from limit.net import Set_Net, Set, is_limit
+from limit.net import Net, Set, is_limit
 from set import empty, universe, union, intersection, compl_of_sets, union_index, is_nonempty
 from limit.net import is_net, subset_two_intersection
 from finite_set import list_to_set, List
 
 typeclass X: Point_Net_System {
-    net: X -> Set_Net[X]
+    net: X -> Net[X]
 
     point_net(x: X) {
         X.net(x).have_common_pt(x)
@@ -621,11 +621,11 @@ theorem continuous_imp_interior_inv_image_subset_inv_image_interior[X: Topology,
 
 /// Topology converge is not defined by intersection of image of source_net, which have a too weak control of the order relation, say, if you consider the ℝ subset defined as distance of all of intersection of subcollection of source_net, then there are too many arbitrary infinite intersection, while net only assure that it have some element subset finite intersection.  
 /// Topology does have some extra property that concern the intersection of image of source_net, i.e. the theory of compactness
-define converge_to[K, X: Topology](source_net: Set_Net[K], target: X, f: K -> X) -> Bool {
+define converge_to[K, X: Topology](source_net: Net[K], target: X, f: K -> X) -> Bool {
     is_limit(source_net, target.net, f)
 }
 
-theorem converge_to_definition_expand[K, X: Topology](source_net: Set_Net[K], target: X, f: K -> X) {
+theorem converge_to_definition_expand[K, X: Topology](source_net: Net[K], target: X, f: K -> X) {
     forall(b: Set[X]) {
         b ∈ target.net implies exists(a: Set[K]) {
             a ∈ source_net and a.image(f) ⊆ b
