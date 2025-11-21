@@ -311,6 +311,14 @@
 {"goal":"pow_gt_one","proof":["a.pow(b) > 1 = 1 < a.pow(b)"]}
 {"goal":"1 <= a^b","proof":["1 <= a^b or 0 = a"]}
 {"goal":"pow_ne_zero","proof":["1 <= 0","a^0 ⋅ a^b = a^(0 + b)","a ⋅ 1 = 1 ⋅ a","not 1 <= 0 or 1 = 0","1 = 0","a^1 = a","b^1 = b","a^1 - 0 = a^1","b^1 - 0 = b^1","1 ⋅ (a - 0) = a - 0","1 ⋅ (b - 0) = b - 0","0 + 1 ⋅ b = 1 ⋅ b"]}
+{"goal":"pow_zero_imp_zero","proof":["a^b != 0 or 0 = a"]}
+{"goal":"a^b > 1","proof":["not 1 < a or 1 < a^b or 0 = b","a > 1 = 1 < a","a^b > 1 = 1 < a^b","not 1 < a^b","1 < a","not 1 < a"]}
+{"goal":"false","proof":["1 > 1","not 1 < 1 or not 1 < 1","1 > 1 = 1 < 1","1 < 1"]}
+{"goal":"a^b = 0","proof":["0^b != 0","0^b = 0 or 0 = b"]}
+{"goal":"false","proof":["not a · c <= a · b or a · c < a · b or a · c = a · b","not a · c < a · b or not a · b < a · c","not a · b < a · b","not a · c < a · b","a · c = a · b"]}
+{"goal":"a = 1","proof":["not 1 <= a or 1 < a or 1 = a","a >= 1 = 1 <= a","a > 1 = 1 < a","not 1 < a","not 1 <= a","a >= 1 or 0 = a","not a >= 1","a >= 1"]}
+{"goal":"a^b = 1","proof":[]}
+{"goal":"pow_eq_one_imp_one","proof":["not 1 <= a or 1 < a or 1 = a","1 <= a^1 or 0 = a","0^b = 0 or 0 = b","a^b != 0 or a^(a^b) = 1","a > 1 = 1 < a","not 1 < a","not 1 <= a","a^1 = a","a^1 != 1","0^b = 0","a^(a^b) != 1","not 1 <= a^1","a^b != 0","0 = a"]}
 {"goal":"exists(k0: ℕ) { b1 + k0 = b2 and k0 != 0 }","proof":["let s0: (ℕ, ℕ) -> ℕ satisfy { forall(x0: ℕ, x1: ℕ) { not x0 < x1 or 0 != s0(x0, x1) } and forall(x2: ℕ, x3: ℕ) { not x2 < x3 or x2 + s0(x2, x3) = x3 } and forall(x4: ℕ, x5: ℕ, x6: ℕ) { x4 + x5 != x6 or x4 < x6 or 0 = x5 } }","b1 + s0(b1, b2) != b2 or s0(b1, b2) = 0","not b1 < b2 or b1 + s0(b1, b2) = b2","not b1 < b2 or s0(b1, b2) != 0","s0(b1, b2) != 0","b1 + s0(b1, b2) = b2","b1 + s0(b1, b2) != b2"]}
 {"goal":"a^b2 = a^b1 ⋅ a^n","proof":["a^b1 ⋅ a^n = a^(b1 + n)"]}
 {"goal":"a^b1 != 0","proof":["a^b1 != 0 or 0 = a","0 = a","not 1 < 0"]}
@@ -329,7 +337,7 @@
 {"goal":"exists(k0: ℕ) { b = k0 + 1 }","proof":["let s0: ℕ -> ℕ satisfy { forall(x0: ℕ) { s0(x0) + 1 = x0 or 0 = x0 } }","s0(b) + 1 != b","s0(b) + 1 = b or 0 = b"]}
 {"goal":"a^b = a ⋅ a^b_pred","proof":["b_pred.suc != b or a ⋅ a^b_pred = a^b","b_pred.suc != b","b_pred + 1 = 1 + b_pred","1 + b_pred = b","1 + b_pred = b_pred.suc"]}
 {"goal":"a^b != 1","proof":["a ⋅ a^b_pred = 1","a ⋅ a^b_pred != 1 or 1 = a"]}
-{"goal":"false","proof":["not a · c <= a · b or a · c < a · b or a · c = a · b","not a · c < a · b or not a · b < a · c","not a · b < a · b","not a · c < a · b","a · c = a · b"]}
+{"goal":"false","proof":[]}
 {"goal":"pow_eq_one_imp","proof":[]}
 {"goal":"f(0)","proof":["0 != 0 or f(0)"]}
 {"goal":"a^m.suc = a^m ⋅ a","proof":["m.suc != m.suc or a ⋅ a^m = a^m.suc","a ⋅ a^m = a^m ⋅ a","a ⋅ a^m != a^m.suc"]}

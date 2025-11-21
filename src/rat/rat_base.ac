@@ -1751,42 +1751,122 @@ theorem from_nat_add(a: ℕ, b: ℕ) {
     ℚ.from_nat(a + b) = ℚ.from_int(ℤ.from_nat(a) + ℤ.from_nat(b))
 }
 
-// The "algebraic integer" method
-theorem square_root_of_two_is_not_rat(x: ℚ) {
-    not x^(ℕ.2) = 2
+theorem from_int_pow(x: ℚ, a: ℤ, n: ℕ) {
+    x = ℚ.from_int(a) implies x^n = ℚ.from_int(a^n)
+} by {
+    define f(m: ℕ) -> Bool {
+        x = ℚ.from_int(a) implies x^m = ℚ.from_int(a^m)
+    }
+    f(ℕ.0)
+    forall(m: ℕ) {
+        if f(m) {
+            x^(m.suc) = x^m ⋅ x
+            x^m = ℚ.from_int(a^m)
+            x^m ⋅ x = ℚ.from_int(a^m) ⋅ ℚ.from_int(a)
+            ℚ.from_int(a^m) ⋅ ℚ.from_int(a) = ℚ.from_int(a^m ⋅ a)
+            ℚ.from_int(a^m ⋅ a) = ℚ.from_int(a^(m.suc))
+            x^(m.suc) = ℚ.from_int(a^(m.suc))
+            f(m.suc)
+        }
+    }
+}
+
+theorem rat_from_div_of_reduced(x: ℚ, p: ℤ, q: ℤ) {
+    x = (ℚ.from_int(p))/(ℚ.from_int(q)) and is_reduced(p, q) implies x.num = p and x.denom = q
 } by {
     let a = ℚ.from_int(x.num)
     let b = ℚ.from_int(x.denom)
     x = a/b
-    is_reduced(x.num, x.denom)
+
+    let y = ℚ.new(p, q)
+    let c = ℚ.from_int(p)
+    let d = ℚ.from_int(q)
+    y = c/d
+
+    x = y
+    x.num = y.num
+    x.denom = y.denom
+}
+
+theorem pow_by_num_denom_pow(x: ℚ, p: ℤ, q: ℤ, n: ℕ) {
+    x.num = p and x.denom = q implies (x^n).num = p^n and (x^n).denom = q^n
+} by {
+    let a = ℚ.from_int(p)
+    let b = ℚ.from_int(q)
+    x = a/b
+    x^n = (a^n)/(b^n)
+    a^n = ℚ.from_int(p^n)
+    b^n = ℚ.from_int(q^n)
+    q > ℤ.0
+    q^n > ℤ.0
+    if n = ℕ.0 {
+        x^n = 1
+        p^n = ℤ.1
+        q^n = ℤ.1
+        (x^n).num = p^n
+        (x^n).denom = q^n
+        (x^n).num = p^n and (x^n).denom = q^n
+    } else {
+        n != ℕ.0
+        if x = 0 {
+            x.num = ℤ.0
+            x.denom = ℤ.1
+            x^n = 0
+            (x^n).num = ℤ.0
+            (x^n).denom = ℤ.1
+            (ℤ.1)^n = ℤ.1
+            (x^n).num = p^n
+            (x^n).denom = q^n
+            (x^n).num = p^n and (x^n).denom = q^n
+        } else {
+            x != 0
+            p != ℤ.0
+            is_reduced(p, q)
+            gcd(p, q) = ℤ.1
+            q > ℤ.0
+            gcd(p^n, q^n) = ℤ.1
+            q^n > ℤ.0
+            p^n != ℤ.0
+            x^n = (ℚ.from_int(p^n))/(ℚ.from_int(q^n))
+            is_reduced(p^n, q^n)
+            (x^n).num = p^n
+            (x^n).denom = q^n
+            (x^n).num = p^n and (x^n).denom = q^n
+        }
+        (x^n).num = p^n and (x^n).denom = q^n
+    }
+}
+
+attributes ℚ {
+    define is_int(self) -> Bool {
+        self.denom = ℤ.1
+    }
+}
+
+// The speacial case of "algebraic integer" method
+theorem square_roof_of_int(x: ℚ, y: ℚ, n: ℕ) {
+    n != ℕ.0 and y.is_int and x^n = y implies x.is_int
+} by {
     let p = x.num
     let q = x.denom
-    gcd(p, q) = ℤ.1
+    x^n = ℚ.new(p^n, q^n)
+    y = ℚ.new(p^n, q^n)
+    q^n = y.denom
+    q^n = ℤ.1
+    q = ℤ.1 or q = -ℤ.1
     q > ℤ.0
-    b != 0
+    q = ℤ.1
+}
+
+theorem square_root_of_two_is_not_rat(x: ℚ) {
+    not x^(ℕ.2) = 2
+} by {
+    let p = x.num
+    let q = x.denom
+    x^(ℕ.2) = ℚ.new(p^(ℕ.2), q^(ℕ.2))
     if x^(ℕ.2) = 2 {
-        (a/b)^(ℕ.2) = 2
-        (a/b) ⋅ (a/b) = 2
-        (a ⋅ a)/(b ⋅ b) = 2
-        (a^(ℕ.2))/(b^(ℕ.2)) = 2
-
-        (a^(ℕ.2))/(b^(ℕ.2)) ⋅ b^(ℕ.2) = 2 ⋅ b^(ℕ.2)
-
-        a^(ℕ.2) = 2 ⋅ b^(ℕ.2)
-
-        ℚ.from_int(p)^(ℕ.2) = ℚ.from_int(ℤ.2) ⋅ ℚ.from_int(q)^(ℕ.2)
-
-        ℚ.from_int(p) ⋅ ℚ.from_int(p) = ℚ.from_int(ℤ.2) ⋅ (ℚ.from_int(q) ⋅ ℚ.from_int(q))
-
-        ℚ.from_int(p^(ℕ.2)) = ℚ.from_int(ℤ.2 ⋅ q^(ℕ.2))
-
-        p^(ℕ.2) = ℤ.2 ⋅ q^(ℕ.2)
-        p^(ℕ.2) != ℤ.0
-        p = ℤ.0 implies p^(ℕ.2) = ℤ.0
-        p != ℤ.0
-        gcd(p^(ℕ.2), q) = ℤ.1
-        q.divides(p^(ℕ.2))
-        q = ℤ.1
+        2 = ℚ.new(p^(ℕ.2), q^(ℕ.2))
+        2.num = p^(ℕ.2)
         p^(ℕ.2) = ℤ.2
         let n = abs(p)
         n^(ℕ.2) = ℕ.2

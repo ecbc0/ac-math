@@ -243,6 +243,17 @@ theorem member_abs_nonpos[A: Ordered_Add](a: A) {
     a <= A.0 implies a.abs = -a
 }
 
+theorem abs_one_imp_abs_or_neg_abs[A: Ordered_Add](a: A) {
+    a = a.abs or a = -a.abs
+} by {
+    if a > A.0 {
+        a.abs = a
+    } else {
+        a.abs = -a
+        a = -a.abs
+    }
+}
+
 define abs[A: Ordered_Add](a: A) -> A {
     a.abs
 }

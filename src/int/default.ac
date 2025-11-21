@@ -616,6 +616,40 @@ theorem plus_abs_gte_zero(n: ℤ) {
     }
 }
 
+theorem abs_by_from_nat(a: ℤ) {
+    a.abs = from_nat(abs(a))
+} by {
+    if a > 0 {
+        from_nat(abs(a)) = a
+        a.abs = a
+        abs_by_from_nat(a)
+    } else {
+        from_nat(abs(a)) = -a
+        a.abs = -a
+        abs_by_from_nat(a)
+    }
+}
+
+theorem from_nat_pow(x: ℤ, a: ℕ, n: ℕ) {
+    x = ℤ.from_nat(a) implies x^n = ℤ.from_nat(a^n)
+} by {
+    define f(m: ℕ) -> Bool {
+        x = ℤ.from_nat(a) implies x^m = ℤ.from_nat(a^m)
+    }
+    f(ℕ.0)
+    forall(m: ℕ) {
+        if f(m) {
+            x^(m.suc) = x^m ⋅ x
+            x^m = ℤ.from_nat(a^m)
+            x^m ⋅ x = ℤ.from_nat(a^m) ⋅ ℤ.from_nat(a)
+            ℤ.from_nat(a^m) ⋅ ℤ.from_nat(a) = ℤ.from_nat(a^m ⋅ a)
+            ℤ.from_nat(a^m ⋅ a) = ℤ.from_nat(a^(m.suc))
+            x^(m.suc) = ℤ.from_nat(a^(m.suc))
+            f(m.suc)
+        }
+    }
+}
+
 // for definition of ^, see mul.ac
 theorem pow_one(a: ℤ) {
     a^(ℕ.1) = a
@@ -623,6 +657,35 @@ theorem pow_one(a: ℤ) {
 
 theorem pow_zero(a: ℤ) {
     a^(ℕ.0) = 1
+}
+
+theorem pow_eq_one_imp_abs_one(a: ℤ, n: ℕ) {
+    n != ℕ.0 and a^n = 1 implies a.abs = 1
+} by {
+    (a^n).abs = 1
+    (a.abs)^n = 1
+    ℤ.from_nat(abs(a))^n = 1
+    ℤ.from_nat(abs(a)^n) = 1
+    abs(a)^n = ℕ.1
+    abs(a) = ℕ.1
+}
+
+theorem pow_eq_one_imp_one_or_neg_one(a: ℤ, n: ℕ) {
+    n != ℕ.0 and a^n = 1 implies a = 1 or a = -1
+} by {
+    a.abs = 1
+}
+
+theorem pow_eq_zero_imp_zero(a: ℤ, n: ℕ) {
+    a^n = 0 implies a = 0
+} by {
+    (a^n).abs = 0
+    (a.abs)^n = 0
+    ℤ.from_nat(abs(a))^n = 0
+    ℤ.from_nat(abs(a)^n) = 0
+    abs(a)^n = ℕ.0
+    abs(a) = ℕ.0
+    a = 0    
 }
 
 theorem pow_add(a: ℤ, b: ℕ, c: ℕ) {
@@ -657,20 +720,6 @@ theorem square_eq_mul(a: ℤ) {
 
 theorem square_pos(a: ℤ) {
     a != 0 implies a^(ℕ.2) > 0
-}
-
-theorem abs_by_from_nat(a: ℤ) {
-    a.abs = from_nat(abs(a))
-} by {
-    if a > 0 {
-        from_nat(abs(a)) = a
-        a.abs = a
-        abs_by_from_nat(a)
-    } else {
-        from_nat(abs(a)) = -a
-        a.abs = -a
-        abs_by_from_nat(a)
-    }
 }
 
 theorem member_abs_neg(a: ℤ) {

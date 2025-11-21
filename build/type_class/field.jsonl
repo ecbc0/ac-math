@@ -219,6 +219,11 @@
 {"goal":"a / b ⋅ b / a = a ⋅ b ⋅ F.1 / (a ⋅ b)","proof":["a ⋅ b ⋅ F.1 / (a ⋅ b) != (a ⋅ b) / (a ⋅ b)","a ⋅ b ⋅ F.1 / (a ⋅ b) = (a ⋅ b) / (a ⋅ b)"]}
 {"goal":"a ⋅ b ⋅ F.1 / (a ⋅ b) = F.1","proof":["a ⋅ b ⋅ F.1 / (a ⋅ b) = F.1 or a ⋅ b = F.0"]}
 {"goal":"div_reciprocal","proof":["a ⋅ b ⋅ F.1 / (a ⋅ b) != a / b ⋅ b / a"]}
-{"goal":"-a ⋅ -F.1 / a = a ⋅ F.1 / a","proof":["-a ⋅ -F.1 / a = a ⋅ F.1 / a"]}
-{"goal":"-F.1 / a = (-a).reciprocal","proof":["-a ⋅ -F.1 / a != F.1 or -F.1 / a = (-a).reciprocal"]}
-{"goal":"a / b ⋅ c / d = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","proof":["-(a ⋅ F.1 / b) ⋅ -(c ⋅ F.1 / d) = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","-a / b ⋅ -c / d = a / b ⋅ c / d","a ⋅ F.1 / b = a / b","c ⋅ F.1 / d = c / d"]}
+{"goal":"f(ℕ.0)","proof":["a^ℕ.0 / (b^ℕ.0) != a / b^ℕ.0 or f(ℕ.0)","F.1 ⋅ F.1 != F.1 or F.1.reciprocal = F.1","ℕ.0 != ℕ.0 or a / b^ℕ.0 = F.1","ℕ.0 != ℕ.0 or a^ℕ.0 = F.1","ℕ.0 != ℕ.0 or b^ℕ.0 = F.1","F.1 / F.1 = F.1.reciprocal","F.1 ⋅ F.1 = F.1","a / b^ℕ.0 = F.1","a^ℕ.0 = F.1","b^ℕ.0 = F.1","a^ℕ.0 / (b^ℕ.0) != a / b^ℕ.0","F.1 / (b^ℕ.0) != a / b^ℕ.0","a / b^ℕ.0 != F.1 / F.1","a / b^ℕ.0 != F.1.reciprocal","F.1.reciprocal != F.1"]}
+{"goal":"a / b^m.suc = a / b^m ⋅ a / b","proof":["m.suc != m.suc or a / b ⋅ a / b^m = a / b^m.suc","a / b ⋅ a / b^m = a / b^m ⋅ a / b","a / b ⋅ a / b^m = a / b^m.suc"]}
+{"goal":"a / b^m ⋅ a / b = a^m / (b^m) ⋅ a / b","proof":["not f(m) or a^m / (b^m) = a / b^m","a^m / (b^m) != a / b^m","a^m / (b^m) = a / b^m"]}
+{"goal":"a^m / (b^m) ⋅ a / b = (a^m ⋅ a) / (b^m ⋅ b)","proof":["a^m / (b^m) ⋅ a / b = (a^m ⋅ a) / (b^m ⋅ b)"]}
+{"goal":"a / b^m.suc = a^m.suc / (b^m.suc)","proof":["m.suc != m.suc or a ⋅ a^m = a^m.suc","m.suc != m.suc or b ⋅ b^m = b^m.suc","a^m ⋅ a ⋅ (b^m ⋅ b).reciprocal = (a^m ⋅ a) / (b^m ⋅ b)","a^m.suc ⋅ (b^m.suc).reciprocal = a^m.suc / (b^m.suc)","a^m ⋅ a = a ⋅ a^m","b^m ⋅ b = b ⋅ b^m","a ⋅ a^m = a^m.suc","b ⋅ b^m = b^m.suc"]}
+{"goal":"f(m.suc)","proof":["a^m.suc / (b^m.suc) != a / b^m.suc or f(m.suc)","a^m.suc / (b^m.suc) != a / b^m.suc"]}
+{"goal":"f(n)","proof":["let s0: (ℕ -> Bool) -> ℕ satisfy { forall(x0: ℕ -> Bool, x1: ℕ) { not x0(ℕ.0) or x0(s0(x0)) or x0(x1) } and forall(x2: ℕ -> Bool, x3: ℕ) { not x2(s0(x2).suc) or not x2(ℕ.0) or x2(x3) } }","not f(s0(f)) or f(s0(f).suc)","not f(s0(f).suc) or not f(ℕ.0) or f(n)","not f(s0(f).suc)","not f(ℕ.0) or f(s0(f)) or f(n)","not f(s0(f))","f(s0(f))"]}
+{"goal":"div_pow","proof":["not f(n) or a^n / (b^n) = a / b^n"]}

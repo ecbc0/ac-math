@@ -240,8 +240,41 @@
 {"goal":"n + from_nat(abs(n)) = n + n","proof":["from_nat(abs(n)) != n","from_nat(abs(n)) = n or n.is_negative","n.is_negative","n < 0 = n.is_negative"]}
 {"goal":"n + from_nat(abs(n)) >= 0","proof":["not (n + n).is_negative or n.is_negative or n.is_negative","n + from_nat(abs(n)) >= 0 = 0 <= n + from_nat(abs(n))","not 0 <= n + from_nat(abs(n))","not 0 <= n + n","0 <= n + n != (n + n).is_negative","n < 0 = n.is_negative","not n.is_negative","0 <= n + n or (n + n).is_negative","(n + n).is_negative"]}
 {"goal":"plus_abs_gte_zero","proof":["n + from_nat(abs(n)) >= 0 = 0 <= n + from_nat(abs(n))","not 0 <= n + from_nat(abs(n))","n + from_nat(abs(n)) != 0 or 0 <= n + from_nat(abs(n))"]}
+{"goal":"from_nat(abs(a)) = a","proof":["not a >= 0 or from_nat(abs(a)) = a","not a >= 0","a >= 0 = 0 <= a","not 0 <= a","a > 0 = 0 < a","0 < a","not 0 < a or 0 <= a"]}
+{"goal":"a.abs = a","proof":["not lib(order).Partial_Order.gt[ℤ](a, 0) or a.abs = a","not lib(order).Partial_Order.gt[ℤ](a, 0)","0 < a = lib(order).Partial_Order.gt[ℤ](a, 0)","a > 0 = 0 < a"]}
+{"goal":"abs_by_from_nat(a)","proof":["from_nat(abs(a)) != a.abs or abs_by_from_nat(a)","from_nat(abs(a)) = a.abs","from_nat(abs(a)) != a.abs"]}
+{"goal":"from_nat(abs(a)) = -a","proof":["a > 0 = 0 < a","not 0 < a","from_nat(abs(-a)) = -a or (-a).is_negative","0 < a = a.is_positive","not a.is_positive","(-a).is_negative = a.is_positive","abs(-a) = abs(a)","from_nat(abs(-a)) != -a","not (-a).is_negative","(-a).is_negative"]}
+{"goal":"a.abs = -a","proof":["a > 0 or a < 0 or 0 = a","lib(order).Partial_Order.gt[ℤ](a, 0) or -a = a.abs","lib(order).Partial_Order.gt[ℤ](a, 0)","not a < 0 or -a = a.abs","not a < 0","0 = a","a < 0 = lib(order).Partial_Order.gt[ℤ](0, a)"]}
+{"goal":"abs_by_from_nat(a)","proof":["from_nat(abs(a)) != a.abs or abs_by_from_nat(a)","from_nat(abs(a)) = a.abs","from_nat(abs(a)) != a.abs"]}
+{"goal":"abs_by_from_nat","proof":["not abs_by_from_nat(a) or from_nat(abs(a)) = a.abs"]}
+{"goal":"f(ℕ.0)","proof":["from_nat(a^ℕ.0) != x^ℕ.0 or f(ℕ.0)","x^ℕ.0 = 1","a^ℕ.0 = ℕ.1","from_nat(a^ℕ.0) != x^ℕ.0"]}
+{"goal":"x^m.suc = x^m ⋅ x","proof":["m.suc != m.suc or x ⋅ x^m = x^m.suc","x^m ⋅ x = x ⋅ x^m","x ⋅ x^m != x^m.suc"]}
+{"goal":"x^m = from_nat(a^m)","proof":["from_nat(a) != x or not f(m) or from_nat(a^m) = x^m","not f(m) or from_nat(a^m) = x^m"]}
+{"goal":"x^m ⋅ x = from_nat(a^m) ⋅ from_nat(a)","proof":[]}
+{"goal":"from_nat(a^m) ⋅ from_nat(a) = from_nat(a^m ⋅ a)","proof":["from_nat(a^m) ⋅ from_nat(a) = from_nat(a^m ⋅ a)"]}
+{"goal":"from_nat(a^m ⋅ a) = from_nat(a^m.suc)","proof":["a^m ⋅ a != a^m.suc","m.suc != m.suc or a ⋅ a^m = a^m.suc","a ⋅ a^m = a^m ⋅ a","a ⋅ a^m = a^m.suc"]}
+{"goal":"x^m.suc = from_nat(a^m.suc)","proof":[]}
+{"goal":"f(m.suc)","proof":["from_nat(a^m.suc) != x^m.suc or f(m.suc)"]}
+{"goal":"from_nat_pow","proof":["let s0: (ℕ -> Bool) -> ℕ satisfy { forall(x0: ℕ -> Bool, x1: ℕ) { not x0(ℕ.0) or x0(s0(x0)) or x0(x1) } and forall(x2: ℕ -> Bool, x3: ℕ) { not x2(s0(x2).suc) or not x2(ℕ.0) or x2(x3) } }","not f(s0(f)) or f(s0(f).suc)","from_nat(a) != x or not f(n) or from_nat(a^n) = x^n","not f(n) or from_nat(a^n) = x^n","not f(n)","not f(s0(f).suc) or not f(ℕ.0) or f(n)","not f(ℕ.0) or f(s0(f)) or f(n)","f(s0(f)) or f(n)","f(s0(f))","not f(s0(f).suc)","f(s0(f).suc)"]}
 {"goal":"pow_one","proof":["a^ℕ.1 = a"]}
 {"goal":"pow_zero","proof":["ℕ.0 != ℕ.0 or a^ℕ.0 = 1"]}
+{"goal":"(a^n).abs = 1","proof":["1.abs != 1","not lib(order).Partial_Order.gt[ℤ](1, 0) or 1.abs = 1","not lib(order).Partial_Order.gt[ℤ](1, 0)"]}
+{"goal":"a.abs^n = 1","proof":["lib(type_class.ordered_ring).abs(a^n) = lib(type_class.ordered_ring).abs(a)^n","lib(type_class.ordered_ring).abs(1) = 1.abs","lib(type_class.ordered_ring).abs(a) = a.abs"]}
+{"goal":"from_nat(abs(a))^n = 1","proof":["from_nat(abs(a)) = a.abs"]}
+{"goal":"from_nat(abs(a)^n) = 1","proof":["from_nat(abs(a)) != from_nat(abs(a)) or from_nat(abs(a)^n) = from_nat(abs(a))^n","from_nat(abs(a)^n) = from_nat(abs(a))^n"]}
+{"goal":"abs(a)^n = ℕ.1","proof":["abs(-a) = abs(a)","abs(from_nat(abs(-a)^n)) = abs(-a)^n","abs(from_nat(ℕ.1)) = ℕ.1"]}
+{"goal":"abs(a) = ℕ.1","proof":["abs(a)^n != ℕ.1 or abs(a) = ℕ.1 or ℕ.0 = n"]}
+{"goal":"pow_eq_one_imp_abs_one","proof":["from_nat(abs(a)) = a.abs"]}
+{"goal":"a.abs = 1","proof":["a^n != 1 or a.abs = 1 or ℕ.0 = n"]}
+{"goal":"pow_eq_one_imp_one_or_neg_one","proof":["a.abs != a","-a.abs != a","-a.abs = a or a.abs = a"]}
+{"goal":"(a^n).abs = 0","proof":["0.abs != 0","0 != 0 or 0.abs = 0"]}
+{"goal":"a.abs^n = 0","proof":["lib(type_class.ordered_ring).abs(a^n) = lib(type_class.ordered_ring).abs(a)^n","lib(type_class.ordered_ring).abs(0) = 0.abs","lib(type_class.ordered_ring).abs(a) = a.abs"]}
+{"goal":"from_nat(abs(a))^n = 0","proof":["from_nat(abs(a)) = a.abs"]}
+{"goal":"from_nat(abs(a)^n) = 0","proof":["from_nat(abs(a)) != a.abs or from_nat(abs(a)^n) = a.abs^n","from_nat(abs(a)) = a.abs","from_nat(abs(a)^n) != a.abs^n"]}
+{"goal":"abs(a)^n = ℕ.0","proof":["from_nat(abs(a)^n) != 0 or abs(from_nat(abs(a)^n)) = ℕ.0","abs(from_nat(abs(a)^n)) = abs(a)^n","abs(from_nat(abs(a)^n)) = ℕ.0","abs(from_nat(abs(a)^n)) != ℕ.0"]}
+{"goal":"abs(a) = ℕ.0","proof":["abs(a)^n != ℕ.0 or abs(a) = ℕ.0"]}
+{"goal":"a = 0","proof":["a.abs != 0 or 0 = a","a.abs != 0","from_nat(abs(a)) = a.abs"]}
+{"goal":"pow_eq_zero_imp_zero","proof":[]}
 {"goal":"pow_add","proof":["a^b ⋅ a^c = a^(b + c)"]}
 {"goal":"pow_mul","proof":["a^b^c = a^(b ⋅ c)"]}
 {"goal":"zero_pow","proof":["0^n = 0 or ℕ.0 = n"]}
@@ -251,13 +284,6 @@
 {"goal":"pos_pow","proof":["a^n > 0 = f(n)"]}
 {"goal":"square_eq_mul","proof":["a^ℕ.1 ⋅ a^ℕ.1 = a^(ℕ.1 + ℕ.1)","a^ℕ.1 = a"]}
 {"goal":"square_pos","proof":["not a < 0 or not a < 0 or a ⋅ a > 0","not a > 0 or a^ℕ.2 > 0","not a > 0","a > 0 or a < 0 or 0 = a","a < 0","a ⋅ a = a^ℕ.2","not a ⋅ a > 0"]}
-{"goal":"from_nat(abs(a)) = a","proof":["not a >= 0 or from_nat(abs(a)) = a","not a >= 0","a >= 0 = 0 <= a","not 0 <= a","a > 0 = 0 < a","0 < a","not 0 < a or 0 <= a"]}
-{"goal":"a.abs = a","proof":["not lib(order).Partial_Order.gt[ℤ](a, 0) or a.abs = a","not lib(order).Partial_Order.gt[ℤ](a, 0)","0 < a = lib(order).Partial_Order.gt[ℤ](a, 0)","a > 0 = 0 < a"]}
-{"goal":"abs_by_from_nat(a)","proof":["from_nat(abs(a)) != a.abs or abs_by_from_nat(a)","from_nat(abs(a)) = a.abs","from_nat(abs(a)) != a.abs"]}
-{"goal":"from_nat(abs(a)) = -a","proof":["a > 0 = 0 < a","not 0 < a","from_nat(abs(-a)) = -a or (-a).is_negative","0 < a = a.is_positive","not a.is_positive","(-a).is_negative = a.is_positive","abs(-a) = abs(a)","from_nat(abs(-a)) != -a","not (-a).is_negative","(-a).is_negative"]}
-{"goal":"a.abs = -a","proof":["a > 0 or a < 0 or 0 = a","lib(order).Partial_Order.gt[ℤ](a, 0) or -a = a.abs","lib(order).Partial_Order.gt[ℤ](a, 0)","not a < 0 or -a = a.abs","not a < 0","0 = a","a < 0 = lib(order).Partial_Order.gt[ℤ](0, a)"]}
-{"goal":"abs_by_from_nat(a)","proof":["from_nat(abs(a)) != a.abs or abs_by_from_nat(a)","from_nat(abs(a)) = a.abs","from_nat(abs(a)) != a.abs"]}
-{"goal":"abs_by_from_nat","proof":["not abs_by_from_nat(a) or from_nat(abs(a)) = a.abs"]}
 {"goal":"member_abs_neg","proof":["not a < 0 or -a = a.abs"]}
 {"goal":"member_abs_nonneg","proof":["not a >= 0 or not a < 0 or a < a","a < 0 = lib(order).Partial_Order.gt[ℤ](0, a)","lib(order).Partial_Order.gt[ℤ](0, a) != lib(order).Partial_Order.lte[ℤ](0, a)","lib(order).Partial_Order.gte[ℤ](a, 0) = lib(order).Partial_Order.lte[ℤ](0, a)","not lib(order).Partial_Order.gte[ℤ](a, 0) or a.abs = a","not lib(order).Partial_Order.gte[ℤ](a, 0)","not lib(order).Partial_Order.lte[ℤ](0, a)","not a < a","lib(order).Partial_Order.gt[ℤ](0, a) or lib(order).Partial_Order.lte[ℤ](0, a)","not a < 0 or a < a","not a < 0","lib(order).Partial_Order.gt[ℤ](0, a)","not lib(order).Partial_Order.gt[ℤ](0, a)"]}
 {"goal":"member_abs_pos","proof":["not a >= 0 or a.abs = a","not a >= 0","a >= 0 = 0 <= a","not 0 <= a","a > 0 = 0 < a","0 < a","not 0 < a or 0 <= a"]}

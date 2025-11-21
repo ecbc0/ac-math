@@ -588,3 +588,22 @@ theorem div_reciprocal[F: Field](a: F, b: F) {
     a/b ⋅ b/a = (a ⋅ b) ⋅ F.1/(a ⋅ b)
     (a ⋅ b) ⋅ F.1/(a ⋅ b) = F.1
 }
+
+theorem div_pow[F: Field](a: F, b: F, n: ℕ) {
+    (a/b)^n = (a^n)/(b^n)
+} by {
+    define f(m: ℕ) -> Bool {
+        (a/b)^m = (a^m)/(b^m)
+    }
+    f(ℕ.0)
+    forall(m: ℕ) {
+        if f(m) {
+            (a/b)^(m.suc) = (a/b)^m ⋅ a/b
+            (a/b)^m ⋅ a/b = (a^m)/(b^m) ⋅ a/b
+            (a^m)/(b^m) ⋅ a/b = (a^m ⋅ a)/(b^m ⋅ b)
+            (a/b)^(m.suc) = (a^(m.suc))/(b^(m.suc))
+            f(m.suc)
+        }
+    }
+    f(n)
+}

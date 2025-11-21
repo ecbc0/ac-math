@@ -880,6 +880,27 @@ theorem pow_ne_zero(a: ℕ, b: ℕ) {
     1 <= a^b
 }
 
+theorem pow_zero_imp_zero(a: ℕ, b: ℕ) {
+    a^b = 0 implies a = 0
+} 
+
+theorem pow_eq_one_imp_one(a: ℕ, b: ℕ) {
+    b != 0 and a^b = 1 implies a = 1
+} by {
+    if a > 1 {
+        a^b > 1
+        false
+    } else {
+        if a = 0 {
+            a^b = 0
+            false
+        } else {
+            a = 1
+            a^b = 1
+        }
+    }
+}
+
 theorem lt_imp_pow_lt(a: ℕ, b1: ℕ, b2: ℕ) {
     1 < a and b1 < b2 implies a^b1 < a^b2
 } by {

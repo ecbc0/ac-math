@@ -78,6 +78,10 @@
 {"goal":"member_abs_nonneg","proof":["not A.0 <= a or A.0 < a or A.0 = a","a >= A.0 = A.0 <= a","A.0 <= a","a > A.0 = A.0 < a","not a > A.0 or a.abs = a","not a > A.0","not A.0 < a","A.0 != a or a.abs = A.0","A.0 = a","a.abs = A.0","a.abs != A.0"]}
 {"goal":"member_abs_pos","proof":["lib(order).lte_from(A.lt, A.0, a) = A.0 <= a","not A.0 < a or lib(order).lte_from(A.lt, A.0, a)","a > A.0 = A.0 < a","A.0 < a","a >= A.0 = A.0 <= a","not a >= A.0 or a.abs = a","not a >= A.0","not A.0 <= a","lib(order).lte_from(A.lt, A.0, a)","not lib(order).lte_from(A.lt, A.0, a)"]}
 {"goal":"member_abs_nonpos","proof":["not a > A.0 or not a <= A.0 or A.0 > A.0","not A.0 > A.0 or not a <= A.0 or a < A.0","a > A.0 or a.abs = -a","a > A.0","A.0 > A.0","not a < A.0 or a.abs = -a","not a < A.0"]}
+{"goal":"a.abs = a","proof":["not a > A.0 or a.abs = a"]}
+{"goal":"a.abs = -a","proof":["a > A.0 or a.abs = -a"]}
+{"goal":"a = -a.abs","proof":["a.abs != -a or a.abs + a = A.0","a + a.abs != A.0 or -a.abs = a","a + a.abs != A.0","a.abs + a = a + a.abs","a.abs + a = A.0","a.abs + a != A.0"]}
+{"goal":"abs_one_imp_abs_or_neg_abs","proof":[]}
 {"goal":"abs(a) = a","proof":["not a > A.0 or a.abs = a","abs(a) = a.abs","a.abs = a","a.abs != a"]}
 {"goal":"a <= abs(a)","proof":["lib(order).lte_from(A.lt, a, abs(a)) = a <= abs(a)","not lib(order).lte_from(A.lt, a, abs(a))","abs(a) != a or lib(order).lte_from(A.lt, a, abs(a))"]}
 {"goal":"a <= A.0","proof":["A.0.max(a) = A.0 or A.0 < a","A.0.max(a) = a or a <= A.0","A.0.max(a) = a","a > A.0 = A.0 < a","not A.0 < a","A.0 != a or a <= A.0","A.0 != a","A.0.max(a) = A.0","A.0.max(a) != A.0"]}

@@ -602,28 +602,70 @@
 {"goal":"from_nat_one","proof":["ℚ.from_int(ℤ.from_nat(ℕ.1)) = ℚ.from_nat(ℕ.1)","ℚ.from_int(ℤ.from_nat(ℕ.1)) != 1"]}
 {"goal":"ℚ.from_nat(a + b) = ℚ.from_int(ℤ.from_nat(a) + ℤ.from_nat(b))","proof":["ℤ.from_nat(a) + ℤ.from_nat(b) = ℤ.from_nat(a + b)","ℚ.from_int(ℤ.from_nat(a + b)) != ℚ.from_nat(a + b)","ℚ.from_int(ℤ.from_nat(a + b)) = ℚ.from_nat(a + b)"]}
 {"goal":"from_nat_add","proof":["ℚ.from_int(ℤ.from_nat(a)) + ℚ.from_int(ℤ.from_nat(b)) = ℚ.from_int(ℤ.from_nat(a) + ℤ.from_nat(b))","ℚ.from_int(ℤ.from_nat(a)) = ℚ.from_nat(a)","ℚ.from_int(ℤ.from_nat(b)) = ℚ.from_nat(b)"]}
+{"goal":"f(ℕ.0)","proof":["ℚ.from_int(a^ℕ.0) != x^ℕ.0 or f(ℕ.0)","ℕ.0 != ℕ.0 or x^ℕ.0 = 1","a^ℕ.0 = ℤ.1","ℚ.from_int(a^ℕ.0) != x^ℕ.0","x^ℕ.0 != ℚ.from_int(ℤ.1)","x^ℕ.0 != 1"]}
+{"goal":"x^m.suc = x^m ⋅ x","proof":["m.suc != m.suc or x ⋅ x^m = x^m.suc","x^m ⋅ x = x ⋅ x^m","x ⋅ x^m != x^m.suc"]}
+{"goal":"x^m = ℚ.from_int(a^m)","proof":["ℚ.from_int(a) != x or not f(m) or ℚ.from_int(a^m) = x^m","not f(m) or ℚ.from_int(a^m) = x^m"]}
+{"goal":"x^m ⋅ x = ℚ.from_int(a^m) ⋅ ℚ.from_int(a)","proof":[]}
+{"goal":"ℚ.from_int(a^m) ⋅ ℚ.from_int(a) = ℚ.from_int(a^m ⋅ a)","proof":["ℚ.from_int(a^m) ⋅ ℚ.from_int(a) = ℚ.from_int(a^m ⋅ a)"]}
+{"goal":"ℚ.from_int(a^m ⋅ a) = ℚ.from_int(a^m.suc)","proof":["a^m ⋅ a != a^m.suc","m.suc != m.suc or a ⋅ a^m = a^m.suc","a^m ⋅ a = a ⋅ a^m","a ⋅ a^m != a^m.suc"]}
+{"goal":"x^m.suc = ℚ.from_int(a^m.suc)","proof":[]}
+{"goal":"f(m.suc)","proof":["ℚ.from_int(a^m.suc) != x^m.suc or f(m.suc)"]}
+{"goal":"from_int_pow","proof":["let s0: (ℕ -> Bool) -> ℕ satisfy { forall(x0: ℕ -> Bool, x1: ℕ) { not x0(ℕ.0) or x0(s0(x0)) or x0(x1) } and forall(x2: ℕ -> Bool, x3: ℕ) { not x2(s0(x2).suc) or not x2(ℕ.0) or x2(x3) } }","not f(s0(f)) or f(s0(f).suc)","ℚ.from_int(a) != x or not f(n) or ℚ.from_int(a^n) = x^n","not f(n) or ℚ.from_int(a^n) = x^n","not f(n)","not f(s0(f).suc) or not f(ℕ.0) or f(n)","not f(ℕ.0) or f(s0(f)) or f(n)","f(s0(f)) or f(n)","f(s0(f))","not f(s0(f).suc)","f(s0(f).suc)"]}
 {"goal":"x = a / b","proof":["ℚ.from_int(x.num) / ℚ.from_int(x.denom) = x"]}
-{"goal":"is_reduced(x.num, x.denom)","proof":["is_reduced(x.num, x.denom)"]}
+{"goal":"y = c / d","proof":["ℚ.from_int(ℚ.new(p, q).num) / ℚ.from_int(ℚ.new(p, q).denom) = ℚ.new(p, q)","not is_reduced(p, q) or ℚ.new(p, q).denom = q","not is_reduced(p, q) or ℚ.new(p, q).num = p","ℚ.new(p, q).num = p","ℚ.new(p, q).denom = q"]}
+{"goal":"x = y","proof":[]}
+{"goal":"x.num = y.num","proof":["y != x"]}
+{"goal":"x.denom = y.denom","proof":["y != x"]}
+{"goal":"rat_from_div_of_reduced","proof":["not is_reduced(p, q) or ℚ.new(p, q).denom = q","not is_reduced(p, q) or ℚ.new(p, q).num = p","ℚ.new(p, q).num = p","y.num = p","ℚ.new(p, q).denom = q","y.denom = q","x.denom = q","x.num = p","x.num != p"]}
+{"goal":"x = a / b","proof":["ℚ.from_int(x.num) / ℚ.from_int(x.denom) = x"]}
+{"goal":"x^n = a^n / (b^n)","proof":["a^n / (b^n) = a / b^n"]}
+{"goal":"a^n = ℚ.from_int(p^n)","proof":["ℚ.from_int(p) != a or ℚ.from_int(p^n) = a^n"]}
+{"goal":"b^n = ℚ.from_int(q^n)","proof":["ℚ.from_int(q) != b or ℚ.from_int(q^n) = b^n"]}
+{"goal":"q > ℤ.0","proof":["q > ℤ.0 = ℤ.0 < q","not ℤ.0 < q","ℤ.0 < q = q.is_positive","not q.is_positive","not x.denom.is_positive","x.denom.is_positive"]}
+{"goal":"q^n > ℤ.0","proof":["not q > ℤ.0 or q^n > ℤ.0"]}
+{"goal":"x^n = 1","proof":["n != ℕ.0 or x^n = 1"]}
+{"goal":"p^n = ℤ.1","proof":["n != ℕ.0 or p^n = ℤ.1"]}
+{"goal":"q^n = ℤ.1","proof":["n != ℕ.0 or q^n = ℤ.1"]}
+{"goal":"(x^n).num = p^n","proof":["ℚ.new(0.num, 0.denom) = 0","ℚ.new(p, ℤ.1) = ℚ.from_int(p)","ℚ.from_int(p^n).num = p^n"]}
+{"goal":"(x^n).denom = q^n","proof":["(x^n).denom != ℤ.1","1.denom != ℤ.1","ℚ.from_int(ℤ.1).denom = ℤ.1"]}
+{"goal":"(x^n).num = p^n and (x^n).denom = q^n","proof":["(x^n).num != p^n"]}
+{"goal":"n != ℕ.0","proof":[]}
+{"goal":"x.num = ℤ.0","proof":["0.num != ℤ.0"]}
+{"goal":"x.denom = ℤ.1","proof":["0.denom != ℤ.1"]}
+{"goal":"x^n = 0","proof":["0^n != 0","0^n = 0 or n = ℕ.0"]}
+{"goal":"(x^n).num = ℤ.0","proof":[]}
+{"goal":"(x^n).denom = ℤ.1","proof":[]}
+{"goal":"ℤ.1^n = ℤ.1","proof":["ℤ.1^n = ℤ.1"]}
+{"goal":"(x^n).num = p^n","proof":["ℚ.new(0.num, 0.denom) = 0","ℚ.new(p, ℤ.1) = ℚ.from_int(p)","ℚ.from_int(p^n).num = p^n"]}
+{"goal":"(x^n).denom = q^n","proof":["not is_reduced(p^n, q^n) or ℚ.new(p^n, q^n).denom = q^n","(a^n / (b^n)).denom != q^n","ℚ.new(p^n, q^n).denom = q^n","ℚ.new(p^n, q^n).denom != q^n"]}
+{"goal":"(x^n).num = p^n and (x^n).denom = q^n","proof":["(x^n).num != p^n"]}
+{"goal":"x != 0","proof":[]}
+{"goal":"p != ℤ.0","proof":["a ⋅ 1 / b = a / b","0 != a or a ⋅ 1 / b = 0","ℚ.new(p, ℤ.1) = ℚ.from_int(p)","ℚ.new(p, ℤ.1) = 0","ℚ.from_int(p) = 0","0 = a","a ⋅ 1 / b = 0","a / b != 0"]}
+{"goal":"is_reduced(p, q)","proof":["not is_reduced(p, x.denom)","is_reduced(x.num, x.denom)"]}
 {"goal":"gcd(p, q) = ℤ.1","proof":["is_reduced(x.num, q)","gcd(x.num, q) != ℤ.1","not is_reduced(x.num, q) or gcd(x.num, q) = ℤ.1"]}
 {"goal":"q > ℤ.0","proof":["not x.denom > ℤ.0","not is_reduced(x.num, x.denom) or x.denom > ℤ.0"]}
-{"goal":"b != 0","proof":["-Add.sub[ℚ](0, b) = Add.sub[ℚ](b, 0)","(0 - b).is_positive = b < 0","0 != b or Add.sub[ℚ](b, 0) = 0","Add.sub[ℚ](b, 0) = 0","q > ℤ.0 = ℤ.0 < q","not b < 0 or 0 != b","not b < 0","0 - b = -b","b.num.is_positive = b.is_positive","ℤ.0 < q = q.is_positive","ℚ.from_int(x.denom).num = x.denom"]}
-{"goal":"a / b^ℕ.2 = 2","proof":[]}
-{"goal":"a / b ⋅ a / b = 2","proof":["x ⋅ a / b != 2","x ⋅ x != 2","ℕ.1.suc != ℕ.1.suc or x ⋅ x^ℕ.1 = x^ℕ.1.suc","x^ℕ.1 = x","x ⋅ x^ℕ.1 != 2","x^ℕ.1.suc = 2","x ⋅ x^ℕ.1 = x^ℕ.1.suc"]}
-{"goal":"(a ⋅ a) / (b ⋅ b) = 2","proof":["(a ⋅ a) / (b ⋅ b) = a / b ⋅ a / b"]}
-{"goal":"a^ℕ.2 / (b^ℕ.2) = 2","proof":["a^ℕ.1 ⋅ a^ℕ.1 = a^(ℕ.1 + ℕ.1)","b^ℕ.1 ⋅ b^ℕ.1 = b^(ℕ.1 + ℕ.1)","a ⋅ a ⋅ (b ⋅ b).reciprocal = (a ⋅ a) / (b ⋅ b)","a^ℕ.2 ⋅ (b^ℕ.2).reciprocal = a^ℕ.2 / (b^ℕ.2)","ℚ.from_int(x.denom)^ℕ.1 = ℚ.from_int(x.denom)","ℚ.from_int(x.num)^ℕ.1 = ℚ.from_int(x.num)"]}
-{"goal":"a^ℕ.2 / (b^ℕ.2) ⋅ b^ℕ.2 = 2 ⋅ b^ℕ.2","proof":["a^ℕ.2 / (b^ℕ.2) != 2"]}
-{"goal":"a^ℕ.2 = 2 ⋅ b^ℕ.2","proof":["a^ℕ.2 / (b^ℕ.2) ⋅ b^ℕ.2 = a^ℕ.2 or b^ℕ.2 = 0","b^ℕ.2 != 0 or 0 = b","b^ℕ.2 != 0","a^ℕ.2 / (b^ℕ.2) ⋅ b^ℕ.2 != a^ℕ.2"]}
-{"goal":"ℚ.from_int(p)^ℕ.2 = ℚ.from_int(ℤ.2) ⋅ ℚ.from_int(q)^ℕ.2","proof":["b^ℕ.2 ⋅ 2 = 2 ⋅ b^ℕ.2","ℚ.from_int(q)^ℕ.2 ⋅ ℚ.from_int(ℤ.2) = ℚ.from_int(ℤ.2) ⋅ ℚ.from_int(q)^ℕ.2"]}
-{"goal":"ℚ.from_int(p) ⋅ ℚ.from_int(p) = ℚ.from_int(ℤ.2) ⋅ (ℚ.from_int(q) ⋅ ℚ.from_int(q))","proof":["ℕ.1.suc != ℕ.1.suc or ℚ.from_int(p) ⋅ ℚ.from_int(p)^ℕ.1 = ℚ.from_int(p)^ℕ.1.suc","ℕ.1.suc != ℕ.1.suc or ℚ.from_int(q) ⋅ ℚ.from_int(q)^ℕ.1 = ℚ.from_int(q)^ℕ.1.suc","b^ℕ.2 + b^ℕ.2 = 2 ⋅ b^ℕ.2","ℚ.from_int(q) ⋅ ℚ.from_int(q) + ℚ.from_int(q) ⋅ ℚ.from_int(q) = 2 ⋅ (ℚ.from_int(q) ⋅ ℚ.from_int(q))","ℕ.1 + ℕ.1 = ℕ.1.suc","ℚ.from_int(x.denom)^ℕ.1 = ℚ.from_int(x.denom)","ℚ.from_int(x.num)^ℕ.1 = ℚ.from_int(x.num)","ℚ.from_int(p) ⋅ ℚ.from_int(p)^ℕ.1 = ℚ.from_int(p)^ℕ.1.suc","ℚ.from_int(q) ⋅ ℚ.from_int(q)^ℕ.1 = ℚ.from_int(q)^ℕ.1.suc"]}
-{"goal":"ℚ.from_int(p^ℕ.2) = ℚ.from_int(ℤ.2 ⋅ q^ℕ.2)","proof":["ℚ.from_int(p) ⋅ ℚ.from_int(p) = ℚ.from_int(p ⋅ p)","ℚ.from_int(q) ⋅ ℚ.from_int(q) = ℚ.from_int(q ⋅ q)","ℚ.from_int(ℤ.2) ⋅ ℚ.from_int(q^ℕ.2) = ℚ.from_int(ℤ.2 ⋅ q^ℕ.2)","p ⋅ p = p^ℕ.2","q ⋅ q = q^ℕ.2"]}
-{"goal":"p^ℕ.2 = ℤ.2 ⋅ q^ℕ.2","proof":["ℚ.from_int(ℤ.2 ⋅ q^ℕ.2) != ℚ.from_int(p^ℕ.2) or ℤ.2 ⋅ q^ℕ.2 = p^ℕ.2"]}
-{"goal":"p^ℕ.2 != ℤ.0","proof":["ℚ.from_int(ℤ.2) ⋅ ℚ.from_int(q) ⋅ ℚ.from_int(q) = ℚ.from_int(ℤ.2) ⋅ (ℚ.from_int(q) ⋅ ℚ.from_int(q))","ℚ.from_int(p) ⋅ ℚ.from_int(p) = ℚ.from_int(p ⋅ p)","2 ⋅ b != 0 or 2 = 0 or 0 = b","(0 ⋅ b ⋅ b) / b = 0 ⋅ b or 0 = b","(2 ⋅ b ⋅ b) / b = 2 ⋅ b or 0 = b","x.num ⋅ x.num = x.num^ℕ.2","ℚ.new(ℤ.0, ℤ.1) = ℚ.from_int(ℤ.0)","0 ⋅ b = 0","(0 ⋅ b ⋅ b) / b = 0 ⋅ b","(2 ⋅ b ⋅ b) / b = 2 ⋅ b","2 ⋅ b != 0 or 2 = 0","2 ⋅ b != 0"]}
-{"goal":"p = ℤ.0 implies p^ℕ.2 = ℤ.0","proof":["ℤ.0^ℕ.2 != ℤ.0","ℤ.0^ℕ.2 = ℤ.0 or ℕ.2 = ℕ.0","ℕ.2 = ℕ.0"]}
-{"goal":"p != ℤ.0","proof":["ℚ.from_int(p) ⋅ ℚ.from_int(p) = ℚ.from_int(p ⋅ p)","ℚ.from_int(q) ⋅ ℚ.from_int(q) = ℚ.from_int(q ⋅ q)","ℤ.from_nat(lib(nat.prime_number).gcd(abs(ℤ.0), abs(q))) = gcd(ℤ.0, q)","lib(int).unit_sign(q) ⋅ q = ℤ.from_nat(abs(q))","lib(int).unit_sign(x.denom) ⋅ ℤ.from_nat(abs(x.denom)) = x.denom","lib(int).unit_sign(ℤ.0) ⋅ ℤ.from_nat(abs(ℤ.0)) = ℤ.0","ℚ.from_int(q) ⋅ ℚ.from_int(q) ⋅ ℚ.from_int(ℤ.2) = ℚ.from_int(ℤ.2) ⋅ (ℚ.from_int(q) ⋅ ℚ.from_int(q))","p ⋅ p = p^ℕ.2","ℤ.0 != p or p.abs = ℤ.0","p.abs = ℤ.0","ℚ.new(q ⋅ q, ℤ.1) = ℚ.from_int(q ⋅ q)","ℚ.new(ℤ.1, ℤ.1) = ℚ.from_int(ℤ.1)","ℚ.new(ℤ.2 ⋅ q^ℕ.2, ℤ.1) = ℚ.from_int(ℤ.2 ⋅ q^ℕ.2)","ℤ.from_nat(abs(p)) = p.abs","ℤ.0 != p or lib(int).unit_sign(p) = ℤ.0","lib(int).unit_sign(p) = ℤ.0","ℤ.0 != p or abs(p) = ℕ.0","abs(p) = ℕ.0","lib(int).unit_sign(q) ⋅ ℤ.1 = lib(int).unit_sign(q)","1 ⋅ 2 = 2","lib(nat.prime_number).gcd(ℕ.0, abs(q)) = abs(q)"]}
-{"goal":"gcd(p^ℕ.2, q) = ℤ.1","proof":["gcd(p, q) != ℤ.1 or gcd(p^ℕ.2, q^ℕ.1) = ℤ.1 or ℤ.0 = p or ℤ.0 = q or ℕ.2 = ℕ.0 or ℕ.1 = ℕ.0","ℕ.1 != ℕ.0 or gcd(p^ℕ.2, q)^ℕ.1 = ℤ.1","q > ℤ.0 = ℤ.0 < q","ℤ.0 < q","not ℤ.0 < q or ℤ.0 != q","gcd(p^ℕ.2, q)^ℕ.1 = gcd(p^ℕ.2, q)","q^ℕ.1 = q","ℤ.0 != q","gcd(p^ℕ.2, q^ℕ.1) != ℤ.1","gcd(p^ℕ.2, q)^ℕ.1 != ℤ.1","ℕ.1 = ℕ.0","ℕ.1 != ℕ.0"]}
-{"goal":"q.divides(p^ℕ.2)","proof":["not q.divides(q ⋅ q) or not (q ⋅ q).divides(p^ℕ.2) or q.divides(p^ℕ.2)","q ⋅ q != q ⋅ q or q.divides(q ⋅ q)","ℤ.2 ⋅ q^ℕ.2 != p^ℕ.2 or (q^ℕ.2).divides(p^ℕ.2)","q ⋅ q = q^ℕ.2","not (q ⋅ q).divides(p^ℕ.2) or not q.divides(q ⋅ q)","q.divides(q ⋅ q)","not (q ⋅ q).divides(p^ℕ.2)","(q^ℕ.2).divides(p^ℕ.2)"]}
-{"goal":"q = ℤ.1","proof":["gcd(q, p^ℕ.2) != ℤ.1 or not q.divides(p^ℕ.2) or -ℤ.1 = q or ℤ.1 = q or ℤ.0 = q","gcd(p^ℕ.2, q) = gcd(q, p^ℕ.2)","gcd(q, p^ℕ.2) = ℤ.1","not q > ℤ.0 or q.abs = q","q > ℤ.0 = ℤ.0 < q","ℤ.0 < q","(-ℤ.1).abs = ℤ.1.abs","not ℤ.0 < q or ℤ.0 != q","ℤ.from_nat(abs(ℤ.1)) = ℤ.1.abs","abs(ℤ.from_nat(ℕ.1)) = ℕ.1","-ℤ.1 = q or ℤ.0 = q","q.abs = q","ℤ.0 != q","-ℤ.1 = q"]}
-{"goal":"p^ℕ.2 = ℤ.2","proof":["q ⋅ q = q^ℕ.2","ℤ.1 ⋅ ℤ.1 = ℤ.1","ℤ.2 ⋅ ℤ.1 = ℤ.2"]}
+{"goal":"gcd(p^n, q^n) = ℤ.1","proof":["gcd(p, q) != ℤ.1 or gcd(p^n, q^n) = ℤ.1 or ℤ.0 = p or ℤ.0 = q or n = ℕ.0 or n = ℕ.0","ℤ.0 = q","not q < q or not q < q","q > ℤ.0 = ℤ.0 < q","ℤ.0 < q","q < q"]}
+{"goal":"q^n > ℤ.0","proof":[]}
+{"goal":"p^n != ℤ.0","proof":["p^n != ℤ.0 or ℤ.0 = p"]}
+{"goal":"x^n = ℚ.from_int(p^n) / ℚ.from_int(q^n)","proof":[]}
+{"goal":"is_reduced(p^n, q^n)","proof":["not q^n > ℤ.0 or gcd(p^n, q^n) != ℤ.1 or is_reduced(p^n, q^n)"]}
+{"goal":"(x^n).num = p^n","proof":["ℚ.from_int(p^n) / ℚ.from_int(q^n) != x^n or not is_reduced(p^n, q^n) or (x^n).num = p^n"]}
+{"goal":"(x^n).denom = q^n","proof":["ℚ.from_int(p^n) / ℚ.from_int(q^n) != x^n or not is_reduced(p^n, q^n) or (x^n).denom = q^n"]}
+{"goal":"(x^n).num = p^n and (x^n).denom = q^n","proof":["(x^n).num != p^n"]}
+{"goal":"(x^n).num = p^n and (x^n).denom = q^n","proof":["(x^n).num != p^n"]}
+{"goal":"pow_by_num_denom_pow","proof":["(x^n).num != p^n"]}
+{"goal":"x^n = ℚ.new(p^n, q^n)","proof":["x.denom != q or x.num != x.num or (x^n).denom = q^n","x.denom != x.denom or x.num != p or (x^n).num = p^n","ℚ.new(y.num, y.denom) = y","x.num != p or (x^n).num = p^n","x.denom != q or (x^n).denom = q^n","(x^n).denom = q^n","(x^n).num = p^n"]}
+{"goal":"y = ℚ.new(p^n, q^n)","proof":["ℚ.new(p^n, q^n) != x^n"]}
+{"goal":"q^n = y.denom","proof":["x.denom != q or x.num != x.num or (x^n).denom = q^n","(x^n).denom != q^n","x.denom != q or (x^n).denom = q^n"]}
+{"goal":"q^n = ℤ.1","proof":["y.denom != ℤ.1","not y.is_int or y.denom = ℤ.1"]}
+{"goal":"q = ℤ.1 or q = -ℤ.1","proof":["q^n != ℤ.1 or -ℤ.1 = q or ℤ.1 = q or ℕ.0 = n"]}
+{"goal":"q > ℤ.0","proof":["q > ℤ.0 = ℤ.0 < q","not ℤ.0 < q","ℤ.0 < q = q.is_positive","not q.is_positive","not x.denom.is_positive","x.denom.is_positive"]}
+{"goal":"q = ℤ.1","proof":["-ℤ.1 < ℤ.0 = Partial_Order.gt[ℤ](ℤ.1, ℤ.0)","ℤ.1 - q != ℤ.0 or ℤ.1 = q","ℤ.1 - q != ℤ.0","not ℤ.0 < -ℤ.1 or not -ℤ.1 < ℤ.0","q > ℤ.0 = ℤ.0 < q","ℤ.0 < q","ℤ.0 < -ℤ.1","ℤ.1 != ℤ.0 or ℤ.1 - q = ℤ.0","ℤ.1 != ℤ.0","Partial_Order.gt[ℤ](ℤ.1, ℤ.0)","not -ℤ.1 < ℤ.0","-ℤ.1 < ℤ.0"]}
+{"goal":"square_roof_of_int","proof":["x.denom != ℤ.1 or x.is_int","x.denom = ℤ.1","x.denom != ℤ.1"]}
+{"goal":"x^ℕ.2 = ℚ.new(p^ℕ.2, q^ℕ.2)","proof":["x.denom != q or x.num != x.num or (x^ℕ.2).denom = q^ℕ.2","x.denom != x.denom or x.num != p or (x^ℕ.2).num = p^ℕ.2","ℚ.new((x^ℕ.2).num, (x^ℕ.2).denom) = x^ℕ.2","x.num != p or (x^ℕ.2).num = p^ℕ.2","x.denom != q or (x^ℕ.2).denom = q^ℕ.2","(x^ℕ.2).denom = q^ℕ.2","(x^ℕ.2).num = p^ℕ.2"]}
+{"goal":"2 = ℚ.new(p^ℕ.2, q^ℕ.2)","proof":["ℚ.new(p^ℕ.2, q^ℕ.2) != x^ℕ.2"]}
+{"goal":"2.num = p^ℕ.2","proof":["x.denom != x.denom or x.num != p or (x^ℕ.2).num = p^ℕ.2","x.num != p or (x^ℕ.2).num = p^ℕ.2","ℚ.new(p^ℕ.2, q^ℕ.2).num != p^ℕ.2","(x^ℕ.2).num != p^ℕ.2"]}
+{"goal":"p^ℕ.2 = ℤ.2","proof":["ℚ.from_int(ℤ.2).num = ℤ.2","ℚ.from_int(ℤ.2).num != p^ℕ.2","ℚ.from_int(ℤ.2).num != 2.num","ℚ.from_int(ℤ.2) != 2"]}
 {"goal":"n^ℕ.2 = ℕ.2","proof":["abs(p)^ℕ.2 != ℕ.2","abs(p)^ℕ.2 = abs(p^ℕ.2)","abs(ℤ.from_nat(ℕ.2)) = ℕ.2","abs(p^ℕ.2) != ℕ.2","abs(ℤ.2) != ℕ.2"]}
 {"goal":"n = ℕ.1","proof":["ℕ.1 ⋅ abs(p) != n or ℕ.1 <= n or n = ℕ.0","not n <= ℕ.1 or not ℕ.1 < n or ℕ.1 < ℕ.1","not ℕ.1 <= n or ℕ.1 < n or n = ℕ.1","n^ℕ.2 = n ⋅ n","n != ℕ.0 or n ⋅ n = ℕ.0","not ℕ.1 <= n or ℕ.1 < n","ℕ.1 ⋅ abs(p) = abs(p)","not ℕ.1 < ℕ.1","n^ℕ.2 != ℕ.0","ℕ.1 ⋅ abs(p) = n","n ⋅ n != ℕ.0","not ℕ.1 < n or ℕ.1 < ℕ.1","not ℕ.1 < n","not ℕ.1 <= n","n != ℕ.0","n = ℕ.0"]}
 {"goal":"n^ℕ.2 = ℕ.1","proof":["ℕ.1^ℕ.2 != ℕ.1","ℕ.1^ℕ.2 = ℕ.1 ⋅ ℕ.1","ℕ.1 ⋅ ℕ.1 != ℕ.1"]}
@@ -633,5 +675,3 @@
 {"goal":"n^ℕ.2 > ℕ.2","proof":["not n > ℕ.1 or n^ℕ.2 > n","ℕ.1 + ℕ.1 > n = ℕ.1 >= n","ℕ.1 >= n = n <= ℕ.1","n^ℕ.2 > n"]}
 {"goal":"false","proof":["ℕ.2 > ℕ.2","not ℕ.2 < ℕ.2 or not ℕ.2 < ℕ.2","ℕ.2 > ℕ.2 = ℕ.2 < ℕ.2","ℕ.2 < ℕ.2"]}
 {"goal":"square_root_of_two_is_not_rat","proof":[]}
-{"goal":"neg_reciprocal_iff","proof":["1 / -a = -1 / a","1 / -1 / a > 0 = -1 / a > 0","-1 / a > 0 = 1 / a < 0","-a > 0 = a < 0","1 / (1 / -a) = -a"]}
-{"goal":"neg_by_div","proof":["1 / -a = -1 / a"]}
