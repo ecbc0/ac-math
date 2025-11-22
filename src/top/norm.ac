@@ -1,0 +1,74 @@
+from limit.metric_space import Distance_Space
+from linear_algebra.vector_space import Vec, ℝ
+from limit.metric_space import Distance_Top, Metric_Top, Complete_Distance_Top, Complete_Metric_Top
+
+let scal[V] = Vec.scal[V]
+
+// example of non quadratic norm: L^1 integral space
+// sometime it's more reasonable to consider it as (quadratic) norm on vector space of affine space, or on tangent space
+typeclass V: Norm_Vec extends Vec {
+    norm: V -> ℝ
+
+    zero_norm {
+        (V.0).norm = ℝ.0 
+    }
+
+    scal_norm(a: ℝ, v: V) {
+        scal(a, v).norm = a.abs ⋅ v.norm
+    }
+
+    norm_triangle(v: V, w: V) {
+        (v + w).norm <= v.norm + w.norm
+    }
+}
+
+theorem neg_norm[V: Norm_Vec](v: V) {
+    (-v).norm = v.norm
+} by {
+    (-ℝ.1).abs = ℝ.1
+    -v = scal(-ℝ.1, v)
+}
+
+theorem norm_gte_zero[V: Norm_Vec](v: V) {
+    v.norm >= ℝ.0
+} by {
+    (v + -v).norm = ℝ.0
+    (v + -v).norm <= v.norm + (-v).norm
+    ℝ.0 <= v.norm + v.norm
+    if v.norm < ℝ.0 {
+        v.norm + v.norm < ℝ.0
+        false
+    }
+}
+
+attributes V: Norm_Vec {
+    define norm_dist(self, other: V) -> ℝ {
+        (self - other).norm
+    }
+}
+
+theorem self_distance_is_zero[V: Norm_Vec](x: V) {
+    x.norm_dist(x) = ℝ.0
+}
+
+theorem distance_symmetric[V: Norm_Vec](x: V, y: V) {
+    x.norm_dist(y) = y.norm_dist(x)
+} 
+
+theorem distance_triangle[V: Norm_Vec](x: V, y: V, z: V) {
+    x.norm_dist(z) <= x.norm_dist(y) + y.norm_dist(z)
+} by {
+    (x - z) = (x - y) + (y - z)
+    (x - z).norm <= (x - y).norm + (y - z).norm
+}
+
+typeclass Norm_Distance extends Norm_Vec, Distance_Space {
+    norm_distance {
+        Norm_Vec.norm_dist = Distance_Space.distance
+    }
+}
+
+typeclass Norm_Top extends Norm_Vec, Distance_Top
+typeclass Norm_Metric_Top extends Norm_Vec, Metric_Top
+typeclass Banach extends Norm_Vec, Complete_Distance_Top
+typeclass Banach_Metric extends Norm_Vec, Complete_Metric_Top

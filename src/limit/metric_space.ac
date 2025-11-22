@@ -456,12 +456,39 @@ theorem not_in_imp_distance_gte_inf_distance_from_compl[M: Distance_Net_System](
     y ∉ a implies x.distance(y) >= inf(distance_from(a.c, x))
 }
 
+theorem ball_is_open_lemma[M: Distance_Net_System](x: M, r: ℝ) {
+    r > 0 implies x.ball(r).interior = x.ball(r)
+} by {
+    forall(y: M) {
+        if y ∈ x.ball(r) {
+            x.distance(y) < r
+            let r1 = r - x.distance(y)
+            r1 > 0
+            forall(z: M) {
+                if z ∈ y.ball(r1) {
+                    y.distance(z) < r1
+                    x.distance(z) <= x.distance(y) + y.distance(z)
+                    x.distance(y) + y.distance(z) < x.distance(y) + r1
+                    x.distance(z) < x.distance(y) + r1
+                    x.distance(y) + r1 = r
+                    x.distance(z) < r
+                    z ∈ x.ball(r)
+                }
+            }
+            y.ball(r1) ⊆ x.ball(r)
+            y.ball(r1) ∈ y.net
+            y ∈ x.ball(r).interior
+        }
+    }
+    x.ball(r).interior ⊇ x.ball(r)
+    x.ball(r).interior ⊆ x.ball(r)
+}
+
 theorem net_limit_split_of_interior_boundary[M: Distance_Net_System](a: Set[M], x: M) {
     x ∈ a.interior implies exists(b: Set[M]) {
         b ∈ x.net and b ⊆ a.interior
     }
-}
-by {
+} by {
     if x ∈ a.interior {
         let b: Set[M] satisfy { 
             b ∈ x.net and b ⊆ a 
@@ -470,32 +497,9 @@ by {
         let r: ℝ satisfy {
             r > 0 and b = x.ball(r)
         }
-        forall(y: M) {
-            if y ∈ b {
-                y ∈ x.ball(r)
-                x.distance(y) < r
-                let r1 = r - x.distance(y)
-                r1 > 0
-                y.ball(r1) ∈ y.ball_net
-                y.ball_net = y.net.sets
-                y.ball(r1) ∈ y.net
-                forall(z: M) {
-                    if z ∈ y.ball(r1) {
-                        y.distance(z) < r1
-                        x.distance(z) <= x.distance(y) + y.distance(z)
-                        x.distance(y) + y.distance(z) < x.distance(y) + r1
-                        x.distance(z) < x.distance(y) + r1
-                        x.distance(y) + r1 = r
-                        x.distance(z) < r
-                        z ∈ x.ball(r)
-                        z ∈ b
-                    }
-                }
-                y.ball(r1) ⊆ b
-                y ∈ a.interior
-            }
-        }
-        b ⊆ a.interior
+        b ⊆ a
+        b.interior ⊆ a.interior
+        b.interior = b
         b ∈ x.net and b ⊆ a.interior
     }
 }
@@ -528,6 +532,10 @@ theorem ball_is_bounded[M: Distance_Space](x: M, r: ℝ) {
 
 typeclass Distance_Top extends Distance_Net_System, Topology
 typeclass Metric_Top extends Distance_Top, Metric_Space
+
+theorem ball_is_open[M: Distance_Top](x: M, r: ℝ) {
+    r > 0 implies x.ball(r).is_open
+}
 
 /// also called Cauchy net
 define is_dist_vanish_net[M: Distance_Space](n: Net[M]) -> Bool {

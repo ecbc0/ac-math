@@ -1,6 +1,7 @@
 from type_class.add import Add
 from real import ℝ
-from limit.metric_space import Distance_Space
+from nat import ℕ
+from set import is_bijective
 
 // Temporarily not consider dimension, waiting for dependent type
 
@@ -29,6 +30,10 @@ typeclass V: Vec extends Add {
     }
 }
 
+instance ℝ: Vec {
+    let scal = ℝ.mul
+}
+
 let scal[V] = Vec.scal[V]
 
 theorem add_neg_is_scal_reverse[V: Vec](v: V) {
@@ -39,64 +44,38 @@ theorem add_neg_is_scal_reverse[V: Vec](v: V) {
     scal(-ℝ.1 + ℝ.1, v) = scal(ℝ.0, v)
 }
 
-// example of non quadratic norm: L^1 integral space
-typeclass V: Norm_Vec extends Vec {
-    norm: V -> ℝ
-
-    zero_norm {
-        (V.0).norm = ℝ.0 
-    }
-
-    scal_norm(a: ℝ, v: V) {
-        scal(a, v).norm = a.abs ⋅ v.norm
-    }
-
-    norm_triangle(v: V, w: V) {
-        (v + w).norm <= v.norm + w.norm
+define scal_hom[V: Vec, W: Vec](f: V -> W) -> Bool {
+    forall(a: ℝ, v: V) {
+        f(scal[V](a, v)) = scal[W](a, f(v)) 
     }
 }
 
-theorem neg_norm[V: Norm_Vec](v: V) {
-    (-v).norm = v.norm
+define add_hom[V: Vec, W: Vec](f: V -> W) -> Bool {
+    forall(v: V, w: V) {
+        f(v + w) = f(v) + f(w) 
+    }
+}
+
+define is_linear[V: Vec, W: Vec](f: V -> W) -> Bool
+ {
+    scal_hom(f) and add_hom(f)
+}
+
+define is_linear_isom[V: Vec, W: Vec](f: V -> W) -> Bool {
+    is_linear(f) and is_bijective(f)
+}
+
+// Temporarily workaround
+structure Vec_Product[V: Vec] {
+    dim: ℕ
+    c: ℕ -> V
+} constraint {
+    forall(idx: ℕ) {
+        idx >= dim implies c(idx) = V.0
+    }
 } by {
-    (-ℝ.1).abs = ℝ.1
-}
-
-theorem norm_gte_zero[V: Norm_Vec](v: V) {
-    v.norm >= ℝ.0
-} by {
-    (v + -v).norm = ℝ.0
-    (v + -v).norm <= v.norm + (-v).norm
-    ℝ.0 <= v.norm + v.norm
-    if v.norm < ℝ.0 {
-        v.norm + v.norm < ℝ.0
-        false
-    }
-}
-
-attributes V: Norm_Vec {
-    define norm_dist(self, other: V) -> ℝ {
-        (self - other).norm
-    }
-}
-
-theorem self_distance_is_zero[V: Norm_Vec](x: V) {
-    x.norm_dist(x) = ℝ.0
-}
-
-theorem distance_symmetric[V: Norm_Vec](x: V, y: V) {
-    x.norm_dist(y) = y.norm_dist(x)
-} 
-
-theorem distance_triangle[V: Norm_Vec](x: V, y: V, z: V) {
-    x.norm_dist(z) <= x.norm_dist(y) + y.norm_dist(z)
-} by {
-    (x - z) = (x - y) + (y - z)
-    (x - z).norm <= (x - y).norm + (y - z).norm
-}
-
-typeclass Norm_Distance extends Norm_Vec, Distance_Space {
-    norm_distance {
-        Norm_Vec.norm_dist = Distance_Space.distance
+    let dim = ℕ.1
+    define c(n: ℕ) -> V {
+        V.0
     }
 }

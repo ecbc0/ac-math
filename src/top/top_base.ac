@@ -1,6 +1,5 @@
-from limit.net import Net, Set, is_limit
+from limit.net import Net, Set, is_limit, is_net, subset_two_intersection, no_empty, subset_two_intersection_helper
 from set import empty, universe, union, intersection, compl_of_sets, union_index, is_nonempty
-from limit.net import is_net, subset_two_intersection
 from finite_set import list_to_set, List
 
 typeclass X: Point_Net_System {
@@ -204,7 +203,7 @@ theorem net_limit_split_of_exterior_boundary[X: Topology](a: Set[X], x: X) {
     }
 }
 
-define limit_pt[X: Topology](a: Set[X], x: X) -> Bool {
+define limit_pt[X: Point_Net_System](a: Set[X], x: X) -> Bool {
     forall(b: Set[X]) {
         b ∈ x.net implies a ∩ b != empty[X]
     }
@@ -223,17 +222,17 @@ theorem contains_imp_limit_pt[X: Topology](a: Set[X], x: X) {
 }
 
 // expected param 0 to have typeclass None
-attributes Set[X: Topology] {
+attributes Set[X: Point_Net_System] {
     define closure(self) -> Set[X] {
         Set[X].new(limit_pt(self))
     }    
 }
 
-theorem closure_contains_limit_pt[X: Topology](a: Set[X], x: X) {
+theorem closure_contains_limit_pt[X: Point_Net_System](a: Set[X], x: X) {
     limit_pt(a, x) implies x ∈ a.closure
 }
 
-theorem subset_closure[X: Topology](a: Set[X]) {
+theorem subset_closure[X: Point_Net_System](a: Set[X]) {
     a ⊆ a.closure
 } by {
     forall(x: X) {
@@ -242,7 +241,7 @@ theorem subset_closure[X: Topology](a: Set[X]) {
     }
 }
 
-theorem closure_preserve_nonempty[X: Topology](a: Set[X], b: Set[X]) {
+theorem closure_preserve_nonempty[X: Point_Net_System](a: Set[X], b: Set[X]) {
     is_nonempty(a) implies is_nonempty(a.closure)
 } by {
     a ⊆ a.closure
@@ -327,7 +326,7 @@ theorem closed_contains_limit_pt[X: Topology](a: Set[X], x: X) {
     limit_pt(a, x) and a.is_closed implies x ∈ a
 }
 
-theorem closure_preserve_subset[X: Topology](a: Set[X], b: Set[X]) {
+theorem closure_preserve_subset[X: Point_Net_System](a: Set[X], b: Set[X]) {
     a ⊆ b implies a.closure ⊆ b.closure
 } by {
     forall(x: X) {
@@ -383,7 +382,7 @@ theorem exterior_is_open[X: Topology](a: Set[X]) {
     a.exterior.is_open
 }
 
-theorem interior_preserve_subset[X: Topology](a: Set[X], b: Set[X]) {
+theorem interior_preserve_subset[X: Point_Net_System](a: Set[X], b: Set[X]) {
     a ⊆ b implies a.interior ⊆ b.interior
 } by {
     forall(x: X) {
@@ -399,6 +398,19 @@ theorem interior_preserve_subset[X: Topology](a: Set[X], b: Set[X]) {
 
 theorem interior_is_largest_open_subset[X: Topology](a: Set[X], b: Set[X]) {
     b ⊆ a and b.is_open implies b ⊆ a.interior
+}
+
+theorem open_contains_set_in_net[X: Topology](x: X , a: Set[X]) {
+    a.is_open and x ∈ a implies exists(s: Set[X]) {
+        s ∈ x.net and s ⊆ a
+    }
+} by {
+    a.interior = a
+    x ∈ a.interior
+    let s: Set[X] satisfy {
+        s ∈ x.net and x ∈ s and s ⊆ a.interior
+    }
+    s ⊆ a
 }
 
 theorem empty_is_open[X: Topology](a: Set[X]) {
@@ -515,6 +527,31 @@ theorem two_intersection_preserve_open[X: Topology](a: Set[X], b: Set[X]) {
     (a ∩ b).is_open    
 }
 
+theorem two_intersection_preserve_interior[X: Topology](a: Set[X], b: Set[X]) {
+    a.interior ∩ b.interior = (a ∩ b).interior
+} by {
+    a.interior ⊆ a
+    b.interior ⊆ b
+    a.interior ∩ b.interior ⊆ a ∩ b
+    a.interior ∩ b.interior ⊆ (a ∩ b).interior
+
+    forall(x: X) {
+        if x ∈ (a ∩ b).interior {
+            let s: Set[X] satisfy {
+                s ∈ x.net and x ∈ s and s ⊆ (a ∩ b).interior
+            }
+            x ∈ a
+            s ⊆ a
+            x ∈ a.interior
+            x ∈ b
+            s ⊆ b
+            x ∈ b.interior
+            x ∈ a.interior ∩ b.interior
+        }
+    }
+    a.interior ∩ b.interior ⊇ (a ∩ b).interior
+}
+
 theorem union_index_preserve_open[I, X: Topology](f: I -> Set[X]) {
     forall(i: I) {
         f(i).is_open
@@ -539,14 +576,253 @@ theorem union_index_preserve_open[I, X: Topology](f: I -> Set[X]) {
     union_index(f).is_open
 }
 
+/// If all sets in net are already open, then continuous is equivalent to limit at every point, and for every net system of topology, if every interior of set in x.net contains x, we can construct equivalent open net system
 define is_continuous[X: Topology, Y: Topology](f: X -> Y) -> Bool {
-    forall(v: Set[Y]) {
-        v.is_open implies forall(x: X) { 
-            f(x) ∈ v implies exists(u: Set[X]) {
+    forall(x: X, v: Set[Y]) {
+        v.is_open and f(x) ∈ v implies exists(u: Set[X]) {
+            u.is_open and x ∈ u and u.image(f) ⊆ v
+        }
+    }
+}
+
+define limit_at_every_point[X: Point_Net_System, Y: Point_Net_System](f: X -> Y) -> Bool {
+    forall(x: X, v: Set[Y]) {
+        v ∈ f(x).net implies exists(u: Set[X]) {
+            u ∈ x.net and u.image(f) ⊆ v
+        }
+    }
+}
+
+define is_open_net[X: Topology](n: Net[X]) -> Bool {
+    forall(s: Set[X]) {
+        s ∈ n implies s.is_open
+    }
+}
+
+define is_open_net_system[X: Topology](net: X -> Net[X]) -> Bool {
+    forall(x: X) {
+        is_open_net(net(x))
+    }
+}
+
+theorem continuous_iff_limit_at_every_point_in_open_net[X: Topology, Y: Topology](f: X -> Y) {
+    is_open_net_system(X.net) and is_open_net_system(Y.net) implies is_continuous(f) iff limit_at_every_point(f)
+} by {
+    if is_continuous(f) {
+        forall(x: X, v: Set[Y]) {
+            if v ∈ f(x).net {
+                v.is_open
+                let (u0: Set[X]) satisfy {
+                    u0.is_open and x ∈ u0 and u0.image(f) ⊆ v
+                }
+                let u: Set[X] satisfy {
+                    u ∈ x.net and u ⊆ u0
+                }
+                u.is_open
+                x ∈ u
+                u.image(f) ⊆ u0.image(f)
+                u.image(f) ⊆ v
+                u ∈ x.net and u.image(f) ⊆ v
+            }
+        }
+        limit_at_every_point(f)
+    }
+    if limit_at_every_point(f) {
+        forall(x: X, v: Set[Y]) {
+            if v.is_open and f(x) ∈ v {
+                let v0: Set[Y] satisfy {
+                    v0 ∈ f(x).net and v0 ⊆ v
+                }
+                let u: Set[X] satisfy {
+                    u ∈ x.net and u.image(f) ⊆ v0
+                }
                 u.is_open and x ∈ u and u.image(f) ⊆ v
             }
         }
+        is_continuous(f)    
     }
+}
+
+define is_interior_nomempty_sets[X: Topology](n: Set[Set[X]]) -> Bool {
+    forall(x: X, s: Set[X]) {
+        s ∈ n implies is_nonempty(s.interior)
+    }
+}
+
+define elem_in_to_interior_sets[X: Topology](n: Set[Set[X]], s: Set[X]) -> Bool {
+    exists(s1: Set[X]) {
+        s1 ∈ n and s = s1.interior
+    }
+}
+
+define to_interior_sets[X: Topology](n: Set[Set[X]]) -> Set[Set[X]] {
+    Set[Set[X]].new(elem_in_to_interior_sets(n))
+}
+
+theorem to_interior_sets_helper[X: Topology](n: Set[Set[X]], s: Set[X]) {
+    s ∈ to_interior_sets(n) implies exists(s1: Set[X]) {
+        s1 ∈ n and s = s1.interior
+    }
+}
+
+theorem interior_preserve_net[X: Topology](n: Set[Set[X]]) {
+    is_interior_nomempty_sets(n) and is_net(n) implies is_net(to_interior_sets(n))
+} by {
+    forall(s: Set[X]) {
+        if s ∈ to_interior_sets(n) {
+            let s1: Set[X] satisfy {
+                s1 ∈ n and s = s1.interior
+            }
+            is_nonempty(s)
+        }
+    }
+    no_empty(to_interior_sets(n))
+    forall(a1: Set[X], a2: Set[X]) {
+        if a1 ∈ to_interior_sets(n) and a2 ∈ to_interior_sets(n) {
+            let s1: Set[X] satisfy {
+                s1 ∈ n and a1 = s1.interior
+            }
+            let s2: Set[X] satisfy {
+                s2 ∈ n and a2 = s2.interior
+            }
+            let s: Set[X] satisfy {
+                s ∈ n and s ⊆ s1 ∩ s2
+            }
+            s.interior ∈ to_interior_sets(n) 
+            s.interior ⊆ s1 ∩ s2 
+            s.interior ⊆ (s1 ∩ s2).interior
+            s.interior ⊆ s1.interior ∩ s2.interior
+            s.interior ∈ to_interior_sets(n) and s.interior ⊆ a1 ∩ a2
+        }
+    }
+    subset_two_intersection_helper(to_interior_sets(n))
+    subset_two_intersection(to_interior_sets(n))
+}
+
+define to_interior_net[X: Topology](n: Net[X]) -> Net[X] {
+    if is_interior_nomempty_sets(n.sets) {
+        Net[X].new(to_interior_sets(n.sets))
+    } else {
+        n
+    }
+}
+
+theorem interior_in_to_interior_net[X: Topology](n: Net[X], s: Set[X]) {
+    is_interior_nomempty_sets(n.sets) and s ∈ n implies s.interior ∈ to_interior_net(n)
+} by {
+    s ∈ n.sets
+    s.interior ∈ to_interior_sets(n.sets)
+    to_interior_sets(n.sets) = to_interior_net(n).sets
+    s.interior ∈ to_interior_net(n)
+}
+
+theorem to_interior_net_helper[X: Topology](n: Net[X], s: Set[X]) {
+    is_interior_nomempty_sets(n.sets) and s ∈ to_interior_net(n) implies exists(s1: Set[X]) {
+        s1 ∈ n and s = s1.interior
+    }
+} by {
+    s ∈ to_interior_net(n).sets
+    s ∈ to_interior_sets(n.sets)
+    let s1: Set[X] satisfy {
+        s1 ∈ n.sets and s = s1.interior
+    }
+    s1 ∈ n
+}
+
+theorem to_interior_net_is_open_net[X: Topology](n: Net[X]) {
+    is_interior_nomempty_sets(n.sets) implies is_open_net(to_interior_net(n))
+} by {
+    forall(s: Set[X]) {
+        if s ∈ to_interior_net(n) {
+            let s1: Set[X] satisfy {
+                s1 ∈ n and s = s1.interior
+            }
+            s.is_open
+        }
+    }
+}
+
+define is_interior_point_net[X: Topology](net: X -> Net[X]) -> Bool {
+    net = X.net and forall(x: X, s: Set[X]) {
+        s ∈ x.net implies s.interior ∈ x.net
+    }
+}
+
+theorem is_interior_point_net_have_interior_nomempty_sets[X: Topology] {
+    is_interior_point_net(X.net) implies forall(x: X) {
+        is_interior_nomempty_sets(x.net.sets)
+    }
+} by {
+    forall(x: X) {
+        forall(s: Set[X]) {
+            if s ∈ x.net.sets {
+                s ∈ x.net
+                s.interior ∈ x.net
+                x ∈ s.interior
+                is_nonempty(s.interior)
+            }
+        }
+        is_interior_nomempty_sets(x.net.sets)
+    }
+}
+
+theorem to_interior_sets_same_limit[X: Topology] {
+    is_interior_point_net(X.net) implies forall(x: X) {
+        x.net.same_limit(to_interior_net(x.net))
+    }
+} by {
+    forall(x: X) {
+        forall(s: Set[X]) {
+            if s ∈ x.net {
+                s.interior ∈ to_interior_net(x.net) and s.interior ⊆ s
+            }
+        }
+        to_interior_net(x.net).finer(x.net)
+        forall(s: Set[X]) {
+            if s ∈ to_interior_net(x.net) {
+                s.is_open
+                let s1: Set[X] satisfy {
+                    s1 ∈ x.net and s = s1.interior
+                }
+                x ∈ s1
+                x ∈ s
+                let t: Set[X] satisfy {
+                    t ∈ x.net and t ⊆ s
+                }
+            }
+        }
+        x.net.finer(to_interior_net(x.net))
+    } 
+}
+
+theorem contains_open_imp_open[X: Topology](v: Set[X]) {
+    forall(x: X) {
+        x ∈ v implies exists(u: Set[X]) {
+            u.is_open and x ∈ u and u ⊆ v
+        }
+    } implies v.is_open
+} by {
+    let open_cover(x: X) -> u: Set[X] satisfy {
+        if x ∈ v {
+            u.is_open and x ∈ u and u ⊆ v
+        } else {
+            u = empty[X]
+        }
+    }
+    forall(x: X) { 
+        open_cover(x) ⊆ v 
+    }
+    union_index(open_cover) ⊆ v
+    forall(x: X) {
+        if x ∈ v {
+            x ∈ open_cover(x)
+            x ∈ union_index(open_cover)
+        }
+    }
+    v ⊆ union_index(open_cover)
+    union_index(open_cover) = v
+        union_index(open_cover).is_open
+        v.is_open
 }
 
 theorem continuous_imp_inv_image_preserve_open[X: Topology, Y: Topology](f: X -> Y) {
@@ -556,28 +832,15 @@ theorem continuous_imp_inv_image_preserve_open[X: Topology, Y: Topology](f: X ->
 } by {
     forall(v: Set[Y]) {
         if v.is_open {
-            let open_cover(x: X) -> u: Set[X] satisfy {
-                if f(x) ∈ v {
-                    u.is_open and x ∈ u and u.image(f) ⊆ v
-                } else {
-                    u = empty[X]
-                }
-            }
-            forall(x: X) { 
-                open_cover(x).image(f) ⊆ v
-                open_cover(x) ⊆ v.inv_image(f) 
-            }
-            union_index(open_cover) ⊆ v.inv_image(f)
             forall(x: X) {
                 if x ∈ v.inv_image(f) {
                     f(x) ∈ v
-                    x ∈ open_cover(x)
-                    x ∈ union_index(open_cover)
+                    let u: Set[X] satisfy {
+                        u.is_open and x ∈ u and u.image(f) ⊆ v
+                    }
+                    u.is_open and x ∈ u and u ⊆ v.inv_image(f)
                 }
             }
-            v.inv_image(f) ⊆ union_index(open_cover)
-            union_index(open_cover) = v.inv_image(f)
-            union_index(open_cover).is_open
             v.inv_image(f).is_open
         }
     } 
@@ -587,7 +850,14 @@ theorem inv_image_preserve_open_imp_continuous[X: Topology, Y: Topology](f: X ->
     forall(v: Set[Y]) {
         v.is_open implies v.inv_image(f).is_open
     } implies is_continuous(f) 
-} 
+} by {
+    forall(x: X, v: Set[Y]) {
+        if v.is_open and f(x) ∈ v {
+            v.inv_image(f).is_open
+            x ∈ v.inv_image(f)
+        }
+    }
+}
 
 theorem continuous_imp_inv_image_preserve_closed[X: Topology, Y: Topology](f: X -> Y) {
     is_continuous(f) implies forall(b: Set[Y]) {
