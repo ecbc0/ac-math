@@ -195,6 +195,11 @@ typeclass X: Topology extends Point_Net_System {
             b ∈ x.net and b ⊆ a.interior
         }
     }
+
+    // This implies the union of all sets in net system is X. In topology of open form, this correspond to the assumption that X is open set. A point with x.net = empty is the limit point of any set
+    not_empty_net(x: X) {
+        is_nonempty(X.net(x).sets)
+    }
 }
 
 theorem net_limit_split_of_exterior_boundary[X: Topology](a: Set[X], x: X) {
@@ -416,6 +421,32 @@ theorem open_contains_set_in_net[X: Topology](x: X , a: Set[X]) {
 theorem empty_is_open[X: Topology](a: Set[X]) {
     a.is_empty implies a.is_open
 }
+
+theorem universe_is_closed[X: Topology](a: Set[X]) {
+    a.is_universal implies a.is_closed
+} 
+
+theorem universe_is_open[X: Topology](a: Set[X]) {
+    a.is_universal implies a.is_open
+} by {
+    forall(x: X) {
+        if x ∈ a {
+            let b: Set[X] satisfy {
+                b ∈ x.net
+            }
+            b ⊆ Set[X].universal_set
+            x ∈ a and b ⊆ a
+            x ∈ a.interior
+        }
+    }
+    a ⊆ a.interior
+    a ⊇ a.interior
+    a.interior = a
+}
+
+theorem empty_is_closed[X: Topology](a: Set[X]) {
+    a.is_empty implies a.is_closed
+} 
 
 define are_open[X: Topology](n: Set[Set[X]]) -> Bool {
     forall(s: Set[X]) {

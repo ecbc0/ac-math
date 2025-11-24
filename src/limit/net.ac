@@ -104,6 +104,17 @@ theorem equivalent_of_contains[K](n: Net[K], s: Set[K]) {
     s ∈ n iff s ∈ n.sets
 } 
 
+theorem net_new_helper[K](n: Net[K], n_sets: Set[Set[K]], s: Set[K]) {
+    is_net(n_sets) and n = Net[K].new(n_sets) implies (
+        s ∈ n iff s ∈ n_sets
+    )
+} by {
+    Net[K].new(n_sets).sets = n_sets
+    n.sets = n_sets
+    s ∈ n implies s ∈ n_sets
+    s ∈ n_sets implies s ∈ n
+}
+
 theorem net_contains_imp_nonempty[K](n: Net[K], s: Set[K]) {
     s ∈ n implies is_nonempty(s)
 } 
@@ -122,6 +133,15 @@ theorem net_contains_imp_subset_two_intersection[K](n: Net[K], a1: Set[K], a2: S
     }
     b ∈ n
     b ∈ n and b ⊆ a1 ∩ a2
+}
+
+theorem two_intersection_nonempty_in_net[K](n: Net[K], a1: Set[K], a2: Set[K]) {
+    a1 ∈ n and a2 ∈ n implies is_nonempty(a1 ∩ a2)
+} by {
+    let (b: Set[K]) satisfy {
+        b ∈ n and b ⊆ a1 ∩ a2
+    }    
+    is_nonempty(b)
 }
 
 typeclass N: Directed extends Partial_Order {
@@ -181,6 +201,59 @@ attributes Net[K] {
 
     define same_limit(self, other: Net[K]) -> Bool {
         self.finer(other) and other.finer(self)
+    }
+}
+
+theorem finer_helper[K](n1: Net[K], n2: Net[K]) {
+    forall(b: Set[K]) {
+        b ∈ n2 implies exists(a: Set[K]) {
+            a ∈ n1 and a ⊆ b
+        }
+    } implies (n1).finer(n2)
+}
+
+theorem finer_imp_intersection_subset[K](n1: Net[K], n2: Net[K]) {
+    (n1).finer(n2) implies intersection(n1.sets) ⊆ intersection(n2.sets)
+} by {
+    forall(x: K) {
+        if x ∈ intersection(n1.sets) {
+            forall(s2: Set[K]) {
+                if s2 ∈ n2.sets {
+                    s2 ∈ n2
+                    let s1: Set[K] satisfy {
+                        s1 ∈ n1 and s1 ⊆ s2
+                    }
+                    s1 ∈ n1.sets
+                    x ∈ s1
+                    x ∈ s2
+                }
+            }
+            x ∈ intersection(n2.sets)
+        }
+    }
+    intersection(n1.sets) ⊆ intersection(n2.sets)
+}
+
+theorem same_limit_imp_same_intersection[K](n1: Net[K], n2: Net[K]) {
+    (n1).same_limit(n2) implies intersection(n1.sets) = intersection(n2.sets)
+} by {
+    intersection(n1.sets) ⊆ intersection(n2.sets)
+    intersection(n1.sets) ⊇ intersection(n2.sets)
+}
+
+theorem finer_trans[K](n1: Net[K], n2: Net[K], n3: Net[K]) {
+    (n1).finer(n2) and (n2).finer(n3) implies (n1).finer(n3)
+} by {
+    forall(a3: Set[K]) {
+        if a3 ∈ n3 {
+            let a2: Set[K] satisfy {
+                a2 ∈ n2 and a2 ⊆ a3
+            }
+            let a1: Set[K] satisfy {
+                a1 ∈ n1 and a1 ⊆ a2
+            }
+            a1 ∈ n1 and a1 ⊆ a3
+        }
     }
 }
 
@@ -249,6 +322,15 @@ define image_of_net[K, L](n: Net[K], f: K -> L) -> Net[L] {
 
 theorem image_of_net_expand[K, L](n: Net[K], f: K -> L) {
     image_of_net(n, f).sets = image_of_sets(n.sets, f)
+}
+
+theorem image_of_net_contains_helper[K, L](n: Net[K], f: K -> L, s: Set[K]) {
+    s ∈ n implies s.image(f) ∈ image_of_net(n, f)
+} by {
+    s ∈ n.sets
+    s.image(f) ∈ image_of_sets(n.sets, f)
+    s.image(f) ∈ image_of_net(n, f).sets
+    s.image(f) ∈ image_of_net(n, f)
 }
 
 theorem is_limit_imp_image_of_net_finer[K, L](source_net: Net[K], target_net: Net[L], f: K -> L) {
@@ -635,21 +717,21 @@ define set_intersect_sets[K](n: Set[Set[K]], s: Set[K]) -> Bool {
     }
 }
 
-define elem_in_subnet[K](n: Set[Set[K]], s: Set[K], sub: Set[K]) -> Bool {
+define elem_in_subnet_sets[K](n: Set[Set[K]], s: Set[K], sub: Set[K]) -> Bool {
     set_intersect_sets(n, s) and exists(t: Set[K]) {
         t ∈ n and sub = s ∩ t
     }
 }
 
-define subnet[K](n: Set[Set[K]], s: Set[K]) -> Set[Set[K]] {
-    Set[Set[K]].new(elem_in_subnet(n, s))
+define subnet_sets[K](n: Set[Set[K]], s: Set[K]) -> Set[Set[K]] {
+    Set[Set[K]].new(elem_in_subnet_sets(n, s))
 }
 
-theorem subnet_is_net[K](n: Set[Set[K]], s: Set[K]) {
-    is_net(n) and set_intersect_sets(n, s) implies is_net(subnet(n, s))
+theorem subnet_sets_is_net[K](n: Set[Set[K]], s: Set[K]) {
+    is_net(n) and set_intersect_sets(n, s) implies is_net(subnet_sets(n, s))
 } by {
     forall(sub: Set[K]) {
-        if sub ∈ subnet(n, s) {
+        if sub ∈ subnet_sets(n, s) {
             set_intersect_sets(n, s)
             let (t: Set[K]) satisfy {
                 t ∈ n and sub = s ∩ t
@@ -658,14 +740,15 @@ theorem subnet_is_net[K](n: Set[Set[K]], s: Set[K]) {
             is_nonempty(sub)
         }
     }
-    no_empty(subnet(n, s))
+    no_empty(subnet_sets(n, s))
 
     forall(a1: Set[K], a2: Set[K]) {
-        if a1 ∈ subnet(n, s) and a2 ∈ subnet(n, s) {
+        if a1 ∈ subnet_sets(n, s) and a2 ∈ subnet_sets(n, s) {
+            elem_in_subnet_sets(n, s, a1)
             let (t1: Set[K]) satisfy {
                 t1 ∈ n and a1 = s ∩ t1
             }
-            elem_in_subnet(n, s, a2)
+            elem_in_subnet_sets(n, s, a2)
             let (t2: Set[K]) satisfy {
                 t2 ∈ n and a2 = s ∩ t2
             }
@@ -677,12 +760,41 @@ theorem subnet_is_net[K](n: Set[Set[K]], s: Set[K]) {
             (s ∩ s) ∩ t1 ∩ t2 = s ∩ (t1 ∩ t2)
             a1 ∩ a2 = s ∩ (t1 ∩ t2)
             let a = s ∩ t
-            a ∈ subnet(n, s)
+            a ∈ subnet_sets(n, s)
             s ∩ t ⊆ s ∩ (t1 ∩ t2)
             a ⊆ a1 ∩ a2
-            a ∈ subnet(n, s) and a ⊆ a1 ∩ a2
+            a ∈ subnet_sets(n, s) and a ⊆ a1 ∩ a2
         }
     }
-    subset_two_intersection_helper(subnet(n, s))
-    subset_two_intersection(subnet(n, s))
+    subset_two_intersection_helper(subnet_sets(n, s))
+    subset_two_intersection(subnet_sets(n, s))
+}
+
+define subnet[K](n: Net[K], s: Set[K]) -> Net[K] {
+    if set_intersect_sets(n.sets, s) {
+        Net[K].new(subnet_sets(n.sets, s))
+    } else {
+        n
+    }
+}
+
+theorem two_intersection_in_subnet[K](n: Net[K], s: Set[K], t: Set[K]) {
+    set_intersect_sets(n.sets, s) and t ∈ n implies s ∩ t ∈ subnet(n, s)
+} by {
+    elem_in_subnet_sets(n.sets, s, s ∩ t)
+    s ∩ t ∈ subnet_sets(n.sets, s)
+    s ∩ t ∈ subnet(n, s).sets
+}
+
+theorem subnet_sets_helper[K](n: Net[K], s: Set[K], sub: Set[K]) {
+    set_intersect_sets(n.sets, s) and sub ∈ subnet(n, s) implies exists(t: Set[K]) {
+        t ∈ n and sub = s ∩ t
+    }
+} by {
+    sub ∈ subnet_sets(n.sets, s)
+    elem_in_subnet_sets(n.sets, s, sub)
+    let t: Set[K] satisfy {
+        t ∈ n.sets and sub = s ∩ t
+    }
+    t ∈ n and sub = s ∩ t
 }

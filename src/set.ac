@@ -57,6 +57,11 @@ attributes Set[K] {
             not x ∈ self
         }
     }
+    define is_universal(self) -> Bool {
+        forall(x: K) {
+            x ∈ self
+        }
+    }
     /// local completion of set in "type" K  
     /// a.c = { x: K | x ∉ a }
     define c(self) -> Set[K] {
@@ -89,6 +94,16 @@ theorem empty_set_is_empty[K](a: Set[K]) {
 
     if (a.is_empty) {
         a = empty[K]
+    } // "=" or "iff" is not good enough in bool now
+}
+
+theorem universal_set_is_universal[K](a: Set[K]) {
+    (a = universe[K]) iff (a.is_universal)
+} by {
+    (a.is_universal) implies (a.contains = constant_true[K])
+
+    if (a.is_universal) {
+        a = universe[K]
     } // "=" or "iff" is not good enough in bool now
 }
 
@@ -971,6 +986,14 @@ theorem intersection_comm_one[K](c: Set[Set[K]], s: Set[K]) {
     intersection_with_one(c, s) ⊇ s ∩ intersection(c)    
 }
 
+theorem intersection_with_one_that_in_sets[K](c: Set[Set[K]], s: Set[K]) {
+    is_nonempty(c) and s ∈ c implies intersection_with_one(c, s) = intersection(c)
+} by {
+    intersection_with_one(c, s) = s ∩ intersection(c)
+    intersection(c) ⊆ s
+    s ∩ intersection(c) = intersection(c)
+}
+
 // todo: (product/sum)_index_of_two
 structure Map[K, L] {
     in_space: Set[K]
@@ -1143,6 +1166,12 @@ attributes Set[K] {
     }
 }
 
+theorem image_helper[K, L](a: Set[K], f: K -> L, y: L) {
+    y ∈ a.image(f) implies exists(x: K) {
+        x ∈ a and y = f(x)
+    }
+}
+
 theorem point_image_is_image[K, L](a: Set[K], f: K -> L) {
     forall(x: K) {
         x ∈ a implies f(x) ∈ a.image(f)
@@ -1287,6 +1316,10 @@ theorem inv_image_preserve_subset[K, L](f: K -> L, a: Set[L], b: Set[L]) {
 
 theorem image_preserve_nomempty[K, L](f: K -> L, a: Set[K]) {
     is_nonempty(a) implies is_nonempty(a.image(f))
+} 
+
+theorem image_preserve_empty[K, L](f: K -> L, a: Set[K]) {
+    (a).is_empty implies (a.image(f)).is_empty
 } 
 
 theorem intersection_image_subset_image_intersection[K, L](f: K -> L, a: Set[K], b: Set[K]) {
