@@ -1,5 +1,5 @@
 from finite_set import Set, List, list_to_set, intersection_of_list_recursion, intersection_of_list
-from set import intersection, elem_in_intersection_general, is_nonempty
+from set import intersection, elem_in_intersection_general
 from order import Partial_Order, Linear_Order, is_acyclic, is_transitive, is_reflexive, is_antisymmetric, is_nonreflexive, lte_from, lt_from, lte_to_lt_partial_order, Partial_Order_Lte
 from nat import ℕ
 from list.list_base import flatten, max_list
@@ -15,27 +15,54 @@ define no_empty[K](sets: Set[Set[K]]) -> Bool {
     }    
 }
 
-define subset_two_intersection[K](sets: Set[Set[K]]) -> Bool {
+define directed[K](sets: Set[Set[K]]) -> Bool {
     forall(a1: Set[K], a2: Set[K]) {
         a1 ∈ sets and a2 ∈ sets implies exists(b: Set[K]) {
-            b ∈ sets and b ⊆ a1 ∩ a2
+            b ∈ sets and b ⊆ a1 and b ⊆ a2
         }
     }    
 }
 
-theorem subset_two_intersection_helper[K](sets: Set[Set[K]]) {
+theorem directed_helper[K](sets: Set[Set[K]]) {
+    forall(a1: Set[K], a2: Set[K]) {
+        a1 ∈ sets and a2 ∈ sets implies exists(b: Set[K]) {
+            b ∈ sets and b ⊆ a1 and b ⊆ a2
+        }
+    } implies directed(sets) 
+}
+
+theorem directed_helper_ver_intersection[K](sets: Set[Set[K]]) {
     forall(a1: Set[K], a2: Set[K]) {
         a1 ∈ sets and a2 ∈ sets implies exists(b: Set[K]) {
             b ∈ sets and b ⊆ a1 ∩ a2
         }
-    } implies subset_two_intersection(sets) 
+    } implies directed(sets) 
+} by {
+    forall(a1: Set[K], a2: Set[K]) {
+        if a1 ∈ sets and a2 ∈ sets {
+            let (b: Set[K]) satisfy {
+                b ∈ sets and b ⊆ a1 ∩ a2
+            }
+            b ∈ sets and b ⊆ a1 and b ⊆ a2
+        }
+    }
 }
 
-theorem subset_two_intersection_helper_imp_by_ver_logic[T](sets: Set[Set[T]]) {
-    subset_two_intersection(sets) implies (
+theorem directed_helper_imp_by[T](sets: Set[Set[T]]) {
+    directed(sets) implies (
         forall(a1: Set[T], a2: Set[T]) {
             a1 ∈ sets and a2 ∈ sets implies exists(b: Set[T]) {
                 b ∈ sets and b ⊆ a1 and b ⊆ a2
+            }
+        } 
+    )
+} 
+
+theorem directed_helper_imp_by_ver_intersection[T](sets: Set[Set[T]]) {
+    directed(sets) implies (
+        forall(a1: Set[T], a2: Set[T]) {
+            a1 ∈ sets and a2 ∈ sets implies exists(b: Set[T]) {
+                b ∈ sets and b ⊆ a1 ∩ a2
             }
         } 
     )
@@ -43,26 +70,16 @@ theorem subset_two_intersection_helper_imp_by_ver_logic[T](sets: Set[Set[T]]) {
     forall(a1: Set[T], a2: Set[T]) {
         if a1 ∈ sets and a2 ∈ sets { 
             let (b: Set[T]) satisfy {
-                b ∈ sets and b ⊆ a1 ∩ a2
+                b ∈ sets and b ⊆ a1 and b ⊆ a2
             }
-            b ∈ sets and b ⊆ a1 and b ⊆ a2
+            b ∈ sets and b ⊆ a1 ∩ a2
         }
     } 
 }
 
-theorem subset_two_intersection_helper_imp_by[T](sets: Set[Set[T]]) {
-    subset_two_intersection(sets) implies (
-        forall(a1: Set[T], a2: Set[T]) {
-            a1 ∈ sets and a2 ∈ sets implies exists(b: Set[T]) {
-                b ∈ sets and b ⊆ a1 ∩ a2
-            }
-        } 
-    )
-} 
-
 /// Topology doesn't seem to provide a sufficient motivation for using the concept of a net, but the definitions of measure and integral should.
 define is_net[K](sets: Set[Set[K]]) -> Bool {
-    no_empty(sets) and subset_two_intersection(sets)
+    no_empty(sets) and directed(sets)
 }
 
 structure Net[K] {
@@ -91,7 +108,7 @@ structure Net[K] {
             b ∈ n and b ⊆ a1 ∩ a2
         }
     }
-    subset_two_intersection(n)
+    directed(n)
 }
 
 attributes Net[K] {
@@ -116,10 +133,10 @@ theorem net_new_helper[K](n: Net[K], n_sets: Set[Set[K]], s: Set[K]) {
 }
 
 theorem net_contains_imp_nonempty[K](n: Net[K], s: Set[K]) {
-    s ∈ n implies is_nonempty(s)
+    s ∈ n implies (s).is_nonempty
 } 
 
-theorem net_contains_imp_subset_two_intersection[K](n: Net[K], a1: Set[K], a2: Set[K]) {
+theorem net_contains_imp_directed[K](n: Net[K], a1: Set[K], a2: Set[K]) {
     a1 ∈ n and a2 ∈ n implies exists(b: Set[K]) {
         b ∈ n and b ⊆ a1 ∩ a2
     }
@@ -127,7 +144,7 @@ theorem net_contains_imp_subset_two_intersection[K](n: Net[K], a1: Set[K], a2: S
     is_net(n.sets)
     a1 ∈ n.sets
     a2 ∈ n.sets
-    subset_two_intersection_helper_imp_by(n.sets)
+    directed_helper_imp_by(n.sets)
     let (b: Set[K]) satisfy {
         b ∈ n.sets and b ⊆ a1 ∩ a2
     }
@@ -136,12 +153,12 @@ theorem net_contains_imp_subset_two_intersection[K](n: Net[K], a1: Set[K], a2: S
 }
 
 theorem two_intersection_nonempty_in_net[K](n: Net[K], a1: Set[K], a2: Set[K]) {
-    a1 ∈ n and a2 ∈ n implies is_nonempty(a1 ∩ a2)
+    a1 ∈ n and a2 ∈ n implies (a1 ∩ a2).is_nonempty
 } by {
     let (b: Set[K]) satisfy {
         b ∈ n and b ⊆ a1 ∩ a2
     }    
-    is_nonempty(b)
+    (b).is_nonempty
 }
 
 typeclass N: Directed extends Partial_Order {
@@ -153,7 +170,7 @@ typeclass N: Directed extends Partial_Order {
     }
 }
 
-// // to define finer we need two differnt Net instance extends a same Partial_Order instance ... and dependent type? 
+// // to define finer we need two differnt Directed instance extends a same Partial_Order instance ... and dependent type? 
 // attributes N: Directed {
 //     define finer[M: Directed] -> Bool {
 //         forall(b: M) {
@@ -169,7 +186,7 @@ typeclass N: Directed extends Partial_Order {
 // }
 
 // Alternative, you can use "image of net" and then use finer
-define is_net_limit[K: Directed, L: Directed](f: K -> L) -> Bool {
+define is_directed_limit[K: Directed, L: Directed](f: K -> L) -> Bool {
     forall(b: L) {
         exists(a: K) {
             f(a) <= b
@@ -284,22 +301,22 @@ theorem image_of_sets_preserve_no_empty[K, L](n: Set[Set[K]], f: K -> L) {
             let (a: Set[K]) satisfy { 
                 a ∈ n and b = a.image(f)
             }
-            is_nonempty(a)
-            is_nonempty(a.image(f))
-            is_nonempty(b)
+            (a).is_nonempty
+            (a.image(f)).is_nonempty
+            (b).is_nonempty
         }
     }
 }
 
-theorem image_of_sets_preserve_subset_two_intersection[K, L](n: Set[Set[K]], f: K -> L) {
-    subset_two_intersection(n) implies subset_two_intersection(image_of_sets(n, f))
+theorem image_of_sets_preserve_directed[K, L](n: Set[Set[K]], f: K -> L) {
+    directed(n) implies directed(image_of_sets(n, f))
 } by {
     forall(b1: Set[L], b2: Set[L]) {
         if b1 ∈ image_of_sets(n, f) and b2 ∈ image_of_sets(n, f) {
             let a1: Set[K] satisfy { a1 ∈ n and b1 = a1.image(f) }
             elem_in_image_of_sets(n, f, b2)
             let a2: Set[K] satisfy { a2 ∈ n and b2 = a2.image(f) }
-            subset_two_intersection_helper_imp_by(n)
+            directed_helper_imp_by(n)
             let a: Set[K] satisfy { a ∈ n and a ⊆ a1 ∩ a2 }
             a.image(f) ⊆ (a1 ∩ a2).image(f)
             (a1 ∩ a2).image(f) ⊆ a1.image(f) ∩ a2.image(f)
@@ -309,7 +326,7 @@ theorem image_of_sets_preserve_subset_two_intersection[K, L](n: Set[Set[K]], f: 
             b ∈ image_of_sets(n, f) and b ⊆ b1 ∩ b2
         }
     }
-    subset_two_intersection_helper(image_of_sets(n, f))
+    directed_helper(image_of_sets(n, f))
 }
 
 theorem image_of_sets_preserve_nets[K, L](n: Set[Set[K]], f: K -> L) {
@@ -471,8 +488,8 @@ theorem seq_to_net_is_net[K](f: ℕ -> K) {
             b ∈ seq_to_net(f) and b ⊆ a1 ∩ a2
         }
     }
-    subset_two_intersection_helper(seq_to_net(f))
-    subset_two_intersection(seq_to_net(f))
+    directed_helper(seq_to_net(f))
+    directed(seq_to_net(f))
 }
 
 define is_set_of_finite_intersection[K](n: Set[Set[K]], s: Set[K]) -> Bool {
@@ -534,8 +551,8 @@ theorem sets_of_finite_intersection_preserve_two_intersection[K](n: Set[Set[K]],
     s1 ∩ s2 ∈ sets_of_finite_intersection(n)
 }
 
-theorem sets_of_finite_intersection_preserve_subset_two_intersection[K](n: Set[Set[K]], s1: Set[K], s2: Set[K]) {
-    subset_two_intersection(n) implies subset_two_intersection(sets_of_finite_intersection(n))
+theorem sets_of_finite_intersection_preserve_directed[K](n: Set[Set[K]], s1: Set[K], s2: Set[K]) {
+    directed(n) implies directed(sets_of_finite_intersection(n))
 }
 
 // helper
@@ -547,10 +564,10 @@ define subset_intersection_of_list[K](n: Set[Set[K]], l: List[Set[K]]) -> Bool {
     exists(t: Set[K]) { t ∈ n and t ⊆ intersection_of_list_recursion(l) }
 }
 
-/// Also, this prove, for net, subset_two_intersection ==> subset_finite_intersection. So indeed using two intersection or finite intersection to define net is equivalent
+/// Also, this prove, for net, directed ==> subset_finite_intersection. So indeed using two intersection or finite intersection to define net is equivalent
 theorem sets_of_finite_intersection_preserve_net_no_empty_lemma[K](n: Set[Set[K]], list: List[Set[K]]) {
     is_net(n)
-    and is_nonempty(n)
+    and (n).is_nonempty
     and list_subset_sets(n, list)
     implies 
     subset_intersection_of_list(n, list) 
@@ -602,7 +619,7 @@ theorem sets_of_finite_intersection_preserve_net_no_empty_lemma[K](n: Set[Set[K]
 }
 
 theorem sets_of_finite_intersection_preserve_net_no_empty[K](n: Set[Set[K]], list: List[Set[K]]) {
-    is_net(n) and is_nonempty(n) implies no_empty(sets_of_finite_intersection(n))
+    is_net(n) and (n).is_nonempty implies no_empty(sets_of_finite_intersection(n))
 } by {
     forall(s: Set[K]) {
         if s ∈ sets_of_finite_intersection(n) {
@@ -629,11 +646,11 @@ theorem sets_of_finite_intersection_preserve_net_no_empty[K](n: Set[Set[K]], lis
 }
 
 theorem sets_of_finite_intersection_preserve_net[K](n: Set[Set[K]]) {
-    is_net(n) and is_nonempty (n) implies is_net(sets_of_finite_intersection(n))
+    is_net(n) and (n).is_nonempty implies is_net(sets_of_finite_intersection(n))
 }
 
 theorem net_subset_finite_intersection[K](n: Set[Set[K]], c: Set[Set[K]]) {
-    is_nonempty(n) and is_net(n) and c ⊆ n and c.is_finite implies exists(t: Set[K]) { t ∈ n and t ⊆ intersection(c) }
+    (n).is_nonempty and is_net(n) and c ⊆ n and c.is_finite implies exists(t: Set[K]) { t ∈ n and t ⊆ intersection(c) }
 } by {
     let l: List[Set[K]] satisfy {
         c.have_exact_list(l)
@@ -708,12 +725,12 @@ theorem net_from_sets_of_finite_intersection[K](n: Set[Set[K]]) {
             a ∈ sets_of_finite_intersection(n)
         }
     }
-    subset_two_intersection(sets_of_finite_intersection(n))
+    directed(sets_of_finite_intersection(n))
 }
 
 define set_intersect_sets[K](n: Set[Set[K]], s: Set[K]) -> Bool {
     forall(t: Set[K]) {
-        t ∈ n implies is_nonempty(s ∩ t)
+        t ∈ n implies (s ∩ t).is_nonempty
     }
 }
 
@@ -736,8 +753,8 @@ theorem subnet_sets_is_net[K](n: Set[Set[K]], s: Set[K]) {
             let (t: Set[K]) satisfy {
                 t ∈ n and sub = s ∩ t
             }
-            is_nonempty(s ∩ t)
-            is_nonempty(sub)
+            (s ∩ t).is_nonempty
+            (sub).is_nonempty
         }
     }
     no_empty(subnet_sets(n, s))
@@ -766,8 +783,8 @@ theorem subnet_sets_is_net[K](n: Set[Set[K]], s: Set[K]) {
             a ∈ subnet_sets(n, s) and a ⊆ a1 ∩ a2
         }
     }
-    subset_two_intersection_helper(subnet_sets(n, s))
-    subset_two_intersection(subnet_sets(n, s))
+    directed_helper(subnet_sets(n, s))
+    directed(subnet_sets(n, s))
 }
 
 define subnet[K](n: Net[K], s: Set[K]) -> Net[K] {

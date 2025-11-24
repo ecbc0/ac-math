@@ -1,5 +1,5 @@
-from limit.net import Net, Set, is_limit, is_net, subset_two_intersection, no_empty, subset_two_intersection_helper
-from set import empty, universe, union, intersection, compl_of_sets, union_index, is_nonempty
+from limit.net import Net, Set, is_limit, is_net, directed, no_empty, directed_helper
+from set import empty, universe, union, intersection, compl_of_sets, union_index
 from finite_set import list_to_set, List
 
 typeclass X: Point_Net_System {
@@ -198,7 +198,7 @@ typeclass X: Topology extends Point_Net_System {
 
     // This implies the union of all sets in net system is X. In topology of open form, this correspond to the assumption that X is open set. A point with x.net = empty is the limit point of any set
     not_empty_net(x: X) {
-        is_nonempty(X.net(x).sets)
+        (X.net(x).sets).is_nonempty
     }
 }
 
@@ -247,7 +247,7 @@ theorem subset_closure[X: Point_Net_System](a: Set[X]) {
 }
 
 theorem closure_preserve_nonempty[X: Point_Net_System](a: Set[X], b: Set[X]) {
-    is_nonempty(a) implies is_nonempty(a.closure)
+    (a).is_nonempty implies (a.closure).is_nonempty
 } by {
     a ⊆ a.closure
 }
@@ -545,7 +545,7 @@ theorem two_intersection_preserve_open[X: Topology](a: Set[X], b: Set[X]) {
                 sb ∈ x.net and sb ⊆ b
             }
             is_net(x.net.sets)
-            subset_two_intersection(x.net.sets)
+            directed(x.net.sets)
             let s: Set[X] satisfy {
                 s ∈ x.net and s ⊆ sa ∩ sb
             }
@@ -676,7 +676,7 @@ theorem continuous_iff_limit_at_every_point_in_open_net[X: Topology, Y: Topology
 
 define is_interior_nomempty_sets[X: Topology](n: Set[Set[X]]) -> Bool {
     forall(x: X, s: Set[X]) {
-        s ∈ n implies is_nonempty(s.interior)
+        s ∈ n implies (s.interior).is_nonempty
     }
 }
 
@@ -704,7 +704,7 @@ theorem interior_preserve_net[X: Topology](n: Set[Set[X]]) {
             let s1: Set[X] satisfy {
                 s1 ∈ n and s = s1.interior
             }
-            is_nonempty(s)
+            (s).is_nonempty
         }
     }
     no_empty(to_interior_sets(n))
@@ -723,11 +723,11 @@ theorem interior_preserve_net[X: Topology](n: Set[Set[X]]) {
             s.interior ⊆ s1 ∩ s2 
             s.interior ⊆ (s1 ∩ s2).interior
             s.interior ⊆ s1.interior ∩ s2.interior
-            s.interior ∈ to_interior_sets(n) and s.interior ⊆ a1 ∩ a2
+            s.interior ∈ to_interior_sets(n) and s.interior ⊆ a1 and s.interior ⊆ a2
         }
     }
-    subset_two_intersection_helper(to_interior_sets(n))
-    subset_two_intersection(to_interior_sets(n))
+    directed_helper(to_interior_sets(n))
+    directed(to_interior_sets(n))
 }
 
 define to_interior_net[X: Topology](n: Net[X]) -> Net[X] {
@@ -790,7 +790,7 @@ theorem is_interior_point_net_have_interior_nomempty_sets[X: Topology] {
                 s ∈ x.net
                 s.interior ∈ x.net
                 x ∈ s.interior
-                is_nonempty(s.interior)
+                (s.interior).is_nonempty
             }
         }
         is_interior_nomempty_sets(x.net.sets)

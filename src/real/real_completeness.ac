@@ -2,7 +2,7 @@ from nat import ℕ
 from rat import ℚ
 from real.real_base import ℝ, is_cut, is_lower_interval, is_greatest, has_greatest, is_dedekind_cut
 numerals ℝ
-from set import Set, empty, intersection, constant_false, is_nonempty
+from set import Set, empty, intersection, constant_false
 
 attributes ℝ {
     /// True if this real number is an upper bound for the set s.
@@ -45,7 +45,7 @@ theorem uniqueness_of_greatest_lower_bound(u1: ℝ, u2: ℝ, s: Set[ℝ]) {
 }
 
 theorem lower_lte_upper_bound(s: Set[ℝ], l: ℝ, u: ℝ) {
-    is_nonempty(s) and l.is_set_lower_bound(s) and u.is_set_upper_bound(s) implies l <= u
+    (s).is_nonempty and l.is_set_lower_bound(s) and u.is_set_upper_bound(s) implies l <= u
 } by {
     let x: ℝ satisfy { x ∈ s }
     l <= x
@@ -54,7 +54,7 @@ theorem lower_lte_upper_bound(s: Set[ℝ], l: ℝ, u: ℝ) {
 }
 
 theorem greatest_lower_lte_least_upper_bound(s: Set[ℝ], l: ℝ, u: ℝ) {
-    is_nonempty(s) and l.is_set_greatest_lower_bound(s) and u.is_set_least_upper_bound(s) implies l <= u
+    (s).is_nonempty and l.is_set_greatest_lower_bound(s) and u.is_set_least_upper_bound(s) implies l <= u
 }
 
 // The supremum condition on s is that it's nonempty, and has
@@ -68,7 +68,7 @@ define sup_cut(s: Set[ℝ], r: ℚ) -> Bool {
 }
 
 theorem sup_cut_is_cut(s: Set[ℝ], ub: ℝ) {
-    is_nonempty(s) and ub.is_set_upper_bound(s)
+    (s).is_nonempty and ub.is_set_upper_bound(s)
     implies
     is_cut(sup_cut(s))
 } by {
@@ -101,7 +101,7 @@ theorem sup_cut_is_cut(s: Set[ℝ], ub: ℝ) {
 }
 
 theorem sup_cut_is_lower_interval(s: Set[ℝ], ub: ℝ) {
-    is_nonempty(s) and ub.is_set_upper_bound(s)
+    (s).is_nonempty and ub.is_set_upper_bound(s)
     implies
     is_lower_interval(sup_cut(s))
 } by {
@@ -120,7 +120,7 @@ theorem sup_cut_is_lower_interval(s: Set[ℝ], ub: ℝ) {
 
 // r ∈ ℚ, r < sup(s) have no greatest
 theorem sup_cut_not_has_greatest(s: Set[ℝ], ub: ℝ) {
-    is_nonempty(s) and ub.is_set_upper_bound(s)
+    (s).is_nonempty and ub.is_set_upper_bound(s)
     implies
     not has_greatest(sup_cut(s))
 } by {
@@ -161,17 +161,19 @@ define have_upper_bound(s: Set[ℝ]) -> Bool {
 }
 
 theorem sup_cut_is_dedekind_cut(s: Set[ℝ], ub: ℝ) {
-    is_nonempty(s) and have_upper_bound(s)
+    (s).is_nonempty and have_upper_bound(s)
     implies
     is_dedekind_cut(sup_cut(s))
 }
 
 theorem sup_dedekind_cut_imp_no_empty_and_have_upper_bound(s: Set[ℝ]) {
-    is_dedekind_cut(sup_cut(s)) implies is_nonempty(s) and have_upper_bound(s)
-} 
+    is_dedekind_cut(sup_cut(s)) implies (s).is_nonempty and have_upper_bound(s)
+} by {
+    is_cut(sup_cut(s))
+}
 
 let sup = function(s: Set[ℝ]) {
-    if is_nonempty(s) and have_upper_bound(s) {
+    if (s).is_nonempty and have_upper_bound(s) {
         ℝ.new(sup_cut(s))
     } else {
         0
@@ -179,17 +181,18 @@ let sup = function(s: Set[ℝ]) {
 }
 
 define have_sup(s: Set[ℝ]) -> Bool {
-    is_nonempty(s) and have_upper_bound(s)
+    (s).is_nonempty and have_upper_bound(s)
 }
 
 theorem ub_imp_lub(s: Set[ℝ], x: ℝ) {
     have_sup(s)
     implies sup(s).is_set_least_upper_bound(s)
 } by {
-    is_nonempty(s)
+    (s).is_nonempty
     have_upper_bound(s)
     is_dedekind_cut(sup_cut(s))
     let y = sup(s)
+    y = ℝ.new(sup_cut(s))
 
     // Part 1: Show y is an upper bound of s
     forall(z: ℝ) {
@@ -233,7 +236,7 @@ theorem ub_imp_lub(s: Set[ℝ], x: ℝ) {
 }
 
 theorem upper_bound_lte_sup(s: Set[ℝ], u: ℝ) {
-    is_nonempty(s) and u.is_set_upper_bound(s) implies sup(s) <= u
+    (s).is_nonempty and u.is_set_upper_bound(s) implies sup(s) <= u
 }
 
 theorem lte_sup(s: Set[ℝ], y: ℝ, a: ℝ) {
@@ -374,7 +377,7 @@ theorem lub_imp_flip_glb(s: Set[ℝ], x: ℝ) {
 }
 
 theorem flip_preserve_nonempty(s: Set[ℝ]) {
-    is_nonempty(s) implies is_nonempty(flip(s))
+    (s).is_nonempty implies (flip(s)).is_nonempty
 } by {
     let x: ℝ satisfy { x ∈ s }
     -x ∈ flip(s)
@@ -387,7 +390,7 @@ define have_lower_bound(s: Set[ℝ]) -> Bool {
 }
 
 let inf = function(s: Set[ℝ]) {
-    if is_nonempty(s) and have_lower_bound(s) {
+    if (s).is_nonempty and have_lower_bound(s) {
         -ℝ.new(sup_cut(flip(s)))
     } else {
         0
@@ -395,22 +398,22 @@ let inf = function(s: Set[ℝ]) {
 }
 
 define have_inf(s: Set[ℝ]) -> Bool {
-    is_nonempty(s) and have_lower_bound(s)
+    (s).is_nonempty and have_lower_bound(s)
 }
 
 theorem lb_imp_glb(s: Set[ℝ]) {
     have_inf(s)
     implies inf(s).is_set_greatest_lower_bound(s)
 } by {
-    is_nonempty(s)
+    (s).is_nonempty
     have_lower_bound(s)
     let x: ℝ satisfy { x.is_set_lower_bound(s) }
-    is_nonempty(flip(s))
+    (flip(s)).is_nonempty
     (-x).is_set_upper_bound(flip(s))
     let y: ℝ satisfy {
         y.is_set_least_upper_bound(flip(s))
     }
-    is_nonempty(flip(s))
+    (flip(s)).is_nonempty
     have_upper_bound(flip(s))
     y = sup(flip(s))
     y = ℝ.new(sup_cut(flip(s)))
@@ -421,7 +424,7 @@ theorem lb_imp_glb(s: Set[ℝ]) {
 }
 
 theorem low_bound_gte_inf(s: Set[ℝ], u: ℝ) {
-    is_nonempty(s) and u.is_set_lower_bound(s) implies inf(s) >= u
+    (s).is_nonempty and u.is_set_lower_bound(s) implies inf(s) >= u
 }
 
 theorem gte_inf(s: Set[ℝ], y: ℝ, a: ℝ) {
@@ -574,7 +577,7 @@ theorem seq_lower_bound_to_lower_bound(f: ℕ -> ℝ) {
 }
 
 theorem seq_nonempty(f: ℕ -> ℝ) {
-    is_nonempty(seq_image(f))
+    (seq_image(f)).is_nonempty
 } by {
     f(ℕ.0) ∈ seq_image(f)
 }
@@ -582,7 +585,7 @@ theorem seq_nonempty(f: ℕ -> ℝ) {
 theorem bounded_increase_convergence_to(f: ℕ -> ℝ) {
     is_increase(f) and have_seq_upper_bound(f) implies converge_to(f, sup(seq_image(f)))
 } by {
-    is_nonempty(seq_image(f))
+    (seq_image(f)).is_nonempty
     have_upper_bound(seq_image(f))
     let a = sup(seq_image(f))
     a.is_set_least_upper_bound(seq_image(f))
@@ -617,7 +620,7 @@ theorem bounded_increase_convergence(f: ℕ -> ℝ) {
 theorem bounded_decrease_convergence_to(f: ℕ -> ℝ) {
     is_decrease(f) and have_seq_lower_bound(f) implies converge_to(f, inf(seq_image(f)))
 } by {
-    is_nonempty(seq_image(f))
+    (seq_image(f)).is_nonempty
     have_lower_bound(seq_image(f))
     let a = inf(seq_image(f))
     a.is_set_greatest_lower_bound(seq_image(f))

@@ -1,8 +1,8 @@
 from real import ℝ
 from real.real_completeness import inf, sup, have_lower_bound, have_upper_bound, directly_closely_gt_inf_directly, have_inf, have_sup
 numerals ℝ
-from set import Set, intersection, is_nonempty
-from limit.net import Net, no_empty, subset_two_intersection, is_net, subset_two_intersection_helper, subset_two_intersection_helper_imp_by_ver_logic, is_limit, image_of_net, net_contains_imp_subset_two_intersection, set_intersect_sets, subnet_sets, elem_in_subnet_sets, subnet, finer_helper
+from set import Set, intersection
+from limit.net import Net, no_empty, directed, is_net, directed_helper, directed_helper_imp_by_ver_intersection, is_limit, image_of_net, net_contains_imp_directed, set_intersect_sets, subnet_sets, elem_in_subnet_sets, subnet, finer_helper
 from top.top_base import Point_Net_System, Topology, converge_to, is_open_net, is_open_net_system, is_continuous, limit_at_every_point
 from util import id_map
 from top.compact import common_limit_pt, to_closure, to_closure_net
@@ -197,13 +197,12 @@ theorem ball_net_is_net[M: Distance_Space](x: M) {
             x.ball(r) ⊆ a1
             x.ball(r) ⊆ x.ball(r2)
             x.ball(r) ⊆ a2
-            x.ball(r) ⊆ a1 ∩ a2
             x.ball(r) ∈ x.ball_net
-            x.ball(r) ∈ x.ball_net and x.ball(r) ⊆ a1 ∩ a2
+            x.ball(r) ∈ x.ball_net and x.ball(r) ⊆ a1 and x.ball(r) ⊆ a2
         }
     }
-    subset_two_intersection_helper(x.ball_net)
-    subset_two_intersection(x.ball_net)
+    directed_helper(x.ball_net)
+    directed(x.ball_net)
 }
 
 theorem point_net[M: Distance_Space](x: M) {
@@ -298,22 +297,22 @@ theorem dist_set_gte_zero[M: Distance_Space](s: Set[M]) {
 }
 
 theorem nonempty_imp_dist_set_contains_zero[M: Distance_Space](s: Set[M]) {
-    is_nonempty(s) implies 0 ∈ dist_set(s)
+    (s).is_nonempty implies 0 ∈ dist_set(s)
 } by {
     let x: M satisfy { x ∈ s }
     0 = x.distance(x)
 }
 
 theorem dist_set_have_lower_bound[M: Distance_Space](s: Set[M]) {
-    is_nonempty(s) implies 0.is_set_lower_bound(dist_set(s))
+    (s).is_nonempty implies 0.is_set_lower_bound(dist_set(s))
 }
 
 theorem dist_set_have_inf[M: Distance_Space](s: Set[M]) {
-    is_nonempty(s) implies have_inf(dist_set(s))
+    (s).is_nonempty implies have_inf(dist_set(s))
 }
 
 theorem nonempty_imp_dist_set_nonempty[M: Distance_Space](s: Set[M]) {
-    is_nonempty(s) implies is_nonempty(dist_set(s))
+    (s).is_nonempty implies (dist_set(s)).is_nonempty
 } 
 
 theorem dist_gte_zero[M: Distance_Space](s: Set[M]) {
@@ -360,7 +359,7 @@ theorem subset_to_dist_lte[M: Distance_Space](s1: Set[M], s2: Set[M]) {
 }
 
 theorem dist_control_helper[M: Distance_Space](s: Set[M], r: ℝ) {
-    is_nonempty(s) and r > 0 and forall(x: M, y: M) {
+    (s).is_nonempty and r > 0 and forall(x: M, y: M) {
         x ∈ s and y ∈ s implies x.distance(y) < r
     } implies have_sup(dist_set(s)) and dist(s) <= r
 } by {
@@ -380,7 +379,7 @@ theorem dist_control_helper[M: Distance_Space](s: Set[M], r: ℝ) {
 }
 
 theorem have_sup_control[M: Distance_Space](s1: Set[M], s2: Set[M]) {
-    is_nonempty(s1) and s1 ⊆ s2 and have_sup(dist_set(s2)) implies have_sup(dist_set(s1))
+    (s1).is_nonempty and s1 ⊆ s2 and have_sup(dist_set(s2)) implies have_sup(dist_set(s1))
 }
 
 define elem_in_distance_from[M: Distance_Space](s: Set[M], x: M, r: ℝ) -> Bool {
@@ -406,7 +405,7 @@ theorem distance_from_have_lower_bound[M: Distance_Space](s: Set[M], x: M) {
 }
 
 theorem non_empty_imp_distance_from_non_empty[M: Distance_Space](s: Set[M], x: M) {
-    is_nonempty(s) implies is_nonempty(distance_from(s, x))
+    (s).is_nonempty implies (distance_from(s, x)).is_nonempty
 } by {
     let y: M satisfy {
         y ∈ s
@@ -415,7 +414,7 @@ theorem non_empty_imp_distance_from_non_empty[M: Distance_Space](s: Set[M], x: M
 }
 
 theorem non_empty_imp_have_inf[M: Distance_Space](s: Set[M], x: M) {
-    is_nonempty(s) implies have_inf(distance_from(s, x))
+    (s).is_nonempty implies have_inf(distance_from(s, x))
 }
 
 theorem distance_from_inf_gte_zero[M: Distance_Space](s: Set[M], x: M) {
@@ -439,7 +438,7 @@ theorem subset_to_distance_from_subset[M: Distance_Space](s1: Set[M], s2: Set[M]
 }
 
 theorem interior_have_non_zero_distance_from_inf[M: Distance_Net_System](a: Set[M], x: M) {
-    x ∈ a.interior and is_nonempty(a.c) implies inf(distance_from(a.c, x)) > 0
+    x ∈ a.interior and (a.c).is_nonempty implies inf(distance_from(a.c, x)) > 0
 } by {
     have_inf(distance_from(a.c, x))
     let s: Set[M] satisfy {
@@ -553,7 +552,7 @@ theorem ball_is_bounded[M: Distance_Space](x: M, r: ℝ) {
         }
     }
     r + r > 0
-    is_nonempty(x.ball(r))
+    (x.ball(r)).is_nonempty
     have_sup(dist_set(x.ball(r)))
 }
 
@@ -564,7 +563,7 @@ theorem is_bounded_control[M: Distance_Space](s1: Set[M], s2: Set[M]) {
         s1.is_empty
         is_bounded(s1)
     } else {
-        is_nonempty(s2)
+        (s2).is_nonempty
         is_bounded(s1)
     }
 }
@@ -723,14 +722,14 @@ theorem dist_vanish_net_if_finer[M: Distance_Top](n: Net[M], x: M, y: M) {
                 ay ∈ n and ay ⊆ y.ball(ε/2)
             }
             is_net(n.sets)
-            subset_two_intersection(n.sets)
-            subset_two_intersection_helper_imp_by_ver_logic(n.sets)
+            directed(n.sets)
+            directed_helper_imp_by_ver_intersection(n.sets)
             ax ∈ n and ay ∈ n
-            net_contains_imp_subset_two_intersection(n, ax, ay)
+            net_contains_imp_directed(n, ax, ay)
             let a: Set[M] satisfy {
                 a ∈ n and a ⊆ ax and a ⊆ ay
             }
-            is_nonempty(a)
+            (a).is_nonempty
             let z: M satisfy { z ∈ a }
             z ∈ x.ball(ε/2)
             z ∈ y.ball(ε/2)
@@ -774,7 +773,7 @@ theorem finer_imp_dist_vanish_net[M: Distance_Top](n: Net[M], x: M) {
                     y.distance(z) < r
                 }
             }
-            is_nonempty(s)
+            (s).is_nonempty
             dist_control_helper(s, r)
             have_sup(dist_set(s))
             dist(s) <= r
@@ -812,7 +811,7 @@ theorem dist_vanish_bounded_tail[M: Distance_Top](n: Net[M]) {
     }
     forall(t: Set[M]) {
         if t ∈ n {
-            is_nonempty(s ∩ t)
+            (s ∩ t).is_nonempty
         }
     }
     set_intersect_sets(n.sets, s)
@@ -836,8 +835,8 @@ theorem dist_vanish_bounded_tail[M: Distance_Top](n: Net[M]) {
             }
             s ∩ t ∈ sub_n
             is_bounded(s ∩ t)
-            is_nonempty(t)
-            is_nonempty(s ∩ t)
+            (t).is_nonempty
+            (s ∩ t).is_nonempty
             s ∩ t ⊆ t
             have_sup(dist_set(s ∩ t))
             have_sup(dist_set(t))
@@ -883,7 +882,7 @@ theorem closure_preserve_bounded[M: Distance_Top](s: Set[M]) {
         dist(s.closure) = 0
         is_bounded(s.closure) and dist(s.closure) = dist(s) 
     } else {
-        is_nonempty(s)
+        (s).is_nonempty
         have_sup(dist_set(s))
         forall(r: ℝ) {
             if r ∈ dist_set(s.closure) {
@@ -898,8 +897,8 @@ theorem closure_preserve_bounded[M: Distance_Top](s: Set[M]) {
                         let uy = y.ball(ε/2)
                         ux ∈ x.net
                         uy ∈ y.net
-                        is_nonempty(ux ∩ s)
-                        is_nonempty(uy ∩ s)
+                        (ux ∩ s).is_nonempty
+                        (uy ∩ s).is_nonempty
                         let x0: M satisfy { x0 ∈ ux ∩ s }
                         let y0: M satisfy { y0 ∈ uy ∩ s }
                         x0 ∈ x.ball(ε/2)
@@ -925,7 +924,7 @@ theorem closure_preserve_bounded[M: Distance_Top](s: Set[M]) {
             }
         }
         sup(dist_set(s)).is_set_upper_bound(dist_set(s.closure))
-        is_nonempty(s.closure)
+        (s.closure).is_nonempty
         have_sup(dist_set(s.closure))
         is_bounded(s.closure)
         sup(dist_set(s.closure)) <= sup(dist_set(s))
@@ -959,7 +958,7 @@ theorem to_closure_preserve_dist_vanish_net[M: Distance_Top](n: Net[M]) {
             let s: Set[M] satisfy {
                 s ∈ n and is_bounded(s) and dist(s) < ε
             }
-            is_nonempty(s)
+            (s).is_nonempty
             is_bounded(s.closure)
             dist(s) = dist(s.closure)
             s.closure ∈ to_closure(n.sets)
@@ -1074,7 +1073,7 @@ theorem uniform_continuous_preserve_dist_vanishing_net[X: Distance_Top, Y: Dista
                     y1.distance(y2) < ε0
                 }
             }
-            is_nonempty(s.image(f))
+            (s.image(f)).is_nonempty
             dist_control_helper(s.image(f), ε0)
             have_sup(dist_set(s.image(f)))
             dist(s.image(f)) <= ε0

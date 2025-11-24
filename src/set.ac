@@ -57,6 +57,11 @@ attributes Set[K] {
             not x ∈ self
         }
     }
+    define is_nonempty(self) -> Bool {
+        exists(x: K) {
+            x ∈ self
+        }
+    }
     define is_universal(self) -> Bool {
         forall(x: K) {
             x ∈ self
@@ -107,16 +112,10 @@ theorem universal_set_is_universal[K](a: Set[K]) {
     } // "=" or "iff" is not good enough in bool now
 }
 
-define is_nonempty[K](s: Set[K]) -> Bool {
-    exists(x: K) {
-        x ∈ s
-    }
-}
-
 theorem is_nonempty_iff_is_not_empty_set[K](s: Set[K]) {
-    is_nonempty(s) iff s != Set[K].empty_set
+    (s).is_nonempty iff s != Set[K].empty_set
 } by {
-    is_nonempty(s) implies s != Set[K].empty_set
+    (s).is_nonempty implies s != Set[K].empty_set
 }
 
 theorem singleton_set_is_singleton[K](a: Set[K]) {
@@ -419,6 +418,18 @@ theorem union_preserve_subset[K](a1: Set[K], a2: Set[K], b1: Set[K], b2: Set[K])
 
 theorem intersect_preserve_subset[K](a1: Set[K], a2: Set[K], b1: Set[K], b2: Set[K]) {
     a1 ⊆ b1 and a2 ⊆ b2 implies a1 ∩ a2 ⊆ b1 ∩ b2
+}
+
+theorem superset_interseciton_superset_to_and[K](sup_1: Set[K], sup_2: Set[K], a: Set[K]) {
+    a ⊆ sup_1 ∩ sup_2 iff a ⊆ sup_1 and a ⊆ sup_2
+} by {
+    a ⊆ sup_1 ∩ sup_2 implies a ⊆ sup_1 and a ⊆ sup_2
+}
+
+theorem subset_union_subset_to_and[K](sub_1: Set[K], sub_2: Set[K], a: Set[K]) {
+    sub_1 ∪ sub_2 ⊆ a iff sub_1 ⊆ a and sub_2 ⊆ a
+} by {
+    sub_1 ∪ sub_2 ⊆ a implies sub_1 ⊆ a and sub_2 ⊆ a
 }
 
 theorem not_subset_iff_contains_compl[K](a: Set[K], b: Set[K]) {
@@ -952,7 +963,7 @@ define intersection_with_one[K](c: Set[Set[K]], s: Set[K]) -> Set[K] {
 }
 
 theorem intersection_comm_one[K](c: Set[Set[K]], s: Set[K]) {
-    is_nonempty(c) implies intersection_with_one(c, s) = s ∩ intersection(c)
+    (c).is_nonempty implies intersection_with_one(c, s) = s ∩ intersection(c)
 } by {
     forall(x: K) {
         if x ∈ intersection_with_one(c, s) {
@@ -987,7 +998,7 @@ theorem intersection_comm_one[K](c: Set[Set[K]], s: Set[K]) {
 }
 
 theorem intersection_with_one_that_in_sets[K](c: Set[Set[K]], s: Set[K]) {
-    is_nonempty(c) and s ∈ c implies intersection_with_one(c, s) = intersection(c)
+    (c).is_nonempty and s ∈ c implies intersection_with_one(c, s) = intersection(c)
 } by {
     intersection_with_one(c, s) = s ∩ intersection(c)
     intersection(c) ⊆ s
@@ -1315,7 +1326,7 @@ theorem inv_image_preserve_subset[K, L](f: K -> L, a: Set[L], b: Set[L]) {
 } 
 
 theorem image_preserve_nomempty[K, L](f: K -> L, a: Set[K]) {
-    is_nonempty(a) implies is_nonempty(a.image(f))
+    (a).is_nonempty implies (a.image(f)).is_nonempty
 } 
 
 theorem image_preserve_empty[K, L](f: K -> L, a: Set[K]) {
