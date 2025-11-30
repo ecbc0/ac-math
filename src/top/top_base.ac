@@ -279,6 +279,7 @@ theorem closure_is_not_exterior[X: Topology](a: Set[X]) {
             x ∈ a.closure
         }
     }
+    a.closure ⊇ a.exterior.c
 }
 
 theorem closure_is_interior_or_boundary[X: Topology](a: Set[X]) {

@@ -1,0 +1,119 @@
+from set import Set, pairwise_disjoint, union, sym_difference, disjoint, empty
+from limit.net import Net
+from real import ℝ
+numerals ℝ
+
+define preserve_union[K](m: Set[Set[K]]) -> Bool {
+    forall(a: Set[K], b: Set[K]) {
+        a ∈ m and b ∈ m implies a ∪ b ∈ m
+    }    
+}
+
+define preserve_intersection[K](m: Set[Set[K]]) -> Bool {
+    forall(a: Set[K], b: Set[K]) {
+        a ∈ m and b ∈ m implies a ∩ b ∈ m
+    }    
+}
+
+define preserve_diff[K](m: Set[Set[K]]) -> Bool {
+    forall(a: Set[K], b: Set[K]) {
+        a ∈ m and b ∈ m implies a ∖ b ∈ m
+    }    
+}
+
+define is_set_algebra[K](m: Set[Set[K]]) -> Bool {
+    preserve_union(m) and 
+    preserve_intersection(m) and 
+    preserve_diff(m)
+}
+
+theorem empty_in_set_algebra[K](m: Set[Set[K]]) {
+    is_set_algebra(m) and m.is_nonempty implies empty[K] ∈ m
+} by {
+    let s: Set[K] satisfy { s ∈ m }
+    s ∖ s ∈ m
+    s ∖ s = empty[K]
+}
+
+theorem set_algebra_preserve_sym_diff[K](m: Set[Set[K]], a: Set[K], b: Set[K]) {
+    is_set_algebra(m) and a ∈ m and b ∈ m and a ⊆ b implies sym_difference(a, b) ∈ m
+} by {
+    a ∖ b ∈ m
+    b ∖ a ∈ m
+    sym_difference(a, b) = (a ∖ b) ∪ (b ∖ a)
+    (a ∖ b) ∪ (b ∖ a) ∈ m
+}
+
+define nonnegtive_volume[K](sets: Set[Set[K]], volume: Set[K] -> ℝ) -> Bool {
+    forall(s: Set[K]) {
+        s ∈ sets implies volume(s) >= 0
+    }
+}
+
+define disjoint_union_to_add[K](sets: Set[Set[K]], vol: Set[K] -> ℝ) -> Bool {
+    forall(s1: Set[K], s2: Set[K]) {
+        s1 ∈ sets and s2 ∈ sets and disjoint(s1, s2) implies vol(s1 ∪ s2) = vol(s1) + vol(s2)
+    }
+}
+
+structure Volume_Chain[K] {
+    sets: Set[Set[K]]
+    vol: Set[K] -> ℝ
+} constraint {
+    is_set_algebra(sets) and
+    nonnegtive_volume(sets, vol) and
+    disjoint_union_to_add(sets, vol)
+} by {
+    let sets = Set[Set[K]].singleton(empty[K])
+    define vol(s: Set[K]) -> ℝ {
+        0
+    }
+    preserve_union(sets) 
+    preserve_intersection(sets) 
+    preserve_diff(sets)
+    nonnegtive_volume(sets, vol) 
+    disjoint_union_to_add(sets, vol)
+}
+
+attributes Volume_Chain[K] {
+    define contains(self, s: Set[K]) -> Bool {
+        self.sets.contains(s)
+    }
+}
+
+theorem set_algebra_constraint_helper[K](m: Volume_Chain[K], a: Set[K], b: Set[K]) {
+    a ∈ m and b ∈ m implies (
+        a ∪ b ∈ m and 
+        a ∩ b ∈ m and 
+        a ∖ b ∈ m
+    )
+} by {
+    a ∪ b ∈ m
+    a ∩ b ∈ m 
+    a ∖ b ∈ m
+}
+
+theorem disjoint_union_to_add_helper[K](m: Volume_Chain[K]) {
+    forall(s1: Set[K], s2: Set[K]) {
+        s1 ∈ m and s2 ∈ m and disjoint(s1, s2) implies m.vol(s1 ∪ s2) = m.vol(s1) + m.vol(s2)
+    }
+}
+
+theorem volume_sub[K](m: Volume_Chain[K], a: Set[K], b: Set[K]) {
+    a ∈ m and b ∈ m and a ⊆ b implies m.vol(b ∖ a) = m.vol(b) - m.vol(a)
+} by {
+    b ∖ a ∈ m
+    b = a ∪ (b ∖ a)
+    disjoint(a, b ∖ a)
+    m.vol(b) = m.vol(a) + m.vol(b ∖ a)
+}
+
+theorem empty_zero_volume[K](m: Volume_Chain[K]) {
+    empty[K] ∈ m implies m.vol(empty[K]) = 0
+} by {
+    empty[K] = empty[K] ∪ empty[K]
+    disjoint(empty[K], empty[K])
+    m.vol(empty[K] ∪ empty[K]) = m.vol(empty[K]) + m.vol(empty[K])
+    m.vol(empty[K]) = m.vol(empty[K]) + m.vol(empty[K])
+    m.vol(empty[K]) = 0
+}

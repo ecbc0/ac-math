@@ -117,6 +117,13 @@ theorem add_assoc(a: ℕ, b: ℕ, c: ℕ) { (a + b) + c = a + (b + c) } by {
     add_assoc(a, b, c)
 }
 
+from type_class.add import P_Add
+
+instance ℕ: P_Add {
+    let 0 = ℕ.0
+    let add = ℕ.add
+}
+
 attributes ℕ {
     /// Multiplication is defined recursively.
     define mul(self, b: ℕ) -> ℕ {
@@ -475,6 +482,10 @@ theorem nat_is_trichotomy {
 
 instance ℕ: Linear_Order
 
+from type_class.ordered_add import Ordered_P_Add
+
+instance ℕ: Ordered_P_Add
+
 theorem lt_suc_left_augment(a: ℕ, b: ℕ) { 
     a < b iff a + 1 <= b 
 } by {
@@ -485,6 +496,14 @@ theorem lt_suc_left_augment(a: ℕ, b: ℕ) {
     if a > b {
         a + 1 > b
     }
+}
+
+theorem lt_cancel(a: ℕ, b: ℕ, c: ℕ) { 
+    a + c < b + c implies a < b
+}
+
+theorem lte_cancel(a: ℕ, b: ℕ, c: ℕ) { 
+    a + c <= b + c implies a <= b
 }
 
 theorem lt_suc_right_augment(a: ℕ, b: ℕ) { 
@@ -748,6 +767,28 @@ theorem sub_distrib_right(a: ℕ, b: ℕ, c: ℕ) {
 theorem sub_distrib_left(a: ℕ, b: ℕ, c: ℕ) {
     (a - b) ⋅ c = a ⋅ c - b ⋅ c
 } 
+
+theorem lt_sub_lt(a: ℕ, b: ℕ, c: ℕ) {
+    c <= a and a < b implies a - c < b - c 
+} by {
+    c <= b
+    (a - c) + c = a
+    (b - c) + c = b
+    (a - c) + c < (b - c) + c
+    a - c < b - c
+}
+
+theorem lte_sub_lte(a: ℕ, b: ℕ, c: ℕ) {
+    c <= a and a <= b implies a - c <= b - c 
+} by {
+    if a = b {
+        a - c = b - c 
+        a - c <= b - c 
+    } else {
+        a - c < b - c 
+        a - c <= b - c 
+    }
+}
 
 // Misc helpers
 theorem two_neq_zero {

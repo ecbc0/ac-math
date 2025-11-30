@@ -1,0 +1,385 @@
+from order import Linear_Order
+from type_class.add import P_Add, Add
+
+// reuse for ℤ, ℚ, ℝ
+
+typeclass A: Ordered_P_Add extends P_Add, Linear_Order {
+    /// Right addition preserves the order relation: if `a < b`, then `a + c < b + c`.
+    right_invariance(a: A, b: A, c: A) {
+        a < b implies a + c < b + c
+    }    
+}
+
+theorem left_invariance[A: Ordered_P_Add](a: A, b: A, c: A) {
+    a < b implies c + a < c + b
+}
+
+theorem lte_add_left[A: Ordered_P_Add](a: A, b: A, c: A) { 
+    b <= c implies a + b <= a + c 
+}
+
+theorem right_lte_lt[A: Ordered_P_Add](a: A, b: A, c: A, d: A) {
+    a < b and c <= d implies a + c < b + d
+} by {
+    if c = d {
+        a + c < b + d
+    } else {
+        c < d
+        a + c < b + c
+        b + c < b + d
+        a + c < b + d
+    }
+}
+
+theorem left_lte_lt[A: Ordered_P_Add](a: A, b: A, c: A, d: A) {
+    a <= b and c < d implies a + c < b + d
+}
+
+theorem lte_add_right[A: Ordered_P_Add](a: A, b: A, c: A) { 
+    b <= c implies b + a <= c + a 
+}
+
+theorem add_nonnegetive_increase[A: Ordered_P_Add](a: A, b: A) {
+    b > A.0 implies a + b > a
+}
+
+theorem add_nonnegetive_increase_weak[A: Ordered_P_Add](a: A, b: A) {
+    b >= A.0 implies a + b >= a
+}
+
+typeclass Ordered_Add extends Ordered_P_Add, Add
+
+theorem lt_sub[A: Ordered_Add](a: A, b: A, c: A) { 
+    a < b + c implies a - b < c 
+} by {
+    a + -b < b + c + -b
+}
+
+theorem lte_sub[A: Ordered_Add](a: A, b: A, c: A) { 
+    a <= b + c implies a - b <= c 
+} by {
+    if a = b + c {
+        a - b = c
+        a - b <= c
+    } else {
+        a - b < c
+        a - b <= c
+    }
+}
+
+theorem gt_sub[A: Ordered_Add](a: A, b: A, c: A) { 
+    a > b + c implies a - b > c 
+} by {
+    a + -b > b + c + -b
+}
+
+theorem gte_sub[A: Ordered_Add](a: A, b: A, c: A) { 
+    a >= b + c implies a - b >= c 
+} by {
+    if a = b + c {
+        a - b = c
+        a - b >= c
+    } else {
+        a - b > c
+        a - b >= c
+    }
+}
+
+theorem gt_minus_pos[A: Ordered_Add](a: A, b: A) {
+    b > A.0 implies a > a - b
+} by {
+    a - (a - b) = b
+    (a - (a - b)) > A.0
+}
+
+theorem add_pos_pos[A: Ordered_Add](a: A, b: A) {
+    a > A.0 and b > A.0 implies (a + b) > A.0
+} 
+
+theorem add_pos_nonneg[A: Ordered_Add](a: A, b: A) {
+    a > A.0 and b >= A.0 implies (a + b) > A.0
+} 
+
+theorem add_neg_nonpos[A: Ordered_Add](a: A, b: A) {
+    a < A.0 and b <= A.0 implies (a + b) < A.0
+}
+
+theorem add_nonneg_nonneg[A: Ordered_Add](a: A, b: A) {
+    a >= A.0 and b >= A.0 implies (a + b) >= A.0
+}
+
+theorem add_nonpos_nonpos[A: Ordered_Add](a: A, b: A) {
+    a <= A.0 and b <= A.0 implies (a + b) <= A.0
+} 
+
+theorem compare_by_zero[A: Ordered_Add](a: A, b: A) {
+    a - b > A.0 iff a > b
+} by {
+    a - b > A.0 implies a > b
+}
+
+theorem nonpos_lt_pos[A: Ordered_Add](a: A, b: A) {
+    a <= A.0 and b > A.0 implies a < b
+} by {
+    (b - a) > A.0
+}
+
+theorem neg_lt_nonneg[A: Ordered_Add](a: A, b: A) { 
+    a < A.0 and b >= A.0 implies a < b 
+}
+
+theorem nonpos_lte_nonneg[A: Ordered_Add](a: A, b: A) {
+    a <= A.0 and b >= A.0 implies a <= b
+}
+
+theorem pos_lte[A: Ordered_Add](a: A, b: A) {
+    a > A.0 and a <= b implies b > A.0
+} 
+
+attributes A: Ordered_Add {
+    define abs(self) -> A {
+        if self > A.0 {
+            self
+        } else {
+            -self
+        }
+    }
+
+    /// The positive part of this integer.
+    define pos_part(self) -> A {
+        if self > A.0 {
+            self.abs
+        } else {
+            A.0
+        }
+    }
+
+    /// The negative part of this integer.
+    define neg_part(self) -> A {
+        if self > A.0 {
+            A.0
+        } else {
+            self.abs
+        }
+    }
+}
+
+theorem pos_neg_decomposition[A: Ordered_Add](a: A) {
+    a = a.pos_part - a.neg_part
+} by {
+    if a > A.0 {
+        a.pos_part = a
+        a.neg_part = A.0
+        a = a.pos_part - a.neg_part
+    } else {
+        a.pos_part = A.0
+        a.neg_part = -a
+        a = a.pos_part - a.neg_part
+    }
+}
+
+theorem neg_abs[A: Ordered_Add](a: A) {
+    (-a).abs = a.abs
+} by {
+    if a > A.0 {
+        -a < A.0
+        (-a).abs = a
+        a.abs = a
+        (-a).abs = a.abs
+    } else {
+        a <= A.0
+        -a >= A.0
+        (-a).abs = -a
+        a.abs = -a
+        (-a).abs = a.abs
+    }
+}
+
+theorem abs_gte_zero[A: Ordered_Add](a: A) {
+    a.abs >= A.0
+} by {
+    if a > A.0 {
+        a.abs = a
+        a.abs >= A.0
+    } else {
+        a <= A.0
+        a.abs = -a
+        -a >= A.0
+        a.abs >= A.0
+    }
+}
+
+theorem pos_part_neg[A: Ordered_Add](a: A) { 
+    (-a).pos_part = a.neg_part 
+} by {
+    if a > A.0 {
+        -a < A.0
+        (-a).pos_part = A.0
+        a.neg_part = A.0
+        (-a).pos_part = a.neg_part
+    } else {
+        a <= A.0
+        -a >= A.0
+        (-a).pos_part = (-a).abs
+        a.neg_part = a.abs
+        (-a).pos_part = a.neg_part
+    }
+}
+
+theorem neg_part_neg[A: Ordered_Add](a: A) { 
+    (-a).neg_part = a.pos_part 
+}
+
+theorem abs_zero_iff_zero[A: Ordered_Add](a: A) {
+    (a).abs = A.0 iff a = A.0
+} by {
+    (a).abs = A.0 implies a = A.0
+}
+
+theorem member_abs_neg[A: Ordered_Add](a: A) {
+    a < A.0 implies a.abs = -a
+}
+
+theorem member_abs_nonneg[A: Ordered_Add](a: A) {
+    a >= A.0 implies a.abs = a
+}
+
+theorem member_abs_pos[A: Ordered_Add](a: A) {
+    a > A.0 implies a.abs = a
+}
+
+theorem member_abs_nonpos[A: Ordered_Add](a: A) {
+    a <= A.0 implies a.abs = -a
+}
+
+theorem abs_one_imp_abs_or_neg_abs[A: Ordered_Add](a: A) {
+    a = a.abs or a = -a.abs
+} by {
+    if a > A.0 {
+        a.abs = a
+    } else {
+        a.abs = -a
+        a = -a.abs
+    }
+}
+
+define abs[A: Ordered_Add](a: A) -> A {
+    a.abs
+}
+
+theorem lte_abs[A: Ordered_Add](a: A) { a <= abs(a) } by {
+    if a > A.0 {
+        abs(a) = a
+        a <= abs(a)
+    } else {
+        a <= A.0
+        abs(a) >= A.0
+        a <= abs(a)
+    }
+}
+
+theorem control_abs[A: Ordered_Add](a: A, r: A) { 
+    r >= A.0 and a <= r and -a <= r implies a.abs <= r 
+} by {
+    if r = A.0 {
+        a <= A.0
+        -a <= A.0
+        a >= -r
+        a >= A.0
+        a = A.0
+        a.abs = A.0
+        a.abs <= r
+    } else {
+        r > A.0
+        if a > A.0 {
+            a.abs = a
+            a.abs <= r
+        } else {
+            a.abs = -a
+            a.abs <= r
+        }
+    }
+}
+
+theorem abs_add_nonneg[A: Ordered_Add](a: A, b: A) {
+    a >= A.0 and b >= A.0 implies abs(a + b) = abs(a) + abs(b)
+}
+
+theorem abs_add_nonpos[A: Ordered_Add](a: A, b: A) {
+    a <= A.0 and b <= A.0 implies abs(a + b) = abs(a) + abs(b)
+} by {
+    (-a) >= A.0
+    (-b) >= A.0
+    abs(-a + -b) = abs(-a) + abs(-b)
+    abs(-a + -b) = abs(-(a + b))
+}
+
+// One case of the triangle inequality
+theorem triangle_nonpos_lte_nonneg[A: Ordered_Add](a: A, b: A) {
+    a >= A.0 and b <= A.0 and abs(b) <= abs(a) implies abs(a + b) <= abs(a) + abs(b)
+} by {
+    a = abs(a)
+    b = -abs(b)
+    a + b = abs(a) + -abs(b)
+    a + b >= A.0
+    a + b = abs(a + b)
+    -abs(b) <= abs(b)
+    a + b <= abs(a) + abs(b)
+}
+
+theorem triangle_nonneg_nonpos[A: Ordered_Add](a: A, b: A) {
+    a >= A.0 and b <= A.0 implies abs(a + b) <= abs(a) + abs(b)
+} by {
+    if abs(b) <= abs(a) {
+        abs(a + b) <= abs(a) + abs(b)
+    } else {
+        abs(a) <= abs(b)
+        abs(-a) <= abs(-b)
+        (-b) >= A.0
+        (-a) <= A.0
+        abs(-b + -a) <= abs(-b) + abs(-a)
+
+        abs(a + b) <= abs(a) + abs(b)
+    }
+}
+
+theorem triangle_ineq[A: Ordered_Add](a: A, b: A) { 
+    (a + b).abs <= (a).abs + (b).abs 
+} by {
+    if a < A.0 {
+        if b < A.0 {
+            abs(a + b) <= abs(a) + abs(b)
+        } else {
+            abs(b + a) <= abs(b) + abs(a)
+            abs(a + b) <= abs(a) + abs(b)
+        }
+    } else {
+        a >= A.0
+        if b < A.0 {
+            abs(a + b) <= abs(a) + abs(b)
+        } else {
+            b >= A.0
+            abs(a + b) <= abs(a) + abs(b)
+        }
+    }
+}
+
+theorem triangle_ineq_sub[A: Ordered_Add](a: A, b: A) { 
+    (a).abs - (b).abs <= (a - b).abs
+} by {
+    // prove |a| <= |(a - b) + b| => |a| - |b| <= |a - b|
+    abs(a) = abs((a - b) + b)
+    abs(a) <= abs(a - b) + abs(b)
+
+    abs(a) <= abs(a - b) + abs(b)
+    
+    abs(a) - abs(b) <= abs(a - b)
+
+    // prove |b| <= |(a - b) + a| => |b| - |a| <= |a - b|
+    abs(b) = abs((b - a) + a)
+    abs(b) <= abs(b - a) + abs(a)
+
+    abs(b) <= abs(b - a) + abs(a)
+    
+    abs(b) - abs(a) <= abs(b - a)
+}

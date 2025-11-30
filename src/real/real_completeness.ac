@@ -2,7 +2,7 @@ from nat import ℕ
 from rat import ℚ
 from real.real_base import ℝ, is_cut, is_lower_interval, is_greatest, has_greatest, is_dedekind_cut
 numerals ℝ
-from set import Set, empty, intersection, constant_false
+from set import Set, empty, intersection, constant_false, fn_image
 
 attributes ℝ {
     /// True if this real number is an upper bound for the set s.
@@ -42,6 +42,74 @@ theorem uniqueness_of_least_upper_bound(u1: ℝ, u2: ℝ, s: Set[ℝ]) {
 
 theorem uniqueness_of_greatest_lower_bound(u1: ℝ, u2: ℝ, s: Set[ℝ]) {
     u1.is_set_greatest_lower_bound(s) and u2.is_set_greatest_lower_bound(s) implies u1 = u2
+}
+
+define same_upper_bound(s1: Set[ℝ], s2: Set[ℝ]) -> Bool {
+    forall(r: ℝ) {
+        r.is_set_upper_bound(s1) iff r.is_set_upper_bound(s2)
+    }
+}
+
+define same_least_upper_bound(s1: Set[ℝ], s2: Set[ℝ]) -> Bool {
+    forall(r: ℝ) {
+        r.is_set_least_upper_bound(s1) iff r.is_set_least_upper_bound(s2)
+    }
+}
+
+theorem same_upper_bound_imp_same_least_upper_bound_lemma(s1: Set[ℝ], s2: Set[ℝ], r: ℝ) {
+    same_upper_bound(s1, s2) and r.is_set_least_upper_bound(s1) implies r.is_set_least_upper_bound(s2)
+} by {
+    forall(x: ℝ) {
+        if x.is_set_upper_bound(s2) {
+            x.is_set_upper_bound(s1)
+            r <= x
+        }
+    }
+    r.is_set_least_upper_bound(s2)
+}
+
+theorem same_upper_bound_imp_same_least_upper_bound(s1: Set[ℝ], s2: Set[ℝ]) {
+    same_upper_bound(s1, s2) implies same_least_upper_bound(s1, s2)
+} by {
+    forall(r: ℝ) {
+        r.is_set_least_upper_bound(s1) implies r.is_set_least_upper_bound(s2)
+        r.is_set_least_upper_bound(s2) implies r.is_set_least_upper_bound(s1)
+        r.is_set_least_upper_bound(s1) iff r.is_set_least_upper_bound(s2)
+    }
+}
+
+define same_lower_bound(s1: Set[ℝ], s2: Set[ℝ]) -> Bool {
+    forall(r: ℝ) {
+        r.is_set_lower_bound(s1) iff r.is_set_lower_bound(s2)
+    }
+}
+
+define same_greatest_lower_bound(s1: Set[ℝ], s2: Set[ℝ]) -> Bool {
+    forall(r: ℝ) {
+        r.is_set_greatest_lower_bound(s1) iff r.is_set_greatest_lower_bound(s2)
+    }
+}
+
+theorem same_lower_bound_imp_same_greatest_lower_bound_lemma(s1: Set[ℝ], s2: Set[ℝ], r: ℝ) {
+    same_lower_bound(s1, s2) and r.is_set_greatest_lower_bound(s1) implies r.is_set_greatest_lower_bound(s2)
+} by {
+    forall(x: ℝ) {
+        if x.is_set_lower_bound(s2) {
+            x.is_set_lower_bound(s1)
+            r >= x
+        }
+    }
+    r.is_set_greatest_lower_bound(s2)
+}
+
+theorem same_lower_bound_imp_same_least_lower_bound(s1: Set[ℝ], s2: Set[ℝ]) {
+    same_lower_bound(s1, s2) implies same_greatest_lower_bound(s1, s2)
+} by {
+    forall(r: ℝ) {
+        r.is_set_greatest_lower_bound(s1) implies r.is_set_greatest_lower_bound(s2)
+        r.is_set_greatest_lower_bound(s2) implies r.is_set_greatest_lower_bound(s1)
+        r.is_set_greatest_lower_bound(s1) iff r.is_set_greatest_lower_bound(s2)
+    }
 }
 
 theorem lower_lte_upper_bound(s: Set[ℝ], l: ℝ, u: ℝ) {
@@ -478,14 +546,18 @@ theorem directly_closely_gt_inf_directly(s: Set[ℝ], u: ℝ) {
     have_inf(s) and u > inf(s) implies exists(a: ℝ) {
         a ∈ s and inf(s) <= a and a < u 
     }
-} 
+}
+
+define tail_bound(f: ℕ -> ℝ, a: ℝ, n: ℕ, ε: ℝ) -> Bool {
+    forall(m: ℕ) {
+        m > n implies (f(m) - a).abs < ε
+    }
+}
 
 define converge_to(f: ℕ -> ℝ, a: ℝ) -> Bool {
     forall(ε: ℝ) {
         ε > 0 implies exists(n: ℕ) {
-            forall(m: ℕ) {
-                m > n implies (f(m) - a).abs < ε
-            }
+            tail_bound(f, a, n, ε)
         }
     }
 }
@@ -504,7 +576,81 @@ define is_increase(f: ℕ -> ℝ) -> Bool {
 
 define is_decrease(f: ℕ -> ℝ) -> Bool {
     forall(n: ℕ, m: ℕ) {
-        n < m implies f(m) <= f(n)
+        n < m implies f(n) >= f(m)
+    }
+}
+
+define is_suc_increase(f: ℕ -> ℝ) -> Bool {
+    forall(n: ℕ) {
+        f(n) <= f(n.suc)
+    } 
+}
+
+theorem suc_increase_imp_increase(f: ℕ -> ℝ) {
+    is_suc_increase(f) implies is_increase(f)
+} by {
+    define p(m: ℕ) -> Bool {
+        forall(n: ℕ) {
+            n < m implies f(n) <= f(m)
+        }
+    }
+    p(ℕ.0)
+    forall(m: ℕ) {
+        f(m) <= f(m.suc)
+        if p(m) {
+            forall(n: ℕ) {
+                if n < m.suc {
+                    n <= m
+                    if n = m {
+                        f(n) <= f(m)
+                        f(n) <= f(m.suc)
+                    } else {
+                        n < m
+                        f(n) <= f(m)
+                        f(n) <= f(m.suc)
+                    }
+                    f(n) <= f(m.suc)
+                }
+            }
+            p(m.suc)
+        }
+    }
+}
+
+define is_suc_decrease(f: ℕ -> ℝ) -> Bool {
+    forall(n: ℕ) {
+        f(n) >= f(n.suc)
+    } 
+}
+
+theorem suc_decrease_imp_decrease(f: ℕ -> ℝ) {
+    is_suc_decrease(f) implies is_decrease(f)
+} by {
+    define p(m: ℕ) -> Bool {
+        forall(n: ℕ) {
+            n < m implies f(n) >= f(m)
+        }
+    }
+    p(ℕ.0)
+    forall(m: ℕ) {
+        f(m) >= f(m.suc)
+        if p(m) {
+            forall(n: ℕ) {
+                if n < m.suc {
+                    n <= m
+                    if n = m {
+                        f(n) >= f(m)
+                        f(n) >= f(m.suc)
+                    } else {
+                        n < m
+                        f(n) >= f(m)
+                        f(n) >= f(m.suc)
+                    }
+                    f(n) >= f(m.suc)
+                }
+            }
+            p(m.suc)
+        }
     }
 }
 
@@ -534,73 +680,93 @@ define have_seq_lower_bound(f: ℕ -> ℝ) -> Bool {
     }
 }
 
-define elem_in_real_seq_image_to_set(f: ℕ -> ℝ, x: ℝ) -> Bool {
-    exists(n: ℕ) { x = f(n) }
-}
-
-define seq_image(f: ℕ -> ℝ) -> Set[ℝ] {
-    Set.new(elem_in_real_seq_image_to_set(f))
-}
-
 theorem seq_upper_bound_to_upper_bound(f: ℕ -> ℝ) {
-    have_seq_upper_bound(f) implies have_upper_bound(seq_image(f))
+    have_seq_upper_bound(f) implies have_upper_bound(fn_image(f))
 } by {
     let a: ℝ satisfy { 
         a.is_seq_upper_bound(f) 
     }
     forall(x: ℝ) {
-        if x ∈ seq_image(f) {
+        if x ∈ fn_image(f) {
             let n: ℕ satisfy { x = f(n) }
             f(n) <= a
             x <= a
         }
     }
-    a.is_set_upper_bound(seq_image(f))
-    have_upper_bound(seq_image(f))
+    a.is_set_upper_bound(fn_image(f))
+    have_upper_bound(fn_image(f))
+}
+
+theorem upper_bound_to_seq_upper_bound(f: ℕ -> ℝ) {
+    have_upper_bound(fn_image(f)) implies have_seq_upper_bound(f)
+} by {
+    let a: ℝ satisfy { 
+        a.is_set_upper_bound(fn_image(f)) 
+    }
+    forall(n: ℕ) {
+        f(n) ∈ fn_image(f) 
+        f(n) <= a
+    }
+    a.is_seq_upper_bound(f)
+    have_seq_upper_bound(f)
 }
 
 theorem seq_lower_bound_to_lower_bound(f: ℕ -> ℝ) {
-    have_seq_lower_bound(f) implies have_lower_bound(seq_image(f))
+    have_seq_lower_bound(f) implies have_lower_bound(fn_image(f))
 } by {
     let a: ℝ satisfy { 
         a.is_seq_lower_bound(f) 
     }
     forall(x: ℝ) {
-        if x ∈ seq_image(f) {
+        if x ∈ fn_image(f) {
             let n: ℕ satisfy { x = f(n) }
             f(n) >= a
             x >= a
         }
     }
-    a.is_set_lower_bound(seq_image(f))
-    have_lower_bound(seq_image(f))
+    a.is_set_lower_bound(fn_image(f))
+    have_lower_bound(fn_image(f))
+}
+
+theorem lower_bound_to_seq_lower_bound(f: ℕ -> ℝ) {
+    have_lower_bound(fn_image(f)) implies have_seq_lower_bound(f)
+} by {
+    let a: ℝ satisfy { 
+        a.is_set_lower_bound(fn_image(f)) 
+    }
+    forall(n: ℕ) {
+        f(n) ∈ fn_image(f) 
+        f(n) >= a
+    }
+    a.is_seq_lower_bound(f)
+    have_seq_lower_bound(f)
 }
 
 theorem seq_nonempty(f: ℕ -> ℝ) {
-    (seq_image(f)).is_nonempty
+    (fn_image(f)).is_nonempty
 } by {
-    f(ℕ.0) ∈ seq_image(f)
+    f(ℕ.0) ∈ fn_image(f)
 }
 
 theorem bounded_increase_convergence_to(f: ℕ -> ℝ) {
-    is_increase(f) and have_seq_upper_bound(f) implies converge_to(f, sup(seq_image(f)))
+    is_increase(f) and have_seq_upper_bound(f) implies converge_to(f, sup(fn_image(f)))
 } by {
-    (seq_image(f)).is_nonempty
-    have_upper_bound(seq_image(f))
-    let a = sup(seq_image(f))
-    a.is_set_least_upper_bound(seq_image(f))
+    (fn_image(f)).is_nonempty
+    have_upper_bound(fn_image(f))
+    let a = sup(fn_image(f))
+    a.is_set_least_upper_bound(fn_image(f))
     forall(ε: ℝ) {
         if ε > 0 {
             let x: ℝ satisfy {
-                x ∈ seq_image(f) and a - ε < x and x <= a
+                x ∈ fn_image(f) and a - ε < x and x <= a
             }
             let n: ℕ satisfy { x = f(n) }
             forall(m: ℕ) {
                 if m > n {
                     f(m) >= f(n)
                     a - ε < f(m)
-                    a.is_set_upper_bound(seq_image(f))
-                    f(m) ∈ seq_image(f)
+                    a.is_set_upper_bound(fn_image(f))
+                    f(m) ∈ fn_image(f)
                     f(m) <= a 
                     - ε < f(m) - a
                     f(m) - a <= 0
@@ -608,6 +774,7 @@ theorem bounded_increase_convergence_to(f: ℕ -> ℝ) {
                     (f(m) - a).abs < ε
                 }
             }
+            tail_bound(f, a, n, ε)
         }
     }
     converge_to(f, a)
@@ -617,31 +784,40 @@ theorem bounded_increase_convergence(f: ℕ -> ℝ) {
     is_increase(f) and have_seq_upper_bound(f) implies converge(f)
 }
 
+theorem bounded_increase_convergence_to_ver_set(f: ℕ -> ℝ) {
+    is_increase(f) and have_upper_bound(fn_image(f)) implies converge_to(f, sup(fn_image(f)))
+}
+
+theorem bounded_increase_convergence_ver_set(f: ℕ -> ℝ) {
+    is_increase(f) and have_upper_bound(fn_image(f)) implies converge(f)
+}
+
 theorem bounded_decrease_convergence_to(f: ℕ -> ℝ) {
-    is_decrease(f) and have_seq_lower_bound(f) implies converge_to(f, inf(seq_image(f)))
+    is_decrease(f) and have_seq_lower_bound(f) implies converge_to(f, inf(fn_image(f)))
 } by {
-    (seq_image(f)).is_nonempty
-    have_lower_bound(seq_image(f))
-    let a = inf(seq_image(f))
-    a.is_set_greatest_lower_bound(seq_image(f))
+    (fn_image(f)).is_nonempty
+    have_lower_bound(fn_image(f))
+    let a = inf(fn_image(f))
+    a.is_set_greatest_lower_bound(fn_image(f))
     forall(ε: ℝ) {
         if ε > 0 {
             let x: ℝ satisfy {
-                x ∈ seq_image(f) and a <= x and x < a + ε
+                x ∈ fn_image(f) and a <= x and x < a + ε
             }
             let n: ℕ satisfy { x = f(n) }
             forall(m: ℕ) {
                 if m > n {
                     f(m) <= f(n)
                     f(m) < a + ε
-                    a.is_set_lower_bound(seq_image(f))
-                    f(m) ∈ seq_image(f)
+                    a.is_set_lower_bound(fn_image(f))
+                    f(m) ∈ fn_image(f)
                     a <= f(m)
                     f(m) - a < ε
                     0 <= f(m) - a
                     (f(m) - a).abs < ε
                 }
             }
+            tail_bound(f, a, n, ε)
         }
     }
     converge_to(f, a)
@@ -649,6 +825,14 @@ theorem bounded_decrease_convergence_to(f: ℕ -> ℝ) {
 
 theorem bounded_decrease_convergence(f: ℕ -> ℝ) {
     is_decrease(f) and have_seq_lower_bound(f) implies converge(f)
+}
+
+theorem bounded_decrease_convergence_to_ver_set(f: ℕ -> ℝ) {
+    is_decrease(f) and have_lower_bound(fn_image(f)) implies converge_to(f, inf(fn_image(f)))
+} 
+
+theorem bounded_decrease_convergence_ver_set(f: ℕ -> ℝ) {
+    is_decrease(f) and have_lower_bound(fn_image(f)) implies converge(f)
 }
 
 theorem real_set_subset_to_inf_gte(a: Set[ℝ], b: Set[ℝ]) {

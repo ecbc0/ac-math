@@ -1,11 +1,11 @@
 from list.list_base import List
-from type_class.add import Add, add_fn
+from type_class.add import P_Add, add_fn
 from nat import ℕ
 numerals ℕ
 
 /// Computes the sum of all elements in a list (requires elements to form an additive commutative monoid).  
 /// also aplly to mul ⋅
-define sum[A: Add](items: List[A]) -> A {
+define sum[A: P_Add](items: List[A]) -> A {
     match items {
         List.nil {
             A.0
@@ -18,12 +18,29 @@ define sum[A: Add](items: List[A]) -> A {
 
 /// Computes the partial sum of a series up to index n.
 /// Returns the sum of f(n) + f(n + 1) + ... + f(m).
-define partial_sum[A: Add](f: ℕ -> A, n: ℕ, m: ℕ) -> A {
+define partial_sum[A: P_Add](f: ℕ -> A, n: ℕ, m: ℕ) -> A {
     sum(n.upto(m).map(f))
 }
 // todo: rearrange invariant. ⩽ n! steps. n! is the number of all rearrange (bijective)
 
-theorem sum_add[A: Add](left: List[A], right: List[A]) {
+define range_sum[A: P_Add](f: ℕ -> A, m: ℕ) -> A {
+    sum(m.range.map(f))
+}
+
+theorem zero_range_sum[A: P_Add](f: ℕ -> A) {
+    range_sum(f, ℕ.0) = A.0
+} by {
+    0.range = List[ℕ].nil
+    0.range.map(f) = List[A].nil
+}
+
+theorem range_sum_from_partial_sum[A: P_Add](f: ℕ -> A, m: ℕ) {
+    range_sum(f, m.suc) = partial_sum(f, 0, m)
+} by {
+    m.suc.range = 0.upto(m)
+}
+
+theorem sum_add[A: P_Add](left: List[A], right: List[A]) {
     sum(left + right) = sum(left) + sum(right)
 } by {
     define p(x: List[A]) -> Bool {
@@ -66,15 +83,23 @@ theorem sum_add[A: Add](left: List[A], right: List[A]) {
     }
 }
 
-theorem sum_append[A: Add](initial: List[A], last: A) {
+theorem sum_append[A: P_Add](initial: List[A], last: A) {
     sum(initial.append(last)) = sum(initial) + last
 }
 
-theorem sum_singleton[A: Add](x: A) {
+theorem range_sum_suc[A: P_Add](f: ℕ -> A, m: ℕ) {
+    range_sum(f, m.suc) = range_sum(f, m) + f(m)
+} by {
+    m.suc.range = m.range.append(m)
+    m.suc.range.map(f) = m.range.map(f).append(f(m))
+    sum(m.range.map(f).append(f(m))) = sum(m.range.map(f)) + f(m)
+}
+
+theorem sum_singleton[A: P_Add](x: A) {
     sum(List.singleton(x)) = x
 }
 
-theorem partial_one[A: Add](f: ℕ -> A) {
+theorem partial_one[A: P_Add](f: ℕ -> A) {
     partial_sum(f, 0, 0) = f(0)
 } by {
     partial_sum(f, 0, 0) = sum(0.upto(0).map(f))
@@ -83,7 +108,7 @@ theorem partial_one[A: Add](f: ℕ -> A) {
 }
 
 /// Summing two mapped lists equals mapping with the pointwise sum of functions.
-theorem map_sum_add[T, A: Add](list: List[T], f: T -> A, g: T -> A) {
+theorem map_sum_add[T, A: P_Add](list: List[T], f: T -> A, g: T -> A) {
     sum(list.map(f)) + sum(list.map(g)) = sum(list.map(add_fn(f, g)))
 } by {
     define p(l: List[T]) -> Bool {
@@ -129,7 +154,7 @@ theorem map_sum_add[T, A: Add](list: List[T], f: T -> A, g: T -> A) {
 
 
 /// Adding two partial sums equals the partial sum of pointwise sums.
-theorem partial_add[A: Add](f: ℕ -> A, g: ℕ -> A, n: ℕ, m: ℕ) {
+theorem partial_add[A: P_Add](f: ℕ -> A, g: ℕ -> A, n: ℕ, m: ℕ) {
     partial_sum(f, n, m) + partial_sum(g, n, m) = partial_sum(add_fn(f, g), n, m)
 } by {
     // Expand the definitions of partial

@@ -1,0 +1,177 @@
+from nat.nat_base import ℕ, true_below
+from list.list_sum import List, sum
+from type_class.ordered_add import P_Add, Ordered_P_Add
+
+attributes A: P_Add {
+    /// Raises a monoid element to a natural number times using repeated multiplication.
+    define times(self, b: ℕ) -> A {
+        match b {
+            ℕ.0 {
+                A.0
+            }
+            ℕ.suc(pred) {
+                self + self.times(pred)
+            }
+        }
+    }
+}
+attributes A: Ordered_P_Add {
+    let times = P_Add.times[A]
+}
+
+// Proof that a.times(n) + a.times(m) = a.times(n+m)
+theorem times_add[A: P_Add](a: A, b: ℕ, c: ℕ) {
+    a.times(b + c) = a.times(b) + a.times(c)
+} by {
+    // Inductive step
+    let f = function(x: ℕ) {
+        a.times(b + x) = a.times(b) + a.times(x)
+    }
+    f(ℕ.0)
+    forall(x: ℕ) {
+        if f(x) {
+            a.times(b + x) = a.times(b) + a.times(x)
+            a.times(b + x.suc) = a.times(b) + a.times(x.suc)
+            f(x.suc)
+        }
+    }
+    f(c)
+}
+
+// Proof that a.times(1) = a
+theorem times_one[A: P_Add](a: A) {
+    a.times(ℕ.1) = a
+} by {
+    a.times(ℕ.1) = a.times(ℕ.0.suc) // by definition of ℕ.1
+    a.times(ℕ.0.suc) = a + a.times(ℕ.0) // by definition of times
+    a + a.times(ℕ.0) = a + A.0 // by definition of times (base case)
+    a + A.0 = a // by mul_identity_right
+    a.times(ℕ.1) = a // transitivity
+}
+
+// Proof that (a.times(n)).times(m) = a.times(n ⋅ m)
+theorem times_mul[A: P_Add](a: A, b: ℕ, c: ℕ) {
+    a.times(b ⋅ c) = (a.times(b)).times(c)
+} by {
+    // Inductive step
+    let f = function(x: ℕ) {
+        a.times(b ⋅ x) = (a.times(b)).times(x)
+    }
+    f(ℕ.0)
+    forall(x: ℕ) {
+        if f(x) {
+            a.times(b ⋅ x) = (a.times(b)).times(x)
+            a.times(b ⋅ x.suc) = (a.times(b)).times(x.suc)
+            f(x.suc)
+        }
+    }
+    f(c)
+}
+
+// Proof that 1.times(n) = 1
+theorem one_times[A: P_Add](n: ℕ) {
+    (A.0).times(n) = A.0
+} by {
+    one_times[A](ℕ.0)
+    one_times[A](n)
+}
+
+theorem remove_sum[A: P_Add](x: A, l: List[A]) {
+    x.times(l.count(x)) + sum(l ∖ x) = sum(l)
+} by {
+    define f(ns: List[A]) -> Bool {
+        x.times(ns.count(x)) + sum(ns ∖ x) = sum(ns)
+    }
+    f(List[A].nil)
+    forall(head: A, tail: List[A]) {
+        sum(List.cons(head, tail)) = head + sum(tail)        
+        if f(tail) {
+            if x ∈ List.cons(head, tail) {
+                if head = x {
+                    List.cons(head, tail) ∖ x = tail ∖ x
+
+                    List.cons(head, tail).count(x) = ℕ.1 + tail.count(x)
+
+                    x.times(List.cons(head, tail).count(x)) = x + x.times(tail.count(x))
+
+                    x.times(tail.count(x)) + sum(tail ∖ x) = sum(tail)
+
+                    x + x.times(tail.count(x)) + sum(List.cons(head, tail) ∖ x) = x + sum(tail)
+
+                    x.times(List.cons(head, tail).count(x)) + sum(List.cons(head, tail) ∖ x) = sum(List.cons(head, tail))
+
+                    f(List.cons(head, tail))
+                } else {
+                    x != head
+                    x ∈ tail
+
+                    List.cons(head, tail).count(x) = tail.count(x)
+                    
+                    List.cons(head, tail) ∖ x = List.cons(head, tail ∖ x)
+
+                    sum(List.cons(head, tail) ∖ x) = head + sum(tail ∖ x)
+
+                    x.times(tail.count(x)) + sum(tail ∖ x) = sum(tail)
+
+                    sum(List.cons(head, tail)) = head + x.times(tail.count(x)) + sum(tail ∖ x)
+
+                    sum(List.cons(head, tail)) = head + x.times(List.cons(head, tail).count(x)) + sum(tail ∖ x)
+
+                    sum(List.cons(head, tail)) = x.times(List.cons(head, tail).count(x)) + sum(List.cons(head, tail) ∖ x)
+
+                    f(List.cons(head, tail))
+                }
+            } else {
+                x ∉ List.cons(head, tail)
+                List.cons(head, tail).count(x) = ℕ.0
+                List.cons(head, tail) ∖ x = List.cons(head, tail)
+                x.times(List.cons(head, tail).count(x)) + sum(List.cons(head, tail) ∖ x) = sum(List.cons(head, tail))
+                f(List.cons(head, tail))
+            }
+        }
+    }
+    f(l)
+}
+
+theorem permutation_same_sum[A: P_Add](list_1: List[A], list_2: List[A]) {
+    list_1.is_permutation(list_2) implies sum(list_1) = sum(list_2)
+} by {
+    define p(n: ℕ) -> Bool {
+        forall(l1: List[A], l2: List[A]) {
+            l1.length = n and l1.is_permutation(l2) implies sum(l1) = sum(l2)
+        }
+
+    }
+    p(ℕ.0)
+    forall(k: ℕ) {
+        if true_below(p, k) {
+            if k = ℕ.0 {
+                p(k)
+            } else {
+                k != ℕ.0
+                forall(l1: List[A], l2: List[A]) {
+                    if l1.length = k and l1.is_permutation(l2) {
+                        let x: A satisfy { x ∈ l1 }
+
+                        l1.count(x) = l2.count(x)
+
+                        x.times(l1.count(x)) + sum(l1 ∖ x) = sum(l1)
+
+                        x.times(l2.count(x)) + sum(l2 ∖ x) = sum(l2)
+
+                        (l1 ∖ x).length < k
+
+                        (l1 ∖ x).is_permutation(l2 ∖ x)
+
+                        sum(l1 ∖ x) = sum(l2 ∖ x)
+
+                        sum(l1) = sum(l2)
+                    }
+                }
+                p(k)
+            }
+            p(k)
+        }
+    }
+    p(list_1.length)
+}

@@ -155,7 +155,10 @@ theorem div_neg_neg[F: Ordered_Field](a: F, b: F) {
     a < F.0 and b < F.0
     implies
     a/b > F.0
-} 
+} by {
+    a/b = a ⋅ F.1/b
+    F.1/b < F.0
+}
 
 theorem div_negs_cancel[F: Ordered_Field](a: F, b: F) {
     a / b = (-a) / (-b)

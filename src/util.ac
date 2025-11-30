@@ -1,7 +1,7 @@
 /// Utilities for functions that are generally independent of types.
 
 /// Composing two functions.
-define compose[T, U, V](f: U -> V, g: T -> U) -> T -> V {
+define compose[T, U, V](f: U -> V, g: T -> U) -> (T -> V) {
     function(t: T) {
         f(g(t))
     }

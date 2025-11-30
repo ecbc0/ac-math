@@ -1,0 +1,276 @@
+from nat import ℕ
+from set import is_bijective, is_injective, is_surjective, Set, Product, union_index, intersection_index, fn_image, compose
+from list import partial_sum, range_sum, sum
+numerals ℕ
+
+// b=4 | (0,4) (1,4) (2,4) (3,4) ...
+// b=3 | (0,3) (1,3) (2,3) (3,3) ...
+// b=2 | (0,2) (1,2) (2,2) (3,2) ...
+// b=1 | (0,1) (1,1) (2,1) (3,1) ...
+// b=0 | (0,0) (1,0) (2,0) (3,0) ...
+//       ----------------------------→ a
+//         a=0   a=1   a=2   a=3
+
+theorem range_sum_suc_one {
+    range_sum(ℕ.suc, 1) = 1
+}
+
+theorem range_sum_suc_two {
+    range_sum(ℕ.suc, 2) = 3
+} by {
+    range_sum(ℕ.suc, 2) = range_sum(ℕ.suc, 1) + ℕ.suc(1) 
+    range_sum(ℕ.suc, 1) + ℕ.suc(1) = 1 + 2
+    1 + 2 = 3
+}
+
+
+define cantor_pair(a: ℕ, b: ℕ) -> ℕ {
+    range_sum(ℕ.suc, a + b) + a
+}
+
+theorem cantor_pair_at_zero_zero {
+    cantor_pair(0, 0) = 0
+} by {
+    cantor_pair(0, 0) = range_sum(ℕ.suc, 0)
+}
+
+theorem cantor_pair_at_zero_two {
+    cantor_pair(0, 2) = 3
+} by {
+    cantor_pair(0, 2) = range_sum(ℕ.suc, 2)
+}
+
+theorem range_sum_suc(n: ℕ) {
+    range_sum(ℕ.suc, n.suc) = range_sum(ℕ.suc, n) + n.suc
+} 
+
+theorem cantor_pair_lt_suc(a1: ℕ, b1: ℕ, a2: ℕ, b2: ℕ) {
+    (a1 + b1).suc = a2 + b2 implies cantor_pair(a1, b1) < cantor_pair(a2, b2)
+} by {
+    a1 <= a1 + b1
+    0 <= a2
+    cantor_pair(a1, b1) <= range_sum(ℕ.suc, a1 + b1) + (a1 + b1)
+    range_sum(ℕ.suc, a1 + b1) + (a1 + b1) < range_sum(ℕ.suc, a1 + b1) + (a1 + b1).suc
+    range_sum(ℕ.suc, a2 + b2) = range_sum(ℕ.suc, a1 + b1) + (a1 + b1).suc
+    range_sum(ℕ.suc, a2 + b2) <= cantor_pair(a2, b2)
+    cantor_pair(a1, b1) < range_sum(ℕ.suc, a2 + b2)
+} 
+
+theorem cantor_pair_lt(a1: ℕ, b1: ℕ, a2: ℕ, b2: ℕ) {
+    a1 + b1 < a2 + b2 implies cantor_pair(a1, b1) < cantor_pair(a2, b2)
+} by {
+    define p(n: ℕ) -> Bool {
+        forall(a: ℕ, b: ℕ) {
+            a1 + b1 < a + b and a + b = n implies cantor_pair(a1, b1) < cantor_pair(a, b)
+        }
+    }
+    p(0)
+    forall(n: ℕ) {
+        if p(n) {
+            forall(a: ℕ, b: ℕ) {
+                if a1 + b1 < a + b and a + b = n.suc {
+                    if a1 + b1 = n {
+                        cantor_pair(a1, b1) < cantor_pair(a, b)
+                    } else {
+                        a1 + b1 < n
+                        let x = n
+                        let y = 0
+                        x + y = n
+                        a1 + b1 < x + y
+                        cantor_pair(a1, b1) < cantor_pair(x, y)
+                        cantor_pair(x, y) < cantor_pair(a, b)
+                        cantor_pair(a1, b1) < cantor_pair(a, b)
+                    }
+                }
+            }
+            p(n.suc)
+        }
+    }
+    p(a2 + b2)
+}
+
+theorem cantor_pair_lt_imp_neq(a1: ℕ, b1: ℕ, a2: ℕ, b2: ℕ) {
+    a1 + b1 < a2 + b2 implies cantor_pair(a1, b1) != cantor_pair(a2, b2)
+} 
+
+theorem cantor_pair_is_injective_lemma(a1: ℕ, b1: ℕ, a2: ℕ, b2: ℕ) {
+    a1 + b1 != a2 + b2 implies cantor_pair(a1, b1) != cantor_pair(a2, b2)
+}
+
+theorem sum_eq_imp_both_eq_or_neq_lemma(a1: ℕ, b1: ℕ, a2: ℕ, b2: ℕ) {
+    a1 + b1 = a2 + b2 implies (a1 = a2 iff b1 = b2)
+} by {
+    a1 = a2 implies b1 = b2
+}
+
+theorem cantor_pair_is_injective_raw(a1: ℕ, b1: ℕ, a2: ℕ, b2: ℕ) {
+    not (a1 = a2 and b1 = b2) implies cantor_pair(a1, b1) != cantor_pair(a2, b2)
+} by {
+    if a1 + b1 = a2 + b2 {
+        a1 != a2
+        cantor_pair(a1, b1) = range_sum(ℕ.suc, a1 + b1) + a1
+        cantor_pair(a2, b2) = range_sum(ℕ.suc, a2 + b2) + a2
+        range_sum(ℕ.suc, a1 + b1) = range_sum(ℕ.suc, a2 + b2)
+        cantor_pair(a1, b1) != cantor_pair(a2, b2)
+    } else {
+        a1 + b1 != a2 + b2
+        cantor_pair(a1, b1) != cantor_pair(a2, b2)
+    }
+}
+
+theorem cantor_pair_is_surjective_lemma(n: ℕ) {
+    exists(m: ℕ) {
+        range_sum(ℕ.suc, m) <= n and n < range_sum(ℕ.suc, m.suc) 
+    }
+} by {
+    define p(x: ℕ) -> Bool {
+        exists(m: ℕ) {
+            range_sum(ℕ.suc, m) <= x and x < range_sum(ℕ.suc, m.suc) 
+        }
+    }
+    range_sum(ℕ.suc, 0) = 0
+    p(0)
+    forall(x: ℕ) {
+        if p(x) {
+            let m: ℕ satisfy {
+                range_sum(ℕ.suc, m) <= x and x < range_sum(ℕ.suc, m.suc)
+            }
+            x.suc <= range_sum(ℕ.suc, m.suc)
+            if x.suc = range_sum(ℕ.suc, m.suc) {
+                range_sum(ℕ.suc, m.suc) <= x.suc 
+                range_sum(ℕ.suc, m.suc) < range_sum(ℕ.suc, m.suc.suc)
+                x.suc < range_sum(ℕ.suc, m.suc.suc)
+                p(x.suc)
+            } else {
+                x.suc < range_sum(ℕ.suc, m.suc)
+                range_sum(ℕ.suc, m) <= x.suc
+                p(x.suc)
+            }
+            p(x.suc)
+        }
+    }
+    p(n)
+}
+
+theorem cantor_pair_is_surjective_raw(n: ℕ) {
+    exists(a: ℕ, b: ℕ) {
+        cantor_pair(a, b) = n 
+    }
+} by {
+    let m: ℕ satisfy {
+        range_sum(ℕ.suc, m) <= n and n < range_sum(ℕ.suc, m.suc)
+    }
+    let a = n - range_sum(ℕ.suc, m)
+    n - range_sum(ℕ.suc, m) < range_sum(ℕ.suc, m.suc) - range_sum(ℕ.suc, m)
+    range_sum(ℕ.suc, m.suc) - range_sum(ℕ.suc, m) = m.suc
+    a < m.suc
+    a <= m
+    let b = m - a
+    a + b = m
+    n = range_sum(ℕ.suc, m) + a
+    n = cantor_pair(a, b)
+}
+
+define c_pair(p: Product[ℕ, ℕ]) -> ℕ {
+    cantor_pair(p.first, p.second)
+}
+
+theorem cantor_pair_is_injective {
+    is_injective(c_pair)
+} by {
+    forall(p1: Product[ℕ, ℕ], p2: Product[ℕ, ℕ]) {
+        if p1 != p2 {
+            let a1 = p1.first
+            let b1 = p1.second
+            let a2 = p2.first
+            let b2 = p2.second
+            not (a1 = a2 and b1 = b2)
+            cantor_pair(a1, b1) != cantor_pair(a2, b2)
+            c_pair(p1) != c_pair(p2)
+        } 
+    }
+}
+
+theorem cantor_pair_is_surjective {
+    is_surjective(c_pair)
+} by {
+    forall(n: ℕ) {
+        let (a: ℕ, b: ℕ) satisfy {
+            cantor_pair(a, b) = n 
+        }
+        let p = Product.new(a, b)
+        c_pair(p) = n
+    }
+}
+
+theorem cantor_pair_is_bijective {
+    is_bijective(c_pair)
+}
+
+let c_pair_inv(n: ℕ) -> p: Product[ℕ, ℕ] satisfy {
+    c_pair(p) = n
+} by {
+    is_surjective(c_pair)
+    let p: Product[ℕ, ℕ] satisfy {
+        c_pair(p) = n
+    }
+}
+
+theorem c_pair_inv_is_inv_1(n: ℕ) {
+    c_pair(c_pair_inv(n)) = n
+}
+
+theorem c_pair_inv_is_inv_2(p: Product[ℕ, ℕ]) {
+    c_pair_inv(c_pair(p)) = p
+} by {
+    c_pair(c_pair_inv(c_pair(p))) = c_pair(p)
+    is_injective(c_pair)
+    c_pair_inv(c_pair(p)) = p
+}
+
+theorem c_pair_inv_is_injective {
+    is_injective(c_pair_inv)
+} by {
+    forall(n1: ℕ, n2: ℕ) {
+        if c_pair_inv(n1) = c_pair_inv(n2) {
+            c_pair(c_pair_inv(n1)) = c_pair(c_pair_inv(n2))
+            c_pair(c_pair_inv(n1)) = n1
+            c_pair(c_pair_inv(n2)) = n2
+            n1 = n2
+        }
+    }
+}
+
+theorem c_pair_inv_is_surjective {
+    is_surjective(c_pair_inv)
+} by {
+    forall(p: Product[ℕ, ℕ]) {
+        c_pair_inv(c_pair(p)) = p
+    }
+}
+
+theorem c_pair_inv_is_bijective {
+    is_bijective(c_pair_inv)
+}
+
+define preserve_countable[T](op: (ℕ -> T) -> T, s: Set[T]) -> Bool {
+    forall(f: ℕ -> T) {
+        fn_image(f) ⊆ s implies op(f) ∈ s
+    }
+}
+
+theorem countable_preserve_countable[T](op: (ℕ -> T) -> T, s: Set[T], f: ℕ -> (ℕ -> T)) {
+    preserve_countable(op, s) and forall(n: ℕ) { fn_image(f(n)) ⊆ s } implies op(compose[ℕ, ℕ -> T, T](op, f)) ∈ s
+} by {
+    forall(x: T) {
+        if x ∈ fn_image(compose[ℕ, ℕ -> T, T](op, f)) {
+            let n: ℕ satisfy {
+                x = compose[ℕ, ℕ -> T, T](op, f)(n)
+            }
+            x = op(f(n))
+            x ∈ s
+        }
+        fn_image(compose[ℕ, ℕ -> T, T](op, f)) ⊆ s
+    }
+    op(compose[ℕ, ℕ -> T, T](op, f)) ∈ s
+}

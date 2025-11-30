@@ -1,6 +1,6 @@
 from nat.prime_number import ℕ, mod_maintains, gcd as nat_gcd, relative_prime as nat_relative_prime
 from int.int_base import ℤ, from_nat, abs, abs_neg, abs_zero, neg_neg, nonzero_pos_or_neg, sub_eq_zero, sub_nat, lt_trans, neg_lt_zero
-from type_class.ordered_ring import triangle_ineq, triangle_ineq_sub
+from type_class.ordered_add import triangle_ineq, triangle_ineq_sub
 
 numerals ℤ
 
@@ -180,8 +180,9 @@ theorem lt_add_left(a: ℤ, b: ℤ, c: ℤ) {
     b < c implies a + b < a + c 
 } 
 
-from type_class.ordered_ring import Ordered_Add, Ordered_Ring
+from type_class.ordered_ring import Ordered_P_Add, Ordered_Add, Ordered_Ring
 
+instance ℤ: Ordered_P_Add
 instance ℤ: Ordered_Add
 
 instance ℤ: Ordered_Ring 

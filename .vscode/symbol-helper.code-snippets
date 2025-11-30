@@ -153,4 +153,8 @@
 	  "prefix": "head:_T,_tail:_List[T]",
 	  "body": "head: ${1:T}, tail: List[${1:T}]"
 	},
+	"Set[Set[K]]":{
+	  "prefix": "sets",
+	  "body": "Set[Set[${1:K}]]"
+	},
 }

@@ -1,6 +1,6 @@
-from limit.metric_space import Distance_Space
+from top.metric_space import Distance_Space
 from linear_algebra.vector_space import Vec, ℝ
-from limit.metric_space import Distance_Top, Metric_Top, Complete_Distance_Top, Complete_Metric_Top
+from top.metric_space import Distance_Top, Metric_Top, Complete_Distance_Top, Complete_Metric_Top
 
 let scal[V] = Vec.scal[V]
 

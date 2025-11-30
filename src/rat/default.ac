@@ -3,6 +3,7 @@ from int import ℤ
 from rat.rat_base import ℚ, reduce
 from order import Linear_Order
 from type_class.ordered_ring import lt_pos_mul_lt_pos, lte_mul_lte
+from type_class.field import recip_diff
 
 numerals ℚ
 
@@ -367,10 +368,12 @@ theorem cancel_to_reciprocal(a: ℚ, b: ℚ) {
     a/(a ⋅ b) = 1/b
 }
 
-theorem recip_diff(a: ℚ, b: ℚ) {
+theorem rat_recip_diff(a: ℚ, b: ℚ) {
     a != 0 and b != 0 implies
     1/a - 1/b = (b - a) / (a ⋅ b)
-} 
+} by {
+    recip_diff(a, b)
+}
 
 theorem lt_mul_lte(a: ℚ, b: ℚ, c: ℚ, d: ℚ) {
     a >= 0 and c > 0 and a < b and c <= d

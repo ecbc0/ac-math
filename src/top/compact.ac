@@ -1,6 +1,7 @@
 from top.top_base import Topology, Set, are_closed, are_open, is_net, intersection, union, limit_pt
 from set import compl_of_sets
 from limit.net import sets_of_finite_intersection, no_empty, directed, directed_helper, net_subset_finite_intersection, set_intersect_sets, Net
+from finite_set import sets_of_finite_union, is_set_of_finite_intersection
 
 define common_limit_pt[X: Topology](n: Set[Set[X]], x: X) -> Bool {
     forall(u: Set[X]) {
@@ -217,6 +218,7 @@ theorem is_compact_finite_intersection_imp_is_compact_intersection[X: Topology](
         if (n).is_nonempty and is_net(n) and are_closed(n) and set_intersect_sets(n, s) {
             forall(t: Set[X]) {
                 if t ∈ sets_of_finite_intersection(n) {
+                    is_set_of_finite_intersection(n, t)
                     let c: Set[Set[X]] satisfy {
                         c ⊆ n and c.is_finite and t = intersection(c)
                     }
@@ -245,67 +247,10 @@ define set_cover_by_one_of_sets[K](s: Set[K], n: Set[Set[K]]) -> Bool {
     }
 }
 
-define is_set_of_finite_union[K](n: Set[Set[K]], s: Set[K]) -> Bool {
-    exists(c: Set[Set[K]]) {
-        c ⊆ n and c.is_finite and s = union(c)
-    }
-}
-
-define sets_of_finite_union[K](n: Set[Set[K]]) -> Set[Set[K]] {
-    Set[Set[K]].new(is_set_of_finite_union(n))
-}
-
 define is_compact_finite_open_cover[X: Topology](s: Set[X]) -> Bool {
     forall(n: Set[Set[X]]) {
         (n).is_nonempty and are_open(n) and s ⊆ union(n) implies set_cover_by_one_of_sets(s, sets_of_finite_union(n))
     }
-}
-
-theorem sets_of_finite_intersection_union_dual[K](n: Set[Set[K]]) {
-    sets_of_finite_intersection(compl_of_sets(n)) = compl_of_sets(sets_of_finite_union(n))
-} by {
-    forall(s: Set[K]) {
-        if s ∈ sets_of_finite_intersection(compl_of_sets(n)) {
-            let c: Set[Set[K]] satisfy {
-                c ⊆ compl_of_sets(n) and c.is_finite and s = intersection(c)
-            }
-            s = union(compl_of_sets(c)).c
-            forall(t: Set[K]) {
-                if t ∈ compl_of_sets(c) {
-                    t.c ∈ c
-                    t.c ∈ compl_of_sets(n)
-                    t ∈ n
-                }
-            }
-            compl_of_sets(c) ⊆ n
-            union(compl_of_sets(c)) ∈ sets_of_finite_union(n)
-            s ∈ compl_of_sets(sets_of_finite_union(n))
-        }
-    }
-    sets_of_finite_intersection(compl_of_sets(n)) ⊆ compl_of_sets(sets_of_finite_union(n))
-
-    forall(s: Set[K]) {
-        if s ∈ compl_of_sets(sets_of_finite_union(n)) {
-            s.c ∈ sets_of_finite_union(n)
-            let c: Set[Set[K]] satisfy {
-                c ⊆ n and c.is_finite and s.c = union(c)
-            }
-            s = union(c).c
-            s = intersection(compl_of_sets(c))
-            forall(t: Set[K]) {
-                if t ∈ compl_of_sets(c) {
-                    t.c ∈ c
-                    t.c ∈ n
-                    t ∈ compl_of_sets(n)
-                }
-            }
-            compl_of_sets(c) ⊆ compl_of_sets(n)
-            compl_of_sets(c).is_finite
-            intersection(compl_of_sets(c)) ∈ sets_of_finite_intersection(compl_of_sets(n))
-            s ∈ sets_of_finite_intersection(compl_of_sets(n))
-        }
-    }
-    sets_of_finite_intersection(compl_of_sets(n)) ⊇ compl_of_sets(sets_of_finite_union(n))    
 }
 
 theorem is_compact_finite_intersection_imp_is_compact_finite_open_cover[X: Topology](s: Set[X]) {

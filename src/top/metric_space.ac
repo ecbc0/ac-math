@@ -258,6 +258,23 @@ theorem dist_set_helper[M: Distance_Space](s: Set[M], r: ℝ) {
     r ∈ dist_set(s) implies exists(x: M, y: M) {
         x ∈ s and y ∈ s and r = x.distance(y)
     }
+} by {
+    elem_in_dist_set(s, r)
+}
+
+theorem empty_to_empty_dist_set[M: Distance_Space] {
+    dist_set(Set[M].empty_set) = Set[ℝ].empty_set
+} by {
+    forall(r: ℝ) {
+        if r ∈ dist_set(Set[M].empty_set) {
+            let (x: M, y: M) satisfy {
+                x ∈ Set[M].empty_set and y ∈ Set[M].empty_set and r = x.distance(y)
+            }
+            false
+        }
+        not r ∈ dist_set(Set[M].empty_set)
+    }
+    dist_set(Set[M].empty_set).contains = Set[ℝ].empty_set.contains
 }
 
 define dist[M: Distance_Space](s: Set[M]) -> ℝ {
@@ -271,14 +288,26 @@ define dist[M: Distance_Space](s: Set[M]) -> ℝ {
 theorem lte_dist[M: Distance_Space](s: Set[M], r: ℝ) {
     have_sup(dist_set(s)) and r ∈ dist_set(s) implies r <= dist(s)
 } by {
-    r <= sup(dist_set(s))
+    if s.is_empty {
+        dist_set(s).is_empty
+        not r ∈ dist_set(s)
+    } else {
+        s.is_nonempty
+        r <= sup(dist_set(s))
+        dist(s) = sup(dist_set(s))
+    }
 }
 
 theorem dist_is_least_upper[M: Distance_Space](s: Set[M], r: ℝ) {
     have_sup(dist_set(s)) and r.is_set_upper_bound(dist_set(s)) implies dist(s) <= r
 } by {
-    sup(dist_set(s)) <= r
-    dist(s) = sup(dist_set(s))
+    if s.is_empty {
+        dist_set(s).is_empty
+        not have_sup(dist_set(s))
+    } else {
+        sup(dist_set(s)) <= r
+        dist(s) = sup(dist_set(s))
+    }
 }
 
 theorem dist_set_gte_zero[M: Distance_Space](s: Set[M]) {
@@ -392,9 +421,39 @@ define distance_from[M: Distance_Space](s: Set[M], x: M) -> Set[ℝ] {
     Set[ℝ].new(elem_in_distance_from(s, x))
 }
 
+theorem empty_to_empty_distance_from[M: Distance_Space](x: M) {
+    distance_from(Set[M].empty_set, x) = Set[ℝ].empty_set
+} by {
+    forall(r: ℝ) {
+        if r ∈ distance_from(Set[M].empty_set, x) {
+            let (y: M) satisfy {
+                y ∈ Set[M].empty_set and x.distance(y) = r
+            }
+            false
+        }
+    }
+    distance_from(Set[M].empty_set, x).contains = Set[ℝ].empty_set.contains
+}
+
 theorem distance_from_gte_zero[M: Distance_Space](s: Set[M], x: M) {
     forall(r: ℝ) {
         r ∈ distance_from(s, x) implies r >= 0
+    }
+} by {
+    if s.is_empty {
+        distance_from(s, x).is_empty
+        forall(r: ℝ) {
+            not r ∈ distance_from(s, x)
+        }
+    } else {
+        forall(r: ℝ) {
+            if r ∈ distance_from(s, x) {
+                let (y: M) satisfy {
+                    y ∈ s and x.distance(y) = r
+                }
+                r >= 0
+            }
+        }        
     }
 }
 

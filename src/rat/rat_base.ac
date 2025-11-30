@@ -2,8 +2,9 @@ from nat import ℕ
 from int import ℤ, gcd, abs, mul_pos_pos_iff
 from util import is_transitive, is_acyclic
 from order import Partial_Order, Linear_Order, typeclass_lte_order
+from type_class.add import P_Add
 from type_class.ring import Mul, zero_mul_to_zero
-from type_class.ordered_ring import Add, Ring, Ordered_Add, Ordered_Ring, lt_mul_pos, mul_lt_lt
+from type_class.ordered_ring import Add, Ring, Ordered_P_Add, Ordered_Add, Ordered_Ring, lt_mul_pos, mul_lt_lt
 from type_class.field import Field
 from type_class.ordered_field import Ordered_Field, lt_pos_reciprocal, square_lt_imp_lt
 
@@ -647,9 +648,12 @@ theorem add_assoc(a: ℚ, b: ℚ, c: ℚ) {
     a + b + c = a + (b + c)
 }
 
-instance ℚ: Add {
+instance ℚ: P_Add {
     let add = ℚ.add
     let 0 = ℚ.0
+}
+
+instance ℚ: Add {
     let neg = ℚ.neg
 }
 
@@ -1179,6 +1183,7 @@ theorem lt_add_right(a: ℚ, b: ℚ, c: ℚ) {
     ((b + c) - (a + c)) > 0
 }
 
+instance ℚ: Ordered_P_Add
 instance ℚ: Ordered_Add
 instance ℚ: Ordered_Ring
 instance ℚ: Ordered_Field

@@ -1,3 +1,0 @@
-from set import Set
-from limit.net import Net
-from real import ℝ

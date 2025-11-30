@@ -188,16 +188,14 @@ theorem singleton_set_is_not_empty[K](a: K) {
 
 attributes Set[K] {
     /// a ⊆ b
-    let subset_eq = function(a: Set[K], b: Set[K]) {
+    define subset_eq(self, other: Set[K]) -> Bool {
         forall(x: K) {
-            x ∈ a implies x ∈ b
+            x ∈ self implies x ∈ other
         }
     }
     /// a ⊇ b
-    let superset_eq = function(a: Set[K], b: Set[K]) {
-        forall(x: K) {
-            x ∈ b implies x ∈ a
-        }
+    define superset_eq(self, other: Set[K]) -> Bool {
+        (other).subset_eq(self)
     }
 
     define subset(self, other: Set[K]) -> Bool {
@@ -323,6 +321,20 @@ theorem difference_is_intersection_with_compl[K](a: Set[K], b: Set[K]) {
     }
 }
 
+theorem diff_subset[K](a: Set[K], b: Set[K]) {
+    (a ∖ b) ⊆ a
+}
+
+theorem subset_compl_to_superset[K](a: Set[K], b: Set[K]) {
+    a ⊆ b iff a.c ⊇ b.c
+} by {
+    a ⊆ b implies a.c ⊇ b.c
+}
+
+theorem subset_diff_to_superset[K](a: Set[K], b: Set[K], s: Set[K]) {
+    a ⊆ b implies s ∖ a ⊇ s ∖ b
+} 
+
 theorem union_comm[K](a1: Set[K], a2: Set[K]) {
     (a1 ∪ a2) = (a2 ∪ a1)
     // by the comm of logic operator `or`
@@ -443,6 +455,142 @@ theorem not_subset_iff_contains_diff[K](a: Set[K], b: Set[K]) {
 } by {
     a ∖ b = a ∩ b.c
     not a ⊆ b implies a ∖ b != empty[K]
+}
+
+theorem subset_iff_not_contains_diff[K](a: Set[K], b: Set[K]) {
+    a ⊆ b iff a ∖ b = empty[K] 
+} by {
+    a ⊆ b implies a ∖ b = empty[K] 
+}
+
+theorem when_sym_diff_is_diff[K](a: Set[K], b: Set[K]) {
+    sym_difference(a, b) = b ∖ a iff a ⊆ b
+} by {
+    if sym_difference(a, b) = b ∖ a {
+        b ∖ a = (b ∖ a) ∪ (a ∖ b)
+        (a ∖ b) ⊆ (b ∖ a)
+        forall(x: K) {
+            if x ∈ a ∖ b {
+                x ∈ a
+                x ∈ b ∖ a
+                x ∉ a
+                false
+            }
+            x ∉ a ∖ b
+        }
+        a ∖ b = empty[K]
+        a ⊆ b
+    }
+    if a ⊆ b {
+        a ∖ b = empty[K]
+        sym_difference(a, b) = b ∖ a
+    }
+}
+
+define disjoint[K](a: Set[K], b: Set[K]) -> Bool {
+    a ∩ b = empty[K]
+}
+
+theorem disjoint_by_logic_imp[K](a: Set[K], b: Set[K]) {
+    disjoint(a, b) implies forall(x: K) {
+        not (x ∈ a and x ∈ b)
+    }
+} 
+
+theorem disjoint_by_logic_imp_by[K](a: Set[K], b: Set[K]) {
+    forall(x: K) {
+        not (x ∈ a and x ∈ b)
+    } implies disjoint(a, b)
+}
+
+theorem diff_disjointt[K](a: Set[K], b: Set[K]) {
+    disjoint(a, b ∖ a)
+} by {
+    forall(x: K) {
+        if x ∈ a ∩ (b ∖ a) {
+            x ∈ a
+            x ∈ b and x ∉ a
+            x ∉ a
+            false
+        } 
+        x ∉ a ∩ (b ∖ a)
+    }
+    a ∩ (b ∖ a) = empty[K]
+}
+
+theorem disjoint_substract[K](a: Set[K], b: Set[K]) {
+    disjoint(a, b) implies (a ∪ b) ∖ a = b
+} by {
+    forall(x: K) {
+        if x ∈ (a ∪ b) ∖ a {
+            x ∈ a ∪ b and x ∉ a
+            x ∈ a or x ∈ b
+            x ∉ a
+            x ∈ b
+        }
+    }
+    (a ∪ b) ∖ a ⊆ b
+    forall(x: K) {
+        if x ∈ b {
+            x ∉ a
+            x ∈ a ∪ b
+            x ∈ a ∪ b and x ∉ a
+            x ∈ (a ∪ b) ∖ a
+        }
+    }
+    (a ∪ b) ∖ a ⊇ b
+}
+
+theorem recover_from_subset_substract[K](a: Set[K], b: Set[K]) {
+    a ⊆ b implies b = a ∪ (b ∖ a)
+} by {
+    // This direction dose not need a ⊆ b 
+    forall(x: K) {
+        if x ∈ b {
+            if x ∈ a {
+                x ∈ a ∪ (b ∖ a)
+            } else {
+                x ∉ a
+                x ∈ b ∖ a
+                x ∈ a ∪ (b ∖ a)
+            }
+            x ∈ a ∪ (b ∖ a)
+        }
+    }
+    b ⊆ a ∪ (b ∖ a)
+    
+    a ⊆ b
+    b ∖ a ⊆ b
+    a ∪ (b ∖ a) ⊆ b
+}
+
+theorem sym_of_subset_substract[K](a: Set[K], b: Set[K]) {
+    a ⊆ b implies a = b ∖ (b ∖ a)
+} by {
+    b = a ∪ (b ∖ a)
+    disjoint(a, b ∖ a)
+    b ∖ (b ∖ a) = a
+}
+
+theorem to_subset_substract[K](a: Set[K], b: Set[K]) {
+    b ∖ a = b ∖ (a ∩ b)
+} by {
+    a ∩ b ⊆ a
+    b ∖ (a ∩ b) ⊇ b ∖ a
+    forall(x: K) {
+        if x ∈ b ∖ (a ∩ b) {
+            x ∈ b
+            x ∉ a ∩ b
+            if x ∈ a {
+                x ∈ a and x ∈ b
+                x ∈ a ∩ b
+                false
+            }
+            x ∉ a
+            x ∈ b ∖ a
+        }
+    }
+    b ∖ a ⊆ b ∖ (a ∩ b)
 }
 
 theorem union_associative[K](a1: Set[K], a2: Set[K], a3: Set[K]) {
@@ -713,6 +861,90 @@ theorem intersection_is_intersection_index_of_two[K](a1: Set[K], a2: Set[K]) {
     }
 }
 
+structure Product[K1, K2] {
+    first: K1
+    second: K2
+}
+
+define suc_to_product[I, J, T](f: I -> (J -> T)) -> Product[I, J] -> T {
+    function(p: Product[I, J]) {
+        f(p.first)(p.second)
+    }
+}
+
+define suc_union_index[I, J, K](f: I -> (J -> Set[K]), i: I) -> Set[K] {
+    union_index(f(i))
+}
+
+theorem suc_union_index_to_union_index_product[I, J, K](f: I -> (J -> Set[K])) {
+    union_index(suc_union_index(f)) = union_index(suc_to_product(f))
+} by {
+    forall(x: K) {
+        if x ∈ union_index(suc_union_index(f)) {
+            let i: I satisfy {
+                x ∈ union_index(f(i))
+            }
+            let j: J satisfy {
+                x ∈ f(i)(j)
+            }
+            x ∈ suc_to_product(f)(Product[I, J].new(i, j))
+            x ∈ union_index(suc_to_product(f))
+        }
+    }
+    union_index(suc_union_index(f)) ⊆ union_index(suc_to_product(f))
+    forall(x: K) {
+        if x ∈ union_index(suc_to_product(f)) {
+            let p: Product[I, J] satisfy {
+                x ∈ suc_to_product(f)(p)
+            }
+            let i0 = p.first
+            let j0 = p.second
+            x ∈ f(i0)(j0)
+            x ∈ union_index(f(i0))
+            x ∈ union_index(suc_union_index(f))
+        }
+    }
+    union_index(suc_union_index(f)) ⊇ union_index(suc_to_product(f))
+}
+
+define suc_intersection_index[I, J, K](f: I -> (J -> Set[K]), i: I) -> Set[K] {
+    intersection_index(f(i))
+}
+
+theorem suc_intersection_index_to_intersection_index_product[I, J, K](f: I -> (J -> Set[K])) {
+    intersection_index(suc_intersection_index(f)) = intersection_index(suc_to_product(f))
+} by {
+    forall(x: K) {
+        if x ∈ intersection_index(suc_intersection_index(f)) {
+            forall(p: Product[I, J]) {
+                let i = p.first
+                let j = p.second
+                x ∈ suc_intersection_index(f)(i)
+                x ∈ intersection_index(f(i))
+                x ∈ f(i)(j)
+                x ∈ suc_to_product(f)(Product[I, J].new(i, j))
+                x ∈ suc_to_product(f)(p)
+            }
+            x ∈ intersection_index(suc_to_product(f))
+        }
+    }
+    intersection_index(suc_intersection_index(f)) ⊆ intersection_index(suc_to_product(f))
+    forall(x: K) {
+        if x ∈ intersection_index(suc_to_product(f)) {
+            forall(i: I) {
+                forall(j: J) {
+                    x ∈ suc_to_product(f)(Product[I, J].new(i, j))
+                    x ∈ f(i)(j)
+                }
+                x ∈ intersection_index(f(i))
+                x ∈ suc_intersection_index(f)(i)
+            }
+            x ∈ intersection_index(suc_intersection_index(f))
+        }
+    }
+    intersection_index(suc_intersection_index(f)) ⊇ intersection_index(suc_to_product(f))
+}
+
 inductive Sum[K1, K2] {
     first(K1)
     second(K2)
@@ -737,11 +969,6 @@ attributes Set[K1] {
 
 theorem add_test[K1, K2](a1: Set[K1], a2: Set[K2]) {
     a1 + a2 ⊆ Set[Sum[K1, K2]].universal_set
-}
-
-structure Product[K1, K2] {
-    first: K1
-    second: K2
 }
 
 define elem_in_product[K1,K2](a1: Set[K1], a2: Set[K2], p: Product[K1,K2]) -> Bool {
@@ -1005,6 +1232,12 @@ theorem intersection_with_one_that_in_sets[K](c: Set[Set[K]], s: Set[K]) {
     s ∩ intersection(c) = intersection(c)
 }
 
+define pairwise_disjoint[K](c: Set[Set[K]]) -> Bool {
+    forall(a: Set[K], b: Set[K]) {
+        a ∈ c and b ∈ c implies disjoint(a, b)
+    }
+}
+
 // todo: (product/sum)_index_of_two
 structure Map[K, L] {
     in_space: Set[K]
@@ -1128,6 +1361,14 @@ define power_set[K](a: Set[K]) -> Set[Set[K]] {
 
 define is_injective[K, L](f: K -> L) -> Bool {
     forall(x1: K, x2: K) { f(x1) = f(x2) implies x1 = x2 }  
+}
+
+theorem is_injective_rev_imp[K, L](f: K -> L) {
+    is_injective(f) implies forall(x1: K, x2: K) { x1 != x2 implies f(x1) != f(x2) }  
+} 
+
+theorem is_injective_rev_imp_by[K, L](f: K -> L) {
+    forall(x1: K, x2: K) { x1 != x2 implies f(x1) != f(x2) } implies is_injective(f)
 }
 
 define is_surjective[K, L](f: K -> L) -> Bool {
@@ -1348,6 +1589,125 @@ theorem intersection_image_subset_image_intersection[K, L](f: K -> L, a: Set[K],
     }
 }
 
+define fn_image[I, K](f: I -> K) -> Set[K] {
+    universe[I].image(f)
+}
+
+theorem fn_image_helper[I, K](f: I -> K, i: I) {
+    f(i) ∈ fn_image(f) 
+} by {
+    i ∈ universe[I]
+}
+
+theorem union_index_to_general[I, K](f: I -> Set[K]) {
+    union_index(f) = union(fn_image(f))
+} by {
+    forall(x: K) {
+        if x ∈ union_index(f) {
+            let i: I satisfy {
+                x ∈ f(i)
+            }
+            f(i) ∈ fn_image(f)
+            x ∈ union(fn_image(f))
+        }
+    }
+    union_index(f) ⊆ union(fn_image(f))
+    forall(x: K) {
+        if x ∈ union(fn_image(f)) {
+            let s: Set[K] satisfy {
+                s ∈ fn_image(f) and x ∈ s 
+            }
+            let i: I satisfy {
+                s = f(i)
+            }
+            x ∈ f(i)
+            x ∈ union_index(f)
+        }
+    }
+    union_index(f) ⊇ union(fn_image(f))
+}
+
+theorem intersection_index_to_general[I, K](f: I -> Set[K]) {
+    intersection_index(f) = intersection(fn_image(f))
+} by {
+    forall(x: K) {
+        if x ∈ intersection_index(f) {
+            forall(s: Set[K]) {
+                if s ∈ fn_image(f) {
+                    let i: I satisfy {
+                        f(i) = s
+                    }
+                    x ∈ f(i)
+                    x ∈ s
+                }
+            }
+            x ∈ intersection(fn_image(f))
+        }
+    }
+    intersection_index(f) ⊆ intersection(fn_image(f))
+
+    forall(x: K) {
+        if x ∈ intersection(fn_image(f)) {
+            forall(i: I) {
+                f(i) ∈ fn_image(f)
+                x ∈ f(i)
+            }
+            x ∈ intersection_index(f)
+        }
+    }
+    intersection_index(f) ⊇ intersection(fn_image(f))
+}
+
+theorem surjective_same_image[I, J, K](g: I -> J, f: J -> Set[K]) {
+    is_surjective(g) implies (
+        fn_image(compose(f, g)) = fn_image(f)
+    )
+} by {
+    forall(s: Set[K]) {
+        if s ∈ fn_image(compose(f, g)) {
+            let i: I satisfy {
+                s = compose(f, g)(i)
+            }
+            s = f(g(i))
+            g(i) ∈ universe[J]
+            s ∈ fn_image(f)    
+        }
+    }
+    fn_image(compose(f, g)) ⊆ fn_image(f)
+
+    forall(s: Set[K]) {
+        if s ∈ fn_image(f) {
+            let j: J satisfy {
+                s = f(j)
+            }
+            let i: I satisfy {
+                j = g(i)
+            }
+            s = f(g(i))
+            s = compose(f, g)(i)
+            i ∈ universe[I]
+            s ∈ fn_image(compose(f, g))
+        }
+    }
+    fn_image(compose(f, g)) ⊇ fn_image(f)
+}
+
+theorem surective_same_union_index[I, J, K](g: I -> J, f: J -> Set[K]) {
+    is_surjective(g) implies union_index(compose(f, g)) = union_index(f)
+} by {
+    union_index(compose(f, g)) = union(fn_image(compose(f, g)))
+    union_index(f) = union(fn_image(f))
+    fn_image(compose(f, g)) = fn_image(f)
+}
+
+theorem surective_same_intersection_index[I, J, K](g: I -> J, f: J -> Set[K]) {
+    is_surjective(g) implies intersection_index(compose(f, g)) = intersection_index(f)
+} by {
+    intersection_index(compose(f, g)) = intersection(fn_image(compose(f, g)))
+    intersection_index(f) = intersection(fn_image(f))
+    fn_image(compose(f, g)) = fn_image(f)
+}
+
 theorem in_singleton[K](x: K, y: K) {
     y ∈ Set[K].singleton(x) iff y = x
 } by {
@@ -1383,6 +1743,8 @@ theorem subset_not_eq_by_contains[K](a: Set[K], b: Set[K]) {
     a ⊂ b implies exists(x: K) {
         x ∈ b and x ∉ a
     }
+} by {
+    a != b
 }
 
 /// Creates a new function that returns true for the given item and delegates to the original function for all other inputs.  

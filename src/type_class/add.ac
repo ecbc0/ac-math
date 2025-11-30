@@ -1,6 +1,6 @@
 /// also called "commutative monoid".  
 /// also apply to mul ⋅
-typeclass A: Add {
+typeclass A: P_Add {
     /// The binary addition operation that combines two elements
     add: (A, A) -> A
 
@@ -21,7 +21,9 @@ typeclass A: Add {
     add_associative(a: A, b: A, c: A) {
         a + (b + c) = (a + b) + c
     }
+}
 
+typeclass A: Add extends P_Add {
     /// The additive inverse of an element.
     neg: A -> A
 
@@ -186,7 +188,7 @@ theorem fix_neg[A: Add](a: A) {
 }
 
 /// Pointwise addition of two functions.
-define add_fn[T, A: Add](f: T -> A, g: T -> A, t: T) -> A {
+define add_fn[T, A: P_Add](f: T -> A, g: T -> A, t: T) -> A {
     f(t) + g(t)
 }
 

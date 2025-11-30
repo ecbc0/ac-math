@@ -1,11 +1,10 @@
 {"goal":"forall(x0: ℝ, x1: ℝ, x2: ℝ) { x0 ⋅ (x1 ⋅ x2) = x0 ⋅ x1 ⋅ x2 }","proof":["let (s0: ℝ, s1: ℝ, s2: ℝ) satisfy { s0 ⋅ (s1 ⋅ s2) != s0 ⋅ s1 ⋅ s2 }","s0 ⋅ (s1 ⋅ s2) = s0 ⋅ s1 ⋅ s2"]}
-{"goal":"forall(x0: ℝ, x1: ℝ, x2: ℝ) { (x0 + x1) ⋅ x2 = Add.add[ℝ](x0 ⋅ x2, x1 ⋅ x2) }","proof":["let (s0: ℝ, s1: ℝ, s2: ℝ) satisfy { s0 ⋅ s2 + s1 ⋅ s2 != (s0 + s1) ⋅ s2 }","s0 ⋅ s2 + s1 ⋅ s2 = (s0 + s1) ⋅ s2"]}
+{"goal":"forall(x0: ℝ, x1: ℝ, x2: ℝ) { (x0 + x1) ⋅ x2 = lib(type_class.add).P_Add.add[ℝ](x0 ⋅ x2, x1 ⋅ x2) }","proof":["let (s0: ℝ, s1: ℝ, s2: ℝ) satisfy { s0 ⋅ s2 + s1 ⋅ s2 != (s0 + s1) ⋅ s2 }","s0 ⋅ s2 + s1 ⋅ s2 = (s0 + s1) ⋅ s2"]}
 {"goal":"forall(x0: ℝ) { ℝ.1 ⋅ x0 = x0 }","proof":["let s0: ℝ satisfy { ℝ.1 ⋅ s0 != s0 }","ℝ.1 ⋅ s0 = s0"]}
-{"goal":"forall(x0: ℝ, x1: ℝ, x2: ℝ) { x0 ⋅ Add.add[ℝ](x1, x2) = Add.add[ℝ](x0 ⋅ x1, x0 ⋅ x2) }","proof":["let (s0: ℝ, s1: ℝ, s2: ℝ) satisfy { s0 ⋅ s1 + s0 ⋅ s2 != s0 ⋅ (s1 + s2) }","s0 ⋅ s1 + s0 ⋅ s2 = s0 ⋅ (s1 + s2)"]}
-{"goal":"forall(x0: ℝ) { ℝ.0 ⋅ x0 = lib(type_class.add).Add.0[ℝ] }","proof":["let s0: ℝ satisfy { ℝ.0 ⋅ s0 != ℝ.0 }","ℝ.0 != ℝ.0 or ℝ.0 ⋅ s0 = ℝ.0"]}
+{"goal":"forall(x0: ℝ, x1: ℝ, x2: ℝ) { x0 ⋅ lib(type_class.add).P_Add.add[ℝ](x1, x2) = lib(type_class.add).P_Add.add[ℝ](x0 ⋅ x1, x0 ⋅ x2) }","proof":["let (s0: ℝ, s1: ℝ, s2: ℝ) satisfy { s0 ⋅ s1 + s0 ⋅ s2 != s0 ⋅ (s1 + s2) }","s0 ⋅ s1 + s0 ⋅ s2 = s0 ⋅ (s1 + s2)"]}
+{"goal":"forall(x0: ℝ) { ℝ.0 ⋅ x0 = lib(type_class.add).P_Add.0[ℝ] }","proof":["let s0: ℝ satisfy { ℝ.0 ⋅ s0 != ℝ.0 }","ℝ.0 != ℝ.0 or ℝ.0 ⋅ s0 = ℝ.0"]}
 {"goal":"scal(-ℝ.1, v) + v = scal(-ℝ.1, v) + scal(ℝ.1, v)","proof":["scal(ℝ.1, v) != v","scal(ℝ.1, v) = V.scal(ℝ.1, v)","V.scal(ℝ.1, v) != v","V.scal(ℝ.1, v) = v"]}
 {"goal":"scal(-ℝ.1, v) + scal(ℝ.1, v) = scal(-ℝ.1 + ℝ.1, v)","proof":["V.scal(-ℝ.1, v) + V.scal(ℝ.1, v) = V.scal(-ℝ.1 + ℝ.1, v)","scal(-ℝ.1 + ℝ.1, v) = V.scal(-ℝ.1 + ℝ.1, v)","scal(-ℝ.1, v) = V.scal(-ℝ.1, v)","scal(ℝ.1, v) = V.scal(ℝ.1, v)"]}
 {"goal":"scal(-ℝ.1 + ℝ.1, v) = scal(ℝ.0, v)","proof":["-ℝ.1 + ℝ.1 != ℝ.0","ℝ.1 + -ℝ.1 = -ℝ.1 + ℝ.1","ℝ.1 + -ℝ.1 = ℝ.0"]}
 {"goal":"add_neg_is_scal_reverse","proof":["scal(-ℝ.1, v) + v != V.0 or scal(-ℝ.1, v) = -v","scal(ℝ.0, v) = V.scal(ℝ.0, v)","V.scal(ℝ.0, v) = V.0","scal(-ℝ.1, v) + v != V.0"]}
 {"goal":"exists(k0: ℕ, k1: ℕ -> V) { forall(x0: ℕ) { x0 >= k0 implies k1(x0) = V.0 } }","proof":["let s0: ℕ satisfy { true }","let s1: (ℕ, ℕ -> V) -> ℕ satisfy { forall(x0: ℕ, x1: ℕ -> V) { s1(x0, x1) >= x0 } and forall(x2: ℕ -> V, x3: ℕ) { x2(s1(x3, x2)) != V.0 } }","c(s1(s0, c)) != V.0","c(s1(s0, c)) = V.0"]}
-{"goal":"exists(k0: ℕ, k1: ℕ -> V) { forall(x0: ℕ) { x0 >= k0 implies k1(x0) = V.0 } }","proof":["let s0: ℕ satisfy { true }","let s1: (ℕ, ℕ -> V) -> ℕ satisfy { forall(x0: ℕ, x1: ℕ -> V) { s1(x0, x1) >= x0 } and forall(x2: ℕ -> V, x3: ℕ) { x2(s1(x3, x2)) != V.0 } }","index(s1(s0, index)) != V.0","index(s1(s0, index)) = V.0"]}

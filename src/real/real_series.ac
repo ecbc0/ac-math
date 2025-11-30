@@ -1,0 +1,227 @@
+from real.real_base import ℝ
+from real.real_completeness import is_increase, is_suc_increase, converge, have_sup, have_upper_bound, converge_to, sup, same_upper_bound, same_least_upper_bound
+from real.real_net_completeness import increase_convergence_to_sup
+numerals ℝ
+from list.list_base import max_list, list_has_max, contains_subset
+from list.list_sum import List, sum, range_sum
+from set import fn_image
+from finite_set import Set, ℕ
+from type_class.ordered_ring import is_nonnegative_list
+
+define is_nonnegative_set(s: Set[ℝ]) -> Bool {
+    forall(x: ℝ) {
+        x ∈ s implies x >= 0
+    }
+}
+
+define is_nonnegative_seq(f: ℕ -> ℝ) -> Bool {
+    forall(n: ℕ) {
+        f(n) >= 0
+    }
+}
+
+theorem nonnegtive_seq_to_set(f: ℕ -> ℝ) {
+    is_nonnegative_seq(f) iff is_nonnegative_set(fn_image(f))
+} by {
+    if is_nonnegative_seq(f) {
+        forall(x: ℝ) {
+            if x ∈ fn_image(f) {
+                let n: ℕ satisfy { x = f(n) }
+                f(n) >= 0
+                x >= 0
+            }
+        }
+        is_nonnegative_set(fn_image(f))
+    }
+    
+    if is_nonnegative_set(fn_image(f)) {
+        forall(n: ℕ) {
+            f(n) ∈ fn_image(f)
+            f(n) >= 0
+        }
+        is_nonnegative_seq(f) 
+    }
+}
+
+define elem_in_finite_sum(f: ℕ -> ℝ, r: ℝ) -> Bool {
+    exists(l: List[ℕ]) {
+        l.is_unique and r = sum(l.map(f)) 
+    }
+}
+
+define set_of_finite_sum(f: ℕ -> ℝ) -> Set[ℝ] {
+    Set[ℝ].new(elem_in_finite_sum(f))
+}
+
+define series(f: ℕ -> ℝ) -> (ℕ -> ℝ) {
+    function(n: ℕ) {
+        range_sum(f, n) 
+    }
+}
+
+theorem series_suc(f: ℕ -> ℝ, n: ℕ) {
+    series(f)(n.suc) = series(f)(n) + f(n)
+} by {
+    range_sum(f, n.suc) = range_sum(f, n) + f(n)
+}
+
+theorem nonnegtive_seq_to_nonnegtive_list(l: List[ℝ], f: ℕ -> ℝ) {
+    is_nonnegative_seq(f) and contains_subset(l.contains, fn_image(f).contains) implies is_nonnegative_list(l)
+} by {
+    forall(x: ℝ) {
+        if x ∈ l {
+            x ∈ fn_image(f)
+            x >= 0
+        }
+    }
+}
+
+theorem contains_seq_list(l: List[ℕ], f: ℕ -> ℝ) {
+    contains_subset(l.map(f).contains, fn_image(f).contains)
+} by {
+    forall(x: ℝ) {
+        if x ∈ l.map(f) {
+            let n: ℕ satisfy {
+                n ∈ l and x = f(n)
+            }
+            f(n) ∈ fn_image(f)
+            x ∈ fn_image(f)
+        }
+    }
+}
+
+theorem nonnegtive_seq_to_series(f: ℕ -> ℝ) {
+    is_nonnegative_seq(f) implies is_nonnegative_seq(series(f))
+} by {
+    define p(n: ℕ) -> Bool {
+        series(f)(n) >= 0
+    }
+    range_sum(f, ℕ.0) = 0
+    series(f)(ℕ.0) = 0
+    p(ℕ.0)
+    forall(n: ℕ) {
+        if p(n) {
+            series(f)(n.suc) = range_sum(f, n.suc)
+            range_sum(f, n.suc) = range_sum(f, n) + f(n)
+            range_sum(f, n) >= 0
+            f(n) >= 0
+            range_sum(f, n.suc) >= 0
+            p(n.suc)
+        }
+    }
+}
+
+theorem nonnegtive_series_increase(f: ℕ -> ℝ) {
+    is_nonnegative_seq(f) implies is_increase(series(f))
+} by {
+    forall(n: ℕ) {
+        series(f)(n.suc) = series(f)(n) + f(n)
+        f(n) >= 0
+        series(f)(n.suc) >=  series(f)(n)
+    }
+    is_suc_increase(series(f))
+}
+
+theorem series_in_set_of_finite_sum(f: ℕ -> ℝ, n: ℕ) {
+    series(f)(n) ∈ set_of_finite_sum(f)
+} by {
+    series(f)(n) = range_sum(f, n)
+    range_sum(f, n) = sum(n.range.map(f))
+    n.range.is_unique
+}
+
+theorem series_image_set_subset_set_of_finite_sum(f: ℕ -> ℝ) {
+    fn_image(series(f)) ⊆ set_of_finite_sum(f)
+} by {
+    forall(r: ℝ) {
+        if r ∈ fn_image(series(f)) {
+            let n: ℕ satisfy { r = series(f)(n) }
+            r ∈ set_of_finite_sum(f)
+        }
+    }
+}
+
+theorem nonnegtive_series_image_have_upper_bound_imp_converge(f: ℕ -> ℝ) {
+    is_nonnegative_seq(f) and have_upper_bound(fn_image(series(f))) implies converge_to(series(f), sup(fn_image(series(f))))
+} by {
+    is_increase(series(f))
+}
+
+theorem series_image_set_have_same_upper_with_set_of_finite_sum(f: ℕ -> ℝ, r: ℝ) {
+    is_nonnegative_seq(f) and r ∈ set_of_finite_sum(f) implies exists(n: ℕ) {
+        r <= series(f)(n) 
+    }
+} by {
+    let l: List[ℕ] satisfy {
+        l.is_unique and r = sum(l.map(f))
+    }
+    let n = max_list(l, ℕ.0)
+    forall(m: ℕ) {
+        if m ∈ l {
+            list_has_max(l, ℕ.0)
+            m <= max_list(l, ℕ.0)
+            m <= n
+            m < n.suc
+            m ∈ n.suc.range
+        }
+    }
+    l ⊆ n.suc.range
+    l.map(f) ⊆ n.suc.range.map(f)
+    is_nonnegative_list(l.map(f))
+    is_nonnegative_list(n.suc.range.map(f))
+    sum(l.map(f)) <= sum(n.suc.range.map(f))
+    sum(n.suc.range.map(f)) = series(f)(n.suc)
+    r <= series(f)(n.suc)
+}
+
+theorem series_image_set_have_same_upper_bound_with_set_of_finite_sum(f: ℕ -> ℝ) {
+    is_nonnegative_seq(f) implies same_upper_bound(fn_image(series(f)), set_of_finite_sum(f))
+} by {
+    forall(r: ℝ) {
+        if r.is_set_upper_bound(fn_image(series(f))) {
+            forall(x: ℝ) {
+                if x ∈ set_of_finite_sum(f) {
+                    let y: ℝ satisfy {
+                        y ∈ fn_image(series(f)) and x <= y
+                    }
+                    y <= r
+                    x <= r
+                }
+            }
+            r.is_set_upper_bound(set_of_finite_sum(f))
+        }
+        r.is_set_upper_bound(fn_image(series(f))) implies r.is_set_upper_bound(set_of_finite_sum(f))
+        
+        if r.is_set_upper_bound(set_of_finite_sum(f)) {
+            forall(x: ℝ) {
+                if x ∈ fn_image(series(f)) {
+                    x ∈ set_of_finite_sum(f)
+                    x <= r
+                }
+            }
+            r.is_set_upper_bound(fn_image(series(f)))
+        }
+        r.is_set_upper_bound(set_of_finite_sum(f)) implies r.is_set_upper_bound(fn_image(series(f)))
+
+        r.is_set_upper_bound(fn_image(series(f))) iff r.is_set_upper_bound(set_of_finite_sum(f))
+    }
+}
+
+theorem series_image_set_have_same_sup_with_set_of_finite_sum(f: ℕ -> ℝ) {
+    is_nonnegative_seq(f) implies same_least_upper_bound(fn_image(series(f)), set_of_finite_sum(f))
+} 
+
+theorem nonnegtive_series_converge_imp_set_of_finite_sum_have_sup(f: ℕ -> ℝ) {
+    is_nonnegative_seq(f) and converge(series(f)) implies have_sup(set_of_finite_sum(f)) and converge_to(series(f), sup(set_of_finite_sum(f))) 
+} by {
+    is_increase(series(f))
+    increase_convergence_to_sup(series(f))
+    have_sup(fn_image(series(f)))
+    converge_to(series(f), sup(fn_image(series(f))))
+    have_upper_bound(set_of_finite_sum(f))
+    set_of_finite_sum(f).is_nonempty
+    have_sup(set_of_finite_sum(f))
+    sup(fn_image(series(f))).is_set_least_upper_bound(set_of_finite_sum(f))
+    sup(fn_image(series(f))) = sup(set_of_finite_sum(f))
+    converge_to(series(f), sup(set_of_finite_sum(f))) 
+}

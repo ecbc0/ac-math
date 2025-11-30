@@ -1,4 +1,4 @@
-from finite_set import Set, List, list_to_set, intersection_of_list_recursion, intersection_of_list
+from finite_set import Set, List, list_to_set, intersection_of_list_recursion, intersection_of_list, sets_of_finite_intersection, is_set_of_finite_intersection
 from set import intersection, elem_in_intersection_general
 from order import Partial_Order, Linear_Order, is_acyclic, is_transitive, is_reflexive, is_antisymmetric, is_nonreflexive, lte_from, lt_from, lte_to_lt_partial_order, Partial_Order_Lte
 from nat import ℕ
@@ -492,65 +492,6 @@ theorem seq_to_net_is_net[K](f: ℕ -> K) {
     directed(seq_to_net(f))
 }
 
-define is_set_of_finite_intersection[K](n: Set[Set[K]], s: Set[K]) -> Bool {
-    exists(c: Set[Set[K]]) {
-        c ⊆ n and c.is_finite and s = intersection(c)
-    }
-}
-
-define sets_of_finite_intersection[K](n: Set[Set[K]]) -> Set[Set[K]] {
-    Set[Set[K]].new(is_set_of_finite_intersection(n))
-}
-
-theorem sets_of_finite_intersection_preserve_two_intersection[K](n: Set[Set[K]], s1: Set[K], s2: Set[K]) {
-    s1 ∈ sets_of_finite_intersection(n) and s2 ∈ sets_of_finite_intersection(n) implies s1 ∩ s2 ∈ sets_of_finite_intersection(n)
-} by {
-    let c1: Set[Set[K]] satisfy {
-        c1 ⊆ n and c1.is_finite and s1 = intersection(c1)
-    }
-    is_set_of_finite_intersection(n, s2)
-    let c2: Set[Set[K]] satisfy {
-        c2 ⊆ n and c2.is_finite and s2 = intersection(c2)
-    }
-
-    let c = c1 ∪ c2
-    c1 ∪ c2 ⊆ n
-    c ⊆ n
-    c.is_finite
-    c1 ⊆ c
-    c2 ⊆ c
-    intersection(c) ⊆ intersection(c1)
-    intersection(c) ⊆ intersection(c2)
-    intersection(c) ⊆ s1 ∩ s2
-
-    forall(x: K) {
-        if x ∈ s1 ∩ s2 {
-            x ∈ s1
-            x ∈ s2
-            x ∈ intersection(c1)
-            x ∈ intersection(c2)
-            forall(s: Set[K]) {
-                if s ∈ c {
-                    if s ∈ c1 {
-                        x ∈ s
-                    }
-                    if s ∈ c2 {
-                        x ∈ s
-                    }
-                    x ∈ s
-                }
-            }
-            elem_in_intersection_general(c, x)
-            x ∈ intersection(c)
-        }
-    }
-    s1 ∩ s2 ⊆ intersection(c)
-
-    s1 ∩ s2 = intersection(c)
-
-    s1 ∩ s2 ∈ sets_of_finite_intersection(n)
-}
-
 theorem sets_of_finite_intersection_preserve_directed[K](n: Set[Set[K]], s1: Set[K], s2: Set[K]) {
     directed(n) implies directed(sets_of_finite_intersection(n))
 }
@@ -658,60 +599,6 @@ theorem net_subset_finite_intersection[K](n: Set[Set[K]], c: Set[Set[K]]) {
     list_subset_sets(n, l)
     let (t: Set[K]) satisfy { t ∈ n and t ⊆ intersection_of_list_recursion(l) }
     intersection_of_list_recursion(l) = intersection(c)
-}
-
-theorem sets_of_finite_intersection_superset[K](n: Set[Set[K]]) {
-    sets_of_finite_intersection(n) ⊇ n
-} by {
-    forall(s: Set[K]) {
-        if s ∈ n {
-            let l = List[Set[K]].singleton(s)
-            intersection_of_list(l) = s
-            intersection(list_to_set(l)) = intersection_of_list(l) 
-            forall(t: Set[K]) {
-                if t = s {
-                    t ∈ l
-                    t ∈ list_to_set(l)
-                    list_to_set(l).contains(t) = Set[Set[K]].singleton(s).contains(t)
-                } else {
-                    t ∉ l
-                    t ∉ list_to_set(l)
-                    list_to_set(l).contains(t) = Set[Set[K]].singleton(s).contains(t)
-                }
-                list_to_set(l).contains(t) = Set[Set[K]].singleton(s).contains(t)
-            }
-            list_to_set(l).contains = Set[Set[K]].singleton(s).contains
-            list_to_set(l) = Set[Set[K]].singleton(s)
-            list_to_set(l) ⊆ n
-            list_to_set(l).have_super_list(l)
-            list_to_set(l).is_finite
-            intersection(list_to_set(l)) = s
-            s ∈ sets_of_finite_intersection(n)
-        }
-    }
-}
-
-theorem sets_of_finite_intersection_preserve_intersection[K](n: Set[Set[K]]) {
-    intersection(sets_of_finite_intersection(n)) = intersection(n)
-} by {
-    sets_of_finite_intersection(n) ⊇ n
-    intersection(sets_of_finite_intersection(n)) ⊆ intersection(n)
-
-    forall(x: K) {
-        if x ∈ intersection(n) {
-            forall(s: Set[K]) {
-                if s ∈ sets_of_finite_intersection(n) {
-                    let c: Set[Set[K]] satisfy {
-                        c ⊆ n and c.is_finite and s = intersection(c)
-                    }
-                    intersection(n) ⊆ intersection(c)
-                    x ∈ s
-                }
-            }
-            x ∈ intersection(sets_of_finite_intersection(n))
-        }
-    }
-    intersection(sets_of_finite_intersection(n)) ⊇ intersection(n)
 }
 
 theorem net_from_sets_of_finite_intersection[K](n: Set[Set[K]]) {

@@ -1,145 +1,45 @@
-{"goal":"left_invariance","proof":["not a < b or a + c < b + c","c + a = a + c","c + b = b + c","not a + c < c + b","not a + c < b + c"]}
-{"goal":"lte_add_left","proof":["not b < c or a + b < a + c","not b <= c or b < c or c = b","not a + b < a + c or a + b <= a + c","a + c != a + b or a + b <= a + c","a + c != a + b","c != b","b < c","not a + b < a + c"]}
-{"goal":"a + c < b + d","proof":["not a + c < b + c","not a < b or a + c < b + c"]}
-{"goal":"c < d","proof":["not c <= d or c < d or d = c"]}
-{"goal":"a + c < b + c","proof":["not a < b or a + c < b + c"]}
-{"goal":"b + c < b + d","proof":["not c < d or b + c < b + d"]}
-{"goal":"a + c < b + d","proof":["not lib(util).is_transitive[A](A.lt) or not a + c < b + c or not b + c < b + d or a + c < b + d","not b + c < b + d or not a + c < b + c"]}
-{"goal":"right_lte_lt","proof":[]}
-{"goal":"left_lte_lt","proof":["not c <= d or not a < b or a + c < b + d","not c < d or a + c < a + d","not a <= b or a < b or b = a","not c < d or c <= d","not c <= d or not a < b","c <= d","not a < b","b = a","a + c < a + d"]}
-{"goal":"lte_add_right","proof":["not b < c or b + a < c + a","not b <= c or b < c or c = b","not b + a < c + a or b + a <= c + a","c + a != b + a or b + a <= c + a","c + a != b + a","c != b","b < c","not b + a < c + a"]}
-{"goal":"a + -b < b + c + -b","proof":["not a < b + c or a + -b < b + c + -b"]}
-{"goal":"lt_sub","proof":["a + -b = a - b","b + c + -b = b + c - b","c + b = b + c","c + b - b = c","a - b < b + c + -b","not a - b < c + b - b","a - b < b + c - b"]}
-{"goal":"a - b = c","proof":["a - c != b or c + b = a","b + c != a or a - c = b","c + b != a or a - b = c","c + b != a","a - c = b","a - c != b"]}
-{"goal":"a - b <= c","proof":["not c <= c","lib(order).lte_from(A.lt, c, c) = c <= c","not lib(order).lte_from(A.lt, c, c)","c != c or lib(order).lte_from(A.lt, c, c)"]}
-{"goal":"a - b < c","proof":["not a < b + c or a - b < c","not a < b + c","not a <= b + c or a < b + c or b + c = a"]}
-{"goal":"a - b <= c","proof":["lib(order).lt_from(A.lte, a - b, c) = a - b < c","not lib(order).lt_from(A.lte, a - b, c) or a - b <= c","lib(order).lt_from(A.lte, a - b, c)","not lib(order).lt_from(A.lte, a - b, c)"]}
-{"goal":"lte_sub","proof":[]}
-{"goal":"a + -b > b + c + -b","proof":["not b + c < a or b + c + -b < a + -b","a + -b > b + c + -b = b + c + -b < a + -b","a > b + c = b + c < a","not b + c + -b < a + -b","b + c < a","not b + c < a"]}
-{"goal":"gt_sub","proof":["a + -b = a - b","b + c + -b = b + c - b","c + b - b = c","c + b = b + c","a - b > b + c + -b","not a - b > c + b - b","a - b > b + c - b"]}
-{"goal":"a - b = c","proof":["a - c != b or c + b = a","b + c != a or a - c = b","c + b != a or a - b = c","c + b != a","a - c = b","a - c != b"]}
-{"goal":"a - b >= c","proof":["a - b >= c = c <= a - b","not c <= a - b","a - b != c or c <= a - b"]}
-{"goal":"a - b > c","proof":["not a > b + c or a - b > c","not a > b + c","not b + c <= a or b + c < a or b + c = a","a >= b + c = b + c <= a","b + c <= a","a > b + c = b + c < a","b + c < a","not b + c < a"]}
-{"goal":"a - b >= c","proof":["a - b >= c = c <= a - b","not c <= a - b","not c < a - b or c <= a - b","a - b > c = c < a - b","not c < a - b","c < a - b"]}
-{"goal":"gte_sub","proof":[]}
-{"goal":"a - (a - b) = b","proof":["-(a - b) != b - a or b + (a - b) = a","b + (a - b) != a or a - (a - b) = b","-(a - b) = b - a","b + (a - b) != a"]}
-{"goal":"a - (a - b) > A.0","proof":[]}
-{"goal":"gt_minus_pos","proof":["not a <= a - b + A.0 or a - (a - b) <= A.0","a - (a - b) > A.0 != a - (a - b) <= A.0","a > a - b + A.0 != a <= a - b + A.0","a - b + A.0 = a - b","not a > a - b + A.0","a > a - b + A.0 or a <= a - b + A.0","not a - (a - b) > A.0 or not a - (a - b) <= A.0","not a - (a - b) <= A.0","a <= a - b + A.0","not a <= a - b + A.0"]}
-{"goal":"add_pos_pos","proof":["not A.0 <= b or not A.0 < a or A.0 + A.0 < a + b","a + b > A.0 + A.0 = A.0 + A.0 < a + b","a > A.0 = A.0 < a","b > A.0 = A.0 < b","A.0 < b","A.0 < a","not A.0 < b or A.0 <= b","A.0 + A.0 = A.0","not a + b > A.0 + A.0","not A.0 + A.0 < a + b","A.0 <= b","not A.0 <= b"]}
-{"goal":"add_pos_nonneg","proof":["not a > A.0 or not b > A.0 or a + b > A.0","not b > A.0","not A.0 <= b or A.0 < b or A.0 = b","lib(order).lt_from(A.lte, A.0, a + b) = A.0 < a + b","lib(order).lt_from(A.lte, A.0, a) = A.0 < a","a + b > A.0 = A.0 < a + b","a > A.0 = A.0 < a","b > A.0 = A.0 < b","not A.0 < b","b >= A.0 = A.0 <= b","A.0 <= b","b + a = a + b","A.0 + a = a","A.0 = b"]}
-{"goal":"add_neg_nonpos","proof":["not b <= A.0 or not a < A.0 or a + b < A.0 + A.0","A.0 + A.0 = A.0","not a + b < A.0 + A.0"]}
-{"goal":"add_nonneg_nonneg","proof":["not lib(util).is_transitive[A](A.lte) or not A.0 <= A.0 + b or not A.0 + b <= a + b or A.0 <= a + b","not A.0 <= a or A.0 + b <= a + b","A.0 + b >= A.0 = A.0 <= A.0 + b","a + b >= A.0 = A.0 <= a + b","a >= A.0 = A.0 <= a","not A.0 <= a + b","A.0 <= a","A.0 + b = b","A.0 + b >= A.0","not A.0 + b <= a + b or not A.0 <= A.0 + b","A.0 <= A.0 + b","A.0 + b <= a + b"]}
-{"goal":"add_nonpos_nonpos","proof":["not lib(util).is_transitive[A](A.lte) or not a + b <= a + A.0 or not a + A.0 <= A.0 or a + b <= A.0","not b <= A.0 or a + b <= a + A.0","a + A.0 = a","not a + b <= a + A.0 or not a + A.0 <= A.0","a + A.0 <= A.0","a + b <= a + A.0"]}
-{"goal":"a - b > A.0 implies a > b","proof":["not a <= b + A.0 or a - b <= A.0","a - b > A.0 != a - b <= A.0","a > b + A.0 != a <= b + A.0","b + A.0 = b","not a > b + A.0","a > b + A.0 or a <= b + A.0","not a - b > A.0 or not a - b <= A.0","not a - b <= A.0","a <= b + A.0","not a <= b + A.0"]}
-{"goal":"compare_by_zero","proof":["a - b > A.0 or a > b","a > b","not a - b > A.0","not a > b + A.0 or a - b > A.0","b + A.0 = b","not a > b + A.0","a > b + A.0"]}
-{"goal":"b - a > A.0","proof":["b - a > A.0 = b > a","not b > a","not b > A.0.max(a) or b > a","not a <= A.0 or A.0.max(a) = A.0","not b > A.0.max(a)","A.0.max(a) = A.0"]}
-{"goal":"nonpos_lt_pos","proof":["b - a > A.0 = b > a","b > a","b > a = a < b"]}
-{"goal":"neg_lt_nonneg","proof":["not A.0 <= b or not a < A.0 or a < b","b >= A.0 = A.0 <= b","A.0 <= b","not A.0 <= b or not a < A.0"]}
-{"goal":"nonpos_lte_nonneg","proof":["not lib(util).is_transitive[A](A.lte) or not a <= A.0 or not A.0 <= b or a <= b","b >= A.0 = A.0 <= b","A.0 <= b","not A.0 <= b or not a <= A.0"]}
-{"goal":"pos_lte","proof":["not a <= b or not A.0 < a or A.0 < b","a > A.0 = A.0 < a","b > A.0 = A.0 < b","not A.0 < b","A.0 < a","not A.0 < a or not a <= b"]}
-{"goal":"a.pos_part = a","proof":["not a > A.0 or a.abs = a.pos_part","not a > A.0 or a.abs = a","a.abs = a","a.abs = a.pos_part","a.abs != a.pos_part"]}
-{"goal":"a.neg_part = A.0","proof":["not a > A.0 or a.neg_part = A.0"]}
-{"goal":"a = a.pos_part - a.neg_part","proof":["a.pos_part - A.0 != a","a - A.0 != a","a - A.0 = a"]}
-{"goal":"a.pos_part = A.0","proof":["a > A.0 or a.pos_part = A.0"]}
-{"goal":"a.neg_part = -a","proof":["a > A.0 or a.abs = a.neg_part","a > A.0 or a.abs = -a","a.abs = -a","a.abs = a.neg_part","a.abs != a.neg_part"]}
-{"goal":"a = a.pos_part - a.neg_part","proof":["a.pos_part - -a != a","A.0 - -a != a","a + -a != A.0 or A.0 - -a = a","a + -a = A.0"]}
-{"goal":"pos_neg_decomposition","proof":[]}
-{"goal":"-a < A.0","proof":["A.0 - -a > A.0 = A.0 > -a","A.0 > -a = -a < A.0","A.0 - -a = --a","--a = a"]}
-{"goal":"(-a).abs = a","proof":["not lib(util).is_acyclic[A](A.lt) or not A.0 < -a or not -a < A.0","-a > A.0 or (-a).abs = --a","-a > A.0 = A.0 < -a","--a = a","(-a).abs != --a","not A.0 < -a","-a > A.0","not -a > A.0"]}
-{"goal":"a.abs = a","proof":["not a > A.0 or a.abs = a"]}
-{"goal":"(-a).abs = a.abs","proof":["(-a).abs != a"]}
-{"goal":"a <= A.0","proof":["A.0.max(a) = A.0 or A.0 < a","A.0.max(a) = a or a <= A.0","A.0.max(a) = a","a > A.0 = A.0 < a","not A.0 < a","A.0 != a or a <= A.0","A.0 != a","A.0.max(a) = A.0","A.0.max(a) != A.0"]}
-{"goal":"-a >= A.0","proof":["not A.0 >= a + A.0 or A.0 - a >= A.0","A.0 >= a = a <= A.0","A.0 - a = -a","not A.0 - a >= A.0","a + A.0 = a","A.0 >= a","not A.0 >= a + A.0","A.0 >= a + A.0"]}
-{"goal":"(-a).abs = -a","proof":["not A.0 <= -a or A.0 < -a or -a = A.0","a > A.0 or a.abs = -a","-a > A.0 = A.0 < -a","-a >= A.0 = A.0 <= -a","A.0 <= -a","not -a > A.0 or (-a).abs = -a","not -a > A.0","not A.0 < -a","A.0 - -a = --a","--a = a","-a - A.0 = -a","-a = A.0","a.abs = -a"]}
-{"goal":"a.abs = -a","proof":["a > A.0 or a.abs = -a"]}
-{"goal":"(-a).abs = a.abs","proof":["(-a).abs != -a"]}
-{"goal":"neg_abs","proof":[]}
-{"goal":"a.abs = a","proof":["not a > A.0 or a.abs = a"]}
-{"goal":"a.abs >= A.0","proof":["lib(order).lte_from(A.lt, A.0, a) = A.0 <= a","not A.0 < a or lib(order).lte_from(A.lt, A.0, a)","a > A.0 = A.0 < a","A.0 < a","a.abs >= A.0 = A.0 <= a.abs","not A.0 <= a.abs","not A.0 <= a","lib(order).lte_from(A.lt, A.0, a)","not lib(order).lte_from(A.lt, A.0, a)"]}
-{"goal":"a <= A.0","proof":["A.0.max(a) = A.0 or A.0 < a","A.0.max(a) = a or a <= A.0","A.0.max(a) = a","a > A.0 = A.0 < a","not A.0 < a","A.0 != a or a <= A.0","A.0 != a","A.0.max(a) = A.0","A.0.max(a) != A.0"]}
-{"goal":"a.abs = -a","proof":["a > A.0 or a.abs = -a"]}
-{"goal":"-a >= A.0","proof":["not A.0 >= a + A.0 or A.0 - a >= A.0","A.0 >= a = a <= A.0","A.0 - a = -a","not A.0 - a >= A.0","a + A.0 = a","A.0 >= a","not A.0 >= a + A.0","A.0 >= a + A.0"]}
-{"goal":"a.abs >= A.0","proof":[]}
-{"goal":"abs_gte_zero","proof":[]}
-{"goal":"-a < A.0","proof":["A.0 - -a > A.0 = A.0 > -a","A.0 > -a = -a < A.0","A.0 - -a = --a","--a = a"]}
-{"goal":"(-a).pos_part = A.0","proof":["not lib(util).is_acyclic[A](A.lt) or not -a < A.0 or not A.0 < -a","-a > A.0 = A.0 < -a","-a > A.0 or (-a).pos_part = A.0","-a > A.0","A.0 < -a","not lib(util).is_acyclic[A](A.lt)"]}
-{"goal":"a.neg_part = A.0","proof":["not a > A.0 or a.neg_part = A.0"]}
-{"goal":"(-a).pos_part = a.neg_part","proof":["(-a).pos_part != A.0"]}
-{"goal":"a <= A.0","proof":["A.0.max(a) = A.0 or A.0 < a","A.0.max(a) = a or a <= A.0","A.0.max(a) = a","a > A.0 = A.0 < a","not A.0 < a","A.0 != a or a <= A.0","A.0 != a","A.0.max(a) = A.0","A.0.max(a) != A.0"]}
-{"goal":"-a >= A.0","proof":["not A.0 >= a + A.0 or A.0 - a >= A.0","A.0 >= a = a <= A.0","A.0 - a = -a","not A.0 - a >= A.0","a + A.0 = a","A.0 >= a","not A.0 >= a + A.0","A.0 >= a + A.0"]}
-{"goal":"(-a).pos_part = (-a).abs","proof":["not A.0 <= -a or A.0 < -a or -a = A.0","not -a > A.0 or (-a).pos_part = (-a).abs","not -a > A.0","a > A.0 or a.abs = -a","-a > A.0 = A.0 < -a","not A.0 < -a","-a >= A.0 = A.0 <= -a","A.0 <= -a","a > A.0 or a.pos_part = A.0","(-a).abs = a.abs","A.0 - -a = --a","--a = a","A.0 - A.0 = A.0","a.pos_part = A.0","-a = A.0","a.abs = -a"]}
-{"goal":"a.neg_part = a.abs","proof":["a > A.0 or a.neg_part = a.abs"]}
-{"goal":"(-a).pos_part = a.neg_part","proof":["(-a).pos_part != a.abs","(-a).abs != a.abs","(-a).abs = a.abs"]}
-{"goal":"pos_part_neg","proof":[]}
-{"goal":"neg_part_neg","proof":["a + -a != A.0 or --a = a","(--a).pos_part = (-a).neg_part","(--a).pos_part != a.pos_part","--a != a","a + -a = A.0"]}
-{"goal":"a.abs = A.0 implies a = A.0","proof":["a.abs != a","a > A.0 or -a = a.abs","not a > A.0 or a.abs = a","A.0 - a != A.0 or A.0 = a","A.0 - a != A.0","A.0 - a = -a","-a != A.0","not a > A.0","-a != a.abs","-a = a.abs"]}
-{"goal":"abs_zero_iff_zero","proof":["A.0 = a","a.abs != A.0","a.abs != a","a > A.0 or -a = a.abs","-a != a.abs or a.abs + a = A.0","not a > A.0 or a.abs = a","a.abs + A.0 = a.abs","a.abs + A.0 != A.0","not a > A.0","a.abs + a != A.0","-a = a.abs","-a != a.abs"]}
-{"goal":"member_abs_neg","proof":["not lib(util).is_acyclic[A](A.lt) or not a < A.0 or not A.0 < a","a > A.0 or -a = a.abs","a > A.0","a > A.0 = A.0 < a","A.0 < a","not lib(util).is_acyclic[A](A.lt)"]}
-{"goal":"member_abs_nonneg","proof":["not A.0 <= a or A.0 < a or A.0 = a","a >= A.0 = A.0 <= a","A.0 <= a","a > A.0 = A.0 < a","not a > A.0 or a.abs = a","not a > A.0","not A.0 < a","A.0 != a or a.abs = A.0","A.0 = a","a.abs = A.0","a.abs != A.0"]}
-{"goal":"member_abs_pos","proof":["lib(order).lte_from(A.lt, A.0, a) = A.0 <= a","not A.0 < a or lib(order).lte_from(A.lt, A.0, a)","a > A.0 = A.0 < a","A.0 < a","a >= A.0 = A.0 <= a","not a >= A.0 or a.abs = a","not a >= A.0","not A.0 <= a","lib(order).lte_from(A.lt, A.0, a)","not lib(order).lte_from(A.lt, A.0, a)"]}
-{"goal":"member_abs_nonpos","proof":["not a > A.0 or not a <= A.0 or A.0 > A.0","not A.0 > A.0 or not a <= A.0 or a < A.0","a > A.0 or a.abs = -a","a > A.0","A.0 > A.0","not a < A.0 or a.abs = -a","not a < A.0"]}
-{"goal":"a.abs = a","proof":["not a > A.0 or a.abs = a"]}
-{"goal":"a.abs = -a","proof":["a > A.0 or a.abs = -a"]}
-{"goal":"a = -a.abs","proof":["a.abs != -a or a.abs + a = A.0","a + a.abs != A.0 or -a.abs = a","a + a.abs != A.0","a.abs + a = a + a.abs","a.abs + a = A.0","a.abs + a != A.0"]}
-{"goal":"abs_one_imp_abs_or_neg_abs","proof":[]}
-{"goal":"abs(a) = a","proof":["not a > A.0 or a.abs = a","abs(a) = a.abs","a.abs = a","a.abs != a"]}
-{"goal":"a <= abs(a)","proof":["lib(order).lte_from(A.lt, a, abs(a)) = a <= abs(a)","not lib(order).lte_from(A.lt, a, abs(a))","abs(a) != a or lib(order).lte_from(A.lt, a, abs(a))"]}
-{"goal":"a <= A.0","proof":["A.0.max(a) = A.0 or A.0 < a","A.0.max(a) = a or a <= A.0","A.0.max(a) = a","a > A.0 = A.0 < a","not A.0 < a","A.0 != a or a <= A.0","A.0 != a","A.0.max(a) = A.0","A.0.max(a) != A.0"]}
-{"goal":"abs(a) >= A.0","proof":["abs(a) = a.abs","not a.abs >= A.0","a.abs >= A.0"]}
-{"goal":"a <= abs(a)","proof":["not abs(a) >= A.0 or not a <= A.0 or a <= abs(a)"]}
-{"goal":"lte_abs","proof":[]}
-{"goal":"a <= A.0","proof":[]}
-{"goal":"-a <= A.0","proof":["not A.0 <= a + A.0 or A.0 - a <= A.0","a >= A.0 = A.0 <= a","A.0 <= a","A.0 - a = -a","not A.0 - a <= A.0","a + A.0 = a","not A.0 <= a + A.0","A.0 <= a + A.0"]}
-{"goal":"a >= -r","proof":["-r - a > A.0 = -r > a","-(r - A.0) = A.0 - r","a >= -r = -r <= a","not -r <= a","-a > A.0 != -a <= A.0","-r > a != -r <= a","A.0 - a = -a","A.0 - r = -r","--r = r","-r > a or -r <= a","-r > a","not -a > A.0 or not -a <= A.0","not -a > A.0"]}
-{"goal":"a >= A.0","proof":["lib(order).lte_from(A.lt, -r, a) = -r <= a","lib(order).lte_from(A.lt, A.0, a) = A.0 <= a","a >= -r = -r <= a","a >= r = r <= a","A.0 - r = -r","r - A.0 = r"]}
-{"goal":"a = A.0","proof":["not lib(util).is_antisymmetric[A](A.lte) or not a <= A.0 or not A.0 <= a or A.0 = a","a >= A.0 = A.0 <= a","A.0 <= a","not lib(util).is_antisymmetric[A](A.lte)"]}
-{"goal":"a.abs = A.0","proof":["A.0.abs != A.0","r.abs != A.0","r.abs != r","not r >= A.0 or r.abs = r"]}
-{"goal":"a.abs <= r","proof":["not A.0 <= r"]}
-{"goal":"r > A.0","proof":["not r >= A.0 or r.max(A.0) = r","r.max(A.0) = A.0 or r > A.0","r.max(A.0) = A.0","r.max(A.0) = r","r.max(A.0) != r"]}
-{"goal":"a.abs = a","proof":["not a > A.0 or a.abs = a"]}
-{"goal":"a.abs <= r","proof":["not a <= r"]}
-{"goal":"a.abs = -a","proof":["a > A.0 or a.abs = -a"]}
-{"goal":"a.abs <= r","proof":["not -a <= r"]}
-{"goal":"control_abs","proof":[]}
-{"goal":"abs_add_nonneg","proof":["not a >= A.0 or not b >= A.0 or a + b >= A.0","not a + b >= A.0 or (a + b).abs = a + b","not a >= A.0 or a.abs = a","not b >= A.0 or b.abs = b","abs(a + b) = (a + b).abs","abs(a) = a.abs","abs(b) = b.abs","a.abs + abs(b) != abs(a + b)","b.abs = b","a.abs = a","abs(a + b) != a + abs(b)","not a >= A.0 or a + b >= A.0","a + b >= A.0","a + abs(b) != (a + b).abs","(a + b).abs != a + b.abs","(a + b).abs = a + b","(a + b).abs != a + b"]}
-{"goal":"-a >= A.0","proof":["not A.0 >= a + A.0 or A.0 - a >= A.0","A.0 >= a = a <= A.0","A.0 - a = -a","not A.0 - a >= A.0","a + A.0 = a","A.0 >= a","not A.0 >= a + A.0","A.0 >= a + A.0"]}
-{"goal":"-b >= A.0","proof":["not A.0 >= b + A.0 or A.0 - b >= A.0","A.0 >= b = b <= A.0","A.0 - b = -b","not A.0 - b >= A.0","b + A.0 = b","A.0 >= b","not A.0 >= b + A.0","A.0 >= b + A.0"]}
-{"goal":"abs(-a + -b) = abs(-a) + abs(-b)","proof":["not -a >= A.0 or not -b >= A.0 or abs(-a) + abs(-b) = abs(-a + -b)"]}
-{"goal":"abs(-a + -b) = abs(-(a + b))","proof":["-a + -b != -(a + b)","-a + -b = -(a + b)"]}
-{"goal":"abs_add_nonpos","proof":["abs(-b) + abs(-a) = abs(-a) + abs(-b)","abs(b) + abs(a) = abs(a) + abs(b)","(-(a + b)).abs = (a + b).abs","(-a).abs = a.abs","(-b).abs = b.abs","abs(-(a + b)) = (-(a + b)).abs","abs(-a) = (-a).abs","abs(-b) = (-b).abs","abs(a + b) = (a + b).abs","abs(a) = a.abs","abs(b) = b.abs"]}
-{"goal":"a = abs(a)","proof":["not a >= A.0 or a.abs = a","abs(a) = a.abs","a.abs = a","a.abs != a"]}
-{"goal":"b = -abs(b)","proof":["not b <= A.0 or b.abs = -b","abs(b) = b.abs","--b = b","-abs(b) != --b","abs(b) != -b","b.abs = -b","b.abs != -b"]}
-{"goal":"a + b = abs(a) + -abs(b)","proof":[]}
-{"goal":"a + b >= A.0","proof":["not abs(a) >= abs(b) + A.0 or abs(a) - abs(b) >= A.0","abs(a) + -abs(b) = abs(a) - abs(b)","abs(a) >= abs(b) = abs(b) <= abs(a)","abs(b) + A.0 = abs(b)","not abs(a) + -abs(b) >= A.0","not abs(a) - abs(b) >= A.0","abs(a) >= abs(b)","not abs(a) >= abs(b) + A.0","abs(a) >= abs(b) + A.0"]}
-{"goal":"a + b = abs(a + b)","proof":["not a + b >= A.0 or (a + b).abs = a + b","abs(a + b) = (a + b).abs","(a + b).abs = a + b","(a + b).abs != a + b"]}
-{"goal":"-abs(b) <= abs(b)","proof":["not b <= abs(b)","b <= abs(b)"]}
-{"goal":"a + b <= abs(a) + abs(b)","proof":["not a + b <= a + abs(b)","b <= abs(b)","not b <= abs(b) or a + b <= a + abs(b)"]}
-{"goal":"triangle_nonpos_lte_nonneg","proof":["not a + b <= abs(a) + abs(b)"]}
-{"goal":"abs(a + b) <= abs(a) + abs(b)","proof":["not abs(b) <= abs(a) or not a >= A.0 or not b <= A.0 or abs(a + b) <= abs(a) + abs(b)"]}
-{"goal":"abs(a) <= abs(b)","proof":["not abs(b).comparable(abs(a)) or abs(b) < abs(a) or abs(a) < abs(b) or abs(b) = abs(a)","not abs(a) < abs(b) or abs(a) <= abs(b)","not abs(b) < abs(a) or abs(b) <= abs(a)","not abs(a) < abs(b)","abs(b) != abs(a) or abs(a) <= abs(b)","abs(b) != abs(a)","abs(b).comparable(abs(a))","not abs(b) < abs(a)","abs(b) < abs(a)"]}
-{"goal":"abs(-a) <= abs(-b)","proof":["abs(-b) >= abs(-a) = abs(-a) <= abs(-b)","abs(b) >= abs(a) = abs(a) <= abs(b)","(-a).abs = a.abs","(-b).abs = b.abs","abs(-a) = (-a).abs","abs(-b) = (-b).abs","abs(a) = a.abs","abs(b) = b.abs"]}
-{"goal":"-b >= A.0","proof":["not A.0 >= b + A.0 or A.0 - b >= A.0","A.0 >= b = b <= A.0","A.0 - b = -b","not A.0 - b >= A.0","b + A.0 = b","A.0 >= b","not A.0 >= b + A.0","A.0 >= b + A.0"]}
-{"goal":"-a <= A.0","proof":["not A.0 <= a + A.0 or A.0 - a <= A.0","a >= A.0 = A.0 <= a","A.0 <= a","A.0 - a = -a","not A.0 - a <= A.0","a + A.0 = a","not A.0 <= a + A.0","A.0 <= a + A.0"]}
-{"goal":"abs(-b + -a) <= abs(-b) + abs(-a)","proof":["not abs(-a) <= abs(-b) or not -b >= A.0 or not -a <= A.0 or abs(-b + -a) <= abs(-b) + abs(-a)"]}
-{"goal":"abs(a + b) <= abs(a) + abs(b)","proof":["-b + -a = -(a + b)","abs(-b) + abs(-a) >= abs(-b + -a) = abs(-b + -a) <= abs(-b) + abs(-a)","abs(a) + abs(b) >= abs(a + b) = abs(a + b) <= abs(a) + abs(b)","abs(-b) + abs(-a) = abs(-a) + abs(-b)","(-(a + b)).abs = (a + b).abs","(-a).abs = a.abs","(-b).abs = b.abs","abs(-a) = (-a).abs","abs(-b + -a) = (-b + -a).abs","abs(-b) = (-b).abs","abs(a + b) = (a + b).abs","abs(a) = a.abs","abs(b) = b.abs"]}
-{"goal":"triangle_nonneg_nonpos","proof":[]}
-{"goal":"abs(a + b) <= abs(a) + abs(b)","proof":["not a <= A.0 or not b <= A.0 or abs(a) + abs(b) = abs(a + b)","not a < A.0 or a <= A.0","not b < A.0 or b <= A.0","abs(a) + abs(b) != abs(a + b) or abs(a + b) <= abs(a) + abs(b)","b <= A.0","a <= A.0","abs(a) + abs(b) != abs(a + b)"]}
-{"goal":"abs(b + a) <= abs(b) + abs(a)","proof":["not b >= A.0 or not a <= A.0 or abs(b + a) <= abs(b) + abs(a)","b.max(A.0) = b or b < A.0","not a < A.0 or a <= A.0","not b >= A.0 or not a <= A.0","b.max(A.0) >= A.0","a <= A.0","not b >= A.0","b.max(A.0) = b"]}
-{"goal":"abs(a + b) <= abs(a) + abs(b)","proof":["abs(a) + abs(b) >= abs(a + b) = abs(a + b) <= abs(a) + abs(b)","abs(b) + abs(a) >= abs(b + a) = abs(b + a) <= abs(b) + abs(a)","abs(b) + abs(a) = abs(a) + abs(b)","b + a = a + b"]}
-{"goal":"a >= A.0","proof":["a >= A.0 or a.min(A.0) = a","a.min(A.0) = a","a.min(A.0) = A.0 or a < A.0","a >= A.0 = A.0 <= a","not A.0 <= a","A.0 != a or A.0 <= a","A.0 != a","a.min(A.0) = A.0","a.min(A.0) != A.0"]}
-{"goal":"abs(a + b) <= abs(a) + abs(b)","proof":["not a >= A.0 or not b <= A.0 or abs(a + b) <= abs(a) + abs(b)","not b <= A.0","lib(order).lt_from(A.lte, b, A.0) = b < A.0","not lib(order).lt_from(A.lte, b, A.0) or b <= A.0","lib(order).lt_from(A.lte, b, A.0)","not lib(order).lt_from(A.lte, b, A.0)"]}
-{"goal":"b >= A.0","proof":["b >= A.0 or b.min(A.0) = b","b.min(A.0) = b","b.min(A.0) = A.0 or b < A.0","b >= A.0 = A.0 <= b","not A.0 <= b","A.0 != b or A.0 <= b","A.0 != b","b.min(A.0) = A.0","b.min(A.0) != A.0"]}
-{"goal":"abs(a + b) <= abs(a) + abs(b)","proof":["not a >= A.0 or not b >= A.0 or abs(a) + abs(b) = abs(a + b)","abs(a) + abs(b) != abs(a + b) or abs(a + b) <= abs(a) + abs(b)","abs(a) + abs(b) != abs(a + b)"]}
-{"goal":"triangle_ineq","proof":["a.abs + b.abs >= (a + b).abs = (a + b).abs <= a.abs + b.abs","abs(a) + abs(b) >= abs(a + b) = abs(a + b) <= abs(a) + abs(b)","abs(b) + abs(a) = abs(a) + abs(b)","b.abs + a.abs = a.abs + b.abs","abs(a + b) = (a + b).abs","abs(a) = a.abs","abs(b) = b.abs"]}
-{"goal":"abs(a) = abs(a - b + b)","proof":["a - b + b != a","a - b != a - b or a - b + b = a"]}
-{"goal":"abs(a) <= abs(a - b) + abs(b)","proof":["not lib(util).is_transitive[A](A.lte) or not abs(a) <= (a - b + b).abs or not (a - b + b).abs <= (a - b).abs + b.abs or abs(a) <= (a - b).abs + b.abs","(a - b + b).abs <= (a - b).abs + b.abs","abs(a - b + b) != abs(a) or abs(a) <= abs(a - b + b)","abs(a - b + b) = (a - b + b).abs","abs(a - b) = (a - b).abs","abs(b) = b.abs","not abs(a) <= abs(a - b) + b.abs","not abs(a) <= (a - b).abs + b.abs","abs(a) <= abs(a - b + b)","abs(a) <= (a - b + b).abs","not (a - b + b).abs <= (a - b).abs + b.abs or not abs(a) <= (a - b + b).abs"]}
-{"goal":"abs(a) <= abs(a - b) + abs(b)","proof":[]}
-{"goal":"abs(a) - abs(b) <= abs(a - b)","proof":["not abs(a) <= abs(b) + abs(a - b) or abs(a) - abs(b) <= abs(a - b)","abs(a - b) + abs(b) = abs(b) + abs(a - b)","not abs(a) <= abs(b) + abs(a - b)","abs(a) <= abs(b) + abs(a - b)"]}
-{"goal":"abs(b) = abs(b - a + a)","proof":["b - a + a != b","b - a != b - a or b - a + a = b"]}
-{"goal":"abs(b) <= abs(b - a) + abs(a)","proof":["not lib(util).is_transitive[A](A.lte) or not abs(b) <= (b - a + a).abs or not (b - a + a).abs <= (b - a).abs + a.abs or abs(b) <= (b - a).abs + a.abs","(b - a + a).abs <= (b - a).abs + a.abs","abs(b - a + a) != abs(b) or abs(b) <= abs(b - a + a)","abs(a) = a.abs","abs(b - a + a) = (b - a + a).abs","abs(b - a) = (b - a).abs","not abs(b) <= abs(b - a) + a.abs","not abs(b) <= (b - a).abs + a.abs","abs(b) <= abs(b - a + a)","abs(b) <= (b - a + a).abs","not (b - a + a).abs <= (b - a).abs + a.abs or not abs(b) <= (b - a + a).abs"]}
-{"goal":"abs(b) <= abs(b - a) + abs(a)","proof":[]}
-{"goal":"abs(b) - abs(a) <= abs(b - a)","proof":["not abs(b) <= abs(a) + abs(b - a) or abs(b) - abs(a) <= abs(b - a)","abs(b - a) + abs(a) = abs(a) + abs(b - a)","not abs(b) <= abs(a) + abs(b - a)","abs(b) <= abs(a) + abs(b - a)"]}
-{"goal":"triangle_ineq_sub","proof":["-(abs(b) - abs(a)) = abs(a) - abs(b)","-(b.abs - a.abs) = a.abs - b.abs","(a - b).abs >= a.abs - b.abs = a.abs - b.abs <= (a - b).abs","abs(a - b) >= abs(a) - abs(b) = abs(a) - abs(b) <= abs(a - b)","abs(a - b) = (a - b).abs","abs(a) = a.abs","abs(b) = b.abs"]}
+{"goal":"p(ℕ.0)","proof":["let (s0: ℕ -> List[A], s1: ℕ -> List[A]) satisfy { forall(x0: List[A], x1: List[A], x2: ℕ) { not x0 ⊆ x1 or x1.length != x2 or not p(x2) or sum[A](x0) <= sum[A](x1) } and forall(x3: ℕ) { s1(x3).length = x3 or p(x3) } and forall(x4: ℕ) { s0(x4) ⊆ s1(x4) or p(x4) } and forall(x5: ℕ) { not sum[A](s0(x5)) <= sum[A](s1(x5)) or p(x5) } }","s1(ℕ.0).length = ℕ.0 or p(ℕ.0)","s0(ℕ.0) ⊆ s1(ℕ.0) or p(ℕ.0)","not sum[A](s0(ℕ.0)) <= sum[A](s1(ℕ.0)) or p(ℕ.0)","s1(ℕ.0).length = ℕ.0","s0(ℕ.0) ⊆ s1(ℕ.0)","not s0(ℕ.0) ⊆ s1(ℕ.0) or s0(ℕ.0).length <= s1(ℕ.0).length","sum[A](s1(ℕ.0)) != sum[A](s0(ℕ.0)) or sum[A](s0(ℕ.0)) <= sum[A](s1(ℕ.0))","s0(ℕ.0).length != ℕ.0 or s0(ℕ.0) = List.nil[A]","s1(ℕ.0).length != ℕ.0 or s1(ℕ.0) = List.nil[A]","not s0(ℕ.0).length <= ℕ.0 or s0(ℕ.0).length = ℕ.0","not sum[A](s0(ℕ.0)) <= sum[A](s1(ℕ.0))","s1(ℕ.0) = List.nil[A]","sum[A](s1(ℕ.0)) != sum[A](s0(ℕ.0))","s0(ℕ.0).length <= s1(ℕ.0).length","s0(ℕ.0).length <= ℕ.0","sum[A](s0(ℕ.0)) != sum[A](List.nil[A])","s0(ℕ.0) != List.nil[A]","s0(ℕ.0).length = ℕ.0","s0(ℕ.0).length != ℕ.0"]}
+{"goal":"a.times(m.suc) = a.times(m) + a","proof":["m.suc != m.suc or a + a.times(m) = a.times(m.suc)","a.times(m) = a.times(m)","a.times(m.suc) = a.times(m.suc)","a.times(m) + a = a + a.times(m)","a + a.times(m) != a.times(m.suc)"]}
+{"goal":"a.times(m) = A.0","proof":["a.times(m) = a.times(m)","a.times(ℕ.0) != A.0","ℕ.0 != ℕ.0 or a.times(ℕ.0) = A.0"]}
+{"goal":"a.times(m.suc) > A.0","proof":["lib(order).lt_from(A.lte, A.0, a) = A.0 < a","lib(order).lt_from(A.lte, A.0, a.times(m.suc)) = A.0 < a.times(m.suc)","a.times(ℕ.0.suc) = a.times(ℕ.0.suc)","a > A.0 = A.0 < a","a.times(m.suc) > A.0 = A.0 < a.times(m.suc)","a.times(m) + a = a + a.times(m)","a + A.0 = a"]}
+{"goal":"a.times(m) > A.0","proof":["not a > A.0 or not p(m) or a.times(m) > A.0 or m = ℕ.0","not p(m) or a.times(m) > A.0 or m = ℕ.0"]}
+{"goal":"a.times(m.suc) > A.0","proof":["not A.0 <= a.times(m) or not A.0 < a or A.0 + A.0 < a + a.times(m)","a + a.times(m) > A.0 = A.0 < a + a.times(m)","a > A.0 = A.0 < a","a.times(m) > A.0 = A.0 < a.times(m)","A.0 < a","A.0 < a.times(m)","a.times(m) + a = a + a.times(m)","not A.0 < a.times(m) or A.0 <= a.times(m)","A.0 + A.0 = A.0","not a.times(m) + a > A.0","not a + a.times(m) > A.0","not A.0 < a + a.times(m)","A.0 <= a.times(m)","not A.0 <= a.times(m) or A.0 + A.0 < a + a.times(m)","not A.0 + A.0 < a + a.times(m)","A.0 + A.0 < a + a.times(m)"]}
+{"goal":"a.times(m.suc) > A.0","proof":[]}
+{"goal":"p(m.suc)","proof":["not a.times(m.suc) > A.0 or p(m.suc)"]}
+{"goal":"nonnegtive_times_preserve_positive","proof":["let s0: (ℕ -> Bool) -> ℕ satisfy { forall(x0: ℕ -> Bool, x1: ℕ) { not x0(ℕ.0) or x0(s0(x0)) or x0(x1) } and forall(x2: ℕ -> Bool, x3: ℕ) { not x2(s0(x2).suc) or not x2(ℕ.0) or x2(x3) } }","not p(s0(p)) or p(s0(p).suc)","not a > A.0 or not p(n) or a.times(n) > A.0 or n = ℕ.0","not p(n) or a.times(n) > A.0 or n = ℕ.0","not p(n)","not p(s0(p).suc) or not p(ℕ.0) or p(n)","not p(ℕ.0) or p(s0(p)) or p(n)","p(s0(p)) or p(n)","p(s0(p))","not p(s0(p).suc)","p(s0(p).suc)"]}
+{"goal":"exists(k0: ℕ) { m = n + k0 and k0 != ℕ.0 }","proof":["let s0: (ℕ, ℕ) -> ℕ satisfy { forall(x0: ℕ, x1: ℕ) { not x0 < x1 or ℕ.0 != s0(x0, x1) } and forall(x2: ℕ, x3: ℕ) { not x2 < x3 or x2 + s0(x2, x3) = x3 } and forall(x4: ℕ, x5: ℕ, x6: ℕ) { x4 + x5 != x6 or x4 < x6 or ℕ.0 = x5 } }","n + s0(n, m) != m or s0(n, m) = ℕ.0","not n < m or n + s0(n, m) = m","not n < m or s0(n, m) != ℕ.0","s0(n, m) != ℕ.0","n + s0(n, m) = m","n + s0(n, m) != m"]}
+{"goal":"a.times(m) = a.times(n) + a.times(d)","proof":["a.times(n) + a.times(d) = a.times(n + d)","a.times(d) = a.times(d)","a.times(m) = a.times(m)","a.times(n) = a.times(n)"]}
+{"goal":"a.times(d) > A.0","proof":["not a > A.0 or a.times(d) > A.0 or d = ℕ.0"]}
+{"goal":"a.times(m) > a.times(n)","proof":["not a.times(d) > A.0 or a.times(n) + a.times(d) > a.times(n)","not a.times(n) + a.times(d) > a.times(n)"]}
+{"goal":"nonnegtive_times","proof":["a.times(m) > a.times(n) = a.times(n) < a.times(m)"]}
+{"goal":"a.times(n) = a.times(m)","proof":["a.times(m) = a.times(m)","a.times(n) = a.times(n)","A.0.times(m) = A.0","A.0.times(n) = A.0"]}
+{"goal":"a.times(n) <= a.times(m)","proof":["a.times(n) = a.times(n)","a.times(m) != a.times(n) or a.times(n) <= a.times(m)"]}
+{"goal":"a > A.0","proof":["not a >= A.0 or a.max(A.0) = a","a.max(A.0) = A.0 or a > A.0","a.max(A.0) = A.0","a.max(A.0) = a","a.max(A.0) != a"]}
+{"goal":"a.times(n) < a.times(m)","proof":["not a > A.0 or not n < m or a.times(n) < a.times(m)"]}
+{"goal":"nonnegtive_times_weak","proof":["lib(order).lt_from(A.lte, a.times(n), a.times(m)) = a.times(n) < a.times(m)","not lib(order).lt_from(A.lte, a.times(n), a.times(m)) or a.times(n) <= a.times(m)","lib(order).lt_from(A.lte, a.times(n), a.times(m))","not lib(order).lt_from(A.lte, a.times(n), a.times(m))"]}
+{"goal":"a ∈ l","proof":["not a ∈ l.filter(lib(list.list_base).not_expect(x)) or a ∈ l","not a ∈ l.filter(lib(list.list_base).not_expect(x))","l.filter(lib(list.list_base).not_expect(x)) = l ∖ x"]}
+{"goal":"a >= A.0","proof":["not is_nonnegative_list[A](l) or not a ∈ l or a >= A.0"]}
+{"goal":"remove_preserve_nonnegative_list","proof":["let s0: List[A] -> A satisfy { forall(x0: List[A], x1: A) { not is_nonnegative_list[A](x0) or not x1 ∈ x0 or x1 >= A.0 } and forall(x2: List[A]) { s0(x2) ∈ x2 or is_nonnegative_list[A](x2) } and forall(x3: List[A]) { not s0(x3) >= A.0 or is_nonnegative_list[A](x3) } }","not s0(l ∖ x) ∈ l ∖ x or s0(l ∖ x) >= A.0","not s0(l ∖ x) >= A.0 or is_nonnegative_list[A](l ∖ x)","s0(l ∖ x) ∈ l ∖ x or is_nonnegative_list[A](l ∖ x)","not s0(l ∖ x) >= A.0","s0(l ∖ x) ∈ l ∖ x","not s0(l ∖ x) ∈ l ∖ x"]}
+{"goal":"p(ℕ.0)","proof":["let (s0: ℕ -> List[A], s1: ℕ -> List[A]) satisfy { forall(x0: List[A], x1: List[A], x2: ℕ) { not is_nonnegative_list[A](x0) or not is_nonnegative_list[A](x1) or not x0 ⊆ x1 or x1.length != x2 or not p(x2) or sum[A](x0) <= sum[A](x1) } and forall(x3: ℕ) { s1(x3).length = x3 or p(x3) } and forall(x4: ℕ) { is_nonnegative_list[A](s0(x4)) or p(x4) } and forall(x5: ℕ) { is_nonnegative_list[A](s1(x5)) or p(x5) } and forall(x6: ℕ) { s0(x6) ⊆ s1(x6) or p(x6) } and forall(x7: ℕ) { not sum[A](s0(x7)) <= sum[A](s1(x7)) or p(x7) } }","s1(ℕ.0).length = ℕ.0 or p(ℕ.0)","s0(ℕ.0) ⊆ s1(ℕ.0) or p(ℕ.0)","not sum[A](s0(ℕ.0)) <= sum[A](s1(ℕ.0)) or p(ℕ.0)","s1(ℕ.0).length = ℕ.0","s0(ℕ.0) ⊆ s1(ℕ.0)","not s0(ℕ.0) ⊆ s1(ℕ.0) or s0(ℕ.0).length <= s1(ℕ.0).length","sum[A](s1(ℕ.0)) != sum[A](s0(ℕ.0)) or sum[A](s0(ℕ.0)) <= sum[A](s1(ℕ.0))","s0(ℕ.0).length != ℕ.0 or s0(ℕ.0) = List.nil[A]","s1(ℕ.0).length != ℕ.0 or s1(ℕ.0) = List.nil[A]","not s0(ℕ.0).length <= ℕ.0 or s0(ℕ.0).length = ℕ.0","not sum[A](s0(ℕ.0)) <= sum[A](s1(ℕ.0))","s1(ℕ.0) = List.nil[A]","sum[A](s1(ℕ.0)) != sum[A](s0(ℕ.0))","s0(ℕ.0).length <= s1(ℕ.0).length","s0(ℕ.0).length <= ℕ.0","sum[A](s0(ℕ.0)) != sum[A](List.nil[A])","s0(ℕ.0) != List.nil[A]","s0(ℕ.0).length = ℕ.0","s0(ℕ.0).length != ℕ.0"]}
+{"goal":"p(k)","proof":["not p(ℕ.0)"]}
+{"goal":"k != ℕ.0","proof":[]}
+{"goal":"exists(k0: A) { k0 ∈ l2 }","proof":["let s0: List[A] -> A satisfy { forall(x0: List[A]) { s0(x0) ∈ x0 or List.nil[A] = x0 } }","not s0(l2) ∈ l2","s0(l2) ∈ l2 or List.nil[A] = l2","List.nil[A] = l2","List.nil[A] != l2 or l2.length = ℕ.0","l2.length != ℕ.0","l2.length = ℕ.0"]}
+{"goal":"x >= A.0","proof":["not is_nonnegative_list[A](l2) or not x ∈ l2 or x >= A.0"]}
+{"goal":"l1.count(x) <= l2.count(x)","proof":["not l1 ⊆ l2 or l1.count(x) <= l2.count(x)"]}
+{"goal":"x.times(l1.count(x)) + sum[A](l1 ∖ x) = sum[A](l1)","proof":["x.times(l1.count(x)) + sum[A](l1 ∖ x) = sum[A](l1)","x.times(l1.count(x)) = x.times(l1.count(x))"]}
+{"goal":"x.times(l2.count(x)) + sum[A](l2 ∖ x) = sum[A](l2)","proof":["x.times(l2.count(x)) + sum[A](l2 ∖ x) = sum[A](l2)","x.times(l2.count(x)) = x.times(l2.count(x))"]}
+{"goal":"(l2 ∖ x).length < k","proof":["not x ∈ l2 or (l2 ∖ x).length < l2.length","not (l2 ∖ x).length < l2.length","(l2 ∖ x).length < l2.length"]}
+{"goal":"l1 ∖ x ⊆ l2 ∖ x","proof":["not l1 ⊆ l2 or l1 ∖ x ⊆ l2 ∖ x"]}
+{"goal":"is_nonnegative_list[A](l1 ∖ x)","proof":["not is_nonnegative_list[A](l1) or is_nonnegative_list[A](l1 ∖ x)"]}
+{"goal":"is_nonnegative_list[A](l2 ∖ x)","proof":["not is_nonnegative_list[A](l2) or is_nonnegative_list[A](l2 ∖ x)"]}
+{"goal":"sum[A](l1 ∖ x) <= sum[A](l2 ∖ x)","proof":["not is_nonnegative_list[A](l1 ∖ x) or not is_nonnegative_list[A](l2 ∖ x) or not l1 ∖ x ⊆ l2 ∖ x or (l2 ∖ x).length != (l2 ∖ x).length or not p((l2 ∖ x).length) or sum[A](l1 ∖ x) <= sum[A](l2 ∖ x)","not true_below(p, k) or not (l2 ∖ x).length < k or p((l2 ∖ x).length)","(l2 ∖ x).length != (l2 ∖ x).length or not p((l2 ∖ x).length)","not p((l2 ∖ x).length)","not (l2 ∖ x).length < k or p((l2 ∖ x).length)"]}
+{"goal":"x.times(l1.count(x)) <= x.times(l2.count(x))","proof":["not x >= A.0 or not l1.count(x) < l2.count(x) or x.times(l1.count(x)) <= x.times(l2.count(x))","not l1.count(x) <= l2.count(x) or l1.count(x) < l2.count(x) or l1.count(x) = l2.count(x)","x.times(l2.count(x)) != x.times(l2.count(x)) or x.times(l2.count(x)) <= x.times(l2.count(x))","not l1.count(x) < l2.count(x)","l1.count(x) = l2.count(x)","x.times(l2.count(x)) <= x.times(l2.count(x))"]}
+{"goal":"x.times(l1.count(x)) + sum[A](l1 ∖ x) <= x.times(l2.count(x)) + sum[A](l2 ∖ x)","proof":["not lib(util).is_transitive[A](A.lte) or not x.times(l1.count(x)) + sum[A](l1 ∖ x) <= x.times(l2.count(x)) + sum[A](l1 ∖ x) or not x.times(l2.count(x)) + sum[A](l1 ∖ x) <= x.times(l2.count(x)) + sum[A](l2 ∖ x) or x.times(l1.count(x)) + sum[A](l1 ∖ x) <= x.times(l2.count(x)) + sum[A](l2 ∖ x)","not x.times(l1.count(x)) <= x.times(l2.count(x)) or x.times(l1.count(x)) + sum[A](l1 ∖ x) <= x.times(l2.count(x)) + sum[A](l1 ∖ x)","not sum[A](l1 ∖ x) <= sum[A](l2 ∖ x) or x.times(l2.count(x)) + sum[A](l1 ∖ x) <= x.times(l2.count(x)) + sum[A](l2 ∖ x)","not x.times(l1.count(x)) + sum[A](l1 ∖ x) <= x.times(l2.count(x)) + sum[A](l1 ∖ x) or not x.times(l2.count(x)) + sum[A](l1 ∖ x) <= x.times(l2.count(x)) + sum[A](l2 ∖ x)","x.times(l2.count(x)) + sum[A](l1 ∖ x) <= x.times(l2.count(x)) + sum[A](l2 ∖ x)","x.times(l1.count(x)) + sum[A](l1 ∖ x) <= x.times(l2.count(x)) + sum[A](l1 ∖ x)"]}
+{"goal":"sum[A](l1) <= sum[A](l2)","proof":[]}
+{"goal":"p(k)","proof":["let (s0: ℕ -> List[A], s1: ℕ -> List[A]) satisfy { forall(x0: List[A], x1: List[A], x2: ℕ) { not is_nonnegative_list[A](x0) or not is_nonnegative_list[A](x1) or not x0 ⊆ x1 or x1.length != x2 or not p(x2) or sum[A](x0) <= sum[A](x1) } and forall(x3: ℕ) { s1(x3).length = x3 or p(x3) } and forall(x4: ℕ) { is_nonnegative_list[A](s0(x4)) or p(x4) } and forall(x5: ℕ) { is_nonnegative_list[A](s1(x5)) or p(x5) } and forall(x6: ℕ) { s0(x6) ⊆ s1(x6) or p(x6) } and forall(x7: ℕ) { not sum[A](s0(x7)) <= sum[A](s1(x7)) or p(x7) } }","is_nonnegative_list[A](s1(k)) or p(k)","is_nonnegative_list[A](s0(k)) or p(k)","s1(k).length = k or p(k)","s0(k) ⊆ s1(k) or p(k)","not sum[A](s0(k)) <= sum[A](s1(k)) or p(k)","not is_nonnegative_list[A](s0(k)) or not is_nonnegative_list[A](s1(k)) or not s0(k) ⊆ s1(k) or s1(k).length != k or sum[A](s0(k)) <= sum[A](s1(k))","is_nonnegative_list[A](s0(k))","is_nonnegative_list[A](s1(k))","s1(k).length = k","s0(k) ⊆ s1(k)","not sum[A](s0(k)) <= sum[A](s1(k))","sum[A](s0(k)) <= sum[A](s1(k))"]}
+{"goal":"p(k)","proof":["let (s0: ℕ -> List[A], s1: ℕ -> List[A]) satisfy { forall(x0: List[A], x1: List[A], x2: ℕ) { not is_nonnegative_list[A](x0) or not is_nonnegative_list[A](x1) or not x0 ⊆ x1 or x1.length != x2 or not p(x2) or sum[A](x0) <= sum[A](x1) } and forall(x3: ℕ) { s1(x3).length = x3 or p(x3) } and forall(x4: ℕ) { is_nonnegative_list[A](s0(x4)) or p(x4) } and forall(x5: ℕ) { is_nonnegative_list[A](s1(x5)) or p(x5) } and forall(x6: ℕ) { s0(x6) ⊆ s1(x6) or p(x6) } and forall(x7: ℕ) { not sum[A](s0(x7)) <= sum[A](s1(x7)) or p(x7) } }","s1(k).length = k or p(k)","s0(k) ⊆ s1(k) or p(k)","not sum[A](s0(k)) <= sum[A](s1(k)) or p(k)","not s0(k) ⊆ s1(k) or s1(k).length != k or sum[A](s0(k)) <= sum[A](s1(k))","s1(k).length = k","s0(k) ⊆ s1(k)","not sum[A](s0(k)) <= sum[A](s1(k))","sum[A](s0(k)) <= sum[A](s1(k))"]}
+{"goal":"p(list_1.length)","proof":["let s0: (ℕ -> Bool) -> ℕ satisfy { forall(x0: ℕ -> Bool, x1: ℕ) { true_below(x0, s0(x0)) or x0(x1) } and forall(x2: ℕ -> Bool, x3: ℕ) { not x2(s0(x2)) or x2(x3) } }","not true_below(p, s0(p)) or p(s0(p))","true_below(p, s0(p)) or p(list_1.length)","true_below(p, s0(p))","let s1: A satisfy { true }","List.cons(s1, list_1).tail = list_1","not p(List.cons(s1, list_1).tail.length)","not p(s0(p)) or p(List.cons(s1, list_1).tail.length)","p(s0(p))","not p(s0(p))"]}
+{"goal":"subset_imp_sum_lte","proof":["let s0: (ℕ -> Bool) -> ℕ satisfy { forall(x0: ℕ -> Bool, x1: ℕ) { true_below(x0, s0(x0)) or x0(x1) } and forall(x2: ℕ -> Bool, x3: ℕ) { not x2(s0(x2)) or x2(x3) } }","not true_below(p, s0(p)) or p(s0(p))","let s1: A satisfy { true }","not is_nonnegative_list[A](list_1) or not is_nonnegative_list[A](list_2) or not list_1 ⊆ list_2 or (list_2 ∖ s1).length + list_2.count(s1) != list_2.length or not p((list_2 ∖ s1).length + list_2.count(s1)) or sum[A](list_1) <= sum[A](list_2)","not is_nonnegative_list[A](list_1) or not is_nonnegative_list[A](list_2) or not list_1 ⊆ list_2 or list_2.length != list_2.length or not p(list_2.length) or sum[A](list_1) <= sum[A](list_2)","(list_2 ∖ s1).length + list_2.count(s1) = list_2.length","list_2.length != list_2.length or not p(list_2.length)","not p(list_2.length)","(list_2 ∖ s1).length + list_2.count(s1) != list_2.length or not p((list_2 ∖ s1).length + list_2.count(s1))","true_below(p, s0(p)) or p(list_2.length)","not p(s0(p)) or p((list_2 ∖ s1).length + list_2.count(s1))","not p((list_2 ∖ s1).length + list_2.count(s1))","not p(s0(p))","true_below(p, s0(p))","not true_below(p, s0(p))"]}
 {"goal":"a + -a > -a","proof":["not a > R.0 or R.0 > R.0 - a","R.0 - a = -a","a + -a = R.0","not R.0 > -a","not R.0 > R.0 - a"]}
 {"goal":"R.0 > -a","proof":["not a > R.0 or R.0 > R.0 - a","R.0 - a = -a","not R.0 > R.0 - a"]}
 {"goal":"a + -a < a + R.0","proof":["not -a < R.0 or a + -a < a + R.0"]}
@@ -155,7 +55,7 @@
 {"goal":"a ⋅ b >= R.0","proof":["a ⋅ b >= R.0 = R.0 <= a ⋅ b","not R.0 <= a ⋅ b","not R.0 < a ⋅ b or R.0 <= a ⋅ b","a ⋅ b > R.0 = R.0 < a ⋅ b","not R.0 < a ⋅ b","R.0 < a ⋅ b"]}
 {"goal":"mul_nonneg_nonneg_nonneg","proof":[]}
 {"goal":"mul_nonneg_nonpos_nonpos","proof":["not a >= R.0 or not -b >= R.0 or a ⋅ -b >= R.0","-a ⋅ -b = a ⋅ b","-a ⋅ -b = -(a ⋅ -b)","-(a ⋅ -b) <= R.0 = a ⋅ -b >= R.0","--b <= R.0 = -b >= R.0","--b = b","not -a ⋅ -b <= R.0","not -(a ⋅ -b) <= R.0","not a ⋅ -b >= R.0","--b <= R.0","not -b >= R.0","-b >= R.0"]}
-{"goal":"mul_pos_neg_neg","proof":["not a > R.0 or not -b > R.0 or a ⋅ -b > R.0","-a ⋅ -b = a ⋅ b","-a ⋅ -b = -(a ⋅ -b)","-(a ⋅ -b) < R.0 = a ⋅ -b > R.0","--b < R.0 = -b > R.0","--b = b","not -a ⋅ -b < R.0","not -(a ⋅ -b) < R.0","not a ⋅ -b > R.0","--b < R.0","not -b > R.0","-b > R.0"]}
+{"goal":"mul_pos_neg_neg","proof":["not a > R.0 or not -b > R.0 or a ⋅ -b > R.0","-a ⋅ -b = a ⋅ b","-a ⋅ -b = -(a ⋅ -b)","R.0 - b > R.0 = R.0 > b","-(a ⋅ -b) < R.0 = a ⋅ -b > R.0","R.0 > b = b < R.0","R.0 - b = -b","not -a ⋅ -b < R.0","not -(a ⋅ -b) < R.0","not a ⋅ -b > R.0","not -b > R.0"]}
 {"goal":"mul_nonpos_nonneg_nonpos","proof":["not b >= R.0 or not a <= R.0 or b ⋅ a <= R.0","b ⋅ a = a ⋅ b","not b ⋅ a <= R.0"]}
 {"goal":"mul_nonpos_nonpos_nonneg","proof":["not -a >= R.0 or not -b >= R.0 or -a ⋅ -b >= R.0","-a ⋅ -b = a ⋅ b","--a <= R.0 = -a >= R.0","--b <= R.0 = -b >= R.0","--a = a","--b = b","not -a ⋅ -b >= R.0","not --b <= R.0 or -b >= R.0","--b <= R.0","--a <= R.0","-a >= R.0","-b >= R.0","not -b >= R.0"]}
 {"goal":"mul_neg_neg_pos","proof":["not -a > R.0 or not -b > R.0 or -a ⋅ -b > R.0","-a ⋅ -b = a ⋅ b","--a < R.0 = -a > R.0","--b < R.0 = -b > R.0","--a = a","--b = b","not -a ⋅ -b > R.0","not --b < R.0 or -b > R.0","--b < R.0","--a < R.0","-a > R.0","-b > R.0","not -b > R.0"]}
@@ -240,3 +140,175 @@
 {"goal":"f(x.suc)","proof":["abs(a)^x.suc != abs(a^x.suc) or f(x.suc)"]}
 {"goal":"f(n)","proof":["let s0: (ℕ -> Bool) -> ℕ satisfy { forall(x0: ℕ -> Bool, x1: ℕ) { not x0(ℕ.0) or x0(s0(x0)) or x0(x1) } and forall(x2: ℕ -> Bool, x3: ℕ) { not x2(s0(x2).suc) or not x2(ℕ.0) or x2(x3) } }","not f(s0(f)) or f(s0(f).suc)","not f(s0(f).suc) or not f(ℕ.0) or f(n)","not f(s0(f).suc)","not f(ℕ.0) or f(s0(f)) or f(n)","not f(s0(f))","f(s0(f))"]}
 {"goal":"pow_abs_eq_abs_pow","proof":["not f(n) or abs(a)^n = abs(a^n)"]}
+{"goal":"r > A.0","proof":["not r >= A.0 or r.max(A.0) = r","r.max(A.0) = A.0 or r > A.0","r.max(A.0) = A.0","r.max(A.0) = r","r.max(A.0) != r"]}
+{"goal":"a.neg_part = -a","proof":["a > A.0 or a.abs = a.neg_part","a > A.0 or a.abs = -a","a.abs = -a","a.abs = a.neg_part","a.abs != a.neg_part"]}
+{"goal":"a.times(m) = A.0","proof":["a.times(m) = a.times(m)","a.times(ℕ.0) != A.0","ℕ.0 != ℕ.0 or a.times(ℕ.0) = A.0"]}
+{"goal":"triangle_ineq_sub","proof":["-(abs(b) - abs(a)) = abs(a) - abs(b)","-(b.abs - a.abs) = a.abs - b.abs","(a - b).abs >= a.abs - b.abs = a.abs - b.abs <= (a - b).abs","abs(a - b) >= abs(a) - abs(b) = abs(a) - abs(b) <= abs(a - b)","abs(a - b) = (a - b).abs","abs(a) = a.abs","abs(b) = b.abs"]}
+{"goal":"compare_by_zero","proof":["a - b > A.0 or a > b","a > b","not a - b > A.0","not a > b + A.0 or a - b > A.0","b + A.0 = b","not a > b + A.0","a > b + A.0"]}
+{"goal":"x.times(l1.count(x)) + sum[A](l1 ∖ x) = sum[A](l1)","proof":["x.times(l1.count(x)) + sum[A](l1 ∖ x) = sum[A](l1)","x.times(l1.count(x)) = x.times(l1.count(x))"]}
+{"goal":"x.times(l1.count(x)) + sum[A](l1 ∖ x) = sum[A](l1)","proof":["x.times(l1.count(x)) + sum[A](l1 ∖ x) = sum[A](l1)","x.times(l1.count(x)) = x.times(l1.count(x))"]}
+{"goal":"x.times(l1.count(x)) + sum[A](l1 ∖ x) = sum[A](l1)","proof":["x.times(l1.count(x)) + sum[A](l1 ∖ x) = sum[A](l1)","x.times(l1.count(x)) = x.times(l1.count(x))"]}
+{"goal":"x.times(l1.count(x)) + sum[A](l1 ∖ x) = sum[A](l1)","proof":["x.times(l1.count(x)) + sum[A](l1 ∖ x) = sum[A](l1)","x.times(l1.count(x)) = x.times(l1.count(x))"]}
+{"goal":"x.times(l1.count(x)) + sum[A](l1 ∖ x) = sum[A](l1)","proof":["x.times(l1.count(x)) + sum[A](l1 ∖ x) = sum[A](l1)","x.times(l1.count(x)) = x.times(l1.count(x))"]}
+{"goal":"x.times(l1.count(x)) + sum[A](l1 ∖ x) = sum[A](l1)","proof":["x.times(l1.count(x)) + sum[A](l1 ∖ x) = sum[A](l1)","x.times(l1.count(x)) = x.times(l1.count(x))"]}
+{"goal":"x.times(l1.count(x)) + sum[A](l1 ∖ x) = sum[A](l1)","proof":["x.times(l1.count(x)) + sum[A](l1 ∖ x) = sum[A](l1)","x.times(l1.count(x)) = x.times(l1.count(x))"]}
+{"goal":"x.times(l1.count(x)) + sum[A](l1 ∖ x) = sum[A](l1)","proof":["x.times(l1.count(x)) + sum[A](l1 ∖ x) = sum[A](l1)","x.times(l1.count(x)) = x.times(l1.count(x))"]}
+{"goal":"x.times(l1.count(x)) + sum[A](l1 ∖ x) = sum[A](l1)","proof":["x.times(l1.count(x)) + sum[A](l1 ∖ x) = sum[A](l1)","x.times(l1.count(x)) = x.times(l1.count(x))"]}
+{"goal":"a >= -r","proof":["-r - a > A.0 = -r > a","-(r - A.0) = A.0 - r","a >= -r = -r <= a","not -r <= a","-a > A.0 != -a <= A.0","-r > a != -r <= a","A.0 - a = -a","A.0 - r = -r","--r = r","-r > a or -r <= a","-r > a","not -a > A.0 or not -a <= A.0","not -a > A.0"]}
+{"goal":"a + -b < b + c + -b","proof":["not a < b + c or a + -b < b + c + -b"]}
+{"goal":"abs(a) = a","proof":["not a > A.0 or a.abs = a","abs(a) = a.abs","a.abs = a","a.abs != a"]}
+{"goal":"(-a).abs = a","proof":["not lib(util).is_acyclic[A](A.lt) or not A.0 < -a or not -a < A.0","-a > A.0 or (-a).abs = --a","-a > A.0 = A.0 < -a","--a = a","(-a).abs != --a","not A.0 < -a","-a > A.0","not -a > A.0"]}
+{"goal":"abs(-a + -b) = abs(-(a + b))","proof":["-a + -b != -(a + b)","-a + -b = -(a + b)"]}
+{"goal":"member_abs_nonneg","proof":["not A.0 <= a or A.0 < a or A.0 = a","a >= A.0 = A.0 <= a","A.0 <= a","a > A.0 = A.0 < a","not a > A.0 or a.abs = a","not a > A.0","not A.0 < a","A.0 != a or a.abs = A.0","A.0 = a","a.abs = A.0","a.abs != A.0"]}
+{"goal":"b >= A.0","proof":["b >= A.0 or b.min(A.0) = b","b.min(A.0) = b","b.min(A.0) = A.0 or b < A.0","b >= A.0 = A.0 <= b","not A.0 <= b","A.0 != b or A.0 <= b","A.0 != b","b.min(A.0) = A.0","b.min(A.0) != A.0"]}
+{"goal":"-abs(b) <= abs(b)","proof":["not b <= abs(b)","b <= abs(b)"]}
+{"goal":"abs(a) - abs(b) <= abs(a - b)","proof":["not abs(a) <= abs(b) + abs(a - b) or abs(a) - abs(b) <= abs(a - b)","abs(a - b) + abs(b) = abs(b) + abs(a - b)","not abs(a) <= abs(b) + abs(a - b)","abs(a) <= abs(b) + abs(a - b)"]}
+{"goal":"a.times(m.suc) = a.times(m) + a","proof":["m.suc != m.suc or a + a.times(m) = a.times(m.suc)","a.times(m) = a.times(m)","a.times(m.suc) = a.times(m.suc)","a.times(m) + a = a + a.times(m)","a + a.times(m) != a.times(m.suc)"]}
+{"goal":"a.times(m.suc) = a.times(m) + a","proof":["m.suc != m.suc or a + a.times(m) = a.times(m.suc)","a.times(m) = a.times(m)","a.times(m.suc) = a.times(m.suc)","a.times(m) + a = a + a.times(m)","a + a.times(m) != a.times(m.suc)"]}
+{"goal":"a + c < b + c","proof":["not a < b or a + c < b + c"]}
+{"goal":"triangle_nonpos_lte_nonneg","proof":["not a + b <= abs(a) + abs(b)"]}
+{"goal":"a.neg_part = A.0","proof":["not a > A.0 or a.neg_part = A.0"]}
+{"goal":"a.neg_part = A.0","proof":["not a > A.0 or a.neg_part = A.0"]}
+{"goal":"a = A.0","proof":["not lib(util).is_antisymmetric[A](A.lte) or not a <= A.0 or not A.0 <= a or A.0 = a","a >= A.0 = A.0 <= a","A.0 <= a","not lib(util).is_antisymmetric[A](A.lte)"]}
+{"goal":"a.abs = A.0 implies a = A.0","proof":["a.abs != a","a > A.0 or -a = a.abs","not a > A.0 or a.abs = a","A.0 - a != A.0 or A.0 = a","A.0 - a != A.0","A.0 - a = -a","-a != A.0","not a > A.0","-a != a.abs","-a = a.abs"]}
+{"goal":"mul_pos_neg_neg","proof":["not a > R.0 or not -b > R.0 or a ⋅ -b > R.0","-a ⋅ -b = a ⋅ b","-a ⋅ -b = -(a ⋅ -b)","-(a ⋅ -b) < R.0 = a ⋅ -b > R.0","--b < R.0 = -b > R.0","--b = b","not -a ⋅ -b < R.0","not -(a ⋅ -b) < R.0","not a ⋅ -b > R.0","--b < R.0","not -b > R.0","-b > R.0"]}
+{"goal":"a - (a - b) = b","proof":["-(a - b) != b - a or b + (a - b) = a","b + (a - b) != a or a - (a - b) = b","-(a - b) = b - a","b + (a - b) != a"]}
+{"goal":"right_lte_lt","proof":[]}
+{"goal":"(-a).pos_part = a.neg_part","proof":["(-a).pos_part != A.0"]}
+{"goal":"(-a).pos_part = a.neg_part","proof":["(-a).pos_part != a.abs","(-a).abs != a.abs","(-a).abs = a.abs"]}
+{"goal":"abs(a) = abs(a - b + b)","proof":["a - b + b != a","a - b != a - b or a - b + b = a"]}
+{"goal":"neg_abs","proof":[]}
+{"goal":"add_nonneg_nonneg","proof":["not lib(util).is_transitive[A](A.lte) or not A.0 <= A.0 + b or not A.0 + b <= a + b or A.0 <= a + b","not A.0 <= a or A.0 + b <= a + b","A.0 + b >= A.0 = A.0 <= A.0 + b","a + b >= A.0 = A.0 <= a + b","a >= A.0 = A.0 <= a","not A.0 <= a + b","A.0 <= a","A.0 + b = b","A.0 + b >= A.0","not A.0 + b <= a + b or not A.0 <= A.0 + b","A.0 <= A.0 + b","A.0 + b <= a + b"]}
+{"goal":"abs_one_imp_abs_or_neg_abs","proof":[]}
+{"goal":"a.abs = A.0","proof":["A.0.abs != A.0","r.abs != A.0","r.abs != r","not r >= A.0 or r.abs = r"]}
+{"goal":"pos_part_neg","proof":[]}
+{"goal":"a <= abs(a)","proof":["lib(order).lte_from(A.lt, a, abs(a)) = a <= abs(a)","not lib(order).lte_from(A.lt, a, abs(a))","abs(a) != a or lib(order).lte_from(A.lt, a, abs(a))"]}
+{"goal":"a <= abs(a)","proof":["not abs(a) >= A.0 or not a <= A.0 or a <= abs(a)"]}
+{"goal":"abs(-a) <= abs(-b)","proof":["abs(-b) >= abs(-a) = abs(-a) <= abs(-b)","abs(b) >= abs(a) = abs(a) <= abs(b)","(-a).abs = a.abs","(-b).abs = b.abs","abs(-a) = (-a).abs","abs(-b) = (-b).abs","abs(a) = a.abs","abs(b) = b.abs"]}
+{"goal":"a = abs(a)","proof":["not a >= A.0 or a.abs = a","abs(a) = a.abs","a.abs = a","a.abs != a"]}
+{"goal":"x.times(l2.count(x)) + sum[A](l2 ∖ x) = sum[A](l2)","proof":["x.times(l2.count(x)) + sum[A](l2 ∖ x) = sum[A](l2)","x.times(l2.count(x)) = x.times(l2.count(x))"]}
+{"goal":"x.times(l2.count(x)) + sum[A](l2 ∖ x) = sum[A](l2)","proof":["x.times(l2.count(x)) + sum[A](l2 ∖ x) = sum[A](l2)","x.times(l2.count(x)) = x.times(l2.count(x))"]}
+{"goal":"x.times(l2.count(x)) + sum[A](l2 ∖ x) = sum[A](l2)","proof":["x.times(l2.count(x)) + sum[A](l2 ∖ x) = sum[A](l2)","x.times(l2.count(x)) = x.times(l2.count(x))"]}
+{"goal":"x.times(l2.count(x)) + sum[A](l2 ∖ x) = sum[A](l2)","proof":["x.times(l2.count(x)) + sum[A](l2 ∖ x) = sum[A](l2)","x.times(l2.count(x)) = x.times(l2.count(x))"]}
+{"goal":"x.times(l2.count(x)) + sum[A](l2 ∖ x) = sum[A](l2)","proof":["x.times(l2.count(x)) + sum[A](l2 ∖ x) = sum[A](l2)","x.times(l2.count(x)) = x.times(l2.count(x))"]}
+{"goal":"x.times(l2.count(x)) + sum[A](l2 ∖ x) = sum[A](l2)","proof":["x.times(l2.count(x)) + sum[A](l2 ∖ x) = sum[A](l2)","x.times(l2.count(x)) = x.times(l2.count(x))"]}
+{"goal":"x.times(l2.count(x)) + sum[A](l2 ∖ x) = sum[A](l2)","proof":["x.times(l2.count(x)) + sum[A](l2 ∖ x) = sum[A](l2)","x.times(l2.count(x)) = x.times(l2.count(x))"]}
+{"goal":"x.times(l2.count(x)) + sum[A](l2 ∖ x) = sum[A](l2)","proof":["x.times(l2.count(x)) + sum[A](l2 ∖ x) = sum[A](l2)","x.times(l2.count(x)) = x.times(l2.count(x))"]}
+{"goal":"x.times(l2.count(x)) + sum[A](l2 ∖ x) = sum[A](l2)","proof":["x.times(l2.count(x)) + sum[A](l2 ∖ x) = sum[A](l2)","x.times(l2.count(x)) = x.times(l2.count(x))"]}
+{"goal":"lte_abs","proof":[]}
+{"goal":"a + -b > b + c + -b","proof":["not b + c < a or b + c + -b < a + -b","a + -b > b + c + -b = b + c + -b < a + -b","a > b + c = b + c < a","not b + c + -b < a + -b","b + c < a","not b + c < a"]}
+{"goal":"lte_add_right","proof":["not b < c or b + a < c + a","not b <= c or b < c or c = b","not b + a < c + a or b + a <= c + a","c + a != b + a or b + a <= c + a","c + a != b + a","c != b","b < c","not b + a < c + a"]}
+{"goal":"abs_add_nonpos","proof":["abs(-b) + abs(-a) = abs(-a) + abs(-b)","abs(b) + abs(a) = abs(a) + abs(b)","(-(a + b)).abs = (a + b).abs","(-a).abs = a.abs","(-b).abs = b.abs","abs(-(a + b)) = (-(a + b)).abs","abs(-a) = (-a).abs","abs(-b) = (-b).abs","abs(a + b) = (a + b).abs","abs(a) = a.abs","abs(b) = b.abs"]}
+{"goal":"a + b <= abs(a) + abs(b)","proof":["not a + b <= a + abs(b)","b <= abs(b)","not b <= abs(b) or a + b <= a + abs(b)"]}
+{"goal":"left_invariance","proof":["not a < b or a + c < b + c","c + a = a + c","c + b = b + c","not a + c < c + b","not a + c < b + c"]}
+{"goal":"a.times(m) = a.times(n) + a.times(d)","proof":["a.times(n) + a.times(d) = a.times(n + d)","a.times(d) = a.times(d)","a.times(m) = a.times(m)","a.times(n) = a.times(n)"]}
+{"goal":"a.times(m) = a.times(n) + a.times(d)","proof":["a.times(n) + a.times(d) = a.times(n + d)","a.times(d) = a.times(d)","a.times(m) = a.times(m)","a.times(n) = a.times(n)"]}
+{"goal":"-a >= A.0","proof":["not A.0 >= a + A.0 or A.0 - a >= A.0","A.0 >= a = a <= A.0","A.0 - a = -a","not A.0 - a >= A.0","a + A.0 = a","A.0 >= a","not A.0 >= a + A.0","A.0 >= a + A.0"]}
+{"goal":"-a >= A.0","proof":["not A.0 >= a + A.0 or A.0 - a >= A.0","A.0 >= a = a <= A.0","A.0 - a = -a","not A.0 - a >= A.0","a + A.0 = a","A.0 >= a","not A.0 >= a + A.0","A.0 >= a + A.0"]}
+{"goal":"-a >= A.0","proof":["not A.0 >= a + A.0 or A.0 - a >= A.0","A.0 >= a = a <= A.0","A.0 - a = -a","not A.0 - a >= A.0","a + A.0 = a","A.0 >= a","not A.0 >= a + A.0","A.0 >= a + A.0"]}
+{"goal":"-a >= A.0","proof":["not A.0 >= a + A.0 or A.0 - a >= A.0","A.0 >= a = a <= A.0","A.0 - a = -a","not A.0 - a >= A.0","a + A.0 = a","A.0 >= a","not A.0 >= a + A.0","A.0 >= a + A.0"]}
+{"goal":"subset_imp_sum_lte","proof":["let s0: (ℕ -> Bool) -> ℕ satisfy { forall(x0: ℕ -> Bool, x1: ℕ) { true_below(x0, s0(x0)) or x0(x1) } and forall(x2: ℕ -> Bool, x3: ℕ) { not x2(s0(x2)) or x2(x3) } }","not true_below(p, s0(p)) or p(s0(p))","let s1: A satisfy { true }","not list_1 ⊆ list_2 or (list_2 ∖ s1).length + list_2.count(s1) != list_2.length or not p((list_2 ∖ s1).length + list_2.count(s1)) or sum[A](list_1) <= sum[A](list_2)","not list_1 ⊆ list_2 or list_2.length != list_2.length or not p(list_2.length) or sum[A](list_1) <= sum[A](list_2)","(list_2 ∖ s1).length + list_2.count(s1) = list_2.length","list_2.length != list_2.length or not p(list_2.length)","not p(list_2.length)","(list_2 ∖ s1).length + list_2.count(s1) != list_2.length or not p((list_2 ∖ s1).length + list_2.count(s1))","true_below(p, s0(p)) or p(list_2.length)","not p(s0(p)) or p((list_2 ∖ s1).length + list_2.count(s1))","not p((list_2 ∖ s1).length + list_2.count(s1))","not p(s0(p))","true_below(p, s0(p))","not true_below(p, s0(p))"]}
+{"goal":"(-a).pos_part = (-a).abs","proof":["not A.0 <= -a or A.0 < -a or -a = A.0","not -a > A.0 or (-a).pos_part = (-a).abs","not -a > A.0","a > A.0 or a.abs = -a","-a > A.0 = A.0 < -a","not A.0 < -a","-a >= A.0 = A.0 <= -a","A.0 <= -a","a > A.0 or a.pos_part = A.0","(-a).abs = a.abs","A.0 - -a = --a","--a = a","A.0 - A.0 = A.0","a.pos_part = A.0","-a = A.0","a.abs = -a"]}
+{"goal":"a - b > A.0 implies a > b","proof":["not a <= b + A.0 or a - b <= A.0","a - b > A.0 != a - b <= A.0","a > b + A.0 != a <= b + A.0","b + A.0 = b","not a > b + A.0","a > b + A.0 or a <= b + A.0","not a - b > A.0 or not a - b <= A.0","not a - b <= A.0","a <= b + A.0","not a <= b + A.0"]}
+{"goal":"member_abs_pos","proof":["lib(order).lte_from(A.lt, A.0, a) = A.0 <= a","not A.0 < a or lib(order).lte_from(A.lt, A.0, a)","a > A.0 = A.0 < a","A.0 < a","a >= A.0 = A.0 <= a","not a >= A.0 or a.abs = a","not a >= A.0","not A.0 <= a","lib(order).lte_from(A.lt, A.0, a)","not lib(order).lte_from(A.lt, A.0, a)"]}
+{"goal":"abs(a + b) <= abs(a) + abs(b)","proof":["not abs(b) <= abs(a) or not a >= A.0 or not b <= A.0 or abs(a + b) <= abs(a) + abs(b)"]}
+{"goal":"abs(a + b) <= abs(a) + abs(b)","proof":["-b + -a = -(a + b)","abs(-b) + abs(-a) >= abs(-b + -a) = abs(-b + -a) <= abs(-b) + abs(-a)","abs(a) + abs(b) >= abs(a + b) = abs(a + b) <= abs(a) + abs(b)","abs(-b) + abs(-a) = abs(-a) + abs(-b)","(-(a + b)).abs = (a + b).abs","(-a).abs = a.abs","(-b).abs = b.abs","abs(-a) = (-a).abs","abs(-b + -a) = (-b + -a).abs","abs(-b) = (-b).abs","abs(a + b) = (a + b).abs","abs(a) = a.abs","abs(b) = b.abs"]}
+{"goal":"abs(a + b) <= abs(a) + abs(b)","proof":["not a <= A.0 or not b <= A.0 or abs(a) + abs(b) = abs(a + b)","not a < A.0 or a <= A.0","not b < A.0 or b <= A.0","abs(a) + abs(b) != abs(a + b) or abs(a + b) <= abs(a) + abs(b)","b <= A.0","a <= A.0","abs(a) + abs(b) != abs(a + b)"]}
+{"goal":"abs(a + b) <= abs(a) + abs(b)","proof":["abs(a) + abs(b) >= abs(a + b) = abs(a + b) <= abs(a) + abs(b)","abs(b) + abs(a) >= abs(b + a) = abs(b + a) <= abs(b) + abs(a)","abs(b) + abs(a) = abs(a) + abs(b)","b + a = a + b"]}
+{"goal":"abs(a + b) <= abs(a) + abs(b)","proof":["not a >= A.0 or not b <= A.0 or abs(a + b) <= abs(a) + abs(b)","not b <= A.0","lib(order).lt_from(A.lte, b, A.0) = b < A.0","not lib(order).lt_from(A.lte, b, A.0) or b <= A.0","lib(order).lt_from(A.lte, b, A.0)","not lib(order).lt_from(A.lte, b, A.0)"]}
+{"goal":"abs(a + b) <= abs(a) + abs(b)","proof":["not a >= A.0 or not b >= A.0 or abs(a) + abs(b) = abs(a + b)","abs(a) + abs(b) != abs(a + b) or abs(a + b) <= abs(a) + abs(b)","abs(a) + abs(b) != abs(a + b)"]}
+{"goal":"nonpos_lt_pos","proof":["b - a > A.0 = b > a","b > a","b > a = a < b"]}
+{"goal":"a + b = abs(a + b)","proof":["not a + b >= A.0 or (a + b).abs = a + b","abs(a + b) = (a + b).abs","(a + b).abs = a + b","(a + b).abs != a + b"]}
+{"goal":"control_abs","proof":[]}
+{"goal":"pos_neg_decomposition","proof":[]}
+{"goal":"a = -a.abs","proof":["a.abs != -a or a.abs + a = A.0","a + a.abs != A.0 or -a.abs = a","a + a.abs != A.0","a.abs + a = a + a.abs","a.abs + a = A.0","a.abs + a != A.0"]}
+{"goal":"triangle_nonneg_nonpos","proof":[]}
+{"goal":"-b >= A.0","proof":["not A.0 >= b + A.0 or A.0 - b >= A.0","A.0 >= b = b <= A.0","A.0 - b = -b","not A.0 - b >= A.0","b + A.0 = b","A.0 >= b","not A.0 >= b + A.0","A.0 >= b + A.0"]}
+{"goal":"-b >= A.0","proof":["not A.0 >= b + A.0 or A.0 - b >= A.0","A.0 >= b = b <= A.0","A.0 - b = -b","not A.0 - b >= A.0","b + A.0 = b","A.0 >= b","not A.0 >= b + A.0","A.0 >= b + A.0"]}
+{"goal":"abs(a) >= A.0","proof":["abs(a) = a.abs","not a.abs >= A.0","a.abs >= A.0"]}
+{"goal":"a + c < b + d","proof":["not a + c < b + c","not a < b or a + c < b + c"]}
+{"goal":"a + c < b + d","proof":["not lib(util).is_transitive[A](A.lt) or not a + c < b + c or not b + c < b + d or a + c < b + d","not b + c < b + d or not a + c < b + c"]}
+{"goal":"-a < A.0","proof":["A.0 - -a > A.0 = A.0 > -a","A.0 > -a = -a < A.0","A.0 - -a = --a","--a = a"]}
+{"goal":"-a < A.0","proof":["A.0 - -a > A.0 = A.0 > -a","A.0 > -a = -a < A.0","A.0 - -a = --a","--a = a"]}
+{"goal":"c < d","proof":["not c <= d or c < d or d = c"]}
+{"goal":"pos_lte","proof":["not a <= b or not A.0 < a or A.0 < b","a > A.0 = A.0 < a","b > A.0 = A.0 < b","not A.0 < b","A.0 < a","not A.0 < a or not a <= b"]}
+{"goal":"nonpos_lte_nonneg","proof":["not lib(util).is_transitive[A](A.lte) or not a <= A.0 or not A.0 <= b or a <= b","b >= A.0 = A.0 <= b","A.0 <= b","not A.0 <= b or not a <= A.0"]}
+{"goal":"a.abs <= r","proof":["not A.0 <= r"]}
+{"goal":"a.abs <= r","proof":["not a <= r"]}
+{"goal":"a.abs <= r","proof":["not -a <= r"]}
+{"goal":"a >= A.0","proof":["lib(order).lte_from(A.lt, -r, a) = -r <= a","lib(order).lte_from(A.lt, A.0, a) = A.0 <= a","a >= -r = -r <= a","a >= r = r <= a","A.0 - r = -r","r - A.0 = r"]}
+{"goal":"a >= A.0","proof":["a >= A.0 or a.min(A.0) = a","a.min(A.0) = a","a.min(A.0) = A.0 or a < A.0","a >= A.0 = A.0 <= a","not A.0 <= a","A.0 != a or A.0 <= a","A.0 != a","a.min(A.0) = A.0","a.min(A.0) != A.0"]}
+{"goal":"member_abs_neg","proof":["not lib(util).is_acyclic[A](A.lt) or not a < A.0 or not A.0 < a","a > A.0 or -a = a.abs","a > A.0","a > A.0 = A.0 < a","A.0 < a","not lib(util).is_acyclic[A](A.lt)"]}
+{"goal":"abs(a) <= abs(b)","proof":["not abs(b).comparable(abs(a)) or abs(b) < abs(a) or abs(a) < abs(b) or abs(b) = abs(a)","not abs(a) < abs(b) or abs(a) <= abs(b)","not abs(b) < abs(a) or abs(b) <= abs(a)","not abs(a) < abs(b)","abs(b) != abs(a) or abs(a) <= abs(b)","abs(b) != abs(a)","abs(b).comparable(abs(a))","not abs(b) < abs(a)","abs(b) < abs(a)"]}
+{"goal":"a = a.pos_part - a.neg_part","proof":["a.pos_part - A.0 != a","a - A.0 != a","a - A.0 = a"]}
+{"goal":"a = a.pos_part - a.neg_part","proof":["a.pos_part - -a != a","A.0 - -a != a","a + -a != A.0 or A.0 - -a = a","a + -a = A.0"]}
+{"goal":"left_lte_lt","proof":["not c <= d or not a < b or a + c < b + d","not c < d or a + c < a + d","not a <= b or a < b or b = a","not c < d or c <= d","not c <= d or not a < b","c <= d","not a < b","b = a","a + c < a + d"]}
+{"goal":"a.abs = a","proof":["not a > A.0 or a.abs = a"]}
+{"goal":"a.abs = a","proof":["not a > A.0 or a.abs = a"]}
+{"goal":"a.abs = a","proof":["not a > A.0 or a.abs = a"]}
+{"goal":"a.abs = a","proof":["not a > A.0 or a.abs = a"]}
+{"goal":"abs(a) <= abs(a - b) + abs(b)","proof":["not lib(util).is_transitive[A](A.lte) or not abs(a) <= (a - b + b).abs or not (a - b + b).abs <= (a - b).abs + b.abs or abs(a) <= (a - b).abs + b.abs","(a - b + b).abs <= (a - b).abs + b.abs","abs(a - b + b) != abs(a) or abs(a) <= abs(a - b + b)","abs(a - b + b) = (a - b + b).abs","abs(a - b) = (a - b).abs","abs(b) = b.abs","not abs(a) <= abs(a - b) + b.abs","not abs(a) <= (a - b).abs + b.abs","abs(a) <= abs(a - b + b)","abs(a) <= (a - b + b).abs","not (a - b + b).abs <= (a - b).abs + b.abs or not abs(a) <= (a - b + b).abs"]}
+{"goal":"abs(a) <= abs(a - b) + abs(b)","proof":[]}
+{"goal":"a + b >= A.0","proof":["not abs(a) >= abs(b) + A.0 or abs(a) - abs(b) >= A.0","abs(a) + -abs(b) = abs(a) - abs(b)","abs(a) >= abs(b) = abs(b) <= abs(a)","abs(b) + A.0 = abs(b)","not abs(a) + -abs(b) >= A.0","not abs(a) - abs(b) >= A.0","abs(a) >= abs(b)","not abs(a) >= abs(b) + A.0","abs(a) >= abs(b) + A.0"]}
+{"goal":"b + c < b + d","proof":["not c < d or b + c < b + d"]}
+{"goal":"b = -abs(b)","proof":["not b <= A.0 or b.abs = -b","abs(b) = b.abs","--b = b","-abs(b) != --b","abs(b) != -b","b.abs = -b","b.abs != -b"]}
+{"goal":"abs(b + a) <= abs(b) + abs(a)","proof":["not b >= A.0 or not a <= A.0 or abs(b + a) <= abs(b) + abs(a)","b.max(A.0) = b or b < A.0","not a < A.0 or a <= A.0","not b >= A.0 or not a <= A.0","b.max(A.0) >= A.0","a <= A.0","not b >= A.0","b.max(A.0) = b"]}
+{"goal":"a.abs = -a","proof":["a > A.0 or a.abs = -a"]}
+{"goal":"a.abs = -a","proof":["a > A.0 or a.abs = -a"]}
+{"goal":"a.abs = -a","proof":["a > A.0 or a.abs = -a"]}
+{"goal":"a.abs = -a","proof":["a > A.0 or a.abs = -a"]}
+{"goal":"add_pos_pos","proof":["not A.0 <= b or not A.0 < a or A.0 + A.0 < a + b","a + b > A.0 + A.0 = A.0 + A.0 < a + b","a > A.0 = A.0 < a","b > A.0 = A.0 < b","A.0 < b","A.0 < a","not A.0 < b or A.0 <= b","A.0 + A.0 = A.0","not a + b > A.0 + A.0","not A.0 + A.0 < a + b","A.0 <= b","not A.0 <= b"]}
+{"goal":"gt_sub","proof":["a + -b = a - b","b + c + -b = b + c - b","c + b - b = c","c + b = b + c","a - b > b + c + -b","not a - b > c + b - b","a - b > b + c - b"]}
+{"goal":"a.pos_part = A.0","proof":["a > A.0 or a.pos_part = A.0"]}
+{"goal":"a.pos_part = a","proof":["not a > A.0 or a.abs = a.pos_part","not a > A.0 or a.abs = a","a.abs = a","a.abs = a.pos_part","a.abs != a.pos_part"]}
+{"goal":"a.times(n) = a.times(m)","proof":["a.times(m) = a.times(m)","a.times(n) = a.times(n)","A.0.times(m) = A.0","A.0.times(n) = A.0"]}
+{"goal":"a.times(n) = a.times(m)","proof":["a.times(m) = a.times(m)","a.times(n) = a.times(n)","A.0.times(m) = A.0","A.0.times(n) = A.0"]}
+{"goal":"a - b <= c","proof":["not c <= c","lib(order).lte_from(A.lt, c, c) = c <= c","not lib(order).lte_from(A.lt, c, c)","c != c or lib(order).lte_from(A.lt, c, c)"]}
+{"goal":"a - b <= c","proof":["lib(order).lt_from(A.lte, a - b, c) = a - b < c","not lib(order).lt_from(A.lte, a - b, c) or a - b <= c","lib(order).lt_from(A.lte, a - b, c)","not lib(order).lt_from(A.lte, a - b, c)"]}
+{"goal":"a - b >= c","proof":["a - b >= c = c <= a - b","not c <= a - b","a - b != c or c <= a - b"]}
+{"goal":"a - b >= c","proof":["a - b >= c = c <= a - b","not c <= a - b","not c < a - b or c <= a - b","a - b > c = c < a - b","not c < a - b","c < a - b"]}
+{"goal":"triangle_ineq","proof":["a.abs + b.abs >= (a + b).abs = (a + b).abs <= a.abs + b.abs","abs(a) + abs(b) >= abs(a + b) = abs(a + b) <= abs(a) + abs(b)","abs(b) + abs(a) = abs(a) + abs(b)","b.abs + a.abs = a.abs + b.abs","abs(a + b) = (a + b).abs","abs(a) = a.abs","abs(b) = b.abs"]}
+{"goal":"gt_minus_pos","proof":["not a <= a - b + A.0 or a - (a - b) <= A.0","a - (a - b) > A.0 != a - (a - b) <= A.0","a > a - b + A.0 != a <= a - b + A.0","a - b + A.0 = a - b","not a > a - b + A.0","a > a - b + A.0 or a <= a - b + A.0","not a - (a - b) > A.0 or not a - (a - b) <= A.0","not a - (a - b) <= A.0","a <= a - b + A.0","not a <= a - b + A.0"]}
+{"goal":"a <= A.0","proof":["A.0.max(a) = A.0 or A.0 < a","A.0.max(a) = a or a <= A.0","A.0.max(a) = a","a > A.0 = A.0 < a","not A.0 < a","A.0 != a or a <= A.0","A.0 != a","A.0.max(a) = A.0","A.0.max(a) != A.0"]}
+{"goal":"a <= A.0","proof":["A.0.max(a) = A.0 or A.0 < a","A.0.max(a) = a or a <= A.0","A.0.max(a) = a","a > A.0 = A.0 < a","not A.0 < a","A.0 != a or a <= A.0","A.0 != a","A.0.max(a) = A.0","A.0.max(a) != A.0"]}
+{"goal":"a <= A.0","proof":["A.0.max(a) = A.0 or A.0 < a","A.0.max(a) = a or a <= A.0","A.0.max(a) = a","a > A.0 = A.0 < a","not A.0 < a","A.0 != a or a <= A.0","A.0 != a","A.0.max(a) = A.0","A.0.max(a) != A.0"]}
+{"goal":"a <= A.0","proof":["A.0.max(a) = A.0 or A.0 < a","A.0.max(a) = a or a <= A.0","A.0.max(a) = a","a > A.0 = A.0 < a","not A.0 < a","A.0 != a or a <= A.0","A.0 != a","A.0.max(a) = A.0","A.0.max(a) != A.0"]}
+{"goal":"a <= A.0","proof":[]}
+{"goal":"-a <= A.0","proof":["not A.0 <= a + A.0 or A.0 - a <= A.0","a >= A.0 = A.0 <= a","A.0 <= a","A.0 - a = -a","not A.0 - a <= A.0","a + A.0 = a","not A.0 <= a + A.0","A.0 <= a + A.0"]}
+{"goal":"-a <= A.0","proof":["not A.0 <= a + A.0 or A.0 - a <= A.0","a >= A.0 = A.0 <= a","A.0 <= a","A.0 - a = -a","not A.0 - a <= A.0","a + A.0 = a","not A.0 <= a + A.0","A.0 <= a + A.0"]}
+{"goal":"(-a).pos_part = A.0","proof":["not lib(util).is_acyclic[A](A.lt) or not -a < A.0 or not A.0 < -a","-a > A.0 = A.0 < -a","-a > A.0 or (-a).pos_part = A.0","-a > A.0","A.0 < -a","not lib(util).is_acyclic[A](A.lt)"]}
+{"goal":"a - b = c","proof":["a - c != b or c + b = a","b + c != a or a - c = b","c + b != a or a - b = c","c + b != a","a - c = b","a - c != b"]}
+{"goal":"a - b = c","proof":["a - c != b or c + b = a","b + c != a or a - c = b","c + b != a or a - b = c","c + b != a","a - c = b","a - c != b"]}
+{"goal":"member_abs_nonpos","proof":["not a > A.0 or not a <= A.0 or A.0 > A.0","not A.0 > A.0 or not a <= A.0 or a < A.0","a > A.0 or a.abs = -a","a > A.0","A.0 > A.0","not a < A.0 or a.abs = -a","not a < A.0"]}
+{"goal":"add_nonpos_nonpos","proof":["not lib(util).is_transitive[A](A.lte) or not a + b <= a + A.0 or not a + A.0 <= A.0 or a + b <= A.0","not b <= A.0 or a + b <= a + A.0","a + A.0 = a","not a + b <= a + A.0 or not a + A.0 <= A.0","a + A.0 <= A.0","a + b <= a + A.0"]}
+{"goal":"abs(b) - abs(a) <= abs(b - a)","proof":["not abs(b) <= abs(a) + abs(b - a) or abs(b) - abs(a) <= abs(b - a)","abs(b - a) + abs(a) = abs(a) + abs(b - a)","not abs(b) <= abs(a) + abs(b - a)","abs(b) <= abs(a) + abs(b - a)"]}
+{"goal":"abs_zero_iff_zero","proof":["A.0 = a","a.abs != A.0","a.abs != a","a > A.0 or -a = a.abs","-a != a.abs or a.abs + a = A.0","not a > A.0 or a.abs = a","a.abs + A.0 = a.abs","a.abs + A.0 != A.0","not a > A.0","a.abs + a != A.0","-a = a.abs","-a != a.abs"]}
+{"goal":"abs(b) = abs(b - a + a)","proof":["b - a + a != b","b - a != b - a or b - a + a = b"]}
+{"goal":"abs(-b + -a) <= abs(-b) + abs(-a)","proof":["not abs(-a) <= abs(-b) or not -b >= A.0 or not -a <= A.0 or abs(-b + -a) <= abs(-b) + abs(-a)"]}
+{"goal":"add_pos_nonneg","proof":["not a > A.0 or not b > A.0 or a + b > A.0","not b > A.0","not A.0 <= b or A.0 < b or A.0 = b","lib(order).lt_from(A.lte, A.0, a + b) = A.0 < a + b","lib(order).lt_from(A.lte, A.0, a) = A.0 < a","a + b > A.0 = A.0 < a + b","a > A.0 = A.0 < a","b > A.0 = A.0 < b","not A.0 < b","b >= A.0 = A.0 <= b","A.0 <= b","b + a = a + b","A.0 + a = a","A.0 = b"]}
+{"goal":"abs(b) <= abs(b - a) + abs(a)","proof":["not lib(util).is_transitive[A](A.lte) or not abs(b) <= (b - a + a).abs or not (b - a + a).abs <= (b - a).abs + a.abs or abs(b) <= (b - a).abs + a.abs","(b - a + a).abs <= (b - a).abs + a.abs","abs(b - a + a) != abs(b) or abs(b) <= abs(b - a + a)","abs(a) = a.abs","abs(b - a + a) = (b - a + a).abs","abs(b - a) = (b - a).abs","not abs(b) <= abs(b - a) + a.abs","not abs(b) <= (b - a).abs + a.abs","abs(b) <= abs(b - a + a)","abs(b) <= (b - a + a).abs","not (b - a + a).abs <= (b - a).abs + a.abs or not abs(b) <= (b - a + a).abs"]}
+{"goal":"abs(b) <= abs(b - a) + abs(a)","proof":[]}
+{"goal":"gte_sub","proof":[]}
+{"goal":"a - (a - b) > A.0","proof":[]}
+{"goal":"sum[A](l1 ∖ x) <= sum[A](l2 ∖ x)","proof":["not l1 ∖ x ⊆ l2 ∖ x or (l2 ∖ x).length != (l2 ∖ x).length or not p((l2 ∖ x).length) or sum[A](l1 ∖ x) <= sum[A](l2 ∖ x)","not true_below(p, k) or not (l2 ∖ x).length < k or p((l2 ∖ x).length)","(l2 ∖ x).length != (l2 ∖ x).length or not p((l2 ∖ x).length)","not p((l2 ∖ x).length)","not (l2 ∖ x).length < k or p((l2 ∖ x).length)"]}
+{"goal":"neg_part_neg","proof":["a + -a != A.0 or --a = a","(--a).pos_part = (-a).neg_part","(--a).pos_part != a.pos_part","--a != a","a + -a = A.0"]}
+{"goal":"a.neg_part = a.abs","proof":["a > A.0 or a.neg_part = a.abs"]}
+{"goal":"a + b = abs(a) + -abs(b)","proof":[]}
+{"goal":"(-a).abs = a.abs","proof":["(-a).abs != a"]}
+{"goal":"(-a).abs = a.abs","proof":["(-a).abs != -a"]}
+{"goal":"lte_add_left","proof":["not b < c or a + b < a + c","not b <= c or b < c or c = b","not a + b < a + c or a + b <= a + c","a + c != a + b or a + b <= a + c","a + c != a + b","c != b","b < c","not a + b < a + c"]}
+{"goal":"abs_gte_zero","proof":[]}
+{"goal":"a.abs >= A.0","proof":["lib(order).lte_from(A.lt, A.0, a) = A.0 <= a","not A.0 < a or lib(order).lte_from(A.lt, A.0, a)","a > A.0 = A.0 < a","A.0 < a","a.abs >= A.0 = A.0 <= a.abs","not A.0 <= a.abs","not A.0 <= a","lib(order).lte_from(A.lt, A.0, a)","not lib(order).lte_from(A.lt, A.0, a)"]}
+{"goal":"a.abs >= A.0","proof":[]}
+{"goal":"lte_sub","proof":[]}
+{"goal":"abs(-a + -b) = abs(-a) + abs(-b)","proof":["not -a >= A.0 or not -b >= A.0 or abs(-a) + abs(-b) = abs(-a + -b)"]}
+{"goal":"a - b < c","proof":["not a < b + c or a - b < c","not a < b + c","not a <= b + c or a < b + c or b + c = a"]}
+{"goal":"neg_lt_nonneg","proof":["not A.0 <= b or not a < A.0 or a < b","b >= A.0 = A.0 <= b","A.0 <= b","not A.0 <= b or not a < A.0"]}
+{"goal":"(-a).abs = -a","proof":["not A.0 <= -a or A.0 < -a or -a = A.0","a > A.0 or a.abs = -a","-a > A.0 = A.0 < -a","-a >= A.0 = A.0 <= -a","A.0 <= -a","not -a > A.0 or (-a).abs = -a","not -a > A.0","not A.0 < -a","A.0 - -a = --a","--a = a","-a - A.0 = -a","-a = A.0","a.abs = -a"]}
+{"goal":"lt_sub","proof":["a + -b = a - b","b + c + -b = b + c - b","c + b = b + c","c + b - b = c","a - b < b + c + -b","not a - b < c + b - b","a - b < b + c - b"]}
+{"goal":"abs_add_nonneg","proof":["not a >= A.0 or not b >= A.0 or a + b >= A.0","not a + b >= A.0 or (a + b).abs = a + b","not a >= A.0 or a.abs = a","not b >= A.0 or b.abs = b","abs(a + b) = (a + b).abs","abs(a) = a.abs","abs(b) = b.abs","a.abs + abs(b) != abs(a + b)","b.abs = b","a.abs = a","abs(a + b) != a + abs(b)","not a >= A.0 or a + b >= A.0","a + b >= A.0","a + abs(b) != (a + b).abs","(a + b).abs != a + b.abs","(a + b).abs = a + b","(a + b).abs != a + b"]}
+{"goal":"a - b > c","proof":["not a > b + c or a - b > c","not a > b + c","not b + c <= a or b + c < a or b + c = a","a >= b + c = b + c <= a","b + c <= a","a > b + c = b + c < a","b + c < a","not b + c < a"]}
+{"goal":"b - a > A.0","proof":["b - a > A.0 = b > a","not b > a","not b > A.0.max(a) or b > a","not a <= A.0 or A.0.max(a) = A.0","not b > A.0.max(a)","A.0.max(a) = A.0"]}
+{"goal":"p(k)","proof":["let (s0: ℕ -> List[A], s1: ℕ -> List[A]) satisfy { forall(x0: List[A], x1: List[A], x2: ℕ) { not x0 ⊆ x1 or x1.length != x2 or not p(x2) or sum[A](x0) <= sum[A](x1) } and forall(x3: ℕ) { s1(x3).length = x3 or p(x3) } and forall(x4: ℕ) { s0(x4) ⊆ s1(x4) or p(x4) } and forall(x5: ℕ) { not sum[A](s0(x5)) <= sum[A](s1(x5)) or p(x5) } }","s1(k).length = k or p(k)","s0(k) ⊆ s1(k) or p(k)","not sum[A](s0(k)) <= sum[A](s1(k)) or p(k)","not s0(k) ⊆ s1(k) or s1(k).length != k or sum[A](s0(k)) <= sum[A](s1(k))","s1(k).length = k","s0(k) ⊆ s1(k)","not sum[A](s0(k)) <= sum[A](s1(k))","sum[A](s0(k)) <= sum[A](s1(k))"]}
+{"goal":"p(k)","proof":[]}
+{"goal":"add_neg_nonpos","proof":["not b <= A.0 or not a < A.0 or a + b < A.0 + A.0","A.0 + A.0 = A.0","not a + b < A.0 + A.0"]}

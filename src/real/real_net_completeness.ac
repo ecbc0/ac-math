@@ -1,11 +1,13 @@
 
-from real.real_completeness import ℝ, inf, sup, have_lower_bound, have_upper_bound, directly_closely_lt_sup, directly_closely_gt_inf, intersection, have_inf, have_sup
-from limit.metric_space import Distance_Space, Metric_Space, Point_Net_System, Topology, Distance_Net_System, Distance_Top, is_dist_vanish_net, is_bounded, are_bounded, dist_set, dist, elem_in_dist_set, Metric_Top, Complete_Distance_Top, Complete_Metric_Top
+from real.real_completeness import ℝ, inf, sup, have_lower_bound, have_upper_bound, directly_closely_lt_sup, directly_closely_gt_inf, intersection, have_inf, have_sup, converge, converge_to, have_seq_upper_bound, have_seq_lower_bound, is_increase, is_decrease
+from top.metric_space import Distance_Space, Metric_Space, Point_Net_System, Topology, Distance_Net_System, Distance_Top, is_dist_vanish_net, is_bounded, are_bounded, dist_set, dist, elem_in_dist_set, Metric_Top, Complete_Distance_Top, Complete_Metric_Top
 from limit.net import Set, Net, no_empty, directed, is_net, set_intersect_sets, subnet_sets, elem_in_subnet_sets, directed_helper, directed_helper_imp_by
 from top.top_base import limit_pt, are_closed
 from top.compact import is_compact, to_closure_net, to_closure
-from set import elem_in_intersection_general
+from set import elem_in_intersection_general, fn_image
+from list.list_base import list_has_max, max_list, list_has_min, min_list
 numerals ℝ
+from nat import ℕ
 
 define elem_in_closed_interval(a: ℝ, b: ℝ, x: ℝ) -> Bool {
     a <= x and x <= b
@@ -861,7 +863,7 @@ theorem real_bounded_dist_vanish_net_converge(n: Net[ℝ]) {
 
 /// also called "Cauchy net/sequence converge"
 theorem real_dist_vanish_net_converge(n: Net[ℝ]) {
-    is_dist_vanish_net(n) and are_bounded(n.sets) implies exists(x: ℝ) { (n).finer(x.net) }
+    is_dist_vanish_net(n) implies exists(x: ℝ) { (n).finer(x.net) }
 } by {
     let sub_n: Net[ℝ] satisfy {
         are_bounded(sub_n.sets) and is_dist_vanish_net(sub_n) and (sub_n).same_limit(n)
@@ -875,3 +877,73 @@ theorem real_dist_vanish_net_converge(n: Net[ℝ]) {
 
 instance ℝ: Complete_Distance_Top
 instance ℝ: Complete_Metric_Top
+
+theorem converge_imp_bounded(f: ℕ -> ℝ) {
+    converge(f) implies is_bounded(fn_image(f))
+} by {
+    let a: ℝ satisfy {
+        converge_to(f, a)
+    }
+    let (n: ℕ) satisfy {
+        forall(m: ℕ) {
+            m > n implies (f(m) - a).abs < 1
+        }
+    }
+    list_has_max(n.suc.range.map(f), 0)
+    list_has_min(n.suc.range.map(f), 0)
+    let u0 = max_list(n.suc.range.map(f), 0)
+    let l0 = min_list(n.suc.range.map(f), 0)
+    let u = u0.max(1 + a)
+    let l = l0.min(-1 + a)
+    fn_image(f).is_nonempty
+    forall(r: ℝ) {
+        if r ∈ fn_image(f) {
+            let m: ℕ satisfy {
+                r = f(m)
+            }
+            if m <= n {
+                m ∈ n.suc.range
+                f(m) ∈ n.suc.range.map(f)
+                f(m) <= u0
+                f(m) <= u
+                l0 <= f(m)
+                l <= f(m)
+                l <= r and r <= u
+            } else {
+                m > n
+                f(m) - a < 1
+                f(m) < 1 + a
+                1 + a <= u
+                f(m) <= u
+                -1 < f(m) - a
+                -1 + a < f(m)
+                l <= -1 + a
+                l <= f(m)
+                l <= r and r <= u
+            }
+            l <= r and r <= u
+        }
+    }
+    l.is_set_lower_bound(fn_image(f))
+    u.is_set_upper_bound(fn_image(f))
+}
+
+theorem increase_convergence_to_sup(f: ℕ -> ℝ) {
+    is_increase(f) and converge(f) implies have_sup(fn_image(f)) and converge_to(f, sup(fn_image(f)))
+} by {
+    have_upper_bound(fn_image(f))
+    fn_image(f).is_nonempty
+    have_sup(fn_image(f))
+    have_seq_upper_bound(f)
+    converge_to(f, sup(fn_image(f)))
+}
+
+theorem decrease_convergence_to_inf(f: ℕ -> ℝ) {
+    is_decrease(f) and converge(f) implies have_inf(fn_image(f)) and converge_to(f, inf(fn_image(f)))
+} by {
+    have_lower_bound(fn_image(f))
+    fn_image(f).is_nonempty
+    have_inf(fn_image(f))
+    have_seq_lower_bound(f)
+    converge_to(f, inf(fn_image(f)))
+}

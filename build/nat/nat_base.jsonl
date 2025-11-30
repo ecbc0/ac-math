@@ -29,6 +29,9 @@
 {"goal":"f(n + 1)","proof":["add_assoc(a, b, n + 1) = f(n + 1)","add_assoc(a, b, n) = f(n)","a + (b + n.suc) != a + b + n.suc or add_assoc(a, b, n.suc)","not add_assoc(a, b, n) or a + (b + n) = a + b + n","a + (b + n + 1) = a + (b + n) + 1","a + b + (n + 1) = a + b + n + 1","b + (n + 1) = b + n + 1","n + 1 = 1 + n","not add_assoc(a, b, n + 1)","1 + n = n.suc","n + 1 = n.suc","not add_assoc(a, b, n.suc)","add_assoc(a, b, n)","a + (b + n.suc) != a + b + n.suc","a + (b + n) = a + b + n"]}
 {"goal":"add_assoc(a, b, c)","proof":["let s0: (ℕ -> Bool) -> ℕ satisfy { forall(x0: ℕ -> Bool, x1: ℕ) { not x0(0) or x0(s0(x0)) or x0(x1) } and forall(x2: ℕ -> Bool, x3: ℕ) { not x2(s0(x2).suc) or not x2(0) or x2(x3) } }","not f(s0(f)) or f(s0(f) + 1)","add_assoc(a, b, c) = f(c)","not f(c)","not f(s0(f).suc) or not f(0) or f(c)","not f(s0(f).suc)","not f(0) or f(s0(f)) or f(c)","f(s0(f))","s0(f) + 1 = s0(f).suc","f(s0(f) + 1)","not f(s0(f) + 1)"]}
 {"goal":"add_assoc","proof":["not add_assoc(a, b, c) or a + (b + c) = a + b + c"]}
+{"goal":"forall(x0: ℕ, x1: ℕ, x2: ℕ) { x0 + (x1 + x2) = x0 + x1 + x2 }","proof":["let (s0: ℕ, s1: ℕ, s2: ℕ) satisfy { s0 + (s1 + s2) != s0 + s1 + s2 }","s0 + (s1 + s2) = s0 + s1 + s2"]}
+{"goal":"forall(x0: ℕ, x1: ℕ) { x0 + x1 = x1 + x0 }","proof":["let (s0: ℕ, s1: ℕ) satisfy { s1 + s0 != s0 + s1 }","s1 + s0 = s0 + s1"]}
+{"goal":"forall(x0: ℕ) { x0 + 0 = x0 }","proof":["let s0: ℕ satisfy { s0 + 0 != s0 }","0 != 0 or s0 + 0 = s0"]}
 {"goal":"mul_zero","proof":["let s0: (ℕ -> Bool) -> ℕ satisfy { forall(x0: ℕ -> Bool, x1: ℕ) { not x0(0) or x0(s0(x0)) or x0(x1) } and forall(x2: ℕ -> Bool, x3: ℕ) { not x2(s0(x2).suc) or not x2(0) or x2(x3) } }","not mul_zero(a) or 0 ⋅ a = 0","not mul_zero(s0(mul_zero)) or 0 ⋅ s0(mul_zero) = 0","0 ⋅ 0 != 0 or 0 ⋅ 0 != 0 or mul_zero(0)","s0(mul_zero).suc ⋅ 0 != 0 or 0 ⋅ s0(mul_zero).suc != 0 or mul_zero(s0(mul_zero).suc)","s0(mul_zero).suc != s0(mul_zero).suc or 0 ⋅ s0(mul_zero) + 0 = 0 ⋅ s0(mul_zero).suc","not mul_zero(s0(mul_zero).suc) or not mul_zero(0) or mul_zero(a)","not mul_zero(0) or mul_zero(s0(mul_zero)) or mul_zero(a)","0 != 0 or 0 ⋅ 0 = 0","0 != 0 or a ⋅ 0 = 0","0 != 0 or s0(mul_zero).suc ⋅ 0 = 0","0 + 0 = 0","0 ⋅ 0 = 0","a ⋅ 0 = 0","s0(mul_zero).suc ⋅ 0 = 0","0 ⋅ a != 0","not mul_zero(a)","mul_zero(0)","0 ⋅ s0(mul_zero) + 0 = 0 ⋅ s0(mul_zero).suc","mul_zero(s0(mul_zero))","not mul_zero(s0(mul_zero).suc)","0 ⋅ s0(mul_zero) = 0","0 ⋅ s0(mul_zero).suc != 0"]}
 {"goal":"mul_suc_right","proof":["b + 1 != b.suc or a ⋅ (b + 1) = a ⋅ b + a","b + 1 != b.suc","b + 1 = 1 + b","1 + b = b.suc"]}
 {"goal":"f(0)","proof":["(a + 1) ⋅ 0 != a ⋅ 0 + 0 or f(0)","(a + 1) ⋅ 0 = 0","a ⋅ 0 = 0","a ⋅ 0 + 0 = a ⋅ 0","(a + 1) ⋅ 0 != a ⋅ 0 + 0"]}
@@ -156,10 +159,13 @@
 {"goal":"trichotomy","proof":["not trichotomy(a, b) or a < b or b < a or b = a"]}
 {"goal":"nat_is_trichotomy","proof":["let (s0: ((ℕ, ℕ) -> Bool) -> ℕ, s1: ((ℕ, ℕ) -> Bool) -> ℕ) satisfy { forall(x0: (ℕ, ℕ) -> Bool, x1: ℕ, x2: ℕ) { not is_trichotomy[ℕ](x0) or x1 = x2 or x0(x1, x2) or x0(x2, x1) } and forall(x3: (ℕ, ℕ) -> Bool) { not x3(s0(x3), s1(x3)) or is_trichotomy[ℕ](x3) } and forall(x4: (ℕ, ℕ) -> Bool) { not x4(s1(x4), s0(x4)) or is_trichotomy[ℕ](x4) } and forall(x5: (ℕ, ℕ) -> Bool) { s1(x5) != s0(x5) or is_trichotomy[ℕ](x5) } }","s1(ℕ.lt) < s0(ℕ.lt) or s0(ℕ.lt) < s1(ℕ.lt) or s1(ℕ.lt) = s0(ℕ.lt)","not s1(ℕ.lt) < s0(ℕ.lt) or is_trichotomy[ℕ](ℕ.lt)","not s1(ℕ.lt) < s0(ℕ.lt)","not s0(ℕ.lt) < s1(ℕ.lt) or is_trichotomy[ℕ](ℕ.lt)","not s0(ℕ.lt) < s1(ℕ.lt)","s1(ℕ.lt) != s0(ℕ.lt) or is_trichotomy[ℕ](ℕ.lt)","s1(ℕ.lt) = s0(ℕ.lt)","s1(ℕ.lt) != s0(ℕ.lt)"]}
 {"goal":"forall(x0: ℕ, x1: ℕ) { x0.comparable(x1) }","proof":["let (s0: ℕ, s1: ℕ) satisfy { not s0.comparable(s1) }","s1 < s0 or s0 < s1 or s1 = s0","not s1 < s0 or s0.comparable(s1)","not s1 < s0","not s0 < s1 or s0.comparable(s1)","not s0 < s1","s1 != s0 or s0.comparable(s1)","s1 = s0","s1 != s0"]}
+{"goal":"forall(x0: ℕ, x1: ℕ, x2: ℕ) { Partial_Order.lt[ℕ](x0, x1) implies Partial_Order.lt[ℕ](P_Add.add[ℕ](x0, x2), P_Add.add[ℕ](x1, x2)) }","proof":["let (s0: ℕ, s1: ℕ, s2: ℕ) satisfy { s0 < s1 and not s0 + s2 < s1 + s2 }","not s0 < s1 or s0 + s2 < s1 + s2"]}
 {"goal":"a < b implies a + 1 <= b","proof":["not a < b or a + 1 <= b"]}
 {"goal":"a + 1 > b","proof":["a + 0.suc != a + 0.suc or a < a + 0.suc or 0.suc = 0","a + 0.suc > a = a < a + 0.suc","0.suc != 0","not a + 0.suc > b","not a + 0.suc > a","not a < a + 0.suc","a < a + 0.suc or 0.suc = 0"]}
 {"goal":"a + 1 > b","proof":["not a <= a + 1 or not b < a or b < a + 1","not b < a or not a < a + 1 or b < a + 1","a + 1 != a + 1 or a < a + 1 or 1 = 0","a + 1 > b = b < a + 1","a > b = b < a","not b < a + 1","b < a","1 != 0 or a + 1 = a","a + 1 != a or a <= a + 1","a < a + 1 or 1 = 0","not a < a + 1 or not b < a","not a < a + 1","not a <= a + 1 or not b < a","not a <= a + 1","a + 1 != a","1 = 0","1 != 0"]}
 {"goal":"lt_suc_left_augment","proof":["a + 1 <= b or a < b","not a + 1 <= b or not a < b","not a < b","a + 1 <= b","not a + 1 <= b or not b < a + 1 or b < b","b < a or a < b or b = a","a + 1 > b = b < a + 1","a > b = b < a","not b < b","b < a or b = a","not b < a + 1 or b < b","not b < a + 1","not a + 1 > b","b != a","not a > b","b < a","not b < a"]}
+{"goal":"lt_cancel","proof":["not b < a or b + c < a + c","a < b or b < a or b = a","b < a or b = a","not b + c < a + c or not a + c < b + c","not a + c < a + c","not b + c < a + c","not b < a","b = a"]}
+{"goal":"lte_cancel","proof":["not b < a or b + c < a + c","not a + c <= b + c or not b + c < a + c or b + c < b + c","a < b or b < a or b = a","not a < b or a <= b","not a < b","b != a or a <= b","b != a","not b + c < b + c","not b + c < a + c or b + c < b + c","not b + c < a + c","b < a","not b < a"]}
 {"goal":"a < b + 1 implies a <= b","proof":["not a + 1 <= b + 1 or a <= b","a + 1 <= b + 1 = a < b + 1","not a + 1 <= b + 1","a + 1 <= b + 1"]}
 {"goal":"a > b","proof":["b + 1 <= a = b < a","a > b = b < a","not b < a","b + 1 != a or b + 1 <= a","not b + 1 <= a","b + 1 <= a"]}
 {"goal":"a > b","proof":["b + 1 <= a = b < a","a > b + 1 = b + 1 < a","a > b = b < a","not b < a","b + 1 < a","not b + 1 < a or b + 1 <= a","not b + 1 <= a","b + 1 <= a"]}
@@ -268,6 +274,17 @@
 {"goal":"sub_distrib_right(a, b, c)","proof":["a · b - a · c != a · (b - c) or sub_distrib_right(a, b, c)"]}
 {"goal":"sub_distrib_right","proof":["not sub_distrib_right(a, b, c) or a ⋅ b - a ⋅ c = a ⋅ (b - c)"]}
 {"goal":"sub_distrib_left","proof":["c ⋅ a - c ⋅ b = c ⋅ (a - b)","a - b = bounded_sub(a, b)","c ⋅ a = a ⋅ c","c ⋅ b = b ⋅ c","c ⋅ bounded_sub(a, b) = bounded_sub(a, b) ⋅ c"]}
+{"goal":"c <= b","proof":["not c <= a or not a <= b or c <= b","not a < b or a <= b","not a <= b or not c <= a","a <= b","not a <= b"]}
+{"goal":"a - c + c = a","proof":["not c <= a or a - c + c = a"]}
+{"goal":"b - c + c = b","proof":["not c <= b or b - c + c = b"]}
+{"goal":"a - c + c < b - c + c","proof":[]}
+{"goal":"a - c < b - c","proof":["not a - c + c < b - c + c or a - c < b - c"]}
+{"goal":"lt_sub_lt","proof":[]}
+{"goal":"a - c = b - c","proof":["b != a"]}
+{"goal":"a - c <= b - c","proof":["a - c = bounded_sub(a, c)","not bounded_sub(a, c) <= b - c","b - c = bounded_sub(a, c)","b - c != bounded_sub(a, c) or bounded_sub(a, c) <= b - c"]}
+{"goal":"a - c < b - c","proof":["not c <= a or not a < b or a - c < b - c","not a < b","not a <= b or a < b or b = a"]}
+{"goal":"a - c <= b - c","proof":["not a - c < b - c or a - c <= b - c"]}
+{"goal":"lte_sub_lte","proof":[]}
 {"goal":"two_neq_zero","proof":["1 + 1 <= 0 = 1 < 0","1 + 1 != 0 or 1 + 1 <= 0","1 + 1 = 0","1 + 1 <= 0","1 < 0","not 1 < 0"]}
 {"goal":"three_neq_zero","proof":["2.suc != 0"]}
 {"goal":"pow_zero","proof":["0 != 0 or a.pow(0) = 1"]}

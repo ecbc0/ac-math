@@ -1,7 +1,7 @@
 from util import compose, id_map
 from nat.nat_base import ℕ
 numerals ℕ
-from order import max_imp_gte
+from order import max_imp_gte, min_imp_lte, Linear_Order
 from option import Option
 from nat.nat_base import true_below, strong_induction
 
@@ -819,12 +819,11 @@ theorem count_lte_lenght[T](list: List[T], item: T) {
     p(list)
 }
 
-theorem remove_length[T](list: List[T], elem: T) {
-    (list ∖ elem).length = list.length - list.count(elem)
-    // this is nat sub
+theorem remove_length_ver_add[T](list: List[T], elem: T) {
+    (list ∖ elem).length + list.count(elem) = list.length
 } by {
     define p(l: List[T]) -> Bool {
-        (l ∖ elem).length = l.length - l.count(elem) 
+        (l ∖ elem).length + l.count(elem) = l.length
     }
 
     // Base case: empty list
@@ -840,15 +839,11 @@ theorem remove_length[T](list: List[T], elem: T) {
                 List.cons(head, tail) ∖ elem = tail ∖ elem
 
                 // p(tail)
-                (tail ∖ elem).length = tail.length - tail.count(elem)
+                (tail ∖ elem).length + tail.count(elem) = tail.length
                 
-                List.cons(head, tail).count(elem) <= List.cons(head, tail).length
-                
-                tail.count(elem) + 1 <= tail.length + 1
+                (tail ∖ elem).length + (tail.count(elem) + 1) = tail.length + 1
                                 
-                tail.length - tail.count(elem) = (tail.length + 1) - (tail.count(elem) + 1)
-                                
-                (List.cons(head, tail) ∖ elem).length = List.cons(head, tail).length - List.cons(head, tail).count(elem)
+                (List.cons(head, tail) ∖ elem).length + List.cons(head, tail).count(elem) = List.cons(head, tail).length
 
                 p(List.cons(head, tail))
             }
@@ -860,13 +855,11 @@ theorem remove_length[T](list: List[T], elem: T) {
                 (List.cons(head, tail) ∖ elem).length = (tail ∖ elem).length + 1
 
                 // p(tail)
-                (tail ∖ elem).length = tail.length - tail.count(elem)
+                (tail ∖ elem).length + tail.count(elem) = tail.length
 
-                tail.count(elem) + 1 <= tail.length + 1
+                (1 + (tail ∖ elem).length) + tail.count(elem) = 1 + tail.length
 
-                tail.length - tail.count(elem) = (tail.length + 1) - (tail.count(elem) + 1)
-
-                (List.cons(head, tail) ∖ elem).length = List.cons(head, tail).length - List.cons(head, tail).count(elem)
+                (List.cons(head, tail) ∖ elem).length + List.cons(head, tail).count(elem) = List.cons(head, tail).length
 
                 p(List.cons(head, tail))
             }
@@ -874,6 +867,15 @@ theorem remove_length[T](list: List[T], elem: T) {
         }
     }
     p(list)
+}
+
+theorem remove_length[T](list: List[T], elem: T) {
+    (list ∖ elem).length = list.length - list.count(elem)
+    // this is nat sub
+} by {
+    (list ∖ elem).length + list.count(elem) = list.length
+    0 <= (list ∖ elem).length
+    list.count(elem) <= list.length
 }
 
 theorem remove_length_lte[T](list: List[T], elem: T) {
@@ -1386,6 +1388,58 @@ theorem range_iff_contains_all_leq(n: ℕ) {
     }
 }
 
+theorem range_count(n: ℕ, m: ℕ) {
+    m ∈ n.range implies n.range.count(m) = 1
+} by {
+    define p(x: ℕ) -> Bool {
+        m ∈ x.range implies x.range.count(m) = 1
+    }
+    p(0)
+    forall(x: ℕ) {
+        x.suc.range = x.range.append(x)
+        x.range.append(x) = x.range + List.singleton(x)
+        (x.range + List.singleton(x)).count(m) = x.range.count(m) + List.singleton(x).count(m)
+        x.suc.range.count(m) = x.range.count(m) + List.singleton(x).count(m)
+        if p(x) {
+            if m ∈ x.suc.range {
+                m < x.suc
+                m <= x
+                if m < x {
+                    m ∈ x.range
+                    m != x
+                    List.singleton(x).count(m) = 0
+                    x.suc.range.count(m) = 1
+                } else {
+                    m = x 
+                    m ∉ x.range
+                    x.range.count(m) = 0
+                    List.singleton(x).count(m) = 1
+                    x.suc.range.count(m) = 1
+                }
+                x.suc.range.count(m) = 1
+            }
+            p(x.suc)
+        }
+    }
+    p(n)
+}
+
+theorem range_is_unique(n: ℕ) {
+    n.range.is_unique
+} by {
+    forall(m: ℕ) {
+        if m ∈ n.range {
+            n.range.count(m) = 1
+            n.range.count(m) <= 1
+        } else {
+            m ∉ n.range
+            n.range.count(m) = 0
+            n.range.count(m) <= 1
+        }
+        n.range.count(m) <= 1
+    }
+}
+
 theorem add_assoc[T](a: List[T], b: List[T], c: List[T]) {
     (a + b) + c = a + (b + c)
 } by {
@@ -1720,40 +1774,85 @@ theorem append_not_nil[T](a: List[T], t: T) {
     a.append(t) != List.nil[T]
 }
 
-define max_list(list: List[ℕ]) -> ℕ {
+define max_list[L: Linear_Order](list: List[L], nil_elem: L) -> L {
     match list {
-        List[ℕ].nil {
-            0
+        List[L].nil {
+            nil_elem
         }
         List.cons(head, tail) {
-            head.max(max_list(tail))
+            head.max(max_list(tail, nil_elem))
         }
     }
 }
 
-theorem list_has_max(list: List[ℕ]) {
-    forall(a: ℕ) {
-        a ∈ list implies a <= max_list(list)
+theorem list_has_max[L: Linear_Order](list: List[L], nil_elem: L) {
+    forall(a: L) {
+        a ∈ list implies a <= max_list(list, nil_elem)
     }
 } by {
-    define f(l: List[ℕ]) -> Bool {
-        forall(k: ℕ) {
-            k ∈ l implies k <= max_list(l)
+    define f(l: List[L]) -> Bool {
+        forall(k: L) {
+            k ∈ l implies k <= max_list(l, nil_elem)
         }
     }
+    f(List[L].nil)
 
-    forall(head: ℕ, tail: List[ℕ]) {
+    forall(head: L, tail: List[L]) {
         if f(tail) {
-            let k = max_list(tail)
-            let m: ℕ = head.max(k)
-            m >= max_list(List.cons(head, tail))
+            let k = max_list(tail, nil_elem)
+            let m: L = head.max(k)
+            m >= max_list(List.cons(head, tail), nil_elem)
             max_imp_gte(head, k)
-            m >= max_list(tail)
-            forall(x: ℕ) {
+            m >= max_list(tail, nil_elem)
+            forall(x: L) {
                 head = x implies x <= m
                 x ∈ tail implies x <= m
 
                 x ∈ List.cons(head, tail) implies x <= m
+            }
+
+            f(List.cons(head, tail))
+        }
+    }
+
+    f(list)
+}
+
+define min_list[L: Linear_Order](list: List[L], nil_elem: L) -> L {
+    match list {
+        List[L].nil {
+            nil_elem
+        }
+        List.cons(head, tail) {
+            head.min(min_list(tail, nil_elem))
+        }
+    }
+}
+
+theorem list_has_min[L: Linear_Order](list: List[L], nil_elem: L) {
+    forall(a: L) {
+        a ∈ list implies a >= min_list(list, nil_elem)
+    }
+} by {
+    define f(l: List[L]) -> Bool {
+        forall(k: L) {
+            k ∈ l implies k >= min_list(l, nil_elem)
+        }
+    }
+    f(List[L].nil)
+
+    forall(head: L, tail: List[L]) {
+        if f(tail) {
+            let k = min_list(tail, nil_elem)
+            let m: L = head.min(k)
+            m <= min_list(List.cons(head, tail), nil_elem)
+            min_imp_lte(head, k)
+            m <= min_list(tail, nil_elem)
+            forall(x: L) {
+                head = x implies x >= m
+                x ∈ tail implies x >= m
+
+                x ∈ List.cons(head, tail) implies x >= m
             }
 
             f(List.cons(head, tail))
@@ -1981,6 +2080,127 @@ theorem singleton_permutation[T](l: List[T], x: T) {
     }
 }
 
+attributes List[T] {
+    define subset_eq(self, other: List[T]) -> Bool {
+        forall(x: T) {
+            x ∈ self implies self.count(x) <= other.count(x)
+        }
+    }
+    define superset_eq(self, other: List[T]) -> Bool {
+        other ⊆ self
+    }
+}
+
+theorem subset_eq_more[T](l1: List[T], l2: List[T]) {
+    l1 ⊆ l2 implies forall(x: T) {
+        l1.count(x) <= l2.count(x)
+    }
+} by {
+    forall(x: T) {
+        if x ∉ l1 {
+            l1.count(x) = 0
+            l1.count(x) <= l2.count(x)
+        } else {
+            x ∈ l1
+            l1.count(x) <= l2.count(x)
+        }
+        l1.count(x) <= l2.count(x)
+    } 
+}
+
+theorem remove_preserve_subset[T](l1: List[T], l2: List[T], x: T) {
+    l1 ⊆ l2 implies (l1 ∖ x) ⊆ (l2 ∖ x)
+} by {
+    forall(y: T) {
+        if y ∈ l1 ∖ x {
+            y != x
+            (l1 ∖ x).count(y) = l1.count(y)
+            (l2 ∖ x).count(y) = l2.count(y)
+            (l1 ∖ x).count(y) <= (l2 ∖ x).count(y)
+        }
+    }
+}
+
+theorem nil_subset[T](l: List[T]) {
+    List[T].nil ⊆ l
+} by {
+    forall(x: T) {
+        List[T].nil.count(x) = 0
+        List[T].nil.count(x) <= l.count(x)
+    }
+}
+
+theorem subset_trans[T](l1: List[T], l2: List[T], l3: List[T]) {
+    l1 ⊆ l2 and l2 ⊆ l3 implies l1 ⊆ l3
+} by {
+    forall(x: T) {
+        if x ∈ l1 {
+            x ∈ l2
+            x ∈ l3
+        }
+    }
+}
+
+theorem subset_imp_length_lte[T](list_1: List[T], list_2: List[T]) {
+    list_1 ⊆ list_2 implies list_1.length <= list_2.length
+} by {
+    define f(n: ℕ) -> Bool {
+        forall(l1: List[T], l2: List[T]) {
+            l1.length = n and l1 ⊆ l2 implies l1.length <= l2.length
+        }
+    }
+    f(0)
+    forall(k: ℕ) {
+        if true_below(f, k) {
+            if k = 0 {
+                f(k)
+            } else {
+                k != 0
+                forall(l1: List[T], l2: List[T]) {
+                    if l1.length = k and l1 ⊆ l2 {
+                        let item: T satisfy { item ∈ l1 }
+
+                        l1.length = (l1 ∖ item).length + l1.count(item)
+
+                        l2.length = (l2 ∖ item).length + l2.count(item)
+
+                        (l1 ∖ item) ⊆ (l2 ∖ item)
+
+                        (l1 ∖ item).length < k
+
+                        (l1 ∖ item).length <= (l2 ∖ item).length
+
+                        l1.count(item) <= l2.count(item)
+
+                        (l1 ∖ item).length + l1.count(item) <= (l2 ∖ item).length + l2.count(item)
+
+                        l1.length <= l2.length
+                    }
+                }
+                f(k)
+            }
+            f(k)
+        }
+    }
+    f(list_1.length)
+}
+
+theorem unique_subset[T](l1: List[T], l2: List[T]) {
+    l1.is_unique and forall(x: T) {
+        x ∈ l1 implies x ∈ l2
+    } implies l1 ⊆ l2
+} by {
+    forall(x: T) {
+        if x ∈ l1 {
+            x ∈ l2
+            l1.count(x) = 1
+            l2.count(x) >= 1
+            l1.count(x) <= l2.count(x)
+        }
+    }
+    l1 ⊆ l2
+}
+
 /// Applies a function to each element of a list, creating a new list of results.
 attributes List[T] {
     define map[U](self, f: T -> U) -> List[U] {
@@ -2126,6 +2346,285 @@ theorem map_id_map[T](list: List[T]) {
     p(list)
 }
 
+theorem map_image_to_exists_imp_dual[T, U](list: List[T], f: T -> U, y: U) {
+    forall(x: T) {
+        x ∈ list implies f(x) != y
+    } implies y ∉ list.map(f)
+} by {
+    define p(l: List[T]) -> Bool {
+        forall(x: T) {
+            x ∈ l implies f(x) != y
+        } implies y ∉ l.map(f)       
+    }
+    p(List[T].nil)
+    forall(head: T, tail: List[T]) {
+        List.cons(head, tail).map(f) = List.cons(f(head), tail.map(f))
+        if p(tail) {
+            if forall(x: T) {
+                x ∈ List.cons(head, tail) implies f(x) != y
+            } {
+                head ∈ List.cons(head, tail)
+                f(head) != y
+                forall(x: T) {
+                    if x ∈ tail {
+                        x ∈ List.cons(head, tail)
+                        f(x) != y
+                    }
+                }
+                y ∉ tail.map(f)
+                y ∉ List.cons(f(head), tail.map(f))
+            }
+            p(List.cons(head, tail))
+        }
+    }
+    p(list)
+}
+
+theorem map_image_to_exists[T, U](list: List[T], f: T -> U, y: U) {
+    y ∈ list.map(f) implies exists(x: T) {
+        x ∈ list and f(x) = y
+    }
+}
+
+define fiber_list[T, U](list: List[T], f: T -> U, y: U) -> List[T] {
+    match list {
+        List[T].nil {
+            List[T].nil
+        }
+        List.cons(head, tail) {
+            if f(head) = y {
+                List.cons(head, fiber_list(tail, f, y))
+            } else {
+                fiber_list(tail, f, y)
+            }
+        }
+    }
+}
+
+theorem map_count_is_fiber_length[T, U](list: List[T], f: T -> U, y: U) {
+    list.map(f).count(y) = fiber_list(list, f, y).length
+} by {
+    define p(l: List[T]) -> Bool {
+        l.map(f).count(y) = fiber_list(l, f, y).length
+    }
+    p(List[T].nil)
+    forall(head: T, tail: List[T]) {
+        List.cons(head, tail).map(f) = List.cons(f(head), tail.map(f))
+        List.cons(head, tail).map(f).count(y) = List.singleton(f(head)).count(y) + tail.map(f).count(y)
+        if p(tail) {
+            tail.map(f).count(y) = fiber_list(tail, f, y).length
+            if f(head) = y {
+                List.cons(head, tail).map(f).count(y) = 1 + tail.map(f).count(y)
+                fiber_list(List.cons(head, tail), f, y) = List.cons(head, fiber_list(tail, f, y))
+                fiber_list(List.cons(head, tail), f, y).length = 1 + fiber_list(tail, f, y).length
+                List.cons(head, tail).map(f).count(y) = fiber_list(List.cons(head, tail), f, y).length
+            } else {
+                List.cons(head, tail).map(f).count(y) = tail.map(f).count(y)
+                fiber_list(List.cons(head, tail), f, y) = fiber_list(tail, f, y)
+                fiber_list(List.cons(head, tail), f, y).length = fiber_list(tail, f, y).length
+                List.cons(head, tail).map(f).count(y) = fiber_list(List.cons(head, tail), f, y).length
+            }
+            List.cons(head, tail).map(f).count(y) = fiber_list(List.cons(head, tail), f, y).length
+            p(List.cons(head, tail))
+        }
+    }
+    p(list)
+}
+
+theorem fiber_list_is_inv_image_imp[T, U](list: List[T], f: T -> U, x: T, y: U) {
+    x ∈ fiber_list(list, f, y) implies f(x) = y
+} by {
+    define p(l: List[T]) -> Bool {
+        x ∈ fiber_list(l, f, y) implies f(x) = y
+    }
+    p(List[T].nil)
+    forall(head: T, tail: List[T]) {
+        if p(tail) {
+            if x ∈ fiber_list(List.cons(head, tail), f, y) {
+                if f(head) = y {
+                    fiber_list(List.cons(head, tail), f, y) = List.cons(head, fiber_list(tail, f, y))
+                    if x = head {
+                        f(x) = y
+                    } else {
+                        x ∈ fiber_list(tail, f, y)
+                        f(x) = y
+                    }
+                    f(x) = y
+                } else {
+                    fiber_list(List.cons(head, tail), f, y) = fiber_list(tail, f, y)
+                    x ∈ fiber_list(tail, f, y)
+                    f(x) = y
+                }           
+                f(x) = y
+            }
+            p(List.cons(head, tail))
+        }
+    }
+    p(list)
+}
+
+theorem fiber_list_is_inv_image_imp_by[T, U](list: List[T], f: T -> U, x: T, y: U) {
+    x ∈ list and f(x) = y implies fiber_list(list, f, y) != List[T].nil and x ∈ fiber_list(list, f, y)
+} by {
+    define p(l: List[T]) -> Bool {
+        x ∈ l and f(x) = y implies fiber_list(l, f, y) != List[T].nil and x ∈ fiber_list(l, f, y)
+    }
+    p(List[T].nil)
+    forall(head: T, tail: List[T]) {
+        if p(tail) {
+            if x ∈ List.cons(head, tail) and f(x) = y {
+                if f(head) = y {
+                    fiber_list(List.cons(head, tail), f, y) = List.cons(head, fiber_list(tail, f, y))
+                    fiber_list(List.cons(head, tail), f, y) != List[T].nil
+                    if x = head {
+                        x ∈ fiber_list(List.cons(head, tail), f, y)
+                    } else {
+                        x ∈ tail
+                        x ∈ fiber_list(tail, f, y)
+                        x ∈ fiber_list(List.cons(head, tail), f, y)
+                    }
+                    x ∈ fiber_list(List.cons(head, tail), f, y)
+                } else {
+                    f(head) != y
+                    x != head
+                    x ∈ tail
+                    fiber_list(List.cons(head, tail), f, y) = fiber_list(tail, f, y)
+                    fiber_list(tail, f, y) != List[T].nil
+                    fiber_list(List.cons(head, tail), f, y) != List[T].nil
+                    x ∈ fiber_list(tail, f, y)
+                    x ∈ fiber_list(List.cons(head, tail), f, y)
+                }
+                fiber_list(List.cons(head, tail), f, y) != List[T].nil and x ∈ fiber_list(List.cons(head, tail), f, y)
+            }
+            p(List.cons(head, tail))
+        }
+    }
+    p(list)
+}
+
+theorem in_fiber_list[T, U](list: List[T], f: T -> U, x: T, y: U) {
+    x ∈ fiber_list(list, f, y) implies x ∈ list
+} by {
+    define p(l: List[T]) -> Bool {
+        x ∉ l implies x ∉ fiber_list(l, f, y)
+    }
+    p(List[T].nil)
+    forall(head: T, tail: List[T]) {
+        if p(tail) {
+            if x ∉ List.cons(head, tail) {
+                x != head
+                x ∉ tail
+                x ∉ fiber_list(tail, f, y)
+                if f(head) = y {
+                    fiber_list(List.cons(head, tail), f, y) = List.cons(head, fiber_list(tail, f, y))
+                    head ∈ List.cons(head, tail)
+                    x ∉ fiber_list(List.cons(head, tail), f, y)
+                } else {
+                    fiber_list(List.cons(head, tail), f, y) = fiber_list(tail, f, y)
+                    x ∉ fiber_list(List.cons(head, tail), f, y)
+                }
+                x ∉ fiber_list(List.cons(head, tail), f, y)
+            }
+            p(List.cons(head, tail))
+        }
+    }
+    p(list)
+}
+
+theorem fiber_list_count[T, U](list: List[T], f: T -> U, x: T, y: U) {
+    x ∈ fiber_list(list, f, y) implies fiber_list(list, f, y).count(x) = list.count(x)
+} by {
+    define p(l: List[T]) -> Bool {
+        x ∈ fiber_list(l, f, y) implies fiber_list(l, f, y).count(x) = l.count(x)
+    }
+    p(List[T].nil)
+    forall(head: T, tail: List[T]) {
+        if p(tail) {
+            if x ∈ fiber_list(List.cons(head, tail), f, y) {
+                f(x) = y
+                x ∈ List.cons(head, tail)
+                if f(head) = y {
+                    fiber_list(List.cons(head, tail), f, y) = List.cons(head, fiber_list(tail, f, y))
+                    
+                    List.cons(head, fiber_list(tail, f, y)).count(x) = List.singleton(head).count(x) + fiber_list(tail, f, y).count(x)
+                    
+                    List.cons(head, tail).count(x) = List.singleton(head).count(x) + tail.count(x)
+
+                    if x ∈ tail {
+                        x ∈ fiber_list(tail, f, y)
+                        fiber_list(tail, f, y).count(x) = tail.count(x)
+                    } else {
+                        x ∉ tail
+                        x ∉ fiber_list(tail, f, y)
+                        fiber_list(tail, f, y).count(x) = tail.count(x)
+                    }
+                    fiber_list(tail, f, y).count(x) = tail.count(x)
+                    
+                    fiber_list(List.cons(head, tail), f, y).count(x) = List.cons(head, tail).count(x)
+                } else {
+                    fiber_list(List.cons(head, tail), f, y) = fiber_list(tail, f, y)
+
+                    x != head
+
+                    List.cons(head, tail).count(x) = tail.count(x)
+
+                    fiber_list(tail, f, y).count(x) = tail.count(x)
+
+                    fiber_list(List.cons(head, tail), f, y).count(x) = List.cons(head, tail).count(x)
+                }
+                p(List.cons(head, tail))
+            }
+        }
+    }
+    p(list)
+}
+
+theorem fiber_list_subset_list[T, U](list: List[T], f: T -> U, y: U) {
+    fiber_list(list, f, y) ⊆ list
+} 
+
+theorem map_preserve_fiber_list_length[T, U](l1: List[T], l2: List[T], f: T -> U, y: U) {
+    l1 ⊆ l2 implies fiber_list(l1, f, y) ⊆ fiber_list(l2, f, y)
+} by {
+    forall(x: T) {
+        if x ∈ fiber_list(l1, f, y) {
+            f(x) = y
+            x ∈ fiber_list(l2, f, y)
+            fiber_list(l1, f, y).count(x) = l1.count(x)
+            fiber_list(l2, f, y).count(x) = l2.count(x)
+            l1.count(x) <= l2.count(x)
+            fiber_list(l1, f, y).count(x) <= fiber_list(l2, f, y).count(x)
+        }
+    }
+}
+
+theorem map_preserve_subset[T, U](l1: List[T], l2: List[T], f: T -> U) {
+    l1 ⊆ l2 implies l1.map(f) ⊆ l2.map(f)
+} by {
+    forall(y: U) {
+        l1.map(f).count(y) = fiber_list(l1, f, y).length
+        l2.map(f).count(y) = fiber_list(l2, f, y).length
+        fiber_list(l1, f, y) ⊆ fiber_list(l2, f, y)
+        fiber_list(l1, f, y).length <= fiber_list(l2, f, y).length
+        l1.map(f).count(y) <= l2.map(f).count(y)
+    }
+}
+
+define two_to_finite[T](op: (T, T) -> T, list: List[T], nil_elem: T) -> T {
+    match list {
+        List[T].nil {
+            nil_elem
+        }
+        List.cons(head, tail) {
+            if tail = List[T].nil {
+                head
+            } else {
+                op(two_to_finite(op, tail, nil_elem), head)
+            }
+        }
+    }
+}
+
 define flatten[T](ls: List[List[T]]) -> List[T] {
     match ls {
         List[List[T]].nil {
@@ -2135,4 +2634,67 @@ define flatten[T](ls: List[List[T]]) -> List[T] {
             head + flatten(tail)
         }
     }
+}
+
+define preserve_two[T](op: (T, T) -> T, contains: T -> Bool) -> Bool {
+    forall(x: T, y: T) {
+        contains(x) and contains(y) implies contains(op(x, y))
+    }
+}
+
+define preserve_finite[T](op: (T, T) -> T, list: List[T], nil_elem: T, contains: T -> Bool) -> Bool {
+    list.length != 0 and (forall(x: T) { list.contains(x) implies contains(x) }) implies contains(two_to_finite(op, list, nil_elem))
+}
+
+theorem preserve_two_to_finite[T](op: (T, T) -> T, list: List[T], nil_elem: T, contains: T -> Bool) {
+    preserve_two(op, contains) implies preserve_finite(op, list, nil_elem, contains)
+} by {
+    define f(l: List[T]) -> Bool {
+        preserve_two(op, contains) implies preserve_finite(op, l, nil_elem, contains)
+    }
+    f(List[T].nil)
+    forall(head: T, tail: List[T]) {
+        if f(tail) {
+            if tail = List[T].nil {
+                List.cons(head, tail) = List.singleton(head)
+                two_to_finite(op, List.cons(head, tail), nil_elem) = head
+                if List.cons(head, tail).length != 0 and forall(x: T) { List.cons(head, tail).contains(x) implies contains(x) } {
+                    List.cons(head, tail).contains(head)
+                    contains(head)
+                    contains(two_to_finite(op, List.cons(head, tail), nil_elem))
+                }
+                f(List.cons(head, tail))
+            } else {
+                tail != List[T].nil
+                tail.length != 0
+                if List.cons(head, tail).length != 0 and forall(x: T) { List.cons(head, tail).contains(x) implies contains(x) } {
+                    forall(x: T) {
+                        if tail.contains(x) {
+                            List.cons(head, tail).contains(x)
+                            contains(x)
+                        }
+                    }
+                    contains(two_to_finite(op, tail, nil_elem))
+                    List.cons(head, tail).contains(head)
+                    contains(head)
+                    contains(op(two_to_finite(op, tail, nil_elem), head))
+                    two_to_finite(op, List.cons(head, tail), nil_elem) = op(two_to_finite(op, tail, nil_elem), head)
+                    contains(two_to_finite(op, List.cons(head, tail), nil_elem))
+                } 
+                f(List.cons(head, tail))
+            }
+            f(List.cons(head, tail))
+        }
+    }
+    f(list)
+}
+
+define contains_subset[T](f1: T -> Bool, f2: T -> Bool) -> Bool {
+    forall(x: T) {
+        f1(x) implies f2(x)
+    }
+}
+
+define contains_subset_list[T](l1: List[T], l2: List[T]) -> Bool {
+    contains_subset(l1.contains, l2.contains)
 }

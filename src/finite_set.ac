@@ -1,6 +1,7 @@
-from list import List
-from set import Set, constant_false, functional_insert, functional_remove, intersection, union, compl_of_sets, compose
+from list.list_base import List, two_to_finite, preserve_two_to_finite, preserve_two, preserve_finite
+from set import Set, constant_false, functional_insert, functional_remove, intersection, union, compl_of_sets, compose, elem_in_intersection_general
 from nat import ℕ
+numerals ℕ
 
 /// True if a boolean function represents a finite set.
 /// A function satisfies the finite constraint if there exists a finite list containing all elements for which the function returns true.
@@ -304,6 +305,33 @@ define intersection_of_list_recursion[K](l: List[Set[K]]) -> Set[K] {
     }
 }
 
+theorem intersection_of_list_recursion_is_two_to_finite[K](l: List[Set[K]]) {
+    intersection_of_list_recursion(l) = two_to_finite(Set[K].intersection, l, Set[K].universal_set)
+} by {
+    define p(xs: List[Set[K]]) -> Bool {
+        intersection_of_list_recursion(xs) = two_to_finite(Set[K].intersection, xs, Set[K].universal_set)
+    }
+    p(List[Set[K]].nil)
+    forall(head: Set[K], tail: List[Set[K]]) {
+        if p(tail) {
+            if tail = List[Set[K]].nil {
+                intersection_of_list_recursion(tail) = Set[K].universal_set
+                intersection_of_list_recursion(List.cons(head, tail)) = head ∩ Set[K].universal_set
+                intersection_of_list_recursion(List.cons(head, tail)) = head
+                two_to_finite(Set.intersection[K], List.cons(head, tail), Set[K].universal_set) = head
+                p(List.cons(head, tail))
+            } else {
+                intersection_of_list_recursion(tail) = two_to_finite(Set.intersection[K], tail, Set[K].universal_set)
+                intersection_of_list_recursion(List.cons(head, tail)) = head ∩ intersection_of_list_recursion(tail)
+                two_to_finite(Set[K].intersection, List.cons(head, tail), Set[K].universal_set) = head ∩ two_to_finite(Set.intersection[K], tail, Set[K].universal_set)
+                p(List.cons(head, tail))
+            }
+            p(List.cons(head, tail))
+        }
+    }
+    p(l)
+}
+
 define elem_in_intersection_of_list[K](l: List[Set[K]], x: K) -> Bool {
     forall(s: Set[K]) {
         s ∈ l implies x ∈ s
@@ -491,6 +519,33 @@ define union_of_list_recursion[K](l: List[Set[K]]) -> Set[K] {
             head ∪ union_of_list_recursion(tail)
         }
     }
+}
+
+theorem union_of_list_recursion_is_two_to_finite[K](l: List[Set[K]]) {
+    union_of_list_recursion(l) = two_to_finite(Set[K].union, l, Set[K].empty_set)
+} by {
+    define p(xs: List[Set[K]]) -> Bool {
+        union_of_list_recursion(xs) = two_to_finite(Set[K].union, xs, Set[K].empty_set)
+    }
+    p(List[Set[K]].nil)
+    forall(head: Set[K], tail: List[Set[K]]) {
+        if p(tail) {
+            if tail = List[Set[K]].nil {
+                union_of_list_recursion(tail) = Set[K].empty_set
+                union_of_list_recursion(List.cons(head, tail)) = head ∪ Set[K].empty_set
+                union_of_list_recursion(List.cons(head, tail)) = head
+                two_to_finite(Set.union[K], List.cons(head, tail), Set[K].empty_set) = head
+                p(List.cons(head, tail))
+            } else {
+                union_of_list_recursion(tail) = two_to_finite(Set.union[K], tail, Set[K].empty_set)
+                union_of_list_recursion(List.cons(head, tail)) = head ∪ union_of_list_recursion(tail)
+                two_to_finite(Set[K].union, List.cons(head, tail), Set[K].empty_set) = head ∪ two_to_finite(Set.union[K], tail, Set[K].empty_set)
+                p(List.cons(head, tail))
+            }
+            p(List.cons(head, tail))
+        }
+    }
+    p(l)
 }
 
 define elem_in_union_of_list[K](l: List[Set[K]], x: K) -> Bool {
@@ -730,6 +785,251 @@ theorem union_of_unique_list[K](list: List[Set[K]]) {
 theorem two_intersection_from_general[K](a1: Set[K], a2: Set[K]) {
     a1 ∩ a2 = intersection(list_to_set(List.cons(a1, List.singleton(a2))))
 } 
+
+define is_set_of_finite_intersection[K](n: Set[Set[K]], s: Set[K]) -> Bool {
+    exists(c: Set[Set[K]]) {
+        c ⊆ n and c.is_finite and s = intersection(c)
+    }
+}
+
+define sets_of_finite_intersection[K](n: Set[Set[K]]) -> Set[Set[K]] {
+    Set[Set[K]].new(is_set_of_finite_intersection(n))
+}
+
+theorem sets_of_finite_intersection_preserve_two_intersection[K](n: Set[Set[K]], s1: Set[K], s2: Set[K]) {
+    s1 ∈ sets_of_finite_intersection(n) and s2 ∈ sets_of_finite_intersection(n) implies s1 ∩ s2 ∈ sets_of_finite_intersection(n)
+} by {
+    let c1: Set[Set[K]] satisfy {
+        c1 ⊆ n and c1.is_finite and s1 = intersection(c1)
+    }
+    is_set_of_finite_intersection(n, s2)
+    let c2: Set[Set[K]] satisfy {
+        c2 ⊆ n and c2.is_finite and s2 = intersection(c2)
+    }
+
+    let c = c1 ∪ c2
+    c1 ∪ c2 ⊆ n
+    c ⊆ n
+    c.is_finite
+    c1 ⊆ c
+    c2 ⊆ c
+    intersection(c) ⊆ intersection(c1)
+    intersection(c) ⊆ intersection(c2)
+    intersection(c) ⊆ s1 ∩ s2
+
+    forall(x: K) {
+        if x ∈ s1 ∩ s2 {
+            x ∈ s1
+            x ∈ s2
+            x ∈ intersection(c1)
+            x ∈ intersection(c2)
+            forall(s: Set[K]) {
+                if s ∈ c {
+                    if s ∈ c1 {
+                        x ∈ s
+                    }
+                    if s ∈ c2 {
+                        x ∈ s
+                    }
+                    x ∈ s
+                }
+            }
+            elem_in_intersection_general(c, x)
+            x ∈ intersection(c)
+        }
+    }
+    s1 ∩ s2 ⊆ intersection(c)
+
+    s1 ∩ s2 = intersection(c)
+
+    s1 ∩ s2 ∈ sets_of_finite_intersection(n)
+}
+
+define is_sets_of_finite_intersection[K](n: Set[Set[K]], s: Set[K]) -> Bool {
+    s ∈ sets_of_finite_intersection(n)
+}
+
+theorem sets_of_finite_intersection_preserve_two[K](n: Set[Set[K]]) {
+    preserve_two(Set[K].intersection, is_set_of_finite_intersection(n))
+} by {
+    forall(s1: Set[K], s2: Set[K]) {
+        if is_set_of_finite_intersection(n)(s1) and is_set_of_finite_intersection(n)(s2) {
+            s1 ∈ sets_of_finite_intersection(n)
+            s2 ∈ sets_of_finite_intersection(n)
+            s1 ∩ s2 ∈ sets_of_finite_intersection(n)
+            is_set_of_finite_intersection(n)(Set[K].intersection(s1, s2))
+        }
+    }
+}
+
+theorem finite_intersection_preserve_sets_of_finite_intersection[K](n: Set[Set[K]], list: List[Set[K]]) {
+    list.length != 0 and (forall(s: Set[K]) { s ∈ list implies s ∈ sets_of_finite_intersection(n) }) implies intersection_of_list(list) ∈ sets_of_finite_intersection(n)
+} by {
+    preserve_two(Set[K].intersection, is_set_of_finite_intersection(n))
+    preserve_finite(Set[K].intersection, list, Set[K].universal_set, is_set_of_finite_intersection(n))
+    forall(s: Set[K]) { 
+        if s ∈ list {
+            s ∈ sets_of_finite_intersection(n) 
+            is_set_of_finite_intersection(n)(s)
+        } 
+    }
+    is_set_of_finite_intersection(n)(two_to_finite(Set[K].intersection, list, Set[K].universal_set))
+    is_set_of_finite_intersection(n)(intersection_of_list(list))
+}
+
+theorem sets_of_finite_intersection_superset[K](n: Set[Set[K]]) {
+    sets_of_finite_intersection(n) ⊇ n
+} by {
+    forall(s: Set[K]) {
+        if s ∈ n {
+            let l = List[Set[K]].singleton(s)
+            intersection_of_list(l) = s
+            intersection(list_to_set(l)) = intersection_of_list(l) 
+            forall(t: Set[K]) {
+                if t = s {
+                    t ∈ l
+                    t ∈ list_to_set(l)
+                    list_to_set(l).contains(t) = Set[Set[K]].singleton(s).contains(t)
+                } else {
+                    t ∉ l
+                    t ∉ list_to_set(l)
+                    list_to_set(l).contains(t) = Set[Set[K]].singleton(s).contains(t)
+                }
+                list_to_set(l).contains(t) = Set[Set[K]].singleton(s).contains(t)
+            }
+            list_to_set(l).contains = Set[Set[K]].singleton(s).contains
+            list_to_set(l) = Set[Set[K]].singleton(s)
+            list_to_set(l) ⊆ n
+            list_to_set(l).have_super_list(l)
+            list_to_set(l).is_finite
+            intersection(list_to_set(l)) = s
+            s ∈ sets_of_finite_intersection(n)
+        }
+    }
+}
+
+theorem sets_of_finite_intersection_preserve_intersection[K](n: Set[Set[K]]) {
+    intersection(sets_of_finite_intersection(n)) = intersection(n)
+} by {
+    sets_of_finite_intersection(n) ⊇ n
+    intersection(sets_of_finite_intersection(n)) ⊆ intersection(n)
+
+    forall(x: K) {
+        if x ∈ intersection(n) {
+            forall(s: Set[K]) {
+                if s ∈ sets_of_finite_intersection(n) {
+                    let c: Set[Set[K]] satisfy {
+                        c ⊆ n and c.is_finite and s = intersection(c)
+                    }
+                    intersection(n) ⊆ intersection(c)
+                    x ∈ s
+                }
+            }
+            x ∈ intersection(sets_of_finite_intersection(n))
+        }
+    }
+    intersection(sets_of_finite_intersection(n)) ⊇ intersection(n)
+}
+
+define is_set_of_finite_union[K](n: Set[Set[K]], s: Set[K]) -> Bool {
+    exists(c: Set[Set[K]]) {
+        c ⊆ n and c.is_finite and s = union(c)
+    }
+}
+
+define sets_of_finite_union[K](n: Set[Set[K]]) -> Set[Set[K]] {
+    Set[Set[K]].new(is_set_of_finite_union(n))
+}
+
+theorem sets_of_finite_intersection_union_dual[K](n: Set[Set[K]]) {
+    sets_of_finite_intersection(compl_of_sets(n)) = compl_of_sets(sets_of_finite_union(n))
+} by {
+    forall(s: Set[K]) {
+        if s ∈ sets_of_finite_intersection(compl_of_sets(n)) {
+            let c: Set[Set[K]] satisfy {
+                c ⊆ compl_of_sets(n) and c.is_finite and s = intersection(c)
+            }
+            s = union(compl_of_sets(c)).c
+            forall(t: Set[K]) {
+                if t ∈ compl_of_sets(c) {
+                    t.c ∈ c
+                    t.c ∈ compl_of_sets(n)
+                    t ∈ n
+                }
+            }
+            compl_of_sets(c) ⊆ n
+            union(compl_of_sets(c)) ∈ sets_of_finite_union(n)
+            s ∈ compl_of_sets(sets_of_finite_union(n))
+        }
+    }
+    sets_of_finite_intersection(compl_of_sets(n)) ⊆ compl_of_sets(sets_of_finite_union(n))
+
+    forall(s: Set[K]) {
+        if s ∈ compl_of_sets(sets_of_finite_union(n)) {
+            s.c ∈ sets_of_finite_union(n)
+            let c: Set[Set[K]] satisfy {
+                c ⊆ n and c.is_finite and s.c = union(c)
+            }
+            s = union(c).c
+            s = intersection(compl_of_sets(c))
+            forall(t: Set[K]) {
+                if t ∈ compl_of_sets(c) {
+                    t.c ∈ c
+                    t.c ∈ n
+                    t ∈ compl_of_sets(n)
+                }
+            }
+            compl_of_sets(c) ⊆ compl_of_sets(n)
+            compl_of_sets(c).is_finite
+            intersection(compl_of_sets(c)) ∈ sets_of_finite_intersection(compl_of_sets(n))
+            s ∈ sets_of_finite_intersection(compl_of_sets(n))
+        }
+    }
+    sets_of_finite_intersection(compl_of_sets(n)) ⊇ compl_of_sets(sets_of_finite_union(n))    
+}
+
+theorem sets_of_finite_union_preserve_two_union[K](n: Set[Set[K]], s1: Set[K], s2: Set[K]) {
+    s1 ∈ sets_of_finite_union(n) and s2 ∈ sets_of_finite_union(n) implies s1 ∪ s2 ∈ sets_of_finite_union(n)
+} by {
+    s1.c ∈ sets_of_finite_intersection(compl_of_sets(n))
+    s2.c ∈ sets_of_finite_intersection(compl_of_sets(n))
+    s1.c ∩ s2.c ∈ sets_of_finite_intersection(compl_of_sets(n))
+    s1.c ∩ s2.c = (s1 ∪ s2).c
+    (s1 ∪ s2).c ∈ compl_of_sets(sets_of_finite_union(n))
+    s1 ∪ s2 ∈ sets_of_finite_union(n)
+}
+
+define is_sets_of_finite_union[K](n: Set[Set[K]], s: Set[K]) -> Bool {
+    s ∈ sets_of_finite_union(n)
+}
+
+theorem sets_of_finite_union_preserve_two[K](n: Set[Set[K]]) {
+    preserve_two(Set[K].union, is_set_of_finite_union(n))
+} by {
+    forall(s1: Set[K], s2: Set[K]) {
+        if is_set_of_finite_union(n)(s1) and is_set_of_finite_union(n)(s2) {
+            s1 ∈ sets_of_finite_union(n)
+            s2 ∈ sets_of_finite_union(n)
+            s1 ∪ s2 ∈ sets_of_finite_union(n)
+            is_set_of_finite_union(n)(Set[K].union(s1, s2))
+        }
+    }
+} 
+
+theorem finite_union_preserve_sets_of_finite_union[K](n: Set[Set[K]], list: List[Set[K]]) {
+    list.length != 0 and (forall(s: Set[K]) { s ∈ list implies s ∈ sets_of_finite_union(n) }) implies union_of_list(list) ∈ sets_of_finite_union(n)
+} by {
+    preserve_two(Set[K].union, is_set_of_finite_union(n))
+    preserve_finite(Set[K].union, list, Set[K].empty_set, is_set_of_finite_union(n))
+    forall(s: Set[K]) { 
+        if s ∈ list {
+            s ∈ sets_of_finite_union(n) 
+            is_set_of_finite_union(n)(s)
+        } 
+    }
+    is_set_of_finite_union(n)(two_to_finite(Set[K].union, list, Set[K].empty_set))
+    is_set_of_finite_union(n)(union_of_list(list))
+}
 
 /// A finite set is a `Set` bundled with a finiteness proof.
 structure Finite_Set[T] {

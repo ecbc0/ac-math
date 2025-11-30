@@ -254,7 +254,7 @@
 {"goal":"forall(x0: ℤ, x1: ℤ, x2: ℤ) { x0 + (x1 + x2) = x0 + x1 + x2 }","proof":["let (s0: ℤ, s1: ℤ, s2: ℤ) satisfy { s0 + (s1 + s2) != s0 + s1 + s2 }","s0 + (s1 + s2) = s0 + s1 + s2"]}
 {"goal":"forall(x0: ℤ, x1: ℤ) { x0 + x1 = x1 + x0 }","proof":["let (s0: ℤ, s1: ℤ) satisfy { s1 + s0 != s0 + s1 }","s1 + s0 = s0 + s1"]}
 {"goal":"forall(x0: ℤ) { x0 + 0 = x0 }","proof":["let s0: ℤ satisfy { s0 + 0 != s0 }","s0 + 0 = s0"]}
-{"goal":"forall(x0: ℤ) { x0 + -x0 = 0 }","proof":["let s0: ℤ satisfy { s0 + -s0 != 0 }","s0 + -s0 = 0"]}
+{"goal":"forall(x0: ℤ) { P_Add.add[ℤ](x0, -x0) = lib(type_class.add).P_Add.0[ℤ] }","proof":["let s0: ℤ satisfy { s0 + -s0 != 0 }","s0 + -s0 = 0"]}
 {"goal":"a + b = 0 implies a = -b","proof":["a + (b + -b) = a + b + -b","b + -b = 0","a + 0 = a","0 + -b = -b","0 + -b != a","a + b + -b != a","a + (b + -b) != a"]}
 {"goal":"add_eq_zero","proof":["-b = a","a + b != 0","b + a = a + b","b + a != 0","b + -b = 0"]}
 {"goal":"add_left_cancel","proof":["c + b != c + a or b = a"]}

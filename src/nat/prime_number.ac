@@ -1196,21 +1196,15 @@ theorem relative_prime_iff_gcd_one(a: ℕ, b: ℕ) {
 }
 
 theorem sub_prime_list_divides(l1: List[ℕ], l2: List[ℕ]) {
-    are_primes(l1) and are_primes(l2) and forall(p: ℕ) {
-        l1.count(p) <= l2.count(p)
-    } implies product(l1).divides(product(l2))
+    are_primes(l1) and are_primes(l2) and l1 ⊆ l2 implies product(l1).divides(product(l2))
 } by {
     define f(l: List[ℕ]) -> Bool {
-        are_primes(l) and are_primes(l2) and forall(p: ℕ) {
-            l.count(p) <= l2.count(p)
-        } implies product(l).divides(product(l2))    
+        are_primes(l) and are_primes(l2) and l ⊆ l2 implies product(l).divides(product(l2))    
     }
     f(List[ℕ].nil)
     forall(head: ℕ, tail: List[ℕ]) {
         if f(tail) {
-            if are_primes(List.cons(head, tail)) and are_primes(l2) and forall(p: ℕ) {
-                List.cons(head, tail).count(p) <= l2.count(p)
-            } {
+            if are_primes(List.cons(head, tail)) and are_primes(l2) and List.cons(head, tail) ⊆ l2 {
                 let q1 = product(tail ∖ head) 
                     
                 head^(tail.count(head)) ⋅ q1 = product(tail)
@@ -1280,9 +1274,7 @@ theorem sub_prime_list_divides(l1: List[ℕ], l2: List[ℕ]) {
 }
 
 theorem divides_imp_sub_prime_list(l1: List[ℕ], l2: List[ℕ]) {
-    are_primes(l1) and are_primes(l2) and product(l1).divides(product(l2)) implies forall(p: ℕ) {
-        l1.count(p) <= l2.count(p)
-    }
+    are_primes(l1) and are_primes(l2) and product(l1).divides(product(l2)) implies l1 ⊆ l2
 } by {
     forall(p: ℕ) {
         p^(l1.count(p)) ⋅ product(l1 ∖ p) = product(l1)

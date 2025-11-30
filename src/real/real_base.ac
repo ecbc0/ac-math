@@ -1,10 +1,10 @@
 from rat import ℚ
 from int import ℤ, abs
 from nat import ℕ
-from type_class.add import neg_distrib
+from type_class.add import neg_distrib, P_Add
 from type_class.ring import Add, Mul, Ring
 from type_class.field import Field
-from type_class.ordered_ring import Ordered_Ring, Ordered_Add, lt_mul_pos, mul_lt_lt, lte_mul_pos, lte_mul_lte
+from type_class.ordered_ring import Ordered_Ring, Ordered_P_Add, Ordered_Add, lt_mul_pos, mul_lt_lt, lte_mul_pos, lte_mul_lte
 from type_class.ordered_field import Ordered_Field
 
 numerals ℚ
@@ -1361,9 +1361,12 @@ theorem add_neg_eq_zero(a: ℝ) {
     a + -a = 0
 } 
 
-instance ℝ: Add {
+instance ℝ: P_Add {
     let add = ℝ.add
     let 0 = ℝ.0
+}
+
+instance ℝ: Add {
     let neg = ℝ.neg
 }
 
@@ -1436,6 +1439,7 @@ theorem lt_add_right(a: ℝ, b: ℝ, c: ℝ) {
     a < b implies a + c < b + c
 } 
 
+instance ℝ: Ordered_P_Add
 instance ℝ: Ordered_Add
 
 theorem lt_add_left(a: ℝ, b: ℝ, c: ℝ) {

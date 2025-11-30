@@ -830,13 +830,15 @@ theorem add_assoc(a: ℤ, b: ℤ, c: ℤ) { (a + b) + c = a + (b + c) } by {
     )
 }
 
-from type_class.add import Add, left_cancel
+from type_class.add import P_Add, Add, left_cancel
 
-instance ℤ: Add {
+instance ℤ: P_Add {
     let add = ℤ.add
    
     let 0 = ℤ.0
+}
 
+instance ℤ: Add {
     let neg = ℤ.neg
 }
 
