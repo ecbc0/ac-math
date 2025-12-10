@@ -70,5 +70,12 @@ typeclass Norm_Distance extends Norm_Vec, Distance_Space {
 
 typeclass Norm_Top extends Norm_Vec, Distance_Top
 typeclass Norm_Metric_Top extends Norm_Vec, Metric_Top
-typeclass Banach extends Norm_Vec, Complete_Distance_Top
-typeclass Banach_Metric extends Norm_Vec, Complete_Metric_Top
+typeclass Banach_Norm extends Norm_Vec, Complete_Distance_Top
+typeclass Banach extends Norm_Vec, Complete_Metric_Top
+
+define norm_fn[T, V: Norm_Vec](f: T -> V) -> (T -> ℝ) {
+    function(x: T) {
+        f(x).norm
+    }
+}
+

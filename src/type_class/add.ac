@@ -193,3 +193,7 @@ define add_fn[T, A: P_Add](f: T -> A, g: T -> A, t: T) -> A {
 }
 
 // instance[T, A: Add] (T -> A): Add
+
+define sub_fn[T, A: Add](f: T -> A, g: T -> A, t: T) -> A {
+    f(t) - g(t)
+}

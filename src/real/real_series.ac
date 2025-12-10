@@ -1,5 +1,5 @@
 from real.real_base import ℝ
-from real.real_completeness import is_increase, is_suc_increase, converge, have_sup, have_upper_bound, converge_to, sup, same_upper_bound, same_least_upper_bound
+from real.real_completeness import is_increase, is_suc_increase, converge, have_sup, have_upper_bound, converge_to, sup, same_upper_bound, same_least_upper_bound, limit
 from real.real_net_completeness import increase_convergence_to_sup
 numerals ℝ
 from list.list_base import max_list, list_has_max, contains_subset
@@ -7,6 +7,7 @@ from list.list_sum import List, sum, range_sum
 from set import fn_image
 from finite_set import Set, ℕ
 from type_class.ordered_ring import is_nonnegative_list
+from top.norm import Norm_Vec, Banach, norm_fn
 
 define is_nonnegative_set(s: Set[ℝ]) -> Bool {
     forall(x: ℝ) {
@@ -23,43 +24,44 @@ define is_nonnegative_seq(f: ℕ -> ℝ) -> Bool {
 theorem nonnegtive_seq_to_set(f: ℕ -> ℝ) {
     is_nonnegative_seq(f) iff is_nonnegative_set(fn_image(f))
 } by {
-    if is_nonnegative_seq(f) {
-        forall(x: ℝ) {
-            if x ∈ fn_image(f) {
-                let n: ℕ satisfy { x = f(n) }
-                f(n) >= 0
-                x >= 0
-            }
-        }
-        is_nonnegative_set(fn_image(f))
+    define prop(x: ℝ) -> Bool {
+        x >= 0
     }
-    
-    if is_nonnegative_set(fn_image(f)) {
-        forall(n: ℕ) {
-            f(n) ∈ fn_image(f)
-            f(n) >= 0
-        }
-        is_nonnegative_seq(f) 
+
+    (forall(y: ℝ) {
+        y ∈ fn_image(f) implies prop(y)
+    }) implies forall(x: ℕ) {
+        prop(f(x))
     }
+
+    is_nonnegative_set(fn_image(f)) implies is_nonnegative_seq(f)
+
+    (forall(x: ℕ) {
+        prop(f(x))
+    }) implies forall(y: ℝ) {
+        y ∈ fn_image(f) implies prop(y)
+    }
+
+    is_nonnegative_seq(f) implies is_nonnegative_set(fn_image(f))
 }
 
-define elem_in_finite_sum(f: ℕ -> ℝ, r: ℝ) -> Bool {
+define elem_in_finite_sum[V: Norm_Vec](f: ℕ -> V, r: V) -> Bool {
     exists(l: List[ℕ]) {
         l.is_unique and r = sum(l.map(f)) 
     }
 }
 
-define set_of_finite_sum(f: ℕ -> ℝ) -> Set[ℝ] {
-    Set[ℝ].new(elem_in_finite_sum(f))
+define set_of_finite_sum[V: Norm_Vec](f: ℕ -> V) -> Set[V] {
+    Set[V].new(elem_in_finite_sum(f))
 }
 
-define series(f: ℕ -> ℝ) -> (ℕ -> ℝ) {
+define series[V: Norm_Vec](f: ℕ -> V) -> (ℕ -> V) {
     function(n: ℕ) {
         range_sum(f, n) 
     }
 }
 
-theorem series_suc(f: ℕ -> ℝ, n: ℕ) {
+theorem series_suc[V: Norm_Vec](f: ℕ -> V, n: ℕ) {
     series(f)(n.suc) = series(f)(n) + f(n)
 } by {
     range_sum(f, n.suc) = range_sum(f, n) + f(n)
@@ -76,10 +78,10 @@ theorem nonnegtive_seq_to_nonnegtive_list(l: List[ℝ], f: ℕ -> ℝ) {
     }
 }
 
-theorem contains_seq_list(l: List[ℕ], f: ℕ -> ℝ) {
+theorem contains_seq_list[V: Norm_Vec](l: List[ℕ], f: ℕ -> V) {
     contains_subset(l.map(f).contains, fn_image(f).contains)
 } by {
-    forall(x: ℝ) {
+    forall(x: V) {
         if x ∈ l.map(f) {
             let n: ℕ satisfy {
                 n ∈ l and x = f(n)
@@ -122,7 +124,7 @@ theorem nonnegtive_series_increase(f: ℕ -> ℝ) {
     is_suc_increase(series(f))
 }
 
-theorem series_in_set_of_finite_sum(f: ℕ -> ℝ, n: ℕ) {
+theorem series_in_set_of_finite_sum[V: Norm_Vec](f: ℕ ->V, n: ℕ) {
     series(f)(n) ∈ set_of_finite_sum(f)
 } by {
     series(f)(n) = range_sum(f, n)
@@ -130,10 +132,10 @@ theorem series_in_set_of_finite_sum(f: ℕ -> ℝ, n: ℕ) {
     n.range.is_unique
 }
 
-theorem series_image_set_subset_set_of_finite_sum(f: ℕ -> ℝ) {
+theorem series_image_set_subset_set_of_finite_sum[V: Norm_Vec](f: ℕ -> V) {
     fn_image(series(f)) ⊆ set_of_finite_sum(f)
 } by {
-    forall(r: ℝ) {
+    forall(r: V) {
         if r ∈ fn_image(series(f)) {
             let n: ℕ satisfy { r = series(f)(n) }
             r ∈ set_of_finite_sum(f)
@@ -224,4 +226,39 @@ theorem nonnegtive_series_converge_imp_set_of_finite_sum_have_sup(f: ℕ -> ℝ)
     sup(fn_image(series(f))).is_set_least_upper_bound(set_of_finite_sum(f))
     sup(fn_image(series(f))) = sup(set_of_finite_sum(f))
     converge_to(series(f), sup(set_of_finite_sum(f))) 
+}
+
+define series_sum(f: ℕ -> ℝ) -> ℝ {
+    limit(series(f))
+}
+
+theorem limit_of_nonneg_series(f: ℕ -> ℝ) {
+    is_nonnegative_seq(f) and converge(series(f)) implies series_sum(f) = sup(fn_image(series(f))) 
+} by {
+    converge_to(series(f), sup(fn_image(series(f))))
+}
+
+theorem nonneg_series_sum_gte_zero(f: ℕ -> ℝ) {
+    is_nonnegative_seq(f) and converge(series(f)) implies series_sum(f) >= 0
+} by {
+    series_sum(f) = sup(fn_image(series(f)))
+    series(f)(ℕ.0) >= 0
+    ℕ.0 ∈ Set[ℕ].universal_set
+    series(f)(ℕ.0) ∈ Set[ℕ].universal_set.image(series(f))
+    series(f)(ℕ.0) ∈ fn_image(series(f))
+    sup(fn_image(series(f))) >= series(f)(ℕ.0)
+    sup(fn_image(series(f))) >= 0
+}
+
+theorem norm_seq_is_nonneg[V: Norm_Vec](f: ℕ -> V) {
+    is_nonnegative_seq(norm_fn(f))
+} by {
+    forall(n: ℕ) {
+        norm_fn(f)(n) = f(n).norm
+        f(n).norm >= 0
+    }
+}
+
+define abs_converge[V: Norm_Vec](f: ℕ -> V) -> Bool {
+    converge(series(norm_fn(f)))
 }

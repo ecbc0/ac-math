@@ -1,5 +1,5 @@
 
-from real.real_completeness import ℝ, inf, sup, have_lower_bound, have_upper_bound, directly_closely_lt_sup, directly_closely_gt_inf, intersection, have_inf, have_sup, converge, converge_to, have_seq_upper_bound, have_seq_lower_bound, is_increase, is_decrease, tail_bound
+from real.real_completeness import ℝ, inf, sup, have_lower_bound, have_upper_bound, directly_closely_lt_sup, directly_closely_gt_inf, intersection, have_inf, have_sup, converge, converge_to, have_seq_upper_bound, have_seq_lower_bound, is_increase, is_decrease, tail_bound, limit
 from top.metric_space import Distance_Space, Metric_Space, Point_Net_System, Topology, Distance_Net_System, Distance_Top, is_dist_vanish_net, is_bounded, are_bounded, dist_set, dist, elem_in_dist_set, Metric_Top, Complete_Distance_Top, Complete_Metric_Top, distance_space_converge_to_definition_expand_ball_imp_by
 from limit.net import Set, Net, no_empty, directed, is_net, set_intersect_sets, subnet_sets, elem_in_subnet_sets, directed_helper, directed_helper_imp_by, seq_net, seq_tail, elem_in_seq_tail
 from top.top_base import limit_pt, are_closed, converge_to as top_converge_to
@@ -8,6 +8,8 @@ from set import elem_in_intersection_general, fn_image
 from list.list_base import list_has_max, max_list, list_has_min, min_list
 numerals ℝ
 from nat import ℕ
+from linear_algebra.vector_space import Vec
+from top.norm import Norm_Vec, Banach 
 
 define elem_in_closed_interval(a: ℝ, b: ℝ, x: ℝ) -> Bool {
     a <= x and x <= b
@@ -877,6 +879,10 @@ theorem real_dist_vanish_net_converge(n: Net[ℝ]) {
 
 instance ℝ: Complete_Distance_Top
 instance ℝ: Complete_Metric_Top
+instance ℝ: Norm_Vec {
+    let norm = ℝ.abs
+}
+instance ℝ: Banach
 
 theorem converge_imp_bounded(f: ℕ -> ℝ) {
     converge(f) implies is_bounded(fn_image(f))
@@ -1002,4 +1008,14 @@ theorem top_converge_imp_real_converge(f: ℕ -> ℝ, a: ℝ) {
             tail_bound(f, a, n, ε)
         }
     }
+}
+
+theorem limit_unique(f: ℕ -> ℝ, a: ℝ) {
+    converge_to(f, a) implies a = limit(f)
+} by {
+    let b: ℝ satisfy { b = limit(f) }
+    converge_to(f, b)
+    top_converge_to(seq_net, a, f)
+    top_converge_to(seq_net, b, f)
+    a = b
 }

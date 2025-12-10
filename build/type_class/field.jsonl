@@ -227,33 +227,3 @@
 {"goal":"f(m.suc)","proof":["a^m.suc / (b^m.suc) != a / b^m.suc or f(m.suc)","a^m.suc / (b^m.suc) != a / b^m.suc"]}
 {"goal":"f(n)","proof":["let s0: (ℕ -> Bool) -> ℕ satisfy { forall(x0: ℕ -> Bool, x1: ℕ) { not x0(ℕ.0) or x0(s0(x0)) or x0(x1) } and forall(x2: ℕ -> Bool, x3: ℕ) { not x2(s0(x2).suc) or not x2(ℕ.0) or x2(x3) } }","not f(s0(f)) or f(s0(f).suc)","not f(s0(f).suc) or not f(ℕ.0) or f(n)","not f(s0(f).suc)","not f(ℕ.0) or f(s0(f)) or f(n)","not f(s0(f))","f(s0(f))"]}
 {"goal":"div_pow","proof":["not f(n) or a^n / (b^n) = a / b^n"]}
-{"goal":"-a ⋅ -F.1 / a = a ⋅ F.1 / a","proof":["-a ⋅ -F.1 / a = a ⋅ F.1 / a"]}
-{"goal":"-a ⋅ -F.1 / a = a ⋅ F.1 / a","proof":["-a ⋅ -F.1 / a = a ⋅ F.1 / a"]}
-{"goal":"-a ⋅ -F.1 / a = a ⋅ F.1 / a","proof":["-a ⋅ -F.1 / a = a ⋅ F.1 / a"]}
-{"goal":"-a ⋅ -F.1 / a = a ⋅ F.1 / a","proof":["-a ⋅ -F.1 / a = a ⋅ F.1 / a"]}
-{"goal":"-a ⋅ -F.1 / a = a ⋅ F.1 / a","proof":["-a ⋅ -F.1 / a = a ⋅ F.1 / a"]}
-{"goal":"-a ⋅ -F.1 / a = a ⋅ F.1 / a","proof":["-a ⋅ -F.1 / a = a ⋅ F.1 / a"]}
-{"goal":"-a ⋅ -F.1 / a = a ⋅ F.1 / a","proof":["-a ⋅ -F.1 / a = a ⋅ F.1 / a"]}
-{"goal":"-a ⋅ -F.1 / a = a ⋅ F.1 / a","proof":["-a ⋅ -F.1 / a = a ⋅ F.1 / a"]}
-{"goal":"-a ⋅ -F.1 / a = a ⋅ F.1 / a","proof":["-a ⋅ -F.1 / a = a ⋅ F.1 / a"]}
-{"goal":"-a ⋅ -F.1 / a = a ⋅ F.1 / a","proof":["-a ⋅ -F.1 / a = a ⋅ F.1 / a"]}
-{"goal":"a / b ⋅ c / d = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","proof":["-(a ⋅ F.1 / b) ⋅ -(c ⋅ F.1 / d) = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","-a / b ⋅ -c / d = a / b ⋅ c / d","a ⋅ F.1 / b = a / b","c ⋅ F.1 / d = c / d"]}
-{"goal":"a / b ⋅ c / d = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","proof":["-(a ⋅ F.1 / b) ⋅ -(c ⋅ F.1 / d) = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","-a / b ⋅ -c / d = a / b ⋅ c / d","a ⋅ F.1 / b = a / b","c ⋅ F.1 / d = c / d"]}
-{"goal":"a / b ⋅ c / d = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","proof":["-(a ⋅ F.1 / b) ⋅ -(c ⋅ F.1 / d) = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","-a / b ⋅ -c / d = a / b ⋅ c / d","a ⋅ F.1 / b = a / b","c ⋅ F.1 / d = c / d"]}
-{"goal":"a / b ⋅ c / d = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","proof":["-(a ⋅ F.1 / b) ⋅ -(c ⋅ F.1 / d) = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","-a / b ⋅ -c / d = a / b ⋅ c / d","a ⋅ F.1 / b = a / b","c ⋅ F.1 / d = c / d"]}
-{"goal":"a / b ⋅ c / d = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","proof":["-(a ⋅ F.1 / b) ⋅ -(c ⋅ F.1 / d) = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","-a / b ⋅ -c / d = a / b ⋅ c / d","a ⋅ F.1 / b = a / b","c ⋅ F.1 / d = c / d"]}
-{"goal":"a / b ⋅ c / d = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","proof":["-(a ⋅ F.1 / b) ⋅ -(c ⋅ F.1 / d) = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","-a / b ⋅ -c / d = a / b ⋅ c / d","a ⋅ F.1 / b = a / b","c ⋅ F.1 / d = c / d"]}
-{"goal":"a / b ⋅ c / d = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","proof":["-(a ⋅ F.1 / b) ⋅ -(c ⋅ F.1 / d) = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","-a / b ⋅ -c / d = a / b ⋅ c / d","a ⋅ F.1 / b = a / b","c ⋅ F.1 / d = c / d"]}
-{"goal":"a / b ⋅ c / d = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","proof":["-(a ⋅ F.1 / b) ⋅ -(c ⋅ F.1 / d) = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","-a / b ⋅ -c / d = a / b ⋅ c / d","a ⋅ F.1 / b = a / b","c ⋅ F.1 / d = c / d"]}
-{"goal":"a / b ⋅ c / d = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","proof":["-(a ⋅ F.1 / b) ⋅ -(c ⋅ F.1 / d) = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","-a / b ⋅ -c / d = a / b ⋅ c / d","a ⋅ F.1 / b = a / b","c ⋅ F.1 / d = c / d"]}
-{"goal":"a / b ⋅ c / d = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","proof":["-(a ⋅ F.1 / b) ⋅ -(c ⋅ F.1 / d) = a ⋅ F.1 / b ⋅ (c ⋅ F.1 / d)","-a / b ⋅ -c / d = a / b ⋅ c / d","a ⋅ F.1 / b = a / b","c ⋅ F.1 / d = c / d"]}
-{"goal":"-F.1 / a = (-a).reciprocal","proof":["-a ⋅ -F.1 / a != F.1 or -F.1 / a = (-a).reciprocal"]}
-{"goal":"-F.1 / a = (-a).reciprocal","proof":["-a ⋅ -F.1 / a != F.1 or -F.1 / a = (-a).reciprocal"]}
-{"goal":"-F.1 / a = (-a).reciprocal","proof":["-a ⋅ -F.1 / a != F.1 or -F.1 / a = (-a).reciprocal"]}
-{"goal":"-F.1 / a = (-a).reciprocal","proof":["-a ⋅ -F.1 / a != F.1 or -F.1 / a = (-a).reciprocal"]}
-{"goal":"-F.1 / a = (-a).reciprocal","proof":["-a ⋅ -F.1 / a != F.1 or -F.1 / a = (-a).reciprocal"]}
-{"goal":"-F.1 / a = (-a).reciprocal","proof":["-a ⋅ -F.1 / a != F.1 or -F.1 / a = (-a).reciprocal"]}
-{"goal":"-F.1 / a = (-a).reciprocal","proof":["-a ⋅ -F.1 / a != F.1 or -F.1 / a = (-a).reciprocal"]}
-{"goal":"-F.1 / a = (-a).reciprocal","proof":["-a ⋅ -F.1 / a != F.1 or -F.1 / a = (-a).reciprocal"]}
-{"goal":"-F.1 / a = (-a).reciprocal","proof":["-a ⋅ -F.1 / a != F.1 or -F.1 / a = (-a).reciprocal"]}
-{"goal":"-F.1 / a = (-a).reciprocal","proof":["-a ⋅ -F.1 / a != F.1 or -F.1 / a = (-a).reciprocal"]}

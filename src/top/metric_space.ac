@@ -665,13 +665,13 @@ theorem is_dist_vanish_net_helper[M: Distance_Space](n: Net[M]) {
     } implies is_dist_vanish_net(n)
 }
 
-define elme_in_zero_dist_class[M: Distance_Space](x: M, y: M) -> Bool {
+define elem_in_zero_dist_class[M: Distance_Space](x: M, y: M) -> Bool {
     x.distance(y) = 0
 }
 
 attributes M: Distance_Space {
     define zero_dist_class(self) -> Set[M] {
-        Set[M].new(elme_in_zero_dist_class(self))
+        Set[M].new(elem_in_zero_dist_class(self))
     }
 }
 
@@ -767,8 +767,8 @@ theorem distance_space_converge_to_definition_expand_ball_imp_by[K, M: Distance_
     is_limit(source_net, target.net, f)
 }
 
-theorem dist_vanish_net_if_finer[M: Distance_Top](n: Net[M], x: M, y: M) {
-    is_dist_vanish_net(n) and n.finer(x.net) and n.finer(y.net) implies x.distance(y) = 0
+theorem limit_unique[M: Distance_Top](n: Net[M], x: M, y: M) {
+    n.finer(x.net) and n.finer(y.net) implies x.distance(y) = 0
 } by {
     forall(ε: ℝ) {
         if ε > 0 {
@@ -804,8 +804,16 @@ theorem dist_vanish_net_if_finer[M: Distance_Top](n: Net[M], x: M, y: M) {
     x.distance(y) = 0    
 }
 
-theorem dist_vanish_net_if_converge[K, M: Distance_Top](n: Net[K], x: M, y: M, f: K -> M) {
-    is_dist_vanish_net(image_of_net(n, f)) and converge_to(n, x, f) and converge_to(n, y, f) implies x.distance(y) = 0
+theorem fn_limit_unique[K, M: Distance_Top](n: Net[K], x: M, y: M, f: K -> M) {
+    converge_to(n, x, f) and converge_to(n, y, f) implies x.distance(y) = 0
+} 
+
+theorem limit_unique_ver_metric[M: Metric_Top](n: Net[M], x: M, y: M) {
+    n.finer(x.net) and n.finer(y.net) implies x = y
+} 
+
+theorem fn_limit_unique_ver_metric[K, M: Metric_Top](n: Net[K], x: M, y: M, f: K -> M) {
+    converge_to(n, x, f) and converge_to(n, y, f) implies x = y
 } 
 
 /// also called "converge net/sequence is Cauchy net/sequence"

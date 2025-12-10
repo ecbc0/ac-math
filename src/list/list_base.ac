@@ -2108,6 +2108,38 @@ theorem subset_eq_more[T](l1: List[T], l2: List[T]) {
     } 
 }
 
+theorem subset_superset_to_permutation[T](l1: List[T], l2: List[T]) {
+    l1 ⊆ l2 and l1 ⊇ l2 implies l1.is_permutation(l2)
+} by {
+    forall(x: T) {
+        l1.count(x) <= l2.count(x)
+        l1.count(x) >= l2.count(x)
+        l1.count(x) = l2.count(x)
+    }
+}
+
+theorem permutation_preserve_subset[T](l1: List[T], l2: List[T], l: List[T]) {
+    l1 ⊆ l and l1.is_permutation(l2) implies l2 ⊆ l
+} by {
+    forall(x: T) {
+        if x ∈ l2 {
+            l1.count(x) = l2.count(x)
+            l2.count(x) <= l.count(x)
+        }
+    }
+}
+
+theorem permutation_preserve_superset[T](l1: List[T], l2: List[T], l: List[T]) {
+    l1 ⊇ l and l1.is_permutation(l2) implies l2 ⊇ l
+} by {
+    forall(x: T) {
+        if x ∈ l {
+            l1.count(x) = l2.count(x)
+            l2.count(x) >= l.count(x)
+        }
+    }
+}
+
 theorem remove_preserve_subset[T](l1: List[T], l2: List[T], x: T) {
     l1 ⊆ l2 implies (l1 ∖ x) ⊆ (l2 ∖ x)
 } by {

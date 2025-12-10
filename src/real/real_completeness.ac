@@ -568,6 +568,14 @@ define converge(f: ℕ -> ℝ) -> Bool {
     }
 }
 
+let limit(f: ℕ -> ℝ) -> a: ℝ satisfy {
+    if converge(f) {
+        converge_to(f, a)
+    } else {
+        a = 0
+    }
+}
+
 define is_increase(f: ℕ -> ℝ) -> Bool {
     forall(n: ℕ, m: ℕ) {
         n < m implies f(n) <= f(m)

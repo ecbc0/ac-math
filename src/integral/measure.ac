@@ -1,6 +1,12 @@
-from set import Set, pairwise_disjoint, union, sym_difference, disjoint, empty
+from set import Set, pairwise_disjoint, union, sym_difference, disjoint, empty, union_index, compose, fn_image, Product
 from limit.net import Net
 from real import ℝ
+from real.real_series import series_sum, series, is_nonnegative_seq
+from real.real_completeness import inf, converge, have_lower_bound, have_inf, closely_gt_inf
+from nat import ℕ
+from top.norm import Banach, scal, norm_fn
+from type_class.add import add_fn, sub_fn
+from list import List
 numerals ℝ
 
 define preserve_union[K](m: Set[Set[K]]) -> Bool {
@@ -62,7 +68,8 @@ structure Volume_Chain[K] {
 } constraint {
     is_set_algebra(sets) and
     nonnegtive_volume(sets, vol) and
-    disjoint_union_to_add(sets, vol)
+    disjoint_union_to_add(sets, vol) and
+    sets.is_nonempty
 } by {
     let sets = Set[Set[K]].singleton(empty[K])
     define vol(s: Set[K]) -> ℝ {
@@ -73,6 +80,7 @@ structure Volume_Chain[K] {
     preserve_diff(sets)
     nonnegtive_volume(sets, vol) 
     disjoint_union_to_add(sets, vol)
+    sets.is_nonempty
 }
 
 attributes Volume_Chain[K] {
@@ -85,18 +93,31 @@ theorem set_algebra_constraint_helper[K](m: Volume_Chain[K], a: Set[K], b: Set[K
     a ∈ m and b ∈ m implies (
         a ∪ b ∈ m and 
         a ∩ b ∈ m and 
-        a ∖ b ∈ m
+        a ∖ b ∈ m and
+        sym_difference(a, b) ∈ m
     )
 } by {
     a ∪ b ∈ m
     a ∩ b ∈ m 
     a ∖ b ∈ m
+    sym_difference(a, b) ∈ m.sets
 }
 
-theorem disjoint_union_to_add_helper[K](m: Volume_Chain[K]) {
-    forall(s1: Set[K], s2: Set[K]) {
-        s1 ∈ m and s2 ∈ m and disjoint(s1, s2) implies m.vol(s1 ∪ s2) = m.vol(s1) + m.vol(s2)
-    }
+theorem disjoint_union_to_add_helper[K](m: Volume_Chain[K], s1: Set[K], s2: Set[K]) {
+    s1 ∈ m and s2 ∈ m and disjoint(s1, s2) implies m.vol(s1 ∪ s2) = m.vol(s1) + m.vol(s2)
+}
+
+theorem nonnegtive_volume_helper[K](m: Volume_Chain[K], s: Set[K]) {
+    s ∈ m implies m.vol(s) >= 0
+} by {
+    s ∈ m.sets
+}
+
+theorem empty_helper[K](m: Volume_Chain[K], s: Set[K]) {
+    empty[K] ∈ m
+} by {
+    m.sets.is_nonempty
+    empty[K] ∈ m.sets
 }
 
 theorem volume_sub[K](m: Volume_Chain[K], a: Set[K], b: Set[K]) {
@@ -108,8 +129,31 @@ theorem volume_sub[K](m: Volume_Chain[K], a: Set[K], b: Set[K]) {
     m.vol(b) = m.vol(a) + m.vol(b ∖ a)
 }
 
+theorem subset_vol_lt[K](m: Volume_Chain[K], a: Set[K], b: Set[K]) {
+    a ∈ m and b ∈ m and a ⊆ b implies m.vol(a) <= m.vol(b)
+} by {
+    m.vol(b ∖ a) + m.vol(a) = m.vol(b)
+    m.vol(b ∖ a) >= 0
+}
+
+theorem set_diff_vol_lt[K](m: Volume_Chain[K], a: Set[K], b: Set[K]) {
+    a ∈ m and b ∈ m implies m.vol(b ∖ a) <= m.vol(b)
+} by {
+    b ∖ a ⊆ b
+}
+
+theorem union_vol_lt[K](m: Volume_Chain[K], a: Set[K], b: Set[K]) {
+    a ∈ m and b ∈ m implies m.vol(a ∪ b) <= m.vol(a) + m.vol(b)
+} by {
+    disjoint(a, b ∖ a)
+    a ∪ b = a ∪ (b ∖ a)
+    m.vol(a ∪ b) = m.vol(a ∪ (b ∖ a))
+    m.vol(a ∪ (b ∖ a)) = m.vol(a) + m.vol(b ∖ a)
+    m.vol(a) + m.vol(b ∖ a) <= m.vol(a) + m.vol(b)
+}
+
 theorem empty_zero_volume[K](m: Volume_Chain[K]) {
-    empty[K] ∈ m implies m.vol(empty[K]) = 0
+    m.vol(empty[K]) = 0
 } by {
     empty[K] = empty[K] ∪ empty[K]
     disjoint(empty[K], empty[K])
@@ -117,3 +161,366 @@ theorem empty_zero_volume[K](m: Volume_Chain[K]) {
     m.vol(empty[K]) = m.vol(empty[K]) + m.vol(empty[K])
     m.vol(empty[K]) = 0
 }
+
+define elem_in_control_dist_from_vol_chain[K](m: Volume_Chain[K], a: Set[K], p: Set[K], r: ℝ) -> Bool {
+    p ∈ m and exists(f: ℕ -> Set[K]) {
+        fn_image(f) ⊆ m.sets and sym_difference(a, p) ⊆ union_index(f) and converge(series(compose(m.vol, f))) and r = series_sum(compose(m.vol, f))
+    }
+}
+
+theorem elem_in_control_dist_from_vol_chain_helper[K](m: Volume_Chain[K], a: Set[K], p: Set[K], r: ℝ) {
+    elem_in_control_dist_from_vol_chain(m, a, p, r) implies p ∈ m and exists(f: ℕ -> Set[K]) {
+        fn_image(f) ⊆ m.sets and sym_difference(a, p) ⊆ union_index(f) and converge(series(compose(m.vol, f))) and r = series_sum(compose(m.vol, f))
+    }
+}
+
+define control_dist_from_vol_chain[K](m: Volume_Chain[K], a: Set[K], p: Set[K]) -> Set[ℝ] {
+    Set[ℝ].new(elem_in_control_dist_from_vol_chain(m, a, p))
+}
+
+theorem control_dist_from_vol_chain_gte_zero[K](m: Volume_Chain[K], a: Set[K], p: Set[K]) {
+    0.is_set_lower_bound(control_dist_from_vol_chain(m, a, p))
+} by {
+    forall(r: ℝ) {
+        if r ∈ control_dist_from_vol_chain(m, a, p) {
+            elem_in_control_dist_from_vol_chain(m, a, p, r)
+            p ∈ m
+            let (f: ℕ -> Set[K]) satisfy {
+                fn_image(f) ⊆ m.sets and sym_difference(a, p) ⊆ union_index(f) and converge(series(compose(m.vol, f))) and r = series_sum(compose(m.vol, f))
+            }
+            forall(n: ℕ) {
+                compose(m.vol, f)(n) = m.vol(f(n))
+                f(n) ∈ fn_image(f)
+                f(n) ∈ m
+                m.vol(f(n)) >= 0
+                compose(m.vol, f)(n) >= 0
+            }
+            is_nonnegative_seq(compose(m.vol, f))
+            series_sum(compose(m.vol, f)) >= 0
+            r >= 0
+        }
+    }
+}
+
+theorem control_dist_from_vol_chain_have_lower_bound[K](m: Volume_Chain[K], a: Set[K], p: Set[K]) {
+    have_lower_bound(control_dist_from_vol_chain(m, a, p))
+}
+
+define dist_from_vol_chain[K](m: Volume_Chain[K], a: Set[K], p: Set[K]) -> ℝ {
+    inf(control_dist_from_vol_chain(m, a, p))
+}
+
+define elem_in_set_of_dist_from_vol_chain[K](m: Volume_Chain[K], a: Set[K], r: ℝ) -> Bool {
+    exists(p: Set[K]) {
+        p ∈ m and control_dist_from_vol_chain(m, a, p).is_nonempty and r = dist_from_vol_chain(m, a, p)
+    }
+}
+
+define set_of_dist_from_vol_chain[K](m: Volume_Chain[K], a: Set[K]) -> Set[ℝ] {
+    Set[ℝ].new(elem_in_set_of_dist_from_vol_chain(m, a))
+}
+
+theorem set_of_dist_from_vol_chain_gte_zero[K](m: Volume_Chain[K], a: Set[K]) {
+    0.is_set_lower_bound(set_of_dist_from_vol_chain(m, a))
+} by {
+    forall(r: ℝ) {
+        if r ∈ set_of_dist_from_vol_chain(m, a) {
+            let (p: Set[K]) satisfy {
+                p ∈ m and control_dist_from_vol_chain(m, a, p).is_nonempty and r = dist_from_vol_chain(m, a, p)
+            }
+            have_inf(control_dist_from_vol_chain(m, a, p))
+            0.is_set_lower_bound((control_dist_from_vol_chain(m, a, p)))
+            0 <= inf((control_dist_from_vol_chain(m, a, p)))
+            dist_from_vol_chain(m, a, p) >= 0
+            r >= 0
+        }
+    }
+}
+
+theorem set_of_dist_from_vol_chain_have_lower_bound[K](m: Volume_Chain[K], a: Set[K]) {
+    have_lower_bound(set_of_dist_from_vol_chain(m, a))
+}
+
+// Control convergence built in definition. Similar for definition of integral
+define is_measurable[K](m: Volume_Chain[K], a: Set[K]) -> Bool {
+    set_of_dist_from_vol_chain(m, a).is_nonempty and inf(set_of_dist_from_vol_chain(m, a)) = 0
+}
+
+// We want to define a net by directed lte: m × m --> Bool satisfy p1 <= p2 := sym_difference(a, p1) ⊇ sym_difference(a, p2), hence preserve order dist_from_vol_chain(m, a, p1) >= dist_from_vol_chain(m, a, p2), i.e. is_limit and converge_to limit inf(dist_from_vol_chain(m, a)). Then is_measurable <==> limit = 0
+
+define lte[K](a: Set[K], p1: Set[K], p2: Set[K]) -> Bool {
+    sym_difference(a, p1) ⊇ sym_difference(a, p2)
+}
+
+theorem approx_vol_net[K](m: Volume_Chain[K], a: Set[K], p1: Set[K], p2: Set[K]) {
+    p1 ∈ m and p2 ∈ m and lte(a, p1, p2) and control_dist_from_vol_chain(m, a, p1).is_nonempty implies dist_from_vol_chain(m, a, p1) >= dist_from_vol_chain(m, a, p2)
+} by {
+    sym_difference(a, p1) ⊇ sym_difference(a, p2)
+    forall(r: ℝ) {
+        if r ∈ control_dist_from_vol_chain(m, a, p1) {
+            elem_in_control_dist_from_vol_chain(m, a, p1, r)
+            let (f: ℕ -> Set[K]) satisfy {
+                fn_image(f) ⊆ m.sets and sym_difference(a, p1) ⊆ union_index(f) and converge(series(compose(m.vol, f))) and r = series_sum(compose(m.vol, f))
+            }
+            sym_difference(a, p2) ⊆ union_index(f)
+            fn_image(f) ⊆ m.sets and sym_difference(a, p2) ⊆ union_index(f) and converge(series(compose(m.vol, f))) and r = series_sum(compose(m.vol, f))
+            r ∈ control_dist_from_vol_chain(m, a, p2)
+        }
+    }
+    control_dist_from_vol_chain(m, a, p1) ⊆ control_dist_from_vol_chain(m, a, p2)
+    control_dist_from_vol_chain(m, a, p2).is_nonempty
+    inf(control_dist_from_vol_chain(m, a, p1)) >= inf(control_dist_from_vol_chain(m, a, p2))
+    dist_from_vol_chain(m, a, p1) >= dist_from_vol_chain(m, a, p2)
+}
+
+define vol_dist[K](m: Volume_Chain[K], a: Set[K], b: Set[K]) -> ℝ {
+    if a ∈ m and b ∈ m {
+        m.vol(sym_difference(a, b))
+    } else {
+        0
+    }
+}
+
+theorem calculate_vol_dist_1[K](m: Volume_Chain[K], a: Set[K], b: Set[K]) {
+    if a ∈ m and b ∈ m {
+        vol_dist(m, a, b) = m.vol(a ∪ b) - m.vol(a ∩ b)
+    }
+} by {
+    disjoint(sym_difference(a, b), a ∩ b)
+    a ∪ b = sym_difference(a, b) ∪ (a ∩ b)
+    m.vol(a ∪ b) = m.vol(sym_difference(a, b)) + m.vol(a ∩ b)
+}
+
+theorem calculate_vol_dist_2[K](m: Volume_Chain[K], a: Set[K], b: Set[K]) {
+    if a ∈ m and b ∈ m {
+        vol_dist(m, a, b) = m.vol(a ∖ b) + m.vol(b ∖ a)
+    }
+} by {
+    disjoint(a ∖ b, b ∖ a)
+    sym_difference(a, b) = (a ∖ b) ∪ (b ∖ a)
+    m.vol((a ∖ b) ∪ (b ∖ a)) = m.vol(a ∖ b) + m.vol(b ∖ a)
+}
+
+// like the control in absolutely convergence or absolute integral, the "M test" method
+theorem vol_dist_control_vol_value_dist[K](m: Volume_Chain[K], a: Set[K], b: Set[K]) {
+    if a ∈ m and b ∈ m {
+        (m.vol(a) - m.vol(b)).abs <= vol_dist(m, a, b)
+    } 
+} by {
+    disjoint(a ∩ b, a ∖ (a ∩ b))
+    disjoint(a ∩ b, b ∖ (a ∩ b))
+    a = (a ∩ b) ∪ (a ∖ a ∩ b)
+    b = (a ∩ b) ∪ (b ∖ a ∩ b)
+    m.vol(a) = m.vol(a ∩ b) + m.vol(a ∖ (a ∩ b))
+    m.vol(b) = m.vol(a ∩ b) + m.vol(b ∖ (a ∩ b))
+    m.vol(a) - m.vol(b) = m.vol(a ∖ (a ∩ b)) - m.vol(b ∖ (a ∩ b))
+    a ∖ (a ∩ b) = a ∖ b
+    b ∖ (a ∩ b) = b ∖ a
+    m.vol(a) - m.vol(b) = m.vol(a ∖ b) - m.vol(b ∖ a)
+    (m.vol(a ∖ b) - m.vol(b ∖ a)).abs <= m.vol(a ∖ b).abs + (-m.vol(b ∖ a)).abs
+    m.vol(a ∖ b).abs = m.vol(a ∖ b) 
+    (-m.vol(b ∖ a)).abs = m.vol(b ∖ a)
+    m.vol(a ∖ b).abs + (-m.vol(b ∖ a)).abs = m.vol(a ∖ b) + m.vol(b ∖ a)
+    m.vol(a ∖ b) + m.vol(b ∖ a) = vol_dist(m, a, b)
+    (m.vol(a) - m.vol(b)).abs = (m.vol(a ∖ b) - m.vol(b ∖ a)).abs
+}
+
+theorem symm[K](m: Volume_Chain[K], a: Set[K], b: Set[K]) {
+    a ∈ m and b ∈ m implies vol_dist(m, a, b) = vol_dist(m, b, a)
+} by {
+    sym_difference(a, b) = sym_difference(b, a)
+    vol_dist(m, a, b) = m.vol(sym_difference(a, b))
+    vol_dist(m, b, a) = m.vol(sym_difference(b, a))
+}
+
+theorem sym_diff_triangle_lemma_1[K](a: Set[K], b1: Set[K], b2: Set[K]) {
+    (b1 ∖ b2) ⊆ (b1 ∖ a) ∪ (a ∖ b2)
+} by {
+    forall(x: K) {
+        if x ∈ b1 ∖ b2 {
+            x ∈ b1 
+            x ∉ b2
+            if x ∈ a {
+                x ∈ a ∖ b2
+                x ∈ (b1 ∖ a) ∪ (a ∖ b2)
+            } else {
+                x ∉ a
+                x ∈ b1 ∖ a
+                x ∈ (b1 ∖ a) ∪ (a ∖ b2)
+            }
+            x ∈ (b1 ∖ a) ∪ (a ∖ b2)
+        }
+    }
+}
+
+theorem sym_diff_triangle_lemma_2[K](a: Set[K], b1: Set[K], b2: Set[K]) {
+    (b1 ∖ b2) ⊆ sym_difference(a, b1) ∪ sym_difference(a, b2)
+} by {
+    (b1 ∖ b2) ⊆ (b1 ∖ a) ∪ (a ∖ b2)
+    (b1 ∖ a) ⊆ sym_difference(a, b1)
+    (a ∖ b2) ⊆ sym_difference(a, b2)
+    (b1 ∖ a) ∪ (a ∖ b2) ⊆ sym_difference(a, b1) ∪ sym_difference(a, b2)
+}
+
+theorem sym_diff_triangle[K](a: Set[K], b1: Set[K], b2: Set[K]) {
+    sym_difference(b1, b2) ⊆ sym_difference(a, b1) ∪ sym_difference(a, b2)
+} by {
+    (b1 ∖ b2) ⊆ sym_difference(a, b1) ∪ sym_difference(a, b2)
+    (b2 ∖ b1) ⊆ sym_difference(a, b2) ∪ sym_difference(a, b1)
+    ((b1 ∖ b2) ∪ (b2 ∖ b1)) ⊆ sym_difference(a, b1) ∪ sym_difference(a, b2)
+}
+
+theorem triangle[K](m: Volume_Chain[K], a: Set[K], b1: Set[K], b2: Set[K]) {
+    a ∈ m and b1 ∈ m and b2 ∈ m implies vol_dist(m, b1, b2) <= vol_dist(m, a, b1) + vol_dist(m, a, b2)
+} by {
+    sym_difference(b1, b2) ∈ m
+    sym_difference(a, b1) ∈ m
+    sym_difference(a, b2) ∈ m
+    sym_difference(a, b1) ∪ sym_difference(a, b2) ∈ m
+    sym_difference(b1, b2) ⊆ sym_difference(a, b1) ∪ sym_difference(a, b2)
+    m.vol(sym_difference(b1, b2)) <= m.vol(sym_difference(a, b1) ∪ sym_difference(a, b2))
+    m.vol(sym_difference(a, b1) ∪ sym_difference(a, b2)) <= m.vol(sym_difference(a, b1)) + m.vol(sym_difference(a, b2))
+    m.vol(sym_difference(b1, b2)) <= m.vol(sym_difference(a, b1)) + m.vol(sym_difference(a, b2))
+
+    vol_dist(m, b1, b2) = m.vol(sym_difference(b1, b2))
+    vol_dist(m, a, b1) = m.vol(sym_difference(a, b1))
+    vol_dist(m, a, b2) = m.vol(sym_difference(a, b2))
+}
+
+define tail_bound[K](m: Volume_Chain[K], a: Set[K], p: Set[K], ε: ℝ) -> Bool {
+    forall(p1: Set[K], p2: Set[K]) {
+        p1 ∈ m and p2 ∈ m and lte(a, p, p1) and lte(a, p, p2) implies vol_dist(m, p1, p2) < ε
+    }
+}
+
+define dist_vanish[K](m: Volume_Chain[K], a: Set[K]) -> Bool {
+    forall(ε: ℝ) {
+        ε > 0 implies exists(p: Set[K]) {
+            p ∈ m and tail_bound(m, a, p, ε)
+        }
+    }
+}
+
+// This is needed, and satisfied by Euclidean simplex/polytope, provided by compactness in Euclidean ℝ^n. (In Minkowski space, it maybe that not all simplex/polytope will be used to define volume). 
+// If we not assumpt sub_additive, then for example, for countable disjoint decomposition, we can only use finite additive to prove series_sum(compose(m.vol, f)) <= m.vol(a)
+define sub_additive[K](m: Volume_Chain[K]) -> Bool {
+    forall(a: Set[K], f: ℕ -> Set[K]) {
+        a ∈ m and fn_image(f) ⊆ m.sets and a ⊆ union_index(f) implies (
+            m.vol(a) <= series_sum(compose(m.vol, f))
+        )
+    }
+}
+
+theorem is_measurable_imp_have_measure[K](m: Volume_Chain[K], a: Set[K]) {
+    sub_additive(m) and is_measurable(m, a) implies dist_vanish(m, a)
+} by {
+    set_of_dist_from_vol_chain(m, a).is_nonempty
+    have_inf(set_of_dist_from_vol_chain(m, a))
+    0.is_set_greatest_lower_bound(set_of_dist_from_vol_chain(m, a))
+    forall(ε: ℝ) {
+        if ε > 0 {
+            ε/2 > 0
+            closely_gt_inf(set_of_dist_from_vol_chain(m, a), 0, ε/2)
+            let r: ℝ satisfy {
+                r ∈ set_of_dist_from_vol_chain(m, a) and 0 <= r and r < 0 + ε/2
+            }
+            r < ε/2
+            elem_in_set_of_dist_from_vol_chain(m, a, r)
+            let p: Set[K] satisfy {
+                p ∈ m and control_dist_from_vol_chain(m, a, p).is_nonempty and r = dist_from_vol_chain(m, a, p)
+            }
+            dist_from_vol_chain(m, a, p) < ε/2
+            dist_from_vol_chain(m, a, p) = inf(control_dist_from_vol_chain(m, a, p))
+            r.is_set_greatest_lower_bound(control_dist_from_vol_chain(m, a, p))
+            closely_gt_inf(control_dist_from_vol_chain(m, a, p), r, ε/2)
+            let r1: ℝ satisfy {
+                r1 ∈ control_dist_from_vol_chain(m, a, p) and r <= r1 and r1 < r + ε/2
+            }
+            r + ε/2 < ε/2 + ε/2
+            ε = ε/2 + ε/2
+            r1 < ε
+            elem_in_control_dist_from_vol_chain(m, a, p, r1)
+            elem_in_control_dist_from_vol_chain_helper(m, a, p, r1)
+            let (f: ℕ -> Set[K]) satisfy {
+                fn_image(f) ⊆ m.sets and sym_difference(a, p) ⊆ union_index(f) and converge(series(compose(m.vol, f))) and r1 = series_sum(compose(m.vol, f))
+            }
+            series_sum(compose(m.vol, f)) < ε
+            forall(p1: Set[K], p2: Set[K]) {
+                if p1 ∈ m and p2 ∈ m and lte(a, p, p1) and lte(a, p, p2) {
+                    sym_difference(a, p) ⊇ sym_difference(a, p1)
+
+                    sym_difference(a, p) ⊇ sym_difference(a, p2)
+
+                    sym_difference(p1, p2) ⊆ sym_difference(a, p1) ∪ sym_difference(a, p2)
+
+                    sym_difference(a, p1) ∪ sym_difference(a, p2) ⊆ sym_difference(a, p)
+
+                    sym_difference(p1, p2) ⊆ sym_difference(a, p)
+
+                    sym_difference(p1, p2) ⊆ union_index(f)
+
+                    sym_difference(p1, p2) ∈ m
+
+                    // sub_additive used here
+                    m.vol(sym_difference(p1, p2)) <= series_sum(compose(m.vol, f))
+
+                    m.vol(sym_difference(p1, p2)) < ε
+
+                    m.vol(sym_difference(p1, p2)) = vol_dist(m, p1, p2)
+                    
+                    vol_dist(m, p1, p2) < ε
+                }
+            }
+            tail_bound(m, a, p, ε)
+            p ∈ m and tail_bound(m, a, p, ε)
+        }
+    }
+}
+
+// Todo: prove that after adding measurable set, it's still a Volume_Chain, and countable_addtive if the sum is < ∞
+
+define char_fn[K](a: Set[K]) -> (K -> ℝ) {
+    function(x: K) {
+        if x ∈ a {
+            1
+        } else {
+            0
+        }
+    }
+}
+
+define scal_by_fn[K, V: Banach](f: K -> ℝ, v: V) -> (K -> V) {
+    function(x: K) {
+        scal(f(x), v)
+    }
+}
+
+structure Step_Pair[K, V: Banach] {
+    set: Set[K]
+    value: V
+}
+
+define step_fn[K, V: Banach](l: List[Step_Pair[K, V]]) -> (K -> V) {
+    match l {
+        List[Step_Pair[K, V]].nil {
+            scal_by_fn(char_fn(empty[K]), V.0)
+        }
+        List.cons(head, tail) {
+            add_fn(scal_by_fn(char_fn(head.set), head.value), step_fn(tail))
+        }
+    }
+}
+
+define is_nonnegative_fn[K](f: K -> ℝ) -> Bool {
+    forall(x: K) { f(x) >= 0 }
+}
+
+define control[K](f1: K -> ℝ, f2: K -> ℝ) -> Bool {
+    is_nonnegative_fn(f1) and forall(x: K) { f1(x) <= f2(x) }
+}
+
+theorem control_imp_is_nonnegative_fn[K](f1: K -> ℝ, f2: K -> ℝ) {
+    control(f1, f2) implies is_nonnegative_fn(f2)
+}
+
+// Todo: use volume to define integral of step_fn (for value of integral) and integral of countable nonnegtive ℝ value step_fn (for control in the definition of integrable). But if you use Volume_Chain after adding measurable set and vol, you can just use finite nonnegtive ℝ value step_fn to control

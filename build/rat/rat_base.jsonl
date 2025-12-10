@@ -675,23 +675,3 @@
 {"goal":"n^ℕ.2 > ℕ.2","proof":["not n > ℕ.1 or n^ℕ.2 > n","ℕ.1 + ℕ.1 > n = ℕ.1 >= n","ℕ.1 >= n = n <= ℕ.1","n^ℕ.2 > n"]}
 {"goal":"false","proof":["ℕ.2 > ℕ.2","not ℕ.2 < ℕ.2 or not ℕ.2 < ℕ.2","ℕ.2 > ℕ.2 = ℕ.2 < ℕ.2","ℕ.2 < ℕ.2"]}
 {"goal":"square_root_of_two_is_not_rat","proof":[]}
-{"goal":"neg_by_div","proof":["1 / -a = -1 / a"]}
-{"goal":"neg_by_div","proof":["1 / -a = -1 / a"]}
-{"goal":"neg_by_div","proof":["1 / -a = -1 / a"]}
-{"goal":"neg_by_div","proof":["1 / -a = -1 / a"]}
-{"goal":"neg_by_div","proof":["1 / -a = -1 / a"]}
-{"goal":"neg_by_div","proof":["1 / -a = -1 / a"]}
-{"goal":"neg_by_div","proof":["1 / -a = -1 / a"]}
-{"goal":"neg_by_div","proof":["1 / -a = -1 / a"]}
-{"goal":"neg_by_div","proof":["1 / -a = -1 / a"]}
-{"goal":"neg_by_div","proof":["1 / -a = -1 / a"]}
-{"goal":"neg_reciprocal_iff","proof":["1 / -a = -1 / a","1 / -1 / a > 0 = -1 / a > 0","-1 / a > 0 = 1 / a < 0","-a > 0 = a < 0","1 / (1 / -a) = -a"]}
-{"goal":"neg_reciprocal_iff","proof":["1 / -a = -1 / a","1 / -1 / a > 0 = -1 / a > 0","-1 / a > 0 = 1 / a < 0","-a > 0 = a < 0","1 / (1 / -a) = -a"]}
-{"goal":"neg_reciprocal_iff","proof":["1 / -a = -1 / a","1 / -1 / a > 0 = -1 / a > 0","-1 / a > 0 = 1 / a < 0","-a > 0 = a < 0","1 / (1 / -a) = -a"]}
-{"goal":"neg_reciprocal_iff","proof":["1 / -a = -1 / a","1 / -1 / a > 0 = -1 / a > 0","-1 / a > 0 = 1 / a < 0","-a > 0 = a < 0","1 / (1 / -a) = -a"]}
-{"goal":"neg_reciprocal_iff","proof":["1 / -a = -1 / a","1 / -1 / a > 0 = -1 / a > 0","-1 / a > 0 = 1 / a < 0","-a > 0 = a < 0","1 / (1 / -a) = -a"]}
-{"goal":"neg_reciprocal_iff","proof":["1 / -a = -1 / a","1 / -1 / a > 0 = -1 / a > 0","-1 / a > 0 = 1 / a < 0","-a > 0 = a < 0","1 / (1 / -a) = -a"]}
-{"goal":"neg_reciprocal_iff","proof":["1 / -a = -1 / a","1 / -1 / a > 0 = -1 / a > 0","-1 / a > 0 = 1 / a < 0","-a > 0 = a < 0","1 / (1 / -a) = -a"]}
-{"goal":"neg_reciprocal_iff","proof":["1 / -a = -1 / a","1 / -1 / a > 0 = -1 / a > 0","-1 / a > 0 = 1 / a < 0","-a > 0 = a < 0","1 / (1 / -a) = -a"]}
-{"goal":"neg_reciprocal_iff","proof":["1 / -a = -1 / a","1 / -1 / a > 0 = -1 / a > 0","-1 / a > 0 = 1 / a < 0","-a > 0 = a < 0","1 / (1 / -a) = -a"]}
-{"goal":"neg_reciprocal_iff","proof":["1 / -a = -1 / a","1 / -1 / a > 0 = -1 / a > 0","-1 / a > 0 = 1 / a < 0","-a > 0 = a < 0","1 / (1 / -a) = -a"]}

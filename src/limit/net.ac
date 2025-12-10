@@ -709,3 +709,5 @@ theorem subnet_sets_helper[K](n: Net[K], s: Set[K], sub: Set[K]) {
     }
     t ∈ n and sub = s ∩ t
 }
+
+// we want to define a net by directed on a set ... i.e. let s: Set[K] and lte: s × s --> Bool be directed, then use correspondence y ∈ s <--> p(y) = { x ∈ s satisfy x <= y } so that y1 <= y2 <==> p(y1) ⊆ p(y2)

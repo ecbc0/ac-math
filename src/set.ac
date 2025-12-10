@@ -424,6 +424,10 @@ theorem sym_difference_another_rep[K](a: Set[K], b: Set[K]) {
     (a ∪ b) ∖ (a ∩ b) ⊆ (a ∖ b) ∪ (b ∖ a)
 }
 
+theorem sym_diff_is_sym[K](a: Set[K], b: Set[K]) {
+    sym_difference(a, b) = sym_difference(b, a)
+}
+
 theorem union_preserve_subset[K](a1: Set[K], a2: Set[K], b1: Set[K], b2: Set[K]) {
     a1 ⊆ b1 and a2 ⊆ b2 implies a1 ∪ a2 ⊆ b1 ∪ b2
 }
@@ -592,6 +596,47 @@ theorem to_subset_substract[K](a: Set[K], b: Set[K]) {
     }
     b ∖ a ⊆ b ∖ (a ∩ b)
 }
+
+theorem substract_decomp[K](a: Set[K], b: Set[K]) {
+    disjoint(a ∩ b, b ∖ (a ∩ b)) and b = (a ∩ b) ∪ (b ∖ (a ∩ b))
+} by {
+    disjoint(a ∩ b, b ∖ (a ∩ b))
+    (a ∩ b) ⊆ b
+}
+
+theorem force_disjoint_union[K](a: Set[K], b: Set[K]) {
+    a ∪ b = a ∪ (b ∖ a)
+} by {
+    b ∖ a ⊆ b
+    a ∪ (b ∖ a) ⊆ a ∪ b
+    forall(x: K) {
+        if x ∈ a ∪ b {
+            if x ∈ a {
+                x ∈ a ∪ (b ∖ a)
+            } else {
+                x ∉ a
+                x ∈ b 
+                x ∈ b ∖ a
+                x ∈ a ∪ (b ∖ a)
+            }
+            x ∈ a ∪ (b ∖ a)
+        }
+    }
+    a ∪ b ⊆ a ∪ (b ∖ a)
+}
+
+theorem sym_diff_decomp_1[K](a: Set[K], b: Set[K]) {
+    disjoint(sym_difference(a, b), a ∩ b) and a ∪ b = sym_difference(a, b) ∪ (a ∩ b)
+} by {
+    sym_difference(a, b) ⊆ a ∪ b
+    a ∩ b ⊆ a ∪ b
+    sym_difference(a, b) = (a ∪ b) ∖ (a ∩ b)
+    a ∪ b = (a ∩ b) ∪ ((a ∪ b) ∖ (a ∩ b))
+}
+
+theorem sym_diff_decomp_2[K](a: Set[K], b: Set[K]) {
+    disjoint(a ∖ b, b ∖ a) and sym_difference(a, b) = (a ∖ b) ∪ (b ∖ a)
+} 
 
 theorem union_associative[K](a1: Set[K], a2: Set[K], a3: Set[K]) {
     (a1 ∪ a2) ∪ a3 = a1 ∪ (a2 ∪ a3)
@@ -1707,6 +1752,38 @@ theorem surective_same_intersection_index[I, J, K](g: I -> J, f: J -> Set[K]) {
     intersection_index(f) = intersection(fn_image(f))
     fn_image(compose(f, g)) = fn_image(f)
 }
+
+theorem pullback_forall_image_imp[K, L](a: Set[K], f: K -> L, prop: L -> Bool) {
+    forall(y: L) {
+        y ∈ a.image(f) implies prop(y)
+    } implies forall(x: K) {
+        x ∈ a implies prop(f(x))
+    }
+} 
+
+theorem pullback_forall_image_imp_by[K, L](a: Set[K], f: K -> L, prop: L -> Bool) {
+    forall(x: K) {
+        x ∈ a implies prop(f(x))
+    } implies forall(y: L) {
+        y ∈ a.image(f) implies prop(y)
+    }
+} 
+
+theorem pullback_forall_fn_image_imp[K, L](f: K -> L, prop: L -> Bool) {
+    forall(y: L) {
+        y ∈ fn_image(f) implies prop(y)
+    } implies forall(x: K) {
+        prop(f(x))
+    }
+} 
+
+theorem pullback_forall_fn_image_imp_by[K, L](a: Set[K], f: K -> L, prop: L -> Bool) {
+    forall(x: K) {
+        prop(f(x))
+    } implies forall(y: L) {
+        y ∈ fn_image(f) implies prop(y)
+    }
+} 
 
 theorem in_singleton[K](x: K, y: K) {
     y ∈ Set[K].singleton(x) iff y = x
