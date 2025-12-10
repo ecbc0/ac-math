@@ -408,89 +408,96 @@ theorem gte_partial_order {
 
 // Using the linear order of ℕ
 
-define seq_tail[K](shift: ℕ, f: ℕ -> K) -> (ℕ -> K) {
-    function(n: ℕ) { f(shift + n) }
-}
-
-define elem_in_seq_tail[K](f: ℕ -> K, shift: ℕ, x: K) -> Bool {
+define elem_in_seq_tail(shift: ℕ, x: ℕ) -> Bool {
     exists(n: ℕ) {
-        x = seq_tail(shift, f)(n)
+        x = shift + n
     }
 }
 
-theorem shift_gte_imp_subset[K](f: ℕ -> K, s1: ℕ, s2: ℕ) {
-    s1 >= s2 implies Set[K].new(elem_in_seq_tail(f, s1)) ⊆ Set[K].new(elem_in_seq_tail(f, s2))
+define seq_tail(shift: ℕ) -> Set[ℕ] {
+    Set[ℕ].new(elem_in_seq_tail(shift))
+}
+
+theorem seq_tail_iff_lte(shift: ℕ, x: ℕ) {
+    x ∈ seq_tail(shift) iff x >= shift
 } by {
-    forall(x: K) {
-        if x ∈ Set[K].new(elem_in_seq_tail(f, s1)) {
-            elem_in_seq_tail(f, s1, x)
-            let n: ℕ satisfy { x = seq_tail(s1, f)(n) }
+    if x ∈ seq_tail(shift) {
+        let n: ℕ satisfy {
+            x = shift + n
+        }
+        x >= shift
+    }
+    if x >= shift {
+        let n: ℕ satisfy {
+            x = shift + n
+        }
+        x ∈ seq_tail(shift)
+    }
+}
 
-            let m: ℕ satisfy { s1 = s2 + m }
-            f(s1 + n) = f(s2 + m + n)
-            seq_tail(s1, f)(n) = seq_tail(s2, f)(m + n)
-            elem_in_seq_tail(f, s2, x)
-
-            x ∈ Set[K].new(elem_in_seq_tail(f, s2))
+theorem shift_gte_imp_subset(s1: ℕ, s2: ℕ) {
+    s1 >= s2 implies seq_tail(s1) ⊆ seq_tail(s2)
+} by {
+    forall(x: ℕ) {
+        if x ∈ seq_tail(s1) {
+            x >= s1
+            x >= s2
+            x ∈ seq_tail(s2)
         }
     }
 }
 
-define elem_in_seq_to_net[K](f: ℕ -> K, a: Set[K]) -> Bool {
+define elem_in_seq_net_sets(a: Set[ℕ]) -> Bool {
     exists(shift: ℕ) {
-        a = Set[K].new(elem_in_seq_tail(f, shift))
+        a = seq_tail(shift)
     }
 }
 
-define seq_to_net[K](f: ℕ -> K) -> Set[Set[K]] {
-    Set[Set[K]].new(elem_in_seq_to_net(f))
-}
+let seq_net_sets = Set[Set[ℕ]].new(elem_in_seq_net_sets)
 
-theorem seq_to_net_is_net[K](f: ℕ -> K) {
-    is_net(seq_to_net(f))
+theorem seq_net_sets_is_net {
+    is_net(seq_net_sets)
 } by {
-    forall(a: Set[K]) {
-        if a ∈ seq_to_net(f) {
-            elem_in_seq_to_net(f)(a)
+    forall(a: Set[ℕ]) {
+        if a ∈ seq_net_sets {
+            elem_in_seq_net_sets(a)
             let shift: ℕ satisfy { 
-                a = Set[K].new(elem_in_seq_tail(f, shift))
+                a = seq_tail(shift)
             }
-            let x: K satisfy {
-                x = seq_tail(shift, f)(0)
-            }
-            x = f(shift)
-            x ∈ a
-            a != Set[K].empty_set
+            shift = shift + 0
+            shift ∈ a
+            a != Set[ℕ].empty_set
         }
     } 
 
-    no_empty(seq_to_net(f))
+    no_empty(seq_net_sets)
     
-    forall(a1: Set[K], a2: Set[K]) {
-        if a1 ∈ seq_to_net(f) and a2 ∈ seq_to_net(f) {
-            elem_in_seq_to_net(f)(a1) 
-            elem_in_seq_to_net(f)(a2)
+    forall(a1: Set[ℕ], a2: Set[ℕ]) {
+        if a1 ∈ seq_net_sets and a2 ∈ seq_net_sets {
+            elem_in_seq_net_sets(a1) 
+            elem_in_seq_net_sets(a2)
             let shift_1: ℕ satisfy {
-                a1 = Set[K].new(elem_in_seq_tail(f, shift_1))
+                a1 = seq_tail(shift_1)
             }
             let shift_2: ℕ satisfy {
-                a2 = Set[K].new(elem_in_seq_tail(f, shift_2))
+                a2 = seq_tail(shift_2)
             }
             let shift = shift_1.max(shift_2)
-            let b = Set[K].new(elem_in_seq_tail(f, shift))
+            let b = seq_tail(shift)
             shift_1 <= shift
             shift_2 <= shift
             b ⊆ a1
             b ⊆ a2
-            b ⊆ a1 ∩ a2
-            elem_in_seq_to_net(f)(b)
-            b ∈ seq_to_net(f)
-            b ∈ seq_to_net(f) and b ⊆ a1 ∩ a2
+            elem_in_seq_net_sets(b)
+            b ∈ seq_net_sets
+            b ∈ seq_net_sets and b ⊆ a1 and b ⊆ a2
         }
     }
-    directed_helper(seq_to_net(f))
-    directed(seq_to_net(f))
+    directed_helper(seq_net_sets)
+    directed(seq_net_sets)
 }
+
+let seq_net = Net[ℕ].new(seq_net_sets)
 
 theorem sets_of_finite_intersection_preserve_directed[K](n: Set[Set[K]], s1: Set[K], s2: Set[K]) {
     directed(n) implies directed(sets_of_finite_intersection(n))
