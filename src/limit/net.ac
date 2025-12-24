@@ -1,6 +1,6 @@
 from finite_set import Set, List, list_to_set, intersection_of_list_recursion, intersection_of_list, sets_of_finite_intersection, is_set_of_finite_intersection
 from set import intersection, elem_in_intersection_general
-from order import Partial_Order, Linear_Order, is_acyclic, is_transitive, is_reflexive, is_antisymmetric, is_nonreflexive, lte_from, lt_from, lte_to_lt_partial_order, Partial_Order_Lte
+from order import Partial_Order, Linear_Order, is_acyclic, is_transitive, is_reflexive, is_antisymmetric, is_nonreflexive, lte_from, lt_from, lte_to_lt_partial_order, Partial_Order_Lte, lte_max
 from nat import ℕ
 from list.list_base import flatten, max_list
 numerals ℕ
@@ -484,6 +484,7 @@ theorem seq_net_sets_is_net {
             }
             let shift = shift_1.max(shift_2)
             let b = seq_tail(shift)
+            lte_max(shift_1, shift_2)
             shift_1 <= shift
             shift_2 <= shift
             b ⊆ a1

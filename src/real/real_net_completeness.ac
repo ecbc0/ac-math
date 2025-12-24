@@ -444,6 +444,7 @@ theorem bounded_imp_have_lower_upper_bound(s: Set[ℝ]) {
             x.distance(y) ∈ dist_set(s)
             x.distance(y) <= r
             x - y <= r
+            x <= y + r
             y >= x - r
             y - x <= r
             y <= x + r
@@ -917,6 +918,7 @@ theorem converge_imp_bounded(f: ℕ -> ℝ) {
                 l <= r and r <= u
             } else {
                 m > n
+                (f(m) - a).abs < 1
                 f(m) - a < 1
                 f(m) < 1 + a
                 1 + a <= u

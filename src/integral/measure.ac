@@ -7,6 +7,7 @@ from nat import ℕ
 from top.norm import Banach, scal, norm_fn
 from type_class.add import add_fn, sub_fn
 from list import List
+from type_class.add import sub_add_cancel_right
 numerals ℝ
 
 define preserve_union[K](m: Set[Set[K]]) -> Bool {
@@ -313,10 +314,12 @@ theorem vol_dist_control_vol_value_dist[K](m: Volume_Chain[K], a: Set[K], b: Set
     b = (a ∩ b) ∪ (b ∖ a ∩ b)
     m.vol(a) = m.vol(a ∩ b) + m.vol(a ∖ (a ∩ b))
     m.vol(b) = m.vol(a ∩ b) + m.vol(b ∖ (a ∩ b))
+    sub_add_cancel_right(m.vol(a ∖ (a ∩ b)), m.vol(b ∖ (a ∩ b)), m.vol(a ∩ b))
     m.vol(a) - m.vol(b) = m.vol(a ∖ (a ∩ b)) - m.vol(b ∖ (a ∩ b))
     a ∖ (a ∩ b) = a ∖ b
     b ∖ (a ∩ b) = b ∖ a
     m.vol(a) - m.vol(b) = m.vol(a ∖ b) - m.vol(b ∖ a)
+    (m.vol(a ∖ b) - m.vol(b ∖ a)).abs = (m.vol(a ∖ b) + -m.vol(b ∖ a)).abs
     (m.vol(a ∖ b) - m.vol(b ∖ a)).abs <= m.vol(a ∖ b).abs + (-m.vol(b ∖ a)).abs
     m.vol(a ∖ b).abs = m.vol(a ∖ b) 
     (-m.vol(b ∖ a)).abs = m.vol(b ∖ a)

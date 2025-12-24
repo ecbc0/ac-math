@@ -1,12 +1,12 @@
 {
-  "version": 2,
+  "version": 4,
   "modules": {
     "countable": "c9a3ea37241a3272f5a6d10bbacda2c12aff7e2f08a407b9c83e17c4b5f7384e",
-    "finite_set": "729bb19d9acabb5926db1ceea904d5de4d8e8d8ce67bfb82eb87518f24831112",
+    "finite_set": "cfa8cb47476a59c6275762f5f4e6afcff5837cd217d075942eb8cc161f58013c",
     "int": "9d981372512514623aa1d86448f28f636da57caa09d98f1311bb64c2b3ed0264",
     "int.int_base": "7108b95a5484708abcf66d405889470ccf9ce7cee20d7d32b3c5adab5e35ad37",
-    "integral.measure": "21362a008237fbc5bf87ca8a8cd9d5ec27fa6f42f2146e08e89d21d82bfb9807",
-    "limit.net": "285393b4135ec8a8373e64a45e167d114f7d2d1b1e898978fed251d86f703cfd",
+    "integral.measure": "93d6f788eff26803fa64ae3a7718ec75fb26758e5c92be4fc7fbe24496aa7097",
+    "limit.net": "93fc698aa229a47a60e75a465dd8fb294255a8e8cb096bac122609b7f8bdbb77",
     "linear_algebra.vector_space": "1b3f8ac5d3ca588aa5d10649de363a828834de49afa64381068b03c9a173b6cf",
     "list": "422b3931569c4560321896190ebc72e4e37b5aedb43b50be55cc0645f424513e",
     "list.list_base": "59fe96fc15b5ed652c0e3c4972f6a4d5e5be184be95f6eccd1188fe346763be9",
@@ -25,13 +25,13 @@
     "real": "d8c31db0a30cd2218a8d0a88f4762cb0064ec7e1af28f6b867f1dcc9d73ed838",
     "real.real_base": "0aa4e6877fd40f09166f70f88664b25bd44b9bdafab0b2bd7c62cecc51ad6235",
     "real.real_completeness": "b1073908e4c5239f1cafa3e67eaabc0744e5e63fd77fe00ab11497e3725d87b4",
-    "real.real_net_completeness": "c4f86a4c63bc8df2967e31bef2d68af524301130564413bd0f3e025ec17c20b7",
+    "real.real_net_completeness": "f4d17acb89de8ed6eb64368aa61e23c647557734ca852ec5249a36a158bc6981",
     "real.real_seq": "16edeca5486c7f986d0a42bce7290a70622ce22a25c6630ce18129a57fa4adfd",
     "real.real_series": "22edd4f37c0c33be4348ed98c034d379e8d98b77c8640cf7d105e6c1951ca5db",
     "set": "547de0bc6d0c1742ea7dee3b67a5fbe9ba1b85de06fce79c932e27a3bf8a246c",
     "top": "af1349b9f5f9a1a6a0404dea36dcc9499bcb25c9adc112b7cc9a93cae41f3262",
-    "top.compact": "5919a2c19513e8c3a4231b3fc8fafec394fb79ad706807d2b436e678245c2cf3",
-    "top.metric_space": "d97005fd1281738f4bfda5d03bab8220aef95f6a9411ac7d7f6596cd42adaba9",
+    "top.compact": "dc1b9a234d491863795f2c1d1c30fa073f2ebe3b7fcf60cdfc5f9983895df13d",
+    "top.metric_space": "9c17a2d33cb5003f8a66a28ee2874e4ad9a8a078bd6ca7fa3c202728e088d172",
     "top.norm": "6b48c0dc6863480bbef495889c7fd93b869c6e9fa4b28795403e473f84e4a568",
     "top.top_base": "0bb2865567919dc94b18b7d36f6f3f41264ae5206c3a4f24fc3d9e0cb9404d88",
     "type_class.add": "d78b4f74349a277ea5276bb6b76c8f121f4927a8b7f5d83189752bf882be6070",
@@ -43,6 +43,6 @@
     "type_class.ordered_ring": "01ba42d5c97ecd48fd6e16c758cbeb05fe883b52221a2be2227325412aca3520",
     "type_class.ring": "4be303e49e11df26941e9dabefa6a7c43b3386f04c2be4ee5d35cbb30b1a8cd3",
     "util": "837d6f50b19e6de2eb2492e415603f03807cecce7009cc2b2feb20719e138cc0",
-    "zorn_lemma": "e7e6ab7b16994015dc54adc2dc7d7f7b6084bb1e4382d673647e4de24e46985f"
+    "zorn_lemma": "1f8341486323e86c457d95432b7bd3498c3f76e7cde2b1154cf6f701a9936d91"
   }
 }

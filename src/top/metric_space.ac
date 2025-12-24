@@ -250,6 +250,7 @@ define elem_in_dist_set[M: Distance_Space](s: Set[M], r: ℝ) -> Bool {
     }
 }
 
+// Todo: rename to diam?
 define dist_set[M: Distance_Space](s: Set[M]) -> Set[ℝ] {
     Set[ℝ].new(elem_in_dist_set(s))
 }
@@ -277,6 +278,7 @@ theorem empty_to_empty_dist_set[M: Distance_Space] {
     dist_set(Set[M].empty_set).contains = Set[ℝ].empty_set.contains
 }
 
+// Todo: rename to diam (diameter)?
 define dist[M: Distance_Space](s: Set[M]) -> ℝ {
     if s.is_empty {
         0

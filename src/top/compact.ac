@@ -202,6 +202,7 @@ theorem is_compact_intersection_imp_is_compact_finite_intersection[X: Topology](
                     t.is_closed
                 }
             }
+            sets_of_finite_intersection(n).is_nonempty
             are_closed(sets_of_finite_intersection(n))
             is_net(sets_of_finite_intersection(n))
             (s ∩ intersection(sets_of_finite_intersection(n))).is_nonempty

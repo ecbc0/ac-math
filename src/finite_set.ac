@@ -252,14 +252,13 @@ theorem union_is_at_most_length[K](a: Set[K], b: Set[K], n1: ℕ, n2: ℕ) {
     l.length <= n1 + n2
 }
 
-// // #25. Acorn dose not support it now
-// let set_to_exact_list[T](s: Set[T]) -> l: List[T] satisfy {
-//     if s.is_finite {
-//        s.have_exact_list(l) 
-//     } else {
-//         List[T].nil
-//     }
-// } 
+let set_to_exact_list[T](s: Set[T]) -> l: List[T] satisfy {
+    if s.is_finite {
+       s.have_exact_list(l) 
+    } else {
+        l = List[T].nil
+    }
+} 
 
 theorem empty_set_have_exact_list_nil[T] {
     Set[T].empty_set.have_exact_list(List[T].nil)
@@ -272,9 +271,9 @@ theorem empty_set_have_exact_list_nil[T] {
     Set[T].empty_set.contains = List[T].nil.contains
 }
 
-// theorem empty_set_to_nil[T] {
-//     set_to_exact_list(Set[T].empty_set) = List[T].nil
-// }
+theorem empty_set_to_nil[T] {
+    set_to_exact_list(Set[T].empty_set) = List[T].nil
+}
 
 define list_to_set[T](l: List[T]) -> Set[T] {
     Set[T].new(l.contains)
@@ -958,6 +957,7 @@ theorem sets_of_finite_intersection_union_dual[K](n: Set[Set[K]]) {
                 }
             }
             compl_of_sets(c) ⊆ n
+            compl_of_sets(c).is_finite
             union(compl_of_sets(c)) ∈ sets_of_finite_union(n)
             s ∈ compl_of_sets(sets_of_finite_union(n))
         }
