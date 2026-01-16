@@ -5,12 +5,15 @@ from list.list_mul import List, Mul, product
 numerals ℕ
 
 attributes ℕ {
+    // A number is composite if it has a proper divisor (i.e., a nontrivial factor)
     define is_composite(self) -> Bool {
         exists(a: ℕ) {
             a.proper_divides(self)
         }
     }
 
+    // A number is prime if it's greater than 1 and has no proper divisors
+    // In other words, its only divisors are 1 and itself
     define is_prime(self) -> Bool {
         forall(a: ℕ) {
             self > 1 and not a.proper_divides(self)
@@ -19,6 +22,8 @@ attributes ℕ {
 }
 
 attributes ℕ {
+    // A number is directly composite if it can be written as product of two nontrivial factors
+    // Both factors must be strictly between 1 and the number itself
     define is_direct_composite(self) -> Bool {
         exists(a: ℕ, b: ℕ) {
             (1 < a and a < self) and
@@ -27,6 +32,8 @@ attributes ℕ {
         }
     }
 
+    // A number is normally composite if it can be factored with both factors > 1
+    // This is equivalent to is_direct_composite but doesn't require factors < n
     define is_normal_composite(self) -> Bool {
         exists(a: ℕ, b: ℕ) {
             (1 < a) and
@@ -36,13 +43,18 @@ attributes ℕ {
     }
 }
 
+// n is composite iff n is directly composite
+// Direct composite explicitly requires both factors to be between 1 and n
 theorem composite_is_direct_composite(n: ℕ) {
     n.is_composite iff n.is_direct_composite
 } by {
+    // Forward direction: if n is composite, then n is directly composite
     if n.is_composite {
         let a: ℕ satisfy { a.proper_divides(n) }
         let b: ℕ satisfy { a ⋅ b = n }
+        // If a is a proper divisor, then b is also a proper divisor
         b.proper_divides(n)
+        // Both a and b are strictly between 1 and n
         (
             (1 < a and a < n) and
             (1 < b and b < n) and
@@ -51,20 +63,26 @@ theorem composite_is_direct_composite(n: ℕ) {
         n.is_direct_composite
     }
 
+    // Reverse direction: if n is directly composite, then n has a proper divisor
     n.is_direct_composite implies n.is_composite
 }
 
+// n is normally composite iff n is directly composite
+// They are equivalent because if a,b > 1 and a*b = n, then automatically a,b < n
 theorem normal_composite_is_direct_composite(n: ℕ) {
     n.is_normal_composite iff n.is_direct_composite
 } by {
+    // Forward direction: direct composite requires a,b < n, so they satisfy normal composite
     n.is_direct_composite implies n.is_normal_composite
 
+    // Reverse direction: if a,b > 1 and a*b = n, prove a,b < n
     if n.is_normal_composite {
         let (a: ℕ, b: ℕ) satisfy {
             (1 < a) and
             (1 < b) and
             a ⋅ b = n
         }
+        // Show that a,b can't be 0, 1, or n (contradiction in each case)
         a != 0
         b != 0
         a <= n
@@ -73,6 +91,7 @@ theorem normal_composite_is_direct_composite(n: ℕ) {
         b != 1
         a != n
         b != n
+        // Therefore a,b < n
         a < n
         b < n
 
@@ -84,39 +103,55 @@ theorem composite_is_normal_composite(n: ℕ) {
     n.is_composite iff n.is_normal_composite
 }
 
+// n is prime iff n > 1 and n is not composite
+// Prime numbers have no proper divisors
 theorem composite_is_not_prime(n: ℕ) {
     n.is_prime iff n > 1 and not n.is_composite
 } by {
+    // If n is prime (n > 1 with no proper divisors), then n is not composite
     n.is_prime implies not n.is_composite
 }
 
+// n is not prime iff n <= 1 or n is composite
+// This characterizes all non-prime numbers: 0, 1, and composites
 theorem not_prime_iff_lte_one_or_composite(n: ℕ) {
     not n.is_prime iff n <= 1 or n.is_composite
 } by {
+    // If n is not prime, then either n <= 1 or n > 1 and has a proper divisor
     not n.is_prime implies n <= 1 or n.is_composite
+    // If n <= 1 or n is composite, then n is not prime
     n <= 1 or n.is_composite implies not n.is_prime
 }
 
+// Every number n > 1 has at least one prime divisor
+// Proof by strong induction: if n is prime, done; if composite, any proper divisor has a prime divisor
 theorem has_prime_divisor(n: ℕ) {
     1 < n implies exists(p: ℕ) {
         p.is_prime and p.divides(n)
     }
 } by {
+    // Strong induction on k: assume property holds for all values below k
     forall(k: ℕ) {
         if true_below(has_prime_divisor, k) {
+            // Case 1: k is prime - then k itself is a prime divisor
             if k.is_prime {
+                // k itself is a prime divisor of k
                 k.divides(k)
                 has_prime_divisor(k)
             }
+            // Case 2: k is composite
             if k.is_composite {
+                // k = b*c with 1 < b,c < k
                 k.is_direct_composite
                 let (b: ℕ, c: ℕ) satisfy {
                     1 < b and b < k and k = b ⋅ c
                 }
+                // By induction hypothesis, b has a prime divisor p
                 has_prime_divisor(b)
                 let (p: ℕ) satisfy {
                     p.is_prime and p.divides(b)
                 }
+                // Since p divides b and b divides k, p divides k by transitivity
                 p.divides(k)
                 has_prime_divisor(k)
             }
@@ -126,36 +161,45 @@ theorem has_prime_divisor(n: ℕ) {
     has_prime_divisor(n)
 }
 
+// A list consists entirely of primes
 define are_primes(l: List[ℕ]) -> Bool {
     forall(n: ℕ) {
         n ∈ l implies n.is_prime
     }
 }
 
+// Empty list trivially consists of primes
 theorem nil_list_are_primes {
     are_primes(List[ℕ].nil)
 }
 
+// Make ℕ an instance of Mul to use product function
 instance ℕ: Mul {
     let mul: (ℕ, ℕ) -> ℕ = ℕ.mul
 
     let 1 = ℕ.1
 }
 
+// Prime factorization theorem: every n != 0 can be factored into primes
+// The list l contains only primes and their product equals n
 theorem prime_decomposition(n: ℕ) {
     n != 0 implies exists(l: List[ℕ]) {
         are_primes(l) and n = product(l)
     }
-} by {   
+} by {
+    // Induction on k using true_below (strong induction principle)
     forall(k: ℕ) {
         if true_below(prime_decomposition, k) {
+            // Case k = 0: vacuously true (antecedent false)
             if k = 0 { prime_decomposition(k) }
+            // Base case: 1 = product(empty list)
             if k = 1 {
                 are_primes(List[ℕ].nil)
                 1 = product(List[ℕ].nil)
 
                 prime_decomposition(k)
             }
+            // If k is prime, then [k] is its prime factorization
             if k.is_prime {
                 let l = List.singleton(k)
                 product(l) = k
@@ -166,14 +210,16 @@ theorem prime_decomposition(n: ℕ) {
                 }
                 are_primes(l)
                 prime_decomposition(k)
-            } 
+            }
+            // If k is composite, factor it as a*b and use induction on a and b
             if k.is_composite {
                 k.is_direct_composite
                 let (a: ℕ, b: ℕ) satisfy {
                     (1 < a and a < k) and
-                    (1 < b and b < k) and 
+                    (1 < b and b < k) and
                     a ⋅ b = k
                 }
+                // By induction, a and b have prime factorizations
                 prime_decomposition(a)
                 prime_decomposition(b)
                 a != 0
@@ -184,6 +230,7 @@ theorem prime_decomposition(n: ℕ) {
                 let lb: List[ℕ] satisfy {
                     are_primes(lb) and b = product(lb)
                 }
+                // Concatenate the two lists to get factorization of k
                 let l = la + lb
                 forall(x: ℕ) {
                     x ∈ la + lb implies x ∈ la or x ∈ lb
@@ -192,6 +239,7 @@ theorem prime_decomposition(n: ℕ) {
                     x ∈ l implies x.is_prime
                 }
                 are_primes(l)
+                // product of concatenated lists = product of factors
                 product(la + lb) = a ⋅ b
                 product(l) = k
                 prime_decomposition(k)
@@ -204,22 +252,28 @@ theorem prime_decomposition(n: ℕ) {
 
 from nat.nat_combo import divides_factorial
 
+// Euclid's theorem: there are infinitely many primes
+// For any n, there exists a prime p > n
 theorem exists_infinite_primes(n: ℕ) {
     exists(p: ℕ) {
         p > n and p.is_prime
     }
 } by {
+    // Consider m = n! + 1, which is > 1
     let m: ℕ = n.! + 1
     1 < m
+    // By has_prime_divisor, m has a prime divisor p
     let (p: ℕ) satisfy {
         p.is_prime and p.divides(m)
     }
     p > 1
     p != 1
+    // Prove p > n by contradiction: if p <= n, then p divides n! and n!+1, impossible
     if p <= n {
         divides_factorial(p, n)
         p.divides(n.!)
         p.divides(n.! + 1)
+        // But a number cannot divide both x and x+1 (unless it's 1)
         not divides_suc(p, n.!)
         false
     }
@@ -231,15 +285,16 @@ theorem exists_infinite_primes(n: ℕ) {
 // theorem euclids_lemma_prime(a: ℕ, b: ℕ, c: ℕ) {
 //     a.is_prime and a.divides(b ⋅ c) implies a.divides(b) or a.divides(c)
 // }
-// Anyway we need induction to prove this, and Euclid algorithm is one way to implement the inductive proof.
+// Anyway we need induction to prove this, and Euclid algorithm is one way to implement inductive proof.
 
+// A pair structure for Euclidean algorithm state
 structure Pair[T1, T2] {
     first: T1
     second: T2
 }
 
-/// Performs one step of the Euclidean algorithm for computing GCD.
-/// Takes the pair (a, b) and replaces it with (b, a mod b).
+/// Performs one step of Euclidean algorithm for computing GCD.
+/// Takes pair (a, b) and replaces it with (b, a mod b).
 define gcd_step(p: Pair[ℕ, ℕ]) -> Pair[ℕ, ℕ] {
     if p.second = 0 {
         p
@@ -261,8 +316,8 @@ define gcd_step_n(p: Pair[ℕ, ℕ], n: ℕ) -> Pair[ℕ, ℕ] {
 }
 
 /// True if a predicate is false for all values below n.
-define false_below(f: ℕ -> Bool, n: ℕ) -> Bool { 
-    forall(x: ℕ) { x < n implies f(x) = false } 
+define false_below(f: ℕ -> Bool, n: ℕ) -> Bool {
+    forall(x: ℕ) { x < n implies f(x) = false }
 }
 
 theorem all_false_below(f: ℕ -> Bool) {
@@ -278,23 +333,27 @@ define is_min(f: ℕ -> Bool, m: ℕ) -> Bool {
 theorem has_min(f: ℕ -> Bool, n: ℕ) {
     f(n) implies exists(m: ℕ) { is_min(f, m) }
 } by {
+    // Strong induction: prove that if f is true at k, it has a minimum
     define g(x: ℕ) -> Bool { has_min(f, x) }
     strong_induction(g)
     forall(k: ℕ) {
         if true_below(g, k) {
             if f(k) {
+                // If f is false everywhere below k, then k is the minimum
                 if false_below(f, k) {
                     is_min(f, k)
                     has_min(f, k)
                 } else {
+                    // Otherwise, there's some a < k where f(a) holds
                     exists(a: ℕ) { a < k and f(a) }
-                    let a: ℕ satisfy { a < k and f(a) } 
+                    let a: ℕ satisfy { a < k and f(a) }
+                    // By induction, f has a minimum at a
                     g(a)
                     has_min(f, a)
                     has_min(f, k)
                 }
             } else {
-                // vacuous true
+                // vacuous true: if f(k) is false, nothing to prove
                 has_min(f, k)
             }
             g(k)
@@ -313,16 +372,19 @@ define decreasing_to_zero(f: ℕ -> ℕ) -> Bool {
 theorem no_infinite_decreasing(f: ℕ -> ℕ) {
     exists(x: ℕ) { f(x) <= f(x.suc) }
 } by {
+    // Proof by contradiction: assume f decreases everywhere
     if not no_infinite_decreasing(f) {
         forall(x: ℕ) {
             not (f(x) <= f(x.suc))
             f(x.suc) < f(x)
         }
-        // Intuitively, f(x.suc) < f(x) make the decreasing speed of f >= 1, so, start from f(0), after f(0) steps, we must have f(f(0)) <= 0 hence contradiction.
+        // Intuitively, f(x.suc) < f(x) makes the decreasing speed of f >= 1,
+        // so, start from f(0), after f(0) steps, we must have f(f(0)) <= 0 hence contradiction.
         let h = function(x: ℕ) { x + f(x) <= f(0) }
         ℕ.induction(h)
         0 + f(0) <= f(0)
         h(0)
+        // Inductive step: prove that if x + f(x) <= f(0), then (x+1) + f(x+1) <= f(0)
         forall(x: ℕ) {
             if h(x) {
                 x + f(x) <= f(0)
@@ -338,6 +400,7 @@ theorem no_infinite_decreasing(f: ℕ -> ℕ) {
         forall(x: ℕ) {
             h(x)
         }
+        // Plug in x = f(0) to get contradiction
         h(f(0).suc)
         f(0).suc + f(f(0).suc) <= f(0)
         f(0).suc <= f(0).suc + f(f(0).suc)
@@ -349,7 +412,9 @@ theorem no_infinite_decreasing(f: ℕ -> ℕ) {
 theorem dtz_terminates(f: ℕ -> ℕ) {
     decreasing_to_zero(f) implies exists(n: ℕ) { f(n) = 0 }
 } by {
+    // By no_infinite_decreasing, there exists n where f(n) <= f(n.suc)
     let (n: ℕ) satisfy { f(n) <= f(n.suc) }
+    // Since f decreases everywhere, f(n) must be 0 (can't be f(n.suc) < f(n))
     f(n) = 0 or f(n.suc) < f(n)
     f(n) = 0
 }
@@ -357,14 +422,15 @@ theorem dtz_terminates(f: ℕ -> ℕ) {
 theorem gcd_terminates(p: Pair[ℕ, ℕ]) {
     exists(n: ℕ) { gcd_step_n(p, n).second = 0 }
 } by {
-    // prove that gcd_step_n(p, x).second decreasing_to_zero
-    // use 
-    //     gcd_step(p) = Pair.new(p.second, p.first.mod(p.second)) 
-    // and 
-    //     p.first.mod(p.second) < p.second
-    let f = function(x: ℕ) { 
-        gcd_step_n(p, x).second 
+    // Prove that gcd_step_n(p, x).second is decreasing_to_zero
+    // Use:
+    //     gcd_step(p) = Pair.new(p.second, p.first.mod(p.second))
+    // and
+    //     p.first.mod(p.second) < p.second (when second != 0)
+    let f = function(x: ℕ) {
+        gcd_step_n(p, x).second
     }
+    // Show that if f(x) != 0, then f(x.suc) < f(x)
     forall(x: ℕ) {
         if f(x) != 0 {
             let q = gcd_step_n(p, x)
@@ -380,33 +446,37 @@ theorem gcd_terminates(p: Pair[ℕ, ℕ]) {
             q.second != 0
 
             gcd_step(q) = Pair.new(q.second, q.first.mod(q.second))
-            
+
             q.first.mod(q.second) = gcd_step(q).second
-            
+
             f(x.suc) = q.first.mod(q.second)
-            
+
             f(x.suc) = q.first.mod(f(x))
-            
+
+            // Property of mod: remainder < divisor
             q.first.mod(f(x)) < f(x)
-            
+
             f(x.suc) < f(x)
         }
     }
     decreasing_to_zero(f)
 }
 
+// Predicate that is true when gcd_step_n reaches zero (remainder = 0)
 define gcd_termination(p: Pair[ℕ, ℕ]) -> (ℕ -> Bool) {
     function(n: ℕ) {
         gcd_step_n(p, n).second = 0
     }
 }
 
+// Number of steps needed for Euclidean algorithm to terminate
 let num_gcd_steps(p: Pair[ℕ, ℕ]) -> n: ℕ satisfy {
     is_min(gcd_termination(p), n)
 } by {
     exists(k: ℕ) { gcd_termination(p, k) }
 }
 
+// The computed number of steps indeed makes the remainder zero
 theorem num_gcd_steps_terminates(p: Pair[ℕ, ℕ]) {
     gcd_step_n(p, num_gcd_steps(p)).second = 0
 } by {
@@ -416,37 +486,48 @@ theorem num_gcd_steps_terminates(p: Pair[ℕ, ℕ]) {
     gcd_termination(p)(num_gcd_steps(p)) = true
 }
 
+// The GCD is the first component of the pair when algorithm terminates
 define gcd_of_pair(p: Pair[ℕ, ℕ]) -> ℕ { gcd_step_n(p, num_gcd_steps(p)).first }
 
+// GCD of two numbers a and b
 define gcd(a: ℕ, b: ℕ) -> ℕ { gcd_of_pair(Pair.new(a, b)) }
 
+// Helper: a divides both components of a pair
 define divides_both(a: ℕ, p: Pair[ℕ, ℕ]) -> Bool {
     a.divides(p.first) and a.divides(p.second)
 }
 
+// If a divides both numbers, it divides the result after one Euclidean step
 theorem divides_both_step(a: ℕ, p: Pair[ℕ, ℕ]) {
     divides_both(a, p) implies divides_both(a, gcd_step(p))
 } by {
+    // a divides p.first and p.second
     a.divides(p.first)
     a.divides(p.second)
+    // a also divides p.first mod p.second (remainder of division)
     a.divides(p.first.mod(p.second))
+    // Case analysis: if remainder is 0, gcd_step returns p unchanged
     if p.second = 0 {
         gcd_step(p) = p
         divides_both(a, gcd_step(p))
     } else {
+        // Otherwise, gcd_step swaps and computes remainder
         gcd_step(p) = Pair[ℕ, ℕ].new(p.second, p.first.mod(p.second))
         divides_both(a, gcd_step(p))
     }
 }
 
+// If d divides both numbers, it divides both after any number of Euclidean steps
 theorem divides_gcd_step_n(d: ℕ, p: Pair[ℕ, ℕ], n: ℕ) {
     divides_both(d, p) implies divides_both(d, gcd_step_n(p, n))
 } by {
-    let f = function(x: ℕ) { 
-        divides_both(d, gcd_step_n(p, x)) 
+    // Induction on n
+    let f = function(x: ℕ) {
+        divides_both(d, gcd_step_n(p, x))
     }
     divides_both(d, gcd_step_n(p, 0))
     f(0)
+    // Inductive step: if property holds for x, it holds for x+1
     forall(x: ℕ) {
         if f(x) {
             divides_both(d, gcd_step_n(p, x))
@@ -458,14 +539,18 @@ theorem divides_gcd_step_n(d: ℕ, p: Pair[ℕ, ℕ], n: ℕ) {
     divides_both(d, gcd_step_n(p, n))
 }
 
+// If d divides both numbers, then d divides their GCD
 theorem divides_gcd_of_pair(d: ℕ, p: Pair[ℕ, ℕ]) {
     divides_both(d, p) implies d.divides(gcd_of_pair(p))
 } by {
+    // After num_gcd_steps steps, d still divides both components
     divides_both(d, gcd_step_n(p, num_gcd_steps(p)))
 
+    // The GCD is the first component at termination
     d.divides(gcd_step_n(p, num_gcd_steps(p)).first)
 }
 
+// If d divides a and b, then d divides gcd(a,b)
 theorem divides_gcd(d: ℕ, a: ℕ, b: ℕ) {
     d.divides(a) and d.divides(b) implies d.divides(gcd(a, b))
 } by {
@@ -478,13 +563,16 @@ theorem divides_gcd(d: ℕ, a: ℕ, b: ℕ) {
     d.divides(gcd(a, b))
 }
 
+// Converse: if a divides both after one step, it divides both before
 theorem divides_both_unstep(a: ℕ, p: Pair[ℕ, ℕ]) {
     divides_both(a, gcd_step(p)) implies divides_both(a, p)
 } by {
     if p.second = 0 {
+        // If remainder is already 0, gcd_step does nothing
         p = gcd_step(p)
         divides_both(a, p)
     } else {
+        // Otherwise, gcd_step swapped the numbers
         gcd_step(p) = Pair[ℕ, ℕ].new(p.second, p.first.mod(p.second))
         a.divides(gcd_step(p).first)
         a.divides(p.second)
@@ -531,6 +619,7 @@ theorem divides_gcd_pair_converse(d: ℕ, p: Pair[ℕ, ℕ]) {
     divides_both(d, p)
 }
 
+// Converse: if d divides gcd(a,b), then d divides a and b
 theorem gcd_divides(d: ℕ, a: ℕ, b: ℕ) {
     d.divides(gcd(a, b)) implies d.divides(a) and d.divides(b)
 } by {
@@ -546,23 +635,32 @@ theorem gcd_divides(d: ℕ, a: ℕ, b: ℕ) {
     d.divides(a) and d.divides(b)
 }
 
+// GCD divides both arguments
 theorem gcd_divides_both(a: ℕ, b: ℕ) {
     gcd(a, b).divides(a) and gcd(a, b).divides(b)
 } by {
+    // Since gcd divides itself, and we've shown divides(gcd(a,b), gcd(a,b))
+    // implies divides(gcd(a,b), a) and divides(gcd(a,b), b)
     gcd(a, b).divides(gcd(a, b))
 }
 
+// The GCD is the greatest common divisor: any common divisor is <= GCD
 theorem gcd_is_gcd(a: ℕ, b: ℕ, d: ℕ) {
     a != 0 and b != 0 and d.divides(a) and d.divides(b) implies d <= gcd(a, b)
 } by {
+    // GCD is non-zero when a and b are non-zero
     gcd(a, b) != 0
+    // Any common divisor divides the GCD
     d.divides(gcd(a, b))
+    // If d divides a non-zero number, d <= that number
     d <= gcd(a, b)
 }
 
+// GCD is non-zero when at least one argument is non-zero
 theorem gcd_nonzero_left(a: ℕ, b: ℕ) {
     a != 0 or b != 0 implies gcd(a, b) != 0
 } by {
+    // Proof by contradiction: if GCD = 0, then both a and b must be 0
     if gcd(a, b) = 0 {
         0.divides(a)
         0.divides(b)
@@ -572,13 +670,16 @@ theorem gcd_nonzero_left(a: ℕ, b: ℕ) {
 }
 
 theorem gcd_zero_right(a: ℕ) { gcd(a, 0) = a } by {
+    // a divides both a and 0, so a divides gcd(a, 0)
     a.divides(a)
     a.divides(0)
     a.divides(gcd(a, 0))
+    // gcd(a, 0) divides a, so they're equal (gcd divides both arguments)
     gcd(a, 0).divides(a)
 }
 
 theorem gcd_zero_left(a: ℕ) { gcd(0, a) = a } by {
+    // gcd(a, 0) = a by previous theorem, show gcd(0, a) = a
     gcd(a, 0).divides(0)
     gcd(a, 0).divides(a)
     gcd(a, 0).divides(gcd(0, a))
@@ -588,32 +689,40 @@ theorem gcd_zero_left(a: ℕ) { gcd(0, a) = a } by {
     gcd(0, a).divides(a)
 }
 
+// GCD is commutative
 theorem gcd_comm(a: ℕ, b: ℕ) { gcd(a, b) = gcd(b, a) } by {
+    // Both gcd(a,b) and gcd(b,a) divide a and b
     (
-        a.divides(gcd(a, b)) and b.divides(gcd(a, b)) 
-        iff 
+        a.divides(gcd(a, b)) and b.divides(gcd(a, b))
+        iff
         b.divides(gcd(a, b)) and a.divides(gcd(a, b))
     )
+    // Each divides the other, so they're equal
     gcd(b, a).divides(gcd(a, b))
     gcd(a, b).divides(gcd(b, a))
 }
 
+// A property f is preserved under mod: if f holds for a and b, it holds for a mod b
 define mod_maintains(f: ℕ -> Bool) -> Bool {
     forall(a: ℕ, b: ℕ) { f(a) and f(b) implies f(a.mod(b)) }
 }
 
+// If f is preserved under mod and holds for a,b, then f holds for gcd(a,b)
 theorem mod_maintains_imp_gcd(f: ℕ -> Bool, a: ℕ, b: ℕ) {
     mod_maintains(f) and f(a) and f(b) implies f(gcd(a, b))
 } by {
+    // Track whether f holds for both components of the pair during Euclidean algorithm
     let p = Pair[ℕ, ℕ].new(a, b)
     let g = function(n: ℕ) {
         f(gcd_step_n(p, n).first) and f(gcd_step_n(p, n).second)
     }
+    // Base case: initially, f holds for a and b
     gcd_step_n(p, 0).first = a
     gcd_step_n(p, 0).second = b
     f(gcd_step_n(p, 0).second)
     f(gcd_step_n(p, 0).first)
     g(0)
+    // Inductive step: if f holds at step x, it holds at step x+1
     forall(x: ℕ) {
         if g(x) {
             gcd_step_n(p, x.suc) = gcd_step(gcd_step_n(p, x))
@@ -621,29 +730,33 @@ theorem mod_maintains_imp_gcd(f: ℕ -> Bool, a: ℕ, b: ℕ) {
             f(gcd_step_n(p, x).second)
 
             if gcd_step_n(p, x).second = 0 {
+                // Algorithm terminates, pair unchanged
                 gcd_step_n(p, x.suc) = gcd_step_n(p, x)
                 f(gcd_step_n(p, x.suc).first)
                 f(gcd_step_n(p, x.suc).second)
                 g(x.suc)
             } else {
+                // One Euclidean step: (a,b) -> (b, a mod b)
                 Pair.new(
                     gcd_step_n(p, x).second,
                     gcd_step_n(p, x).first.mod(gcd_step_n(p, x).second)
                 ) = gcd_step(gcd_step_n(p, x))
 
                 gcd_step_n(p, x.suc).first = gcd_step_n(p, x).second
-                                
+
                 gcd_step_n(p, x.suc).second = gcd_step_n(p, x).first.mod(gcd_step_n(p, x).second)
-                
+
                 f(gcd_step_n(p, x.suc).first)
 
+                // mod_maintains ensures f holds for a mod b
                 f(gcd_step_n(p, x).first.mod(gcd_step_n(p, x).second))
-                
+
                 f(gcd_step_n(p, x.suc).second)
                 g(x.suc)
             }
         }
     }
+    // At termination, f holds for the GCD (first component when second is 0)
     g(num_gcd_steps(p))
     f(gcd_step_n(p, num_gcd_steps(p)).first)
     f(gcd(a, b))
@@ -657,6 +770,7 @@ theorem gcd_one_left(a: ℕ) {
     gcd(1, a) = 1
 }
 
+// Multiplying both arguments by m (non-zero) multiplies the GCD by m
 theorem gcd_mul_left_nonzero(a: ℕ, b: ℕ, m: ℕ) {
     m != 0 implies m ⋅ gcd(a, b) = gcd(m ⋅ a, m ⋅ b)
 } by {
@@ -683,17 +797,21 @@ theorem gcd_mul_left_nonzero(a: ℕ, b: ℕ, m: ℕ) {
     (m ⋅ gcd(a, b)).divides(gcd(m ⋅ a, m ⋅ b))
 }
 
+// Multiplying both arguments by m multiplies the GCD by m (including m=0)
 theorem gcd_mul_left(a: ℕ, b: ℕ, m: ℕ) {
     m ⋅ gcd(a, b) = gcd(m ⋅ a, m ⋅ b)
 } by {
+    // Handle zero case separately
     if m = 0 {
         m ⋅ gcd(a, b) = 0
         gcd(m ⋅ a, m ⋅ b) = 0
     } else {
+        // Non-zero case proved by gcd_mul_left_nonzero
         m ⋅ gcd(a, b) = gcd(m ⋅ a, m ⋅ b)
     }
 }
 
+// Right multiplication version (using commutativity)
 theorem gcd_mul_right(a: ℕ, b: ℕ, m: ℕ) {
     gcd(a, b) ⋅ m = gcd(a ⋅ m, b ⋅ m)
 } by {
@@ -702,6 +820,7 @@ theorem gcd_mul_right(a: ℕ, b: ℕ, m: ℕ) {
     gcd_comm(m ⋅ a, m ⋅ b)
 }
 
+// If a = af * gcd(a,b) and b = bf * gcd(a,b), then gcd(af, bf) = 1
 theorem cofactor(a: ℕ, b: ℕ, af: ℕ, bf: ℕ) {
     (
         gcd(a, b) != 0 and
@@ -709,45 +828,57 @@ theorem cofactor(a: ℕ, b: ℕ, af: ℕ, bf: ℕ) {
         bf ⋅ gcd(a, b) = b
     ) implies gcd(af, bf) = 1
 } by {
+    // gcd(af, bf) divides af, so it divides a = af * gcd(a,b)
     gcd(af, bf).divides(af)
     (gcd(a, b) ⋅ gcd(af, bf)).divides(a)
+    // Similarly for b
     gcd(af, bf).divides(bf)
     (gcd(a, b) ⋅ gcd(af, bf)).divides(b)
+    // So gcd(a,b) * gcd(af, bf) divides gcd(a,b), implying gcd(af, bf) = 1
     (gcd(a, b) ⋅ gcd(af, bf)).divides(gcd(a, b))
     (gcd(a, b) ⋅ gcd(af, bf)).divides(gcd(a, b) ⋅ 1)
     gcd(af, bf).divides(1)
     gcd(af, bf) = 1
 }
 
+// For prime p, either gcd(p,n) = 1 or p divides n
 theorem gcd_of_prime(p: ℕ, n: ℕ) {
     p.is_prime implies gcd(p, n) = 1 or p.divides(n)
 } by {
+    // gcd(p,n) divides p, so p = d * gcd(p,n) for some d
     gcd(p, n).divides(p)
     let d: ℕ satisfy {
         d ⋅ gcd(p, n) = p
     }
     d != 0
+    // If d = 1, then gcd(p,n) = p, so p divides n
     if d = 1 {
         gcd(p, n) = p
         p.divides(n)
     } else {
+        // If d > 1 and gcd(p,n) > 1, then p would be composite (contradiction)
         if gcd(p, n) > 1 {
             d > 1
             p.is_composite
             false
         }
+        // Otherwise, gcd(p,n) = 1
         gcd(p, n) != 0
         gcd(p, n) = 1
     }
 }
 
+// Euclid's lemma for primes: if prime a divides product b*c, then a divides b or a divides c
 theorem euclids_lemma_prime(a: ℕ, b: ℕ, c: ℕ) {
     a.is_prime and a.divides(b ⋅ c) implies a.divides(b) or a.divides(c)
 } by {
+    // If a doesn't divide b, then gcd(a,b) = 1
     if not a.divides(b) {
         gcd(a, b) = 1
+        // Use gcd multiplication property
         gcd(a ⋅ c, b ⋅ c) = gcd(a, b) ⋅ c
         gcd(a ⋅ c, b ⋅ c) = c
+        // a divides both a*c and b*c, so a divides gcd(a*c, b*c) = c
         a.divides(a ⋅ c)
         a.divides(b ⋅ c)
         a.divides(gcd(a ⋅ c, b ⋅ c))
@@ -755,12 +886,14 @@ theorem euclids_lemma_prime(a: ℕ, b: ℕ, c: ℕ) {
     }
 }
 
+// If a prime divides another prime, they must be equal
 theorem divides_prime(a: ℕ, b: ℕ) {
-    a.is_prime and b.is_prime and a.divides(b) implies a = b 
+    a.is_prime and b.is_prime and a.divides(b) implies a = b
 } by {
     a <= b
+    // If a < b, then a would be a proper divisor of b, contradicting b is prime
     not (1 < a and a < b)
-    a = b    
+    a = b
 }
 
 theorem euclids_lemma_divides_primes(a: ℕ, b: ℕ, c: ℕ) {
@@ -770,6 +903,7 @@ theorem euclids_lemma_divides_primes(a: ℕ, b: ℕ, c: ℕ) {
 theorem are_primes_decomposition(head: ℕ, tail: List[ℕ]) {
     are_primes(List.cons(head, tail)) iff head.is_prime and are_primes(tail)
 } by {
+    // Forward direction: if list has only primes, head is prime and tail has only primes
     if are_primes(List.cons(head, tail)) {
         head.is_prime
         forall(x: ℕ) {
@@ -778,6 +912,7 @@ theorem are_primes_decomposition(head: ℕ, tail: List[ℕ]) {
         }
         are_primes(tail)
     }
+    // Reverse direction: if head is prime and tail has only primes, list has only primes
     if head.is_prime and are_primes(tail) {
         forall(x: ℕ) {
             x ∈ List.cons(head, tail) implies x = head or x ∈ tail
@@ -787,24 +922,28 @@ theorem are_primes_decomposition(head: ℕ, tail: List[ℕ]) {
     }
 }
 
+// If prime a divides product of list l, then a divides some element of l
 theorem euclids_lemma_prime_divides_list(a: ℕ, l: List[ℕ]) {
     a.is_prime and a.divides(product(l)) implies exists(b: ℕ) {
         b ∈ l and a.divides(b)
-    } 
+    }
 } by {
     define f(ps: List[ℕ]) -> Bool {
         euclids_lemma_prime_divides_list(a, ps)
     }
+    // Base case: empty list, product = 1, no prime divides 1
     product(List[ℕ].nil) = 1
     not a.divides(1)
     f(List[ℕ].nil)
 
+    // Inductive step: cons(head, tail)
     forall(head: ℕ, tail: List[ℕ]) {
         product(List.cons(head, tail)) = head ⋅ product(tail)
         if f(tail) {
             if a.divides(product(List.cons(head, tail))) {
+                // By Euclid's lemma for primes
                 a.divides(head) or a.divides(product(tail))
-                if a.divides(head) { 
+                if a.divides(head) {
                     exists(b: ℕ) {
                         b ∈ List.cons(head, tail) and a.divides(b)
                     }
@@ -833,26 +972,34 @@ theorem euclids_lemma_prime_divides_list(a: ℕ, l: List[ℕ]) {
     f(l)
 }
 
+// If prime a divides product of prime list l, then a is in l
 theorem euclids_lemma_prime_divides_prime_list(a: ℕ, l: List[ℕ]) {
     a.is_prime and are_primes(l) and a.divides(product(l)) implies a ∈ l
+
 } by {
+    // Should follow from euclids_lemma_prime_divides_list and the fact that
+    // if a prime divides another element of the list (all primes), they must be equal
     let (p: ℕ) satisfy {
         p ∈ l and a.divides(p)
     } 
     a = p
 }
 
+// Product of list equals x^count(x) times product of list with x removed
 theorem remove_product(x: ℕ, l: List[ℕ]) {
     x^(l.count(x)) ⋅ product(l ∖ x) = product(l)
 } by {
+    // Induction on list structure
     define f(ns: List[ℕ]) -> Bool {
         x^(ns.count(x)) ⋅ product(ns ∖ x) = product(ns)
     }
     f(List[ℕ].nil)
     forall(head: ℕ, tail: List[ℕ]) {
-        product(List.cons(head, tail)) = head ⋅ product(tail)        
+        product(List.cons(head, tail)) = head ⋅ product(tail)
         if f(tail) {
+            // Case: x is in the list
             if x ∈ List.cons(head, tail) {
+                // Subcase: head is x
                 if head = x {
                     List.cons(head, tail) ∖ x = tail ∖ x
 
@@ -868,11 +1015,12 @@ theorem remove_product(x: ℕ, l: List[ℕ]) {
 
                     f(List.cons(head, tail))
                 } else {
+                    // Subcase: head is not x, so x is in tail
                     x != head
                     x ∈ tail
 
                     List.cons(head, tail).count(x) = tail.count(x)
-                    
+
                     List.cons(head, tail) ∖ x = List.cons(head, tail ∖ x)
 
                     product(List.cons(head, tail) ∖ x) = head ⋅ product(tail ∖ x)
@@ -888,6 +1036,7 @@ theorem remove_product(x: ℕ, l: List[ℕ]) {
                     f(List.cons(head, tail))
                 }
             } else {
+                // Case: x is not in the list
                 x ∉ List.cons(head, tail)
                 List.cons(head, tail).count(x) = 0
                 List.cons(head, tail) ∖ x = List.cons(head, tail)
@@ -958,27 +1107,32 @@ theorem prime_list_same_count_prime(x: ℕ, l1: List[ℕ], l2: List[ℕ]) {
     l2.count(x) >= l1.count(x)
 }
 
+// A composite number cannot divide a prime
 theorem composite_not_divides_prime(a: ℕ, p: ℕ) {
     a.is_composite and p.is_prime implies not a.divides(p)
 } by {
     if a.divides(p) {
-        let (b: ℕ, c: ℕ, n: ℕ) satisfy { 
+        let (b: ℕ, c: ℕ, n: ℕ) satisfy {
             a = b ⋅ c and
-            (1 < b and b < a) and 
+            (1 < b and b < a) and
             (1 < c and c < a) and
             a ⋅ n = p
         }
+        // Then b * (c * n) = p with 1 < b < p
         b ⋅ (c ⋅ n) = p
         b < p
+        // So b is a proper divisor of p, contradicting p is prime
         b.proper_divides(p)
         not p.is_prime
         false
     }
 }
 
+// If n is not prime and l contains only primes, then n doesn't appear in l
 theorem not_prime_not_in_prime_list(n: ℕ, l: List[ℕ]) {
     not n.is_prime and are_primes(l) implies l.count(n) = 0
 } by {
+    // Case analysis: n <= 1 or n > 1 (hence composite)
     if n <= 1 {
         l.count(n) = 0
     } else {
@@ -988,25 +1142,30 @@ theorem not_prime_not_in_prime_list(n: ℕ, l: List[ℕ]) {
     }
 }
 
+// Uniqueness of prime factorization: any two prime factorizations of n are permutations
 theorem prime_decomposition_uniqueness(n: ℕ, l1: List[ℕ], l2: List[ℕ]) {
     1 < n and
     are_primes(l1) and n = product(l1) and
-    are_primes(l2) and n = product(l2) implies 
+    are_primes(l2) and n = product(l2) implies
     l1.is_permutation(l2)
 } by {
+    // Two lists are permutations iff they have the same count of every element
     forall(x: ℕ) {
         x.is_prime implies l1.count(x) = l2.count(x)
         not x.is_prime implies l1.count(x) = l2.count(x)
     }
 }
 
+// Product of empty list is 1
 theorem nil_list_product_is_one {
     product(List[ℕ].nil) = 1
 }
 
+// Non-empty prime list has product > 1
 theorem non_nil_prime_list_product_gt_one(l: List[ℕ]) {
     l != List[ℕ].nil and are_primes(l) implies 1 < product(l)
 } by {
+    // Induction on list structure
     define f(ps: List[ℕ]) -> Bool {
         non_nil_prime_list_product_gt_one(ps)
     }
@@ -1015,11 +1174,13 @@ theorem non_nil_prime_list_product_gt_one(l: List[ℕ]) {
         if f(tail) {
             if are_primes(List.cons(head, tail)) {
                 if tail = List[ℕ].nil {
+                    // Singleton list: product = head, and head > 1 (prime)
                     product(List.cons(head, tail)) = head
                     head.is_prime
                     1 < head
                     1 < product(List.cons(head, tail))
                 } else {
+                    // Non-singleton: both head > 1 and product(tail) > 1
                     1 < product(tail)
                     head.is_prime
                     1 < head
@@ -1072,17 +1233,21 @@ theorem prime_list_divides_product(p: ℕ, l: List[ℕ]) {
     }
 }
 
+// Prime numbers have unique prime decomposition as singleton list
 theorem prime_have_singleton_prime_decomposition(x: ℕ, l: List[ℕ]) {
     x.is_prime and x.have_prime_decomp(l) implies l = List.singleton(x)
 } by {
+    // Can't have x appearing more than once (would make product too large)
     if l.count(x) > 1 {
         x^(l.count(x)) ⋅ product(l ∖ x) = product(l)
         product(l) = x
         x^(l.count(x)) > x
         false
     } else {
+        // x must appear exactly once
         l.count(x) != 0
         l.count(x) = 1
+        // Can't have any other element in the list (would divide x)
         if exists(y: ℕ) { y ∈ l and y != x } {
             let y: ℕ satisfy { y ∈ l and y != x }
             l.count(y) != 0
@@ -1114,21 +1279,25 @@ theorem have_no_common_prime_factor_helper(a: ℕ, b: ℕ) {
     } implies have_no_common_prime_factor(a, b)
 }
 
+// Numbers are relatively prime (coprime) if they share no prime factors
 // prepare for the defition of rational number
 define relative_prime(a: ℕ, b: ℕ) -> Bool {
     a != 0 and b != 0 and have_no_common_prime_factor(a, b)
 }
 
+// If a and b are relatively prime, their GCD is 1
 theorem relative_prime_imp_gcd_one(a: ℕ, b: ℕ) {
-    relative_prime(a, b) implies gcd(a, b) = 1 
+    relative_prime(a, b) implies gcd(a, b) = 1
 } by {
     gcd(a, b) != 0
     let (l: List[ℕ]) satisfy {
         gcd(a, b).have_prime_decomp(l)
     }
+    // Assume gcd(a,b) > 1 for contradiction
     if gcd(a, b) != 1 {
         gcd(a, b) > 1
         l != List[ℕ].nil
+        // GCD > 1 has a prime divisor
         let p: ℕ satisfy { p ∈ l and p.is_prime }
         p.divides(gcd(a, b))
         p.divides(a)
@@ -1143,6 +1312,7 @@ theorem relative_prime_imp_gcd_one(a: ℕ, b: ℕ) {
         }
         p ∈ la
         p ∈ lb
+        // Contradicts a and b having no common prime factors
         not have_no_common_prime_factor(a, b)
         not relative_prime(a, b)
         false
@@ -1195,21 +1365,23 @@ theorem relative_prime_iff_gcd_one(a: ℕ, b: ℕ) {
     a != 0 and b != 0 and gcd(a, b) = 1 implies relative_prime(a, b)
 }
 
+// If l1 is a subset of l2 (both prime lists), then product(l1) divides product(l2)
 theorem sub_prime_list_divides(l1: List[ℕ], l2: List[ℕ]) {
     are_primes(l1) and are_primes(l2) and l1 ⊆ l2 implies product(l1).divides(product(l2))
 } by {
+    // Induction on l1
     define f(l: List[ℕ]) -> Bool {
-        are_primes(l) and are_primes(l2) and l ⊆ l2 implies product(l).divides(product(l2))    
+        are_primes(l) and are_primes(l2) and l ⊆ l2 implies product(l).divides(product(l2))
     }
     f(List[ℕ].nil)
     forall(head: ℕ, tail: List[ℕ]) {
         if f(tail) {
             if are_primes(List.cons(head, tail)) and are_primes(l2) and List.cons(head, tail) ⊆ l2 {
-                let q1 = product(tail ∖ head) 
-                    
+                let q1 = product(tail ∖ head)
+
                 head^(tail.count(head)) ⋅ q1 = product(tail)
 
-                let q2 = product(l2 ∖ head) 
+                let q2 = product(l2 ∖ head)
 
                 head^(l2.count(head)) ⋅ q2 = product(l2)
 
@@ -1226,7 +1398,7 @@ theorem sub_prime_list_divides(l1: List[ℕ], l2: List[ℕ]) {
                     product(tail) ⋅ q = product(l2)
                 }
 
-                head^(tail.count(head)) ⋅ q1 ⋅ q = head^(l2.count(head)) ⋅ q2 
+                head^(tail.count(head)) ⋅ q1 ⋅ q = head^(l2.count(head)) ⋅ q2
 
                 List.cons(head, tail).count(head) = 1 + tail.count(head)
 
@@ -1241,11 +1413,12 @@ theorem sub_prime_list_divides(l1: List[ℕ], l2: List[ℕ]) {
                 }
 
                 head^(tail.count(head)) ⋅ (q1 ⋅ q) = head^(tail.count(head)) ⋅ (head ⋅ n)
-                
+
                 q1 ⋅ q = head ⋅ n
 
                 head.divides(q1 ⋅ q)
 
+                // head can't divide q1 (q1 has no head factors by construction)
                 if head.divides(q1) {
                     head ∈ (tail ∖ head)
                     false
@@ -1273,6 +1446,7 @@ theorem sub_prime_list_divides(l1: List[ℕ], l2: List[ℕ]) {
     f(l1)
 }
 
+// If product(l1) divides product(l2) (both prime lists), then l1 is a subset of l2
 theorem divides_imp_sub_prime_list(l1: List[ℕ], l2: List[ℕ]) {
     are_primes(l1) and are_primes(l2) and product(l1).divides(product(l2)) implies l1 ⊆ l2
 } by {
@@ -1288,18 +1462,20 @@ theorem divides_imp_sub_prime_list(l1: List[ℕ], l2: List[ℕ]) {
             l2.count(p) = 0
             l1.count(p) <= l2.count(p)
         } else {
-            p.is_prime 
+            p.is_prime
             if l1.count(p) = 0 {
                 l1.count(p) <= l2.count(p)
             } else {
-                l1.count(p) != 0 
+                l1.count(p) != 0
                 l1.count(p) >= 1
                 are_primes(l2 ∖ p)
+                // p doesn't divide product(l2 ∖ p) since it has no p factors
                 not p.divides(product(l2 ∖ p))
 
+                // Assume for contradiction that l1 has more p's than l2
                 if (l1.count(p) > l2.count(p)) {
-                    let n: ℕ satisfy { 
-                        l1.count(p) = l2.count(p) + n and n != 0 
+                    let n: ℕ satisfy {
+                        l1.count(p) = l2.count(p) + n and n != 0
                     }
 
                     let q: ℕ satisfy {
@@ -1314,32 +1490,36 @@ theorem divides_imp_sub_prime_list(l1: List[ℕ], l2: List[ℕ]) {
 
                     p ⋅ (p^(n - 1) ⋅ product(l1 ∖ p) ⋅ q) = product(l2 ∖ p)
 
+                    // Contradiction: p divides product(l2 ∖ p)
                     p.divides(product(l2 ∖ p))
 
                     false
                 }
                 l1.count(p) <= l2.count(p)
-            }            
+            }
         }
     }
 }
 
+// General Euclid's lemma: if gcd(a,b)=1 and a divides b*c, then a divides c
 theorem euclids_lemma(a: ℕ, b: ℕ, c: ℕ) {
     gcd(a, b) = 1 and a.divides(b ⋅ c) implies a.divides(c)
 } by {
+    // Handle edge cases where one or more arguments is zero
     if a = 0 {
         b = 1
         b ⋅ c = 0
         c = 0
         a.divides(c)
-    } 
+    }
     if b = 0 {
         a = 1
         a.divides(c)
     }
     if c = 0 {
         a.divides(c)
-    } 
+    }
+    // Main case: all non-zero
     if a != 0 and b != 0 and c != 0 {
         let (la: List[ℕ]) satisfy {
             a.have_prime_decomp(la)
@@ -1350,6 +1530,7 @@ theorem euclids_lemma(a: ℕ, b: ℕ, c: ℕ) {
         let (lc: List[ℕ]) satisfy {
             c.have_prime_decomp(lc)
         }
+        // la is a subset of lb+lc (since a divides b*c)
         forall(p: ℕ) {
             if p ∈ lb + lc {
                 p ∈ lb or p ∈ lc
@@ -1364,6 +1545,7 @@ theorem euclids_lemma(a: ℕ, b: ℕ, c: ℕ) {
         product(la) = a
         product(la).divides(product(lb + lc))
         divides_imp_sub_prime_list(la, lb + lc)
+        // Show la is a subset of lc
         forall(p: ℕ) {
             la.count(p) <= (lb + lc).count(p)
             (lb + lc).count(p) = lb.count(p) + lc.count(p)
@@ -1372,29 +1554,35 @@ theorem euclids_lemma(a: ℕ, b: ℕ, c: ℕ) {
             } else {
                 la.count(p) != 0
                 p.divides(a)
+                // Since gcd(a,b)=1, p doesn't divide b
                 not p.divides(b)
                 lb.count(p) = 0
                 la.count(p) <= lc.count(p)
             }
         }
+        // Therefore la is subset of lc, so a divides c
         a.divides(c)
     }
 }
 
 // Todo: use unique list and power to represent prime list
 
+// If prime p divides a^n (n > 0), then p divides a
 theorem prime_divide_power(p: ℕ, a: ℕ, n: ℕ) {
-    p.is_prime and n != 0 and p.divides(a^n) implies p.divides(a) 
+    p.is_prime and n != 0 and p.divides(a^n) implies p.divides(a)
 } by {
+    // Induction on n
     define f(m: ℕ) -> Bool {
-        p.is_prime and m != 0 and p.divides(a^m) implies p.divides(a) 
+        p.is_prime and m != 0 and p.divides(a^m) implies p.divides(a)
     }
     f(0)
     forall(m: ℕ) {
         if f(m) {
             if p.divides(a^(m.suc)) {
+                // a^(m+1) = a^m * a, so p divides a^m or a
                 p.divides(a^m ⋅ a)
                 p.divides(a^m) or p.divides(a)
+                // If p divides a^m, by induction p divides a
                 p.divides(a)
                 f(m.suc)
             }
@@ -1422,17 +1610,20 @@ theorem not_have_no_common_prime_factor_imp_have_common_prime_facotr(a: ℕ, b: 
     p.divides(b)
 }
 
+// If a and b are relatively prime, then so are a^n and b^m (for n,m > 0)
 theorem power_preserve_relative_prime(a: ℕ, b: ℕ, n: ℕ, m: ℕ) {
     relative_prime(a, b) and n != 0 and m != 0 implies relative_prime(a^n, b^m)
 } by {
     a^n != 0
     b^n != 0
+    // Proof by contradiction
     if not relative_prime(a^n, b^m) {
         not have_no_common_prime_factor(a^n, b^m)
         have_common_prime_factor(a^n, b^m)
         let c: ℕ satisfy {
             c.is_prime and c.divides(a^n) and c.divides(b^m)
         }
+        // By prime_divide_power, if c divides a^n then c divides a
         c.divides(a)
         c.divides(b)
         not have_no_common_prime_factor(a, b)
@@ -1445,11 +1636,14 @@ theorem power_preserve_gcd_one(a: ℕ, b: ℕ, n: ℕ, m: ℕ) {
     a != 0 and b != 0 and gcd(a, b) = 1 and n != 0 and m != 0 implies gcd(a^n, b^m) = 1
 }
 
+// If a divides b and gcd(a,b)=1, then a must be 1
 theorem gcd_one_and_divide_imp_one(a: ℕ, b: ℕ) {
     a != 0 and gcd(a, b) = 1 and a.divides(b) implies a = 1
 } by {
+    // Proof by contradiction
     if a != 1 {
         a > 1
+        // Since a divides both a and b, gcd(a,b) >= a
         a.divides(a)
         a.divides(b)
         gcd(a, b) >= a

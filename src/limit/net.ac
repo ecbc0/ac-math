@@ -5,16 +5,21 @@ from nat import ℕ
 from list.list_base import flatten, max_list
 numerals ℕ
 
+// Nets are a generalization of sequences used in topology to define limits
+// A net consists of a directed family of nonempty sets
+
 // And now Acorn not support direct subtype and dependent type. Once they are support, we can make the set c: Set[Set[K]], c.is_chain in to type 
 
 // Subtype make type and set almost the same thing, i.e. for a: Set[K], we have subtype { x: T | x ∈ a }
 
+// A collection of sets is no_empty if it contains no empty sets
 define no_empty[K](sets: Set[Set[K]]) -> Bool {
     forall(a: Set[K]) {
         a ∈ sets implies a != Set[K].empty_set
     }    
 }
 
+// A collection of sets is directed if for any two sets, there exists a third set contained in both
 define directed[K](sets: Set[Set[K]]) -> Bool {
     forall(a1: Set[K], a2: Set[K]) {
         a1 ∈ sets and a2 ∈ sets implies exists(b: Set[K]) {
@@ -23,6 +28,7 @@ define directed[K](sets: Set[Set[K]]) -> Bool {
     }    
 }
 
+// Helper theorem: the condition in the definition of directed is equivalent to directed
 theorem directed_helper[K](sets: Set[Set[K]]) {
     forall(a1: Set[K], a2: Set[K]) {
         a1 ∈ sets and a2 ∈ sets implies exists(b: Set[K]) {
@@ -31,6 +37,7 @@ theorem directed_helper[K](sets: Set[Set[K]]) {
     } implies directed(sets) 
 }
 
+// Alternative helper using intersection: if for any two sets there's a set in their intersection, the collection is directed
 theorem directed_helper_ver_intersection[K](sets: Set[Set[K]]) {
     forall(a1: Set[K], a2: Set[K]) {
         a1 ∈ sets and a2 ∈ sets implies exists(b: Set[K]) {
@@ -48,6 +55,7 @@ theorem directed_helper_ver_intersection[K](sets: Set[Set[K]]) {
     }
 }
 
+// Converse: directed implies the existence of a set in the intersection for any two sets
 theorem directed_helper_imp_by[T](sets: Set[Set[T]]) {
     directed(sets) implies (
         forall(a1: Set[T], a2: Set[T]) {
@@ -58,6 +66,7 @@ theorem directed_helper_imp_by[T](sets: Set[Set[T]]) {
     )
 } 
 
+// Converse using intersection formulation
 theorem directed_helper_imp_by_ver_intersection[T](sets: Set[Set[T]]) {
     directed(sets) implies (
         forall(a1: Set[T], a2: Set[T]) {
@@ -78,15 +87,18 @@ theorem directed_helper_imp_by_ver_intersection[T](sets: Set[Set[T]]) {
 }
 
 /// Topology doesn't seem to provide a sufficient motivation for using the concept of a net, but the definitions of measure and integral should.
+// A net is a nonempty directed collection of sets
 define is_net[K](sets: Set[Set[K]]) -> Bool {
     no_empty(sets) and directed(sets)
 }
 
+// A Net structure encapsulates a collection of sets that is a net
 structure Net[K] {
     sets: Set[Set[K]]
 } constraint {
     is_net(sets)
 } by {
+    // Construct a singleton net as a witness: { {x} } where x is any element
     let x: K satisfy { true }
     let s = Set[K].singleton(x)
     let n = Set[Set[K]].singleton(s)
@@ -111,16 +123,19 @@ structure Net[K] {
     directed(n)
 }
 
+// Attribute: check if a set is contained in the net
 attributes Net[K] {
     define contains(self, s: Set[K]) -> Bool {
         self.sets.contains(s)
     }
 }
 
+// Membership in a net is equivalent to membership in its underlying set of sets
 theorem equivalent_of_contains[K](n: Net[K], s: Set[K]) {
     s ∈ n iff s ∈ n.sets
 } 
 
+// Helper for creating a new net: membership is preserved
 theorem net_new_helper[K](n: Net[K], n_sets: Set[Set[K]], s: Set[K]) {
     is_net(n_sets) and n = Net[K].new(n_sets) implies (
         s ∈ n iff s ∈ n_sets
@@ -132,10 +147,12 @@ theorem net_new_helper[K](n: Net[K], n_sets: Set[Set[K]], s: Set[K]) {
     s ∈ n_sets implies s ∈ n
 }
 
+// Any set in a net is nonempty
 theorem net_contains_imp_nonempty[K](n: Net[K], s: Set[K]) {
     s ∈ n implies (s).is_nonempty
 } 
 
+// For any two sets in a net, there exists a third set in their intersection
 theorem net_contains_imp_directed[K](n: Net[K], a1: Set[K], a2: Set[K]) {
     a1 ∈ n and a2 ∈ n implies exists(b: Set[K]) {
         b ∈ n and b ⊆ a1 ∩ a2
@@ -152,6 +169,7 @@ theorem net_contains_imp_directed[K](n: Net[K], a1: Set[K], a2: Set[K]) {
     b ∈ n and b ⊆ a1 ∩ a2
 }
 
+// The intersection of any two sets in a net is nonempty
 theorem two_intersection_nonempty_in_net[K](n: Net[K], a1: Set[K], a2: Set[K]) {
     a1 ∈ n and a2 ∈ n implies (a1 ∩ a2).is_nonempty
 } by {
@@ -161,6 +179,7 @@ theorem two_intersection_nonempty_in_net[K](n: Net[K], a1: Set[K], a2: Set[K]) {
     (b).is_nonempty
 }
 
+// A typeclass for directed sets extending partial orders: any two elements have a common lower bound
 typeclass N: Directed extends Partial_Order {
     directed(a: N, b: N) {
         exists(c: N) {
@@ -170,7 +189,7 @@ typeclass N: Directed extends Partial_Order {
     }
 }
 
-// // to define finer we need two differnt Directed instance extends a same Partial_Order instance ... and dependent type? 
+// // to define finer we need two differnt Directed instance extends a same Partial_Order instance ... and dependent type?
 // attributes N: Directed {
 //     define finer[M: Directed] -> Bool {
 //         forall(b: M) {
@@ -194,6 +213,7 @@ define is_directed_limit[K: Directed, L: Directed](f: K -> L) -> Bool {
     }
 }
 
+// A point x is a common point of a collection of sets if it belongs to every set in the collection
 define have_common_pt[K](n: Set[Set[K]], x: K) -> Bool {
     forall(s: Set[K]) {
         s ∈ n implies x ∈ s
@@ -207,7 +227,9 @@ attributes Net[K] {
     }
 }
 
+// Net attributes for comparing nets
 attributes Net[K] {
+    // n1 is finer than n2 if for every set in n2, there's a subset in n1
     define finer(self, other: Net[K]) -> Bool {
         forall(b: Set[K]) {
             b ∈ other implies exists(a: Set[K]) {
@@ -216,11 +238,13 @@ attributes Net[K] {
         }
     }
 
+    // Two nets have the same limit if each is finer than the other (they are equivalent)
     define same_limit(self, other: Net[K]) -> Bool {
         self.finer(other) and other.finer(self)
     }
 }
 
+// Helper: the condition in the definition of finer is equivalent to finer
 theorem finer_helper[K](n1: Net[K], n2: Net[K]) {
     forall(b: Set[K]) {
         b ∈ n2 implies exists(a: Set[K]) {
@@ -229,6 +253,7 @@ theorem finer_helper[K](n1: Net[K], n2: Net[K]) {
     } implies (n1).finer(n2)
 }
 
+// If a net is finer than another, their intersection of all sets is contained in the other's intersection
 theorem finer_imp_intersection_subset[K](n1: Net[K], n2: Net[K]) {
     (n1).finer(n2) implies intersection(n1.sets) ⊆ intersection(n2.sets)
 } by {
@@ -251,6 +276,7 @@ theorem finer_imp_intersection_subset[K](n1: Net[K], n2: Net[K]) {
     intersection(n1.sets) ⊆ intersection(n2.sets)
 }
 
+// If two nets have the same limit, their intersections are equal
 theorem same_limit_imp_same_intersection[K](n1: Net[K], n2: Net[K]) {
     (n1).same_limit(n2) implies intersection(n1.sets) = intersection(n2.sets)
 } by {
@@ -258,6 +284,7 @@ theorem same_limit_imp_same_intersection[K](n1: Net[K], n2: Net[K]) {
     intersection(n1.sets) ⊇ intersection(n2.sets)
 }
 
+// The finer relation is transitive
 theorem finer_trans[K](n1: Net[K], n2: Net[K], n3: Net[K]) {
     (n1).finer(n2) and (n2).finer(n3) implies (n1).finer(n3)
 } by {
@@ -283,16 +310,19 @@ define is_limit[K, L](source_net: Net[K], target_net: Net[L], f: K -> L) -> Bool
     }
 }
 
+// A set b is in the image of sets if it's the image under f of some set in n
 define elem_in_image_of_sets[K, L](n: Set[Set[K]], f: K -> L, b: Set[L]) -> Bool {
     exists(a: Set[K]) { 
         a ∈ n and b = a.image(f)
     }
 }
 
+// Construct the image of a collection of sets under a function f
 define image_of_sets[K, L](n: Set[Set[K]], f: K -> L) -> Set[Set[L]] {
     Set[Set[L]].new(elem_in_image_of_sets(n, f))
 }
 
+// Taking images under f preserves the nonempty property
 theorem image_of_sets_preserve_no_empty[K, L](n: Set[Set[K]], f: K -> L) {
     no_empty(n) implies no_empty(image_of_sets(n, f))
 } by {
@@ -308,6 +338,7 @@ theorem image_of_sets_preserve_no_empty[K, L](n: Set[Set[K]], f: K -> L) {
     }
 }
 
+// Taking images under f preserves the directed property
 theorem image_of_sets_preserve_directed[K, L](n: Set[Set[K]], f: K -> L) {
     directed(n) implies directed(image_of_sets(n, f))
 } by {
@@ -329,18 +360,22 @@ theorem image_of_sets_preserve_directed[K, L](n: Set[Set[K]], f: K -> L) {
     directed_helper(image_of_sets(n, f))
 }
 
+// Taking images under f preserves the net property (both nonempty and directed)
 theorem image_of_sets_preserve_nets[K, L](n: Set[Set[K]], f: K -> L) {
     is_net(n) implies is_net(image_of_sets(n, f))
 }
 
+// Construct the image of a net under a function f
 define image_of_net[K, L](n: Net[K], f: K -> L) -> Net[L] {
     Net[L].new(image_of_sets(n.sets, f))
 }
 
+// Helper: the underlying sets of the image of a net is the image of its underlying sets
 theorem image_of_net_expand[K, L](n: Net[K], f: K -> L) {
     image_of_net(n, f).sets = image_of_sets(n.sets, f)
 }
 
+// If s is in n, then its image under f is in the image of the net
 theorem image_of_net_contains_helper[K, L](n: Net[K], f: K -> L, s: Set[K]) {
     s ∈ n implies s.image(f) ∈ image_of_net(n, f)
 } by {
@@ -350,6 +385,7 @@ theorem image_of_net_contains_helper[K, L](n: Net[K], f: K -> L, s: Set[K]) {
     s.image(f) ∈ image_of_net(n, f)
 }
 
+// f is a limit from source_net to target_net iff the image of source_net under f is finer than target_net
 theorem is_limit_imp_image_of_net_finer[K, L](source_net: Net[K], target_net: Net[L], f: K -> L) {
     is_limit(source_net, target_net, f) implies image_of_net(source_net, f).finer(target_net)
 } by {
@@ -366,6 +402,7 @@ theorem is_limit_imp_image_of_net_finer[K, L](source_net: Net[K], target_net: Ne
     }    
 }
 
+// Converse: if the image of source_net under f is finer than target_net, then f is a limit
 theorem image_of_net_finer_imp_is_limit[K, L](source_net: Net[K], target_net: Net[L], f: K -> L) {
     image_of_net(source_net, f).finer(target_net) implies is_limit(source_net, target_net, f)
 } by {
@@ -385,12 +422,15 @@ theorem image_of_net_finer_imp_is_limit[K, L](source_net: Net[K], target_net: Ne
     }    
 }
 
-theorem gte_trans(a: ℕ, b: ℕ, c: ℕ) { a >= b and b >= c implies a >= c } 
-
+// Basic properties of the greater-than-or-equal relation on natural numbers
+// Transitivity: if a >= b and b >= c, then a >= c
+theorem gte_trans(a: ℕ, b: ℕ, c: ℕ) { a >= b and b >= c implies a >= c }
+// Reflexivity: every number is >= itself
 theorem gte_reflexive(a: ℕ) { a >= a }
-
+// Antisymmetry: if a >= b and b >= a, then a = b
 theorem gte_antisymmetric(a: ℕ, b: ℕ) { a >= b and b >= a implies a = b }
 
+// The >= relation on ℕ is a partial order (reflexive, transitive, and antisymmetric)
 theorem gte_partial_order {
     is_reflexive(ℕ.gte) and
     is_transitive(ℕ.gte) and
@@ -408,6 +448,7 @@ theorem gte_partial_order {
 
 // Using the linear order of ℕ
 
+// Define the "tail" of a sequence starting from a given shift point: {shift, shift+1, shift+2, ...}
 define elem_in_seq_tail(shift: ℕ, x: ℕ) -> Bool {
     exists(n: ℕ) {
         x = shift + n
@@ -418,6 +459,7 @@ define seq_tail(shift: ℕ) -> Set[ℕ] {
     Set[ℕ].new(elem_in_seq_tail(shift))
 }
 
+// The tail set contains exactly those numbers >= the shift point
 theorem seq_tail_iff_lte(shift: ℕ, x: ℕ) {
     x ∈ seq_tail(shift) iff x >= shift
 } by {
@@ -435,6 +477,7 @@ theorem seq_tail_iff_lte(shift: ℕ, x: ℕ) {
     }
 }
 
+// If shift_1 >= shift_2, then tail starting at shift_1 is a subset of tail starting at shift_2
 theorem shift_gte_imp_subset(s1: ℕ, s2: ℕ) {
     s1 >= s2 implies seq_tail(s1) ⊆ seq_tail(s2)
 } by {
@@ -447,6 +490,7 @@ theorem shift_gte_imp_subset(s1: ℕ, s2: ℕ) {
     }
 }
 
+// Define the sequence net: a set of tails starting at various shift points
 define elem_in_seq_net_sets(a: Set[ℕ]) -> Bool {
     exists(shift: ℕ) {
         a = seq_tail(shift)
@@ -455,6 +499,7 @@ define elem_in_seq_net_sets(a: Set[ℕ]) -> Bool {
 
 let seq_net_sets = Set[Set[ℕ]].new(elem_in_seq_net_sets)
 
+// Prove that the sequence net is indeed a net (nonempty and directed)
 theorem seq_net_sets_is_net {
     is_net(seq_net_sets)
 } by {
@@ -500,20 +545,22 @@ theorem seq_net_sets_is_net {
 
 let seq_net = Net[ℕ].new(seq_net_sets)
 
+// Taking finite intersections of sets from a directed set preserves the directed property
 theorem sets_of_finite_intersection_preserve_directed[K](n: Set[Set[K]], s1: Set[K], s2: Set[K]) {
     directed(n) implies directed(sets_of_finite_intersection(n))
 }
 
-// helper
+// Helper: all sets in the list are members of n
 define list_subset_sets[K](n: Set[Set[K]], l: List[Set[K]]) -> Bool {
     forall(s: Set[K]){ s ∈ l implies s ∈ n }
 }
 
+// Helper: there exists a set in n that is a subset of the intersection of the list
 define subset_intersection_of_list[K](n: Set[Set[K]], l: List[Set[K]]) -> Bool {
     exists(t: Set[K]) { t ∈ n and t ⊆ intersection_of_list_recursion(l) }
 }
 
-/// Also, this prove, for net, directed ==> subset_finite_intersection. So indeed using two intersection or finite intersection to define net is equivalent
+// Main lemma: if n is a net, then for any finite list of sets from n, there's a set in n contained in their intersection
 theorem sets_of_finite_intersection_preserve_net_no_empty_lemma[K](n: Set[Set[K]], list: List[Set[K]]) {
     is_net(n)
     and (n).is_nonempty
@@ -567,6 +614,7 @@ theorem sets_of_finite_intersection_preserve_net_no_empty_lemma[K](n: Set[Set[K]
     p(list)
 }
 
+// Taking finite intersections of a net preserves the nonempty property
 theorem sets_of_finite_intersection_preserve_net_no_empty[K](n: Set[Set[K]], list: List[Set[K]]) {
     is_net(n) and (n).is_nonempty implies no_empty(sets_of_finite_intersection(n))
 } by {
@@ -594,10 +642,12 @@ theorem sets_of_finite_intersection_preserve_net_no_empty[K](n: Set[Set[K]], lis
     }
 }
 
+// Taking finite intersections of a nonempty net preserves the net property (both nonempty and directed)
 theorem sets_of_finite_intersection_preserve_net[K](n: Set[Set[K]]) {
     is_net(n) and (n).is_nonempty implies is_net(sets_of_finite_intersection(n))
 }
 
+// For any finite subset of a net, there exists a set in the net contained in their intersection
 theorem net_subset_finite_intersection[K](n: Set[Set[K]], c: Set[Set[K]]) {
     (n).is_nonempty and is_net(n) and c ⊆ n and c.is_finite implies exists(t: Set[K]) { t ∈ n and t ⊆ intersection(c) }
 } by {
@@ -609,6 +659,7 @@ theorem net_subset_finite_intersection[K](n: Set[Set[K]], c: Set[Set[K]]) {
     intersection_of_list_recursion(l) = intersection(c)
 }
 
+// If the set of finite intersections is nonempty, then it forms a net
 theorem net_from_sets_of_finite_intersection[K](n: Set[Set[K]]) {
     no_empty(sets_of_finite_intersection(n)) implies is_net(sets_of_finite_intersection(n))
 } by {
@@ -623,22 +674,26 @@ theorem net_from_sets_of_finite_intersection[K](n: Set[Set[K]]) {
     directed(sets_of_finite_intersection(n))
 }
 
+// A set s intersects all sets in n (i.e., their intersection with s is always nonempty)
 define set_intersect_sets[K](n: Set[Set[K]], s: Set[K]) -> Bool {
     forall(t: Set[K]) {
         t ∈ n implies (s ∩ t).is_nonempty
     }
 }
 
+// A set sub belongs to the subnet if it's the intersection of s with some set from n
 define elem_in_subnet_sets[K](n: Set[Set[K]], s: Set[K], sub: Set[K]) -> Bool {
     set_intersect_sets(n, s) and exists(t: Set[K]) {
         t ∈ n and sub = s ∩ t
     }
 }
 
+// The subnet of n with respect to s consists of all intersections of s with sets from n
 define subnet_sets[K](n: Set[Set[K]], s: Set[K]) -> Set[Set[K]] {
     Set[Set[K]].new(elem_in_subnet_sets(n, s))
 }
 
+// If s intersects all sets in n, then the subnet with respect to s is itself a net
 theorem subnet_sets_is_net[K](n: Set[Set[K]], s: Set[K]) {
     is_net(n) and set_intersect_sets(n, s) implies is_net(subnet_sets(n, s))
 } by {
@@ -682,6 +737,7 @@ theorem subnet_sets_is_net[K](n: Set[Set[K]], s: Set[K]) {
     directed(subnet_sets(n, s))
 }
 
+// Construct a subnet from a net n with respect to a set s; if s doesn't intersect all sets, return n unchanged
 define subnet[K](n: Net[K], s: Set[K]) -> Net[K] {
     if set_intersect_sets(n.sets, s) {
         Net[K].new(subnet_sets(n.sets, s))
@@ -690,6 +746,7 @@ define subnet[K](n: Net[K], s: Set[K]) -> Net[K] {
     }
 }
 
+// If s intersects all sets in n, then the intersection of s with any set t from n is in the subnet
 theorem two_intersection_in_subnet[K](n: Net[K], s: Set[K], t: Set[K]) {
     set_intersect_sets(n.sets, s) and t ∈ n implies s ∩ t ∈ subnet(n, s)
 } by {
@@ -698,6 +755,7 @@ theorem two_intersection_in_subnet[K](n: Net[K], s: Set[K], t: Set[K]) {
     s ∩ t ∈ subnet(n, s).sets
 }
 
+// Helper: any set in the subnet can be expressed as the intersection of s with some set from n
 theorem subnet_sets_helper[K](n: Net[K], s: Set[K], sub: Set[K]) {
     set_intersect_sets(n.sets, s) and sub ∈ subnet(n, s) implies exists(t: Set[K]) {
         t ∈ n and sub = s ∩ t
@@ -711,4 +769,5 @@ theorem subnet_sets_helper[K](n: Net[K], s: Set[K], sub: Set[K]) {
     t ∈ n and sub = s ∩ t
 }
 
+// Future: define a net using a directed set with a partial order, by mapping each element y to the set of elements less than or equal to y
 // we want to define a net by directed on a set ... i.e. let s: Set[K] and lte: s × s --> Bool be directed, then use correspondence y ∈ s <--> p(y) = { x ∈ s satisfy x <= y } so that y1 <= y2 <==> p(y1) ⊆ p(y2)

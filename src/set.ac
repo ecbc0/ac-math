@@ -21,6 +21,7 @@ define negate_fn[K](f: K -> Bool) -> (K -> Bool) {
     }
 }
 
+/// The negation of negation returns the original function.
 theorem reflect_of_nagate_fn[K] (f: K -> Bool) {
     negate_fn[K](negate_fn[K](f)) = f
 } by {
@@ -31,6 +32,7 @@ theorem reflect_of_nagate_fn[K] (f: K -> Bool) {
     }
 }
 
+/// Negating the constant false function yields constant true.
 theorem dual_of_constant_bool_fn[K] {
     negate_fn(constant_false[K]) = constant_true[K]
 }
@@ -92,6 +94,7 @@ theorem empty_is_not_universal[K] {
     constant_true(x) = true
 }
 
+/// A set equals the empty set iff it contains no elements.
 theorem empty_set_is_empty[K](a: Set[K]) {
     (a = empty[K]) iff (a.is_empty)
 } by {
@@ -102,6 +105,7 @@ theorem empty_set_is_empty[K](a: Set[K]) {
     } // "=" or "iff" is not good enough in bool now
 }
 
+/// A set equals the universal set iff it contains all elements of type K.
 theorem universal_set_is_universal[K](a: Set[K]) {
     (a = universe[K]) iff (a.is_universal)
 } by {
@@ -112,12 +116,14 @@ theorem universal_set_is_universal[K](a: Set[K]) {
     } // "=" or "iff" is not good enough in bool now
 }
 
+/// A set is nonempty iff it is not equal to the empty set.
 theorem is_nonempty_iff_is_not_empty_set[K](s: Set[K]) {
     (s).is_nonempty iff s != Set[K].empty_set
 } by {
     (s).is_nonempty implies s != Set[K].empty_set
 }
 
+/// Singleton sets have exactly one element, and any set with exactly one element is a singleton.
 theorem singleton_set_is_singleton[K](a: Set[K]) {
     forall(x: K) { Set[K].singleton(x).is_singleton }
 
@@ -126,6 +132,7 @@ theorem singleton_set_is_singleton[K](a: Set[K]) {
     (a.is_singleton) implies exists(x: K) {a = Set[K].singleton(x)}
 }
 
+/// The not_contains function is equivalent to the negation of contains.
 theorem non_contains_is_negate_contains[K] (a: Set[K]) {
     a.not_contains = negate_fn[K](a.contains)
 } by {
@@ -140,18 +147,22 @@ theorem non_contains_is_negate_contains[K] (a: Set[K]) {
     }
 }
 
+/// Element not in set is logically equivalent to negation of element in set.
 theorem not_contains_is_not_in[K](a: Set[K], x: K) {
     (x ∉ a) iff (not x ∈ a)
 } 
 
+/// Element not in set iff element is in complement of set.
 theorem element_not_in_is_element_in_compl[K](a: Set[K], x: K) {
     (x ∉ a) iff (x ∈ a.c)
 } 
 
+/// The complement's contains function equals the set's not_contains function.
 theorem compl_contains_is_non_contains[K](a: Set[K]) {
     a.c.contains = a.not_contains
 } 
 
+/// Taking complement twice returns original set.
 theorem compl_is_reflect[K](a: Set[K]) {
     a.c.c = a
 } by {
@@ -163,6 +174,7 @@ theorem compl_is_reflect[K](a: Set[K]) {
     a.c.c.contains = a.contains
 }
 
+/// Complement operation is involutive: applying complement twice is identity function.
 theorem compl_is_reflect_by_fn[K] {
     compose(Set[K].c, Set[K].c) = id_map[Set[K]]
 } by {
@@ -172,6 +184,7 @@ theorem compl_is_reflect_by_fn[K] {
     }
 }
 
+/// Complement of empty set is universal set, and complement of universal set is empty set.
 theorem dual_of_empty_set_and_universal[K] {
     empty[K].c = universe[K]
     and 
@@ -182,51 +195,59 @@ theorem dual_of_empty_set_and_universal[K] {
     empty[K].c = universe[K] // redundant
 }
 
+/// A singleton set is never empty.
 theorem singleton_set_is_not_empty[K](a: K) {
     not (Set[K].singleton(a)).is_empty
 } 
 
 attributes Set[K] {
-    /// a ⊆ b
+    /// a ⊆ b: Every element of a is also an element of b.
     define subset_eq(self, other: Set[K]) -> Bool {
         forall(x: K) {
             x ∈ self implies x ∈ other
         }
     }
-    /// a ⊇ b
+    /// a ⊇ b: Every element of b is also an element of a.
     define superset_eq(self, other: Set[K]) -> Bool {
         (other).subset_eq(self)
     }
 
+    /// a ⊂ b: a is a proper subset of b (a ⊆ b and a ≠ b).
     define subset(self, other: Set[K]) -> Bool {
         self ⊆ other and self != other
     }
 }
 
+/// Subset and superset are dual relations.
 theorem sym_of_subset_and_supset[K](a: Set[K], b: Set[K]) {
     (a ⊆ b) iff (b ⊇ a)
 } by {
     (a ⊆ b) implies (b ⊇ a)
 }
 
+/// Empty set is subset of every set (vacuous truth).
 theorem empty_set_is_always_subset[K](a: Set[K]) {
     empty[K] ⊆ a
     // by "Vacuous Truth"
     // something like: if the condition in the "if" control flow is flase, then skip the execution block, without error
 }
 
+/// Every set is a subset of the universal set.
 theorem all_sets_subset_universal[K](a: Set[K]) {
     a ⊆ universe[K]
 }
 
+/// Every set is a subset of itself.
 theorem subset_self[K](a: Set[K]) {
     a ⊆ a
 }
 
+/// Subset relation is transitive.
 theorem subset_trans[K](a1: Set[K], a2: Set[K], a3: Set[K]) {
     (a1 ⊆ a2 and a2 ⊆ a3) implies a1 ⊆ a3
 }
 
+/// Two sets are equal iff they are subsets of each other (extensionality).
 theorem subset_and_supset_iff_equal[K](a1: Set[K], a2: Set[K]) {
     (a1 = a2) iff (a1 ⊆ a2 and a1 ⊇ a2)
 } by {
@@ -244,6 +265,7 @@ theorem subset_and_supset_iff_equal[K](a1: Set[K], a2: Set[K]) {
     (a1 = a2) implies (a2 ⊆ a1)
 }
 
+/// Characterizes set equality via extensionality: a = b iff ∀ x, x ∈ a ⇔ x ∈ b.
 define set_eq_prop[K](a: Set[K], b: Set[K]) -> Bool {
     forall(x: K) {
         ((x ∈ a) implies (x ∈ b)) 
@@ -252,6 +274,7 @@ define set_eq_prop[K](a: Set[K], b: Set[K]) -> Bool {
     }
 }
 
+/// Sets are equal iff they have the same elements (extensionality).
 theorem set_equal_representation[K](a: Set[K], b: Set[K]) {
     (a = b) iff set_eq_prop(a, b)
 } by {
@@ -290,6 +313,7 @@ attributes Set[K] {
     }
 }
 
+/// Element in union iff element in either set.
 theorem in_union[K](a1: Set[K], a2: Set[K], x: K) {
     (x ∈ (a1 ∪ a2)) iff (x ∈ a1 or x ∈ a2)
 } by {
@@ -298,6 +322,7 @@ theorem in_union[K](a1: Set[K], a2: Set[K], x: K) {
     (x ∈ a1 or x ∈ a2) implies (x ∈ (a1 ∪ a2))
 }
 
+/// Element in intersection iff element in both sets.
 theorem in_intersection[K](a1: Set[K], a2: Set[K], x: K) {
     x ∈ (a1 ∩ a2) = (x ∈ a1 and x ∈ a2)
     // parentheses required?
@@ -305,10 +330,12 @@ theorem in_intersection[K](a1: Set[K], a2: Set[K], x: K) {
     x ∈ (a1 ∩ a2) implies (x ∈ a1 and x ∈ a2)
 }
 
+/// A set and its complement are disjoint.
 theorem compl_separate[K](a: Set[K]) {
     a ∩ a.c = empty[K]
 }
 
+/// Set difference equals intersection with complement.
 theorem difference_is_intersection_with_compl[K](a: Set[K], b: Set[K]) {
     (a ∖ b) = (a ∩ b.c)
 } by {
@@ -321,20 +348,24 @@ theorem difference_is_intersection_with_compl[K](a: Set[K], b: Set[K]) {
     }
 }
 
+/// Set difference is subset of minuend.
 theorem diff_subset[K](a: Set[K], b: Set[K]) {
     (a ∖ b) ⊆ a
 }
 
+/// Subset relation reverses under complement.
 theorem subset_compl_to_superset[K](a: Set[K], b: Set[K]) {
     a ⊆ b iff a.c ⊇ b.c
 } by {
     a ⊆ b implies a.c ⊇ b.c
 }
 
+/// Subset relation reverses under difference with fixed superset.
 theorem subset_diff_to_superset[K](a: Set[K], b: Set[K], s: Set[K]) {
     a ⊆ b implies s ∖ a ⊇ s ∖ b
 } 
 
+/// Union is commutative.
 theorem union_comm[K](a1: Set[K], a2: Set[K]) {
     (a1 ∪ a2) = (a2 ∪ a1)
     // by the comm of logic operator `or`
@@ -348,6 +379,7 @@ theorem union_comm[K](a1: Set[K], a2: Set[K]) {
     elem_in_union(a1, a2) = elem_in_union(a2, a1)
 }
 
+/// Intersection is commutative.
 theorem intersection_comm[K](a1: Set[K], a2: Set[K]) {
     a1 ∩ a2 = a2 ∩ a1
 } by {
@@ -360,6 +392,7 @@ theorem intersection_comm[K](a1: Set[K], a2: Set[K]) {
     elem_in_intersection(a1, a2) = elem_in_intersection(a2, a1)
 }
 
+/// De Morgan's law: complement of union equals intersection of complements.
 theorem union_intersection_compl_dual[K](a1: Set[K], a2: Set[K]) {
     (a1 ∪ a2).c = (a1.c ∩ a2.c)
     // by the De Morgan law of logic operator `and`, `or`
@@ -373,6 +406,7 @@ theorem union_intersection_compl_dual[K](a1: Set[K], a2: Set[K]) {
     }
 }
 
+/// Each set is subset of their union.
 theorem set_in_union[K](a1: Set[K], a2: Set[K]) {
     a1 ⊆ a1 ∪ a2 and a2 ⊆ a1 ∪ a2
 } by {
@@ -380,10 +414,12 @@ theorem set_in_union[K](a1: Set[K], a2: Set[K]) {
     a2 ⊆ a1 ∪ a2
 }
 
+/// If both sets are subsets of a third, their union is also subset.
 theorem subset_union_is_subset[K](sub_1: Set[K], sub_2: Set[K], a: Set[K]) {
     (sub_1 ⊆ a and sub_2 ⊆ a) implies ((sub_1 ∪ sub_2) ⊆ a)
 }
 
+/// Intersection is subset of each operand.
 theorem set_contains_intersection[K](a1: Set[K], a2: Set[K]) {
     a1 ∩ a2 ⊆ a1 and a1 ∩ a2 ⊆ a2
 } by {
@@ -391,14 +427,17 @@ theorem set_contains_intersection[K](a1: Set[K], a2: Set[K]) {
     a1 ∩ a2 ⊆ a2
 }
 
+/// If both sets are supersets of a third, their intersection is also superset.
 theorem supset_intersection_is_supset[K](sup_1: Set[K], sup_2: Set[K], a: Set[K]) {
     (sup_1 ⊇ a and sup_2 ⊇ a) implies ((sup_1 ∩ sup_2) ⊇ a)
 }
 
+/// Symmetric difference: elements in exactly one of two sets.
 define sym_difference[K](a: Set[K], b: Set[K]) -> Set[K] {
     (a ∖ b) ∪ (b ∖ a) 
 }
 
+/// Alternative representation of symmetric difference via union minus intersection.
 theorem sym_difference_another_rep[K](a: Set[K], b: Set[K]) {
     (a ∖ b) ∪ (b ∖ a) = (a ∪ b) ∖ (a ∩ b) 
 } by {
@@ -424,36 +463,43 @@ theorem sym_difference_another_rep[K](a: Set[K], b: Set[K]) {
     (a ∪ b) ∖ (a ∩ b) ⊆ (a ∖ b) ∪ (b ∖ a)
 }
 
+/// Symmetric difference is symmetric in its arguments.
 theorem sym_diff_is_sym[K](a: Set[K], b: Set[K]) {
     sym_difference(a, b) = sym_difference(b, a)
 }
 
+/// Union preserves subset relation in both arguments.
 theorem union_preserve_subset[K](a1: Set[K], a2: Set[K], b1: Set[K], b2: Set[K]) {
     a1 ⊆ b1 and a2 ⊆ b2 implies a1 ∪ a2 ⊆ b1 ∪ b2
 }
 
+/// Intersection preserves subset relation in both arguments.
 theorem intersect_preserve_subset[K](a1: Set[K], a2: Set[K], b1: Set[K], b2: Set[K]) {
     a1 ⊆ b1 and a2 ⊆ b2 implies a1 ∩ a2 ⊆ b1 ∩ b2
 }
 
+/// Being subset of intersection is equivalent to being subset of both operands.
 theorem superset_interseciton_superset_to_and[K](sup_1: Set[K], sup_2: Set[K], a: Set[K]) {
     a ⊆ sup_1 ∩ sup_2 iff a ⊆ sup_1 and a ⊆ sup_2
 } by {
     a ⊆ sup_1 ∩ sup_2 implies a ⊆ sup_1 and a ⊆ sup_2
 }
 
+/// Being subset of union is equivalent to each operand being subset.
 theorem subset_union_subset_to_and[K](sub_1: Set[K], sub_2: Set[K], a: Set[K]) {
     sub_1 ∪ sub_2 ⊆ a iff sub_1 ⊆ a and sub_2 ⊆ a
 } by {
     sub_1 ∪ sub_2 ⊆ a implies sub_1 ⊆ a and sub_2 ⊆ a
 }
 
+/// Not subset iff intersection with complement is nonempty.
 theorem not_subset_iff_contains_compl[K](a: Set[K], b: Set[K]) {
     not a ⊆ b iff a ∩ b.c != empty[K] 
 } by {
     not a ⊆ b implies a ∩ b.c != empty[K] 
 }
 
+/// Not subset iff set difference is nonempty.
 theorem not_subset_iff_contains_diff[K](a: Set[K], b: Set[K]) {
     not a ⊆ b iff a ∖ b != empty[K] 
 } by {
@@ -461,12 +507,14 @@ theorem not_subset_iff_contains_diff[K](a: Set[K], b: Set[K]) {
     not a ⊆ b implies a ∖ b != empty[K]
 }
 
+/// Subset iff set difference is empty.
 theorem subset_iff_not_contains_diff[K](a: Set[K], b: Set[K]) {
     a ⊆ b iff a ∖ b = empty[K] 
 } by {
     a ⊆ b implies a ∖ b = empty[K] 
 }
 
+/// Symmetric difference reduces to single difference when one set is subset of the other.
 theorem when_sym_diff_is_diff[K](a: Set[K], b: Set[K]) {
     sym_difference(a, b) = b ∖ a iff a ⊆ b
 } by {
@@ -491,22 +539,26 @@ theorem when_sym_diff_is_diff[K](a: Set[K], b: Set[K]) {
     }
 }
 
+/// Two sets are disjoint iff their intersection is empty.
 define disjoint[K](a: Set[K], b: Set[K]) -> Bool {
     a ∩ b = empty[K]
 }
 
+/// Disjoint sets have no common elements.
 theorem disjoint_by_logic_imp[K](a: Set[K], b: Set[K]) {
     disjoint(a, b) implies forall(x: K) {
         not (x ∈ a and x ∈ b)
     }
 } 
 
+/// Sets with no common elements are disjoint.
 theorem disjoint_by_logic_imp_by[K](a: Set[K], b: Set[K]) {
     forall(x: K) {
         not (x ∈ a and x ∈ b)
     } implies disjoint(a, b)
 }
 
+/// A set is disjoint with its difference from another set.
 theorem diff_disjointt[K](a: Set[K], b: Set[K]) {
     disjoint(a, b ∖ a)
 } by {
@@ -522,6 +574,7 @@ theorem diff_disjointt[K](a: Set[K], b: Set[K]) {
     a ∩ (b ∖ a) = empty[K]
 }
 
+/// Removing a set from union with disjoint set returns the other set.
 theorem disjoint_substract[K](a: Set[K], b: Set[K]) {
     disjoint(a, b) implies (a ∪ b) ∖ a = b
 } by {
@@ -545,6 +598,7 @@ theorem disjoint_substract[K](a: Set[K], b: Set[K]) {
     (a ∪ b) ∖ a ⊇ b
 }
 
+/// Any set can be decomposed as subset union with its difference.
 theorem recover_from_subset_substract[K](a: Set[K], b: Set[K]) {
     a ⊆ b implies b = a ∪ (b ∖ a)
 } by {
@@ -568,6 +622,7 @@ theorem recover_from_subset_substract[K](a: Set[K], b: Set[K]) {
     a ∪ (b ∖ a) ⊆ b
 }
 
+/// Subset equals complement of difference from superset.
 theorem sym_of_subset_substract[K](a: Set[K], b: Set[K]) {
     a ⊆ b implies a = b ∖ (b ∖ a)
 } by {
@@ -576,6 +631,7 @@ theorem sym_of_subset_substract[K](a: Set[K], b: Set[K]) {
     b ∖ (b ∖ a) = a
 }
 
+/// Difference can be computed using smaller first operand.
 theorem to_subset_substract[K](a: Set[K], b: Set[K]) {
     b ∖ a = b ∖ (a ∩ b)
 } by {
@@ -597,6 +653,7 @@ theorem to_subset_substract[K](a: Set[K], b: Set[K]) {
     b ∖ a ⊆ b ∖ (a ∩ b)
 }
 
+/// A set decomposes into disjoint union of intersection with and difference of intersection.
 theorem substract_decomp[K](a: Set[K], b: Set[K]) {
     disjoint(a ∩ b, b ∖ (a ∩ b)) and b = (a ∩ b) ∪ (b ∖ (a ∩ b))
 } by {
@@ -604,6 +661,7 @@ theorem substract_decomp[K](a: Set[K], b: Set[K]) {
     (a ∩ b) ⊆ b
 }
 
+/// Union can be expressed as disjoint union with difference from other operand.
 theorem force_disjoint_union[K](a: Set[K], b: Set[K]) {
     a ∪ b = a ∪ (b ∖ a)
 } by {
@@ -625,6 +683,7 @@ theorem force_disjoint_union[K](a: Set[K], b: Set[K]) {
     a ∪ b ⊆ a ∪ (b ∖ a)
 }
 
+/// Union decomposes into disjoint union of  symmetric difference with intersection.
 theorem sym_diff_decomp_1[K](a: Set[K], b: Set[K]) {
     disjoint(sym_difference(a, b), a ∩ b) and a ∪ b = sym_difference(a, b) ∪ (a ∩ b)
 } by {
@@ -634,10 +693,12 @@ theorem sym_diff_decomp_1[K](a: Set[K], b: Set[K]) {
     a ∪ b = (a ∩ b) ∪ ((a ∪ b) ∖ (a ∩ b))
 }
 
+/// Symmetric difference is disjoint union of two differences.
 theorem sym_diff_decomp_2[K](a: Set[K], b: Set[K]) {
     disjoint(a ∖ b, b ∖ a) and sym_difference(a, b) = (a ∖ b) ∪ (b ∖ a)
 } 
 
+/// Union is associative.
 theorem union_associative[K](a1: Set[K], a2: Set[K], a3: Set[K]) {
     (a1 ∪ a2) ∪ a3 = a1 ∪ (a2 ∪ a3)
     // by assoc if logic `or`
@@ -658,6 +719,7 @@ theorem union_associative[K](a1: Set[K], a2: Set[K], a3: Set[K]) {
     u1 ⊆ u2 
 }
 
+/// Intersection is associative.
 theorem intersection_associative[K](a1: Set[K], a2: Set[K], a3: Set[K]) {
     (a1 ∩ a2) ∩ a3 = a1 ∩ (a2 ∩ a3)
 } by {
@@ -665,55 +727,68 @@ theorem intersection_associative[K](a1: Set[K], a2: Set[K], a3: Set[K]) {
     ((a1.c ∪ a2.c) ∪ a3.c).c = (a1.c ∪ (a2.c ∪ a3.c)).c
 }
 
+/// Union is idempotent.
 theorem union_idemp[K](a: Set[K]) {
     a ∪ a = a
 }
 
+/// Intersection is idempotent.
 theorem intersection_idemp[K](a: Set[K]) {
     a ∩ a = a
 }
 
+/// Union with superset returns superset.
 theorem union_subset_is_self[K](sub: Set[K], a: Set[K]) {
     sub ⊆ a implies sub ∪ a = a
 }
 
+/// Intersection with subset returns subset.
 theorem intersection_subset_is_self[K](sup: Set[K], a: Set[K]) {
     sup ⊇ a implies sup ∩ a = a
 }
 
+/// Union with empty set returns original set.
 theorem union_empty_is_self[K](a: Set[K]) {
     a ∪ empty[K] = a
 }
 
+/// Union with universal set returns universal set.
 theorem union_universal_is_universal[K](a: Set[K]) {
     a ∪ universe[K] = universe[K]
 }
 
+/// Intersection with universal set returns original set.
 theorem intersection_universal_is_self[K](a: Set[K]) {
     a ∩ universe[K] = a
 }
 
+/// Intersection with empty set returns empty set.
 theorem intersection_empty_is_empty[K](s: Set[K]) {
     s ∩ empty[K] = empty[K]
 }
 
+/// If two disjoint sets have union equal to universal, they are complements.
 theorem decomposition_of_universe[K](a: Set[K], b: Set[K]) {
     a ∩ b = empty[K] and a ∪ b = universe[K] implies a = b.c
 }
 
+/// A set union with its complement equals universal set.
 theorem decomposition_of_universe_imp_rev[K](a: Set[K], b: Set[K]) {
     a ∪ a.c = universe[K]
 }
 
+/// Boolean distributive law.
 theorem bool_distributive(x1: Bool, x2: Bool, y: Bool) {
     ((x1 or x2) and y) = ((x1 and y) or (x2 and y))
     // parentheses is necessary
 }
 
+/// Boolean dual distributive law.
 theorem bool_distributive_dual(x1: Bool, x2: Bool, y: Bool) {
     ((x1 and x2) or y) = ((x1 or y) and (x2 or y)) 
 } // if put together "bool_distributive" and "bool_distributive_dual" with `and`, search fail
 
+/// Set distributive law: union distributes over intersection.
 theorem union_intersection_distributive[K](a1: Set[K], a2: Set[K], b: Set[K]) {
     ((a1 ∪ a2) ∩ b) = ((a1 ∩ b) ∪ (a2 ∩ b))
 } 
@@ -738,6 +813,7 @@ by {
     ((a1 ∪ a2) ∩ b) ⊆ ((a1 ∩ b) ∪ (a2 ∩ b))
 }
 
+/// Set distributive law: intersection distributes over union.
 theorem union_intersection_distributive_dual[K](a1: Set[K], a2: Set[K], b: Set[K]) {
     ((a1 ∩ a2) ∪ b) = ((a1 ∪ b) ∩ (a2 ∪ b))
 } by {
@@ -906,11 +982,14 @@ theorem intersection_is_intersection_index_of_two[K](a1: Set[K], a2: Set[K]) {
     }
 }
 
+/// Ordered pair of elements from types K1 and K2.
 structure Product[K1, K2] {
     first: K1
     second: K2
 }
 
+/// Curries a two-argument function: f(i)(j) ↦ f(i,j).
+/// Converts I -> (J -> T) to (I × J) -> T.
 define suc_to_product[I, J, T](f: I -> (J -> T)) -> Product[I, J] -> T {
     function(p: Product[I, J]) {
         f(p.first)(p.second)
@@ -990,6 +1069,8 @@ theorem suc_intersection_index_to_intersection_index_product[I, J, K](f: I -> (J
     intersection_index(suc_intersection_index(f)) ⊇ intersection_index(suc_to_product(f))
 }
 
+/// Disjoint union (sum type) of K1 and K2.
+/// Either value from K1 (inl) or value from K2 (inr).
 inductive Sum[K1, K2] {
     first(K1)
     second(K2)
@@ -1091,10 +1172,12 @@ theorem sets_subset_imp_union_subset[K](c1: Set[Set[K]], c2: Set[Set[K]]) {
     }
 }
 
+/// Every set in collection is subset of their union.
 theorem union_subset[K](c: Set[Set[K]], s: Set[K]) {
     s ∈ c implies s ⊆ union(c)
 }
 
+/// If every set in collection is subset of s, then union is also subset.
 theorem superset_union[K](c: Set[Set[K]], s: Set[K]) {
     forall(t: Set[K]) {
         t ∈ c implies s ⊇ t
@@ -1111,6 +1194,7 @@ define intersection[K](c: Set[Set[K]]) -> Set[K] {
     Set[K].new(elem_in_intersection_general(c))
 }
 
+/// Subset of sets implies superset of intersections.
 theorem sets_subset_imp_intersection_superset[K](c1: Set[Set[K]], c2: Set[Set[K]]) {
     c1 ⊆ c2 implies intersection(c1) ⊇ intersection(c2)
 } by {
@@ -1127,10 +1211,12 @@ theorem sets_subset_imp_intersection_superset[K](c1: Set[Set[K]], c2: Set[Set[K]
     }
 }
 
+/// Every set in collection is superset of their intersection.
 theorem intersection_superset[K](c: Set[Set[K]], s: Set[K]) {
     s ∈ c implies s ⊇ intersection(c)
 }
 
+/// If s is subset of every set in collection, s is subset of intersection.
 theorem subset_intersection[K](c: Set[Set[K]], s: Set[K]) {
     forall(t: Set[K]) {
         t ∈ c implies s ⊆ t
@@ -1141,6 +1227,7 @@ theorem subset_intersection[K](c: Set[Set[K]], s: Set[K]) {
     }
 }
 
+/// Intersection over empty collection equals universal set.
 theorem empty_intersection_is_universe[K] {
     intersection(Set[Set[K]].empty_set) = Set[K].universal_set
 } by {
@@ -1160,14 +1247,17 @@ theorem empty_intersection_is_universe[K] {
     intersection(Set[Set[K]].empty_set).contains = Set[K].universal_set.contains
 }
 
+/// Helper predicate for set of complements.
 define elem_in_compl_of_sets[K](sets: Set[Set[K]], s: Set[K]) -> Bool {
     s.c ∈ sets
 }
 
+/// Set of complements of a collection of sets.
 define compl_of_sets[K](sets: Set[Set[K]]) -> Set[Set[K]] {
     Set[Set[K]].new(elem_in_compl_of_sets(sets))
 }
 
+/// Taking complements twice returns original collection.
 theorem compl_of_sets_reflect[K](sets: Set[Set[K]]) {
     compl_of_sets(compl_of_sets(sets)) = sets
 } by {
@@ -1187,6 +1277,7 @@ theorem compl_of_sets_reflect[K](sets: Set[Set[K]]) {
     sets.contains = compl_of_sets(compl_of_sets(sets)).contains
 }
 
+/// Complement of union equals intersection of complements (generalized De Morgan).
 theorem union_intersection_compl_dual_general[K](sets: Set[Set[K]]) {
     union(sets).c = intersection(compl_of_sets(sets))
 } by {
@@ -1220,6 +1311,7 @@ theorem union_intersection_compl_dual_general[K](sets: Set[Set[K]]) {
     union(sets).c ⊇ intersection(compl_of_sets(sets))
 }
 
+/// Union over empty collection equals empty set.
 theorem empty_union_is_empty[K] {
     union(Set[Set[K]].empty_set) = Set[K].empty_set
 }
@@ -1234,6 +1326,7 @@ define intersection_with_one[K](c: Set[Set[K]], s: Set[K]) -> Set[K] {
     )
 }
 
+/// If set is in nonempty collection, intersection with it equals intersection.
 theorem intersection_comm_one[K](c: Set[Set[K]], s: Set[K]) {
     (c).is_nonempty implies intersection_with_one(c, s) = s ∩ intersection(c)
 } by {
@@ -1277,6 +1370,7 @@ theorem intersection_with_one_that_in_sets[K](c: Set[Set[K]], s: Set[K]) {
     s ∩ intersection(c) = intersection(c)
 }
 
+/// All pairs of sets in collection are disjoint.
 define pairwise_disjoint[K](c: Set[Set[K]]) -> Bool {
     forall(a: Set[K], b: Set[K]) {
         a ∈ c and b ∈ c implies disjoint(a, b)
@@ -1284,6 +1378,8 @@ define pairwise_disjoint[K](c: Set[Set[K]]) -> Bool {
 }
 
 // todo: (product/sum)_index_of_two
+/// A function with specified domain and codomain as sets.
+/// Represents a function f: A → B where A ⊆ in_space and f(A) ⊆ out_space.
 structure Map[K, L] {
     in_space: Set[K]
     out_space: Set[L]
@@ -1354,6 +1450,7 @@ define product_index_map[I, K](m: Map[I, Set[K]]) -> Set[I -> K] {
 // todo: set theory version of sum_index
 
 attributes Map[K, L] {
+    /// True if the function is injective: f(x₁) = f(x₂) ⇒ x₁ = x₂.
     define is_injective(self) -> Bool {
         forall(x1: K, x2: K) {
             x1 ∈ self.in_space and 
@@ -1363,6 +1460,7 @@ attributes Map[K, L] {
         }
     }
 
+    /// True if the function is surjective: ∀ y ∈ B, ∃ x ∈ A, f(x) = y.
     define is_surjective(self) -> Bool {
         forall(y: L) {
             y ∈ self.out_space implies exists(x: K) {
@@ -1371,11 +1469,13 @@ attributes Map[K, L] {
         }
     }
 
+    /// True if the function is both injective and surjective (bijective).
     define is_bijective(self) -> Bool {
         self.is_injective and self.is_surjective
     }
 }
 
+/// |A| ≤ |B|: There exists an injective function f: A → B.
 define cardinal_lte[K, L](a: Set[K], b: Set[L]) -> Bool {
     exists(m: Map[K, L]) {
         m.in_space = a and
@@ -1384,6 +1484,7 @@ define cardinal_lte[K, L](a: Set[K], b: Set[L]) -> Bool {
     }
 }
 
+/// |A| ≥ |B|: There exists a surjective function f: A → B.
 define cardinal_gte[K, L](a: Set[K], b: Set[L]) -> Bool {
     exists(m: Map[K, L]) {
         m.in_space = a and
@@ -1392,6 +1493,7 @@ define cardinal_gte[K, L](a: Set[K], b: Set[L]) -> Bool {
     }
 }
 
+/// |A| = |B|: There exists a bijective function f: A → B.
 define cardinal_eq[K, L](a: Set[K], b: Set[L]) -> Bool {
     exists(m: Map[K, L]) {
         m.in_space = a and
@@ -1400,30 +1502,37 @@ define cardinal_eq[K, L](a: Set[K], b: Set[L]) -> Bool {
     }
 }
 
+/// The power set 𝒫(A): The set of all subsets of A.
 define power_set[K](a: Set[K]) -> Set[Set[K]] {
     Set[Set[K]].new(a.superset_eq)
 }
 
+/// Function is injective: distinct inputs give distinct outputs.
 define is_injective[K, L](f: K -> L) -> Bool {
     forall(x1: K, x2: K) { f(x1) = f(x2) implies x1 = x2 }  
 }
 
+/// Injectivity implies distinct inputs have distinct outputs.
 theorem is_injective_rev_imp[K, L](f: K -> L) {
     is_injective(f) implies forall(x1: K, x2: K) { x1 != x2 implies f(x1) != f(x2) }  
 } 
 
+/// Distinct inputs having distinct outputs implies injectivity.
 theorem is_injective_rev_imp_by[K, L](f: K -> L) {
     forall(x1: K, x2: K) { x1 != x2 implies f(x1) != f(x2) } implies is_injective(f)
 }
 
+/// Function is surjective: every output has some input.
 define is_surjective[K, L](f: K -> L) -> Bool {
     forall(y: L) { exists(x: K) { f(x) = y } } 
 }
 
+/// Function is bijective: both injective and surjective.
 define is_bijective[K, L](f: K -> L) -> Bool {
     is_injective(f) and is_surjective(f) 
 }
 
+/// Cantor's theorem: no function from K to power set of K is surjective.
 theorem cardinal_lt_power[K](f: K -> Set[K]) {
     not is_surjective(f)
 } by {
@@ -1454,10 +1563,12 @@ define elem_in_inv_image_of_function[K, L](b: Set[L], f: K -> L, x: K) -> Bool {
 }
 
 attributes Set[K] {
+    /// The image f(A) = {f(x) | x ∈ A}.
     define image[L](self, f: K -> L) -> Set[L] {
         Set[L].new(elem_in_image_of_function(self, f))
     }
 
+    /// The preimage (inverse image) f⁻¹(B) = {x | f(x) ∈ B}.
     define inv_image[L](self, f: L -> K) -> Set[L] {
         Set[L].new(elem_in_inv_image_of_function(self, f))
     }

@@ -10,38 +10,47 @@ from list import List
 from type_class.add import sub_add_cancel_right
 numerals ℝ
 
+/// A collection of sets is closed under binary union.
 define preserve_union[K](m: Set[Set[K]]) -> Bool {
     forall(a: Set[K], b: Set[K]) {
         a ∈ m and b ∈ m implies a ∪ b ∈ m
     }    
 }
 
+/// A collection of sets is closed under binary intersection.
 define preserve_intersection[K](m: Set[Set[K]]) -> Bool {
     forall(a: Set[K], b: Set[K]) {
         a ∈ m and b ∈ m implies a ∩ b ∈ m
     }    
 }
 
+/// A collection of sets is closed under set difference.
 define preserve_diff[K](m: Set[Set[K]]) -> Bool {
     forall(a: Set[K], b: Set[K]) {
         a ∈ m and b ∈ m implies a ∖ b ∈ m
     }    
 }
 
+/// A set algebra is a collection of sets closed under union, intersection, and difference.
 define is_set_algebra[K](m: Set[Set[K]]) -> Bool {
     preserve_union(m) and 
     preserve_intersection(m) and 
     preserve_diff(m)
 }
 
+/// Every nonempty set algebra contains the empty set.
 theorem empty_in_set_algebra[K](m: Set[Set[K]]) {
     is_set_algebra(m) and m.is_nonempty implies empty[K] ∈ m
 } by {
+    /// Choose any set s in the algebra (exists since m is nonempty)
     let s: Set[K] satisfy { s ∈ m }
+    /// By closure under set difference, s ∖ s ∈ m
     s ∖ s ∈ m
+    /// The difference of a set with itself is the empty set
     s ∖ s = empty[K]
 }
 
+/// Set algebras preserve symmetric difference when one set is subset of another.
 theorem set_algebra_preserve_sym_diff[K](m: Set[Set[K]], a: Set[K], b: Set[K]) {
     is_set_algebra(m) and a ∈ m and b ∈ m and a ⊆ b implies sym_difference(a, b) ∈ m
 } by {
@@ -51,18 +60,21 @@ theorem set_algebra_preserve_sym_diff[K](m: Set[Set[K]], a: Set[K], b: Set[K]) {
     (a ∖ b) ∪ (b ∖ a) ∈ m
 }
 
+/// Volume function is nonnegative on all sets in the collection.
 define nonnegtive_volume[K](sets: Set[Set[K]], volume: Set[K] -> ℝ) -> Bool {
     forall(s: Set[K]) {
         s ∈ sets implies volume(s) >= 0
     }
 }
 
+/// Volume is additive on disjoint sets: vol(A ∪ B) = vol(A) + vol(B) when A ∩ B = ∅.
 define disjoint_union_to_add[K](sets: Set[Set[K]], vol: Set[K] -> ℝ) -> Bool {
     forall(s1: Set[K], s2: Set[K]) {
         s1 ∈ sets and s2 ∈ sets and disjoint(s1, s2) implies vol(s1 ∪ s2) = vol(s1) + vol(s2)
     }
 }
 
+/// A volume chain consists of a set algebra with a nonnegative, finitely additive volume function.
 structure Volume_Chain[K] {
     sets: Set[Set[K]]
     vol: Set[K] -> ℝ
@@ -84,12 +96,15 @@ structure Volume_Chain[K] {
     sets.is_nonempty
 }
 
+/// Convenience methods for Volume_Chain.
 attributes Volume_Chain[K] {
+    /// Check if a set belongs to this volume chain.
     define contains(self, s: Set[K]) -> Bool {
         self.sets.contains(s)
     }
 }
 
+/// Helper theorem: set algebra operations preserve membership in volume chain.
 theorem set_algebra_constraint_helper[K](m: Volume_Chain[K], a: Set[K], b: Set[K]) {
     a ∈ m and b ∈ m implies (
         a ∪ b ∈ m and 
@@ -98,22 +113,29 @@ theorem set_algebra_constraint_helper[K](m: Volume_Chain[K], a: Set[K], b: Set[K
         sym_difference(a, b) ∈ m
     )
 } by {
+    /// By closure under union
     a ∪ b ∈ m
-    a ∩ b ∈ m 
+    /// By closure under intersection
+    a ∩ b ∈ m
+    /// By closure under set difference
     a ∖ b ∈ m
+    /// Symmetric difference preserves membership via set_algebra_preserve_sym_diff
     sym_difference(a, b) ∈ m.sets
 }
 
+/// Helper theorem for disjoint additivity of volume.
 theorem disjoint_union_to_add_helper[K](m: Volume_Chain[K], s1: Set[K], s2: Set[K]) {
     s1 ∈ m and s2 ∈ m and disjoint(s1, s2) implies m.vol(s1 ∪ s2) = m.vol(s1) + m.vol(s2)
 }
 
+/// Helper theorem: volume is nonnegative on sets in the volume chain.
 theorem nonnegtive_volume_helper[K](m: Volume_Chain[K], s: Set[K]) {
     s ∈ m implies m.vol(s) >= 0
 } by {
     s ∈ m.sets
 }
 
+/// Helper theorem: empty set belongs to every volume chain.
 theorem empty_helper[K](m: Volume_Chain[K], s: Set[K]) {
     empty[K] ∈ m
 } by {
@@ -121,74 +143,104 @@ theorem empty_helper[K](m: Volume_Chain[K], s: Set[K]) {
     empty[K] ∈ m.sets
 }
 
+/// Volume is subtractive: vol(B ∖ A) = vol(B) - vol(A) when A ⊆ B.
 theorem volume_sub[K](m: Volume_Chain[K], a: Set[K], b: Set[K]) {
     a ∈ m and b ∈ m and a ⊆ b implies m.vol(b ∖ a) = m.vol(b) - m.vol(a)
 } by {
+    /// Set difference preserves membership
     b ∖ a ∈ m
+    /// Since a ⊆ b, we have b = a ∪ (b ∖ a)
     b = a ∪ (b ∖ a)
+    /// The union is disjoint
     disjoint(a, b ∖ a)
+    /// By finite additivity of volume on disjoint sets
     m.vol(b) = m.vol(a) + m.vol(b ∖ a)
 }
 
+/// Volume is monotone: A ⊆ B implies vol(A) ≤ vol(B).
 theorem subset_vol_lt[K](m: Volume_Chain[K], a: Set[K], b: Set[K]) {
     a ∈ m and b ∈ m and a ⊆ b implies m.vol(a) <= m.vol(b)
 } by {
+    /// From volume_sub: m.vol(b) = m.vol(a) + m.vol(b ∖ a)
     m.vol(b ∖ a) + m.vol(a) = m.vol(b)
+    /// Volume is nonnegative on all sets
     m.vol(b ∖ a) >= 0
 }
 
+/// Volume of set difference is bounded: vol(B ∖ A) ≤ vol(B).
 theorem set_diff_vol_lt[K](m: Volume_Chain[K], a: Set[K], b: Set[K]) {
     a ∈ m and b ∈ m implies m.vol(b ∖ a) <= m.vol(b)
 } by {
+    /// Set difference is always a subset
     b ∖ a ⊆ b
+    /// Apply monotonicity (subset_vol_lt)
 }
 
+/// Subadditivity of volume: vol(A ∪ B) ≤ vol(A) + vol(B).
 theorem union_vol_lt[K](m: Volume_Chain[K], a: Set[K], b: Set[K]) {
     a ∈ m and b ∈ m implies m.vol(a ∪ b) <= m.vol(a) + m.vol(b)
 } by {
+    /// The sets a and b ∖ a are disjoint
     disjoint(a, b ∖ a)
+    /// Decompose the union as disjoint union
     a ∪ b = a ∪ (b ∖ a)
+    /// Substitute
     m.vol(a ∪ b) = m.vol(a ∪ (b ∖ a))
+    /// Apply finite additivity to disjoint union
     m.vol(a ∪ (b ∖ a)) = m.vol(a) + m.vol(b ∖ a)
+    /// Volume is monotone: b ∖ a ⊆ b
     m.vol(a) + m.vol(b ∖ a) <= m.vol(a) + m.vol(b)
 }
 
+/// The empty set has zero volume.
 theorem empty_zero_volume[K](m: Volume_Chain[K]) {
     m.vol(empty[K]) = 0
 } by {
+    /// Empty set equals its union with itself
     empty[K] = empty[K] ∪ empty[K]
+    /// Empty set is disjoint with itself
     disjoint(empty[K], empty[K])
+    /// Apply finite additivity
     m.vol(empty[K] ∪ empty[K]) = m.vol(empty[K]) + m.vol(empty[K])
+    /// Substitute using the equality above
     m.vol(empty[K]) = m.vol(empty[K]) + m.vol(empty[K])
+    /// The only real number satisfying x = x + x is 0
     m.vol(empty[K]) = 0
 }
 
+/// Element belongs to control distance set if it can approximate the symmetric difference with a convergent series.
 define elem_in_control_dist_from_vol_chain[K](m: Volume_Chain[K], a: Set[K], p: Set[K], r: ℝ) -> Bool {
     p ∈ m and exists(f: ℕ -> Set[K]) {
         fn_image(f) ⊆ m.sets and sym_difference(a, p) ⊆ union_index(f) and converge(series(compose(m.vol, f))) and r = series_sum(compose(m.vol, f))
     }
 }
 
+/// Helper theorem unpacking the definition of control distance membership.
 theorem elem_in_control_dist_from_vol_chain_helper[K](m: Volume_Chain[K], a: Set[K], p: Set[K], r: ℝ) {
     elem_in_control_dist_from_vol_chain(m, a, p, r) implies p ∈ m and exists(f: ℕ -> Set[K]) {
         fn_image(f) ⊆ m.sets and sym_difference(a, p) ⊆ union_index(f) and converge(series(compose(m.vol, f))) and r = series_sum(compose(m.vol, f))
     }
 }
 
+/// Set of all control distances for approximating set a by set p from the volume chain.
 define control_dist_from_vol_chain[K](m: Volume_Chain[K], a: Set[K], p: Set[K]) -> Set[ℝ] {
     Set[ℝ].new(elem_in_control_dist_from_vol_chain(m, a, p))
 }
 
+/// Control distances are always nonnegative.
 theorem control_dist_from_vol_chain_gte_zero[K](m: Volume_Chain[K], a: Set[K], p: Set[K]) {
     0.is_set_lower_bound(control_dist_from_vol_chain(m, a, p))
 } by {
     forall(r: ℝ) {
         if r ∈ control_dist_from_vol_chain(m, a, p) {
+            /// Unpack the definition of control distance membership
             elem_in_control_dist_from_vol_chain(m, a, p, r)
             p ∈ m
+            /// Extract the covering sequence f with series sum r
             let (f: ℕ -> Set[K]) satisfy {
                 fn_image(f) ⊆ m.sets and sym_difference(a, p) ⊆ union_index(f) and converge(series(compose(m.vol, f))) and r = series_sum(compose(m.vol, f))
             }
+            /// Show each term in the series is nonnegative
             forall(n: ℕ) {
                 compose(m.vol, f)(n) = m.vol(f(n))
                 f(n) ∈ fn_image(f)
@@ -196,84 +248,108 @@ theorem control_dist_from_vol_chain_gte_zero[K](m: Volume_Chain[K], a: Set[K], p
                 m.vol(f(n)) >= 0
                 compose(m.vol, f)(n) >= 0
             }
+            /// The sequence is nonnegative everywhere
             is_nonnegative_seq(compose(m.vol, f))
+            /// Series sum of nonnegative sequence is nonnegative
             series_sum(compose(m.vol, f)) >= 0
             r >= 0
         }
     }
 }
 
+/// Control distance sets always have lower bounds.
 theorem control_dist_from_vol_chain_have_lower_bound[K](m: Volume_Chain[K], a: Set[K], p: Set[K]) {
     have_lower_bound(control_dist_from_vol_chain(m, a, p))
 }
 
+// todo: rename to the concept "outer measure"
+/// Distance from volume chain defined as infimum of control distances.
 define dist_from_vol_chain[K](m: Volume_Chain[K], a: Set[K], p: Set[K]) -> ℝ {
     inf(control_dist_from_vol_chain(m, a, p))
 }
 
+/// Element belongs to set of distances if there exists a set p with finite control distance.
 define elem_in_set_of_dist_from_vol_chain[K](m: Volume_Chain[K], a: Set[K], r: ℝ) -> Bool {
     exists(p: Set[K]) {
         p ∈ m and control_dist_from_vol_chain(m, a, p).is_nonempty and r = dist_from_vol_chain(m, a, p)
     }
 }
 
+/// Set of all possible distances from volume chain for approximating set a.
 define set_of_dist_from_vol_chain[K](m: Volume_Chain[K], a: Set[K]) -> Set[ℝ] {
     Set[ℝ].new(elem_in_set_of_dist_from_vol_chain(m, a))
 }
 
+/// Distances from volume chain are always nonnegative.
 theorem set_of_dist_from_vol_chain_gte_zero[K](m: Volume_Chain[K], a: Set[K]) {
     0.is_set_lower_bound(set_of_dist_from_vol_chain(m, a))
 } by {
     forall(r: ℝ) {
         if r ∈ set_of_dist_from_vol_chain(m, a) {
+            /// Extract the approximating set p
             let (p: Set[K]) satisfy {
                 p ∈ m and control_dist_from_vol_chain(m, a, p).is_nonempty and r = dist_from_vol_chain(m, a, p)
             }
+            /// Control distance set has infimum
             have_inf(control_dist_from_vol_chain(m, a, p))
+            /// 0 is a lower bound for control distances
             0.is_set_lower_bound((control_dist_from_vol_chain(m, a, p)))
+            /// Infimum is at least 0
             0 <= inf((control_dist_from_vol_chain(m, a, p)))
+            /// Distance is the infimum
             dist_from_vol_chain(m, a, p) >= 0
             r >= 0
         }
     }
 }
 
+/// Distance sets always have lower bounds.
 theorem set_of_dist_from_vol_chain_have_lower_bound[K](m: Volume_Chain[K], a: Set[K]) {
     have_lower_bound(set_of_dist_from_vol_chain(m, a))
 }
 
 // Control convergence built in definition. Similar for definition of integral
+// todo: after using concept "outer measure", outer measure defines a distance on Set[K] with finite outer measure, then measurable set is complement of distance space of Volume_Chain (e.g. finite union of simplex in Euclidean ℝ^n)
+/// A set is measurable if it can be approximated arbitrarily well by sets from the volume chain.
 define is_measurable[K](m: Volume_Chain[K], a: Set[K]) -> Bool {
     set_of_dist_from_vol_chain(m, a).is_nonempty and inf(set_of_dist_from_vol_chain(m, a)) = 0
 }
 
 // We want to define a net by directed lte: m × m --> Bool satisfy p1 <= p2 := sym_difference(a, p1) ⊇ sym_difference(a, p2), hence preserve order dist_from_vol_chain(m, a, p1) >= dist_from_vol_chain(m, a, p2), i.e. is_limit and converge_to limit inf(dist_from_vol_chain(m, a)). Then is_measurable <==> limit = 0
 
+/// Order relation for approximation net: smaller symmetric difference means larger in order.
 define lte[K](a: Set[K], p1: Set[K], p2: Set[K]) -> Bool {
     sym_difference(a, p1) ⊇ sym_difference(a, p2)
 }
 
+/// Approximation distances are monotone with respect to the approximation order.
 theorem approx_vol_net[K](m: Volume_Chain[K], a: Set[K], p1: Set[K], p2: Set[K]) {
     p1 ∈ m and p2 ∈ m and lte(a, p1, p2) and control_dist_from_vol_chain(m, a, p1).is_nonempty implies dist_from_vol_chain(m, a, p1) >= dist_from_vol_chain(m, a, p2)
 } by {
+    /// By definition of lte, symmetric difference is larger
     sym_difference(a, p1) ⊇ sym_difference(a, p2)
+    /// Show every control distance for p1 is also a control distance for p2
     forall(r: ℝ) {
         if r ∈ control_dist_from_vol_chain(m, a, p1) {
             elem_in_control_dist_from_vol_chain(m, a, p1, r)
             let (f: ℕ -> Set[K]) satisfy {
                 fn_image(f) ⊆ m.sets and sym_difference(a, p1) ⊆ union_index(f) and converge(series(compose(m.vol, f))) and r = series_sum(compose(m.vol, f))
             }
+            /// Since sym_difference(a, p2) is smaller, it's also covered by f
             sym_difference(a, p2) ⊆ union_index(f)
             fn_image(f) ⊆ m.sets and sym_difference(a, p2) ⊆ union_index(f) and converge(series(compose(m.vol, f))) and r = series_sum(compose(m.vol, f))
             r ∈ control_dist_from_vol_chain(m, a, p2)
         }
     }
+    /// Control distance set for p1 is subset of that for p2
     control_dist_from_vol_chain(m, a, p1) ⊆ control_dist_from_vol_chain(m, a, p2)
     control_dist_from_vol_chain(m, a, p2).is_nonempty
+    /// Infimum of subset is at least infimum of superset
     inf(control_dist_from_vol_chain(m, a, p1)) >= inf(control_dist_from_vol_chain(m, a, p2))
     dist_from_vol_chain(m, a, p1) >= dist_from_vol_chain(m, a, p2)
 }
 
+/// Volume-based metric on sets in the volume chain.
 define vol_dist[K](m: Volume_Chain[K], a: Set[K], b: Set[K]) -> ℝ {
     if a ∈ m and b ∈ m {
         m.vol(sym_difference(a, b))
@@ -282,67 +358,88 @@ define vol_dist[K](m: Volume_Chain[K], a: Set[K], b: Set[K]) -> ℝ {
     }
 }
 
+/// First formula for volume distance: vol_dist(a,b) = vol(a ∪ b) - vol(a ∩ b).
 theorem calculate_vol_dist_1[K](m: Volume_Chain[K], a: Set[K], b: Set[K]) {
     if a ∈ m and b ∈ m {
         vol_dist(m, a, b) = m.vol(a ∪ b) - m.vol(a ∩ b)
     }
 } by {
+    /// Symmetric difference and intersection are disjoint
     disjoint(sym_difference(a, b), a ∩ b)
+    /// Union can be expressed as disjoint union
     a ∪ b = sym_difference(a, b) ∪ (a ∩ b)
+    /// Apply finite additivity to disjoint union
     m.vol(a ∪ b) = m.vol(sym_difference(a, b)) + m.vol(a ∩ b)
 }
 
+/// Second formula for volume distance: vol_dist(a,b) = vol(a ∖ b) + vol(b ∖ a).
 theorem calculate_vol_dist_2[K](m: Volume_Chain[K], a: Set[K], b: Set[K]) {
     if a ∈ m and b ∈ m {
         vol_dist(m, a, b) = m.vol(a ∖ b) + m.vol(b ∖ a)
     }
 } by {
+    /// Set differences are disjoint
     disjoint(a ∖ b, b ∖ a)
+    /// Symmetric difference is union of disjoint differences
     sym_difference(a, b) = (a ∖ b) ∪ (b ∖ a)
+    /// Apply finite additivity
     m.vol((a ∖ b) ∪ (b ∖ a)) = m.vol(a ∖ b) + m.vol(b ∖ a)
 }
 
 // like the control in absolutely convergence or absolute integral, the "M test" method
+/// Volume difference controls volume values: |vol(a) - vol(b)| ≤ vol_dist(a,b).
 theorem vol_dist_control_vol_value_dist[K](m: Volume_Chain[K], a: Set[K], b: Set[K]) {
     if a ∈ m and b ∈ m {
         (m.vol(a) - m.vol(b)).abs <= vol_dist(m, a, b)
-    } 
+    }
 } by {
+    /// Decompose a and b into disjoint parts
     disjoint(a ∩ b, a ∖ (a ∩ b))
     disjoint(a ∩ b, b ∖ (a ∩ b))
     a = (a ∩ b) ∪ (a ∖ a ∩ b)
     b = (a ∩ b) ∪ (b ∖ a ∩ b)
+    /// Apply finite additivity
     m.vol(a) = m.vol(a ∩ b) + m.vol(a ∖ (a ∩ b))
     m.vol(b) = m.vol(a ∩ b) + m.vol(b ∖ (a ∩ b))
+    /// Subtract volumes, cancel the common part
     sub_add_cancel_right(m.vol(a ∖ (a ∩ b)), m.vol(b ∖ (a ∩ b)), m.vol(a ∩ b))
     m.vol(a) - m.vol(b) = m.vol(a ∖ (a ∩ b)) - m.vol(b ∖ (a ∩ b))
+    /// Simplify set differences
     a ∖ (a ∩ b) = a ∖ b
     b ∖ (a ∩ b) = b ∖ a
     m.vol(a) - m.vol(b) = m.vol(a ∖ b) - m.vol(b ∖ a)
+    /// Apply triangle inequality to real numbers
     (m.vol(a ∖ b) - m.vol(b ∖ a)).abs = (m.vol(a ∖ b) + -m.vol(b ∖ a)).abs
     (m.vol(a ∖ b) - m.vol(b ∖ a)).abs <= m.vol(a ∖ b).abs + (-m.vol(b ∖ a)).abs
-    m.vol(a ∖ b).abs = m.vol(a ∖ b) 
+    /// Absolute value of nonnegative volume is itself
+    m.vol(a ∖ b).abs = m.vol(a ∖ b)
     (-m.vol(b ∖ a)).abs = m.vol(b ∖ a)
     m.vol(a ∖ b).abs + (-m.vol(b ∖ a)).abs = m.vol(a ∖ b) + m.vol(b ∖ a)
+    /// Apply calculate_vol_dist_2
     m.vol(a ∖ b) + m.vol(b ∖ a) = vol_dist(m, a, b)
     (m.vol(a) - m.vol(b)).abs = (m.vol(a ∖ b) - m.vol(b ∖ a)).abs
 }
 
+/// Symmetry of volume distance: vol_dist(a,b) = vol_dist(b,a).
 theorem symm[K](m: Volume_Chain[K], a: Set[K], b: Set[K]) {
     a ∈ m and b ∈ m implies vol_dist(m, a, b) = vol_dist(m, b, a)
 } by {
+    /// Symmetric difference is symmetric by definition
     sym_difference(a, b) = sym_difference(b, a)
+    /// Volume of symmetric difference depends only on the set
     vol_dist(m, a, b) = m.vol(sym_difference(a, b))
     vol_dist(m, b, a) = m.vol(sym_difference(b, a))
 }
 
+/// Lemma for symmetric difference triangle inequality: (b1 ∖ b2) ⊆ (b1 ∖ a) ∪ (a ∖ b2).
 theorem sym_diff_triangle_lemma_1[K](a: Set[K], b1: Set[K], b2: Set[K]) {
     (b1 ∖ b2) ⊆ (b1 ∖ a) ∪ (a ∖ b2)
 } by {
     forall(x: K) {
         if x ∈ b1 ∖ b2 {
-            x ∈ b1 
+            x ∈ b1
             x ∉ b2
+            /// Case analysis on whether x ∈ a
             if x ∈ a {
                 x ∈ a ∖ b2
                 x ∈ (b1 ∖ a) ∪ (a ∖ b2)
@@ -356,46 +453,62 @@ theorem sym_diff_triangle_lemma_1[K](a: Set[K], b1: Set[K], b2: Set[K]) {
     }
 }
 
+/// Second lemma: (b1 ∖ b2) ⊆ sym_difference(a, b1) ∪ sym_difference(a, b2).
 theorem sym_diff_triangle_lemma_2[K](a: Set[K], b1: Set[K], b2: Set[K]) {
     (b1 ∖ b2) ⊆ sym_difference(a, b1) ∪ sym_difference(a, b2)
 } by {
+    /// From lemma 1
     (b1 ∖ b2) ⊆ (b1 ∖ a) ∪ (a ∖ b2)
+    /// Set differences are subsets of corresponding symmetric differences
     (b1 ∖ a) ⊆ sym_difference(a, b1)
     (a ∖ b2) ⊆ sym_difference(a, b2)
+    /// Union preserves subset relation
     (b1 ∖ a) ∪ (a ∖ b2) ⊆ sym_difference(a, b1) ∪ sym_difference(a, b2)
 }
 
+/// Triangle inequality for symmetric difference.
 theorem sym_diff_triangle[K](a: Set[K], b1: Set[K], b2: Set[K]) {
     sym_difference(b1, b2) ⊆ sym_difference(a, b1) ∪ sym_difference(a, b2)
 } by {
+    /// Apply lemma 2 with roles of (a, b1, b2)
     (b1 ∖ b2) ⊆ sym_difference(a, b1) ∪ sym_difference(a, b2)
+    /// Apply lemma 2 with b1 and b2 swapped
     (b2 ∖ b1) ⊆ sym_difference(a, b2) ∪ sym_difference(a, b1)
+    /// Symmetric difference is union of the two differences
     ((b1 ∖ b2) ∪ (b2 ∖ b1)) ⊆ sym_difference(a, b1) ∪ sym_difference(a, b2)
 }
 
+/// Triangle inequality for volume distance: vol_dist(b1,b2) ≤ vol_dist(a,b1) + vol_dist(a,b2).
 theorem triangle[K](m: Volume_Chain[K], a: Set[K], b1: Set[K], b2: Set[K]) {
     a ∈ m and b1 ∈ m and b2 ∈ m implies vol_dist(m, b1, b2) <= vol_dist(m, a, b1) + vol_dist(m, a, b2)
 } by {
+    /// All symmetric differences belong to m
     sym_difference(b1, b2) ∈ m
     sym_difference(a, b1) ∈ m
     sym_difference(a, b2) ∈ m
     sym_difference(a, b1) ∪ sym_difference(a, b2) ∈ m
+    /// Apply sym_diff_triangle
     sym_difference(b1, b2) ⊆ sym_difference(a, b1) ∪ sym_difference(a, b2)
+    /// Volume is monotone
     m.vol(sym_difference(b1, b2)) <= m.vol(sym_difference(a, b1) ∪ sym_difference(a, b2))
+    /// Apply union_vol_lt (subadditivity)
     m.vol(sym_difference(a, b1) ∪ sym_difference(a, b2)) <= m.vol(sym_difference(a, b1)) + m.vol(sym_difference(a, b2))
     m.vol(sym_difference(b1, b2)) <= m.vol(sym_difference(a, b1)) + m.vol(sym_difference(a, b2))
 
+    /// Substitute using definition of vol_dist
     vol_dist(m, b1, b2) = m.vol(sym_difference(b1, b2))
     vol_dist(m, a, b1) = m.vol(sym_difference(a, b1))
     vol_dist(m, a, b2) = m.vol(sym_difference(a, b2))
 }
 
+/// Tail bound condition for Cauchy property of approximation net.
 define tail_bound[K](m: Volume_Chain[K], a: Set[K], p: Set[K], ε: ℝ) -> Bool {
     forall(p1: Set[K], p2: Set[K]) {
         p1 ∈ m and p2 ∈ m and lte(a, p, p1) and lte(a, p, p2) implies vol_dist(m, p1, p2) < ε
     }
 }
 
+/// Distance vanishing property: approximations become arbitrarily close.
 define dist_vanish[K](m: Volume_Chain[K], a: Set[K]) -> Bool {
     forall(ε: ℝ) {
         ε > 0 implies exists(p: Set[K]) {
@@ -406,6 +519,7 @@ define dist_vanish[K](m: Volume_Chain[K], a: Set[K]) -> Bool {
 
 // This is needed, and satisfied by Euclidean simplex/polytope, provided by compactness in Euclidean ℝ^n. (In Minkowski space, it maybe that not all simplex/polytope will be used to define volume). 
 // If we not assumpt sub_additive, then for example, for countable disjoint decomposition, we can only use finite additive to prove series_sum(compose(m.vol, f)) <= m.vol(a)
+/// Subadditivity: volume of a set is bounded below by series covering it.
 define sub_additive[K](m: Volume_Chain[K]) -> Bool {
     forall(a: Set[K], f: ℕ -> Set[K]) {
         a ∈ m and fn_image(f) ⊆ m.sets and a ⊆ union_index(f) implies (
@@ -414,6 +528,7 @@ define sub_additive[K](m: Volume_Chain[K]) -> Bool {
     }
 }
 
+/// Measurable sets satisfy the distance vanishing property under subadditivity.
 theorem is_measurable_imp_have_measure[K](m: Volume_Chain[K], a: Set[K]) {
     sub_additive(m) and is_measurable(m, a) implies dist_vanish(m, a)
 } by {
@@ -423,6 +538,7 @@ theorem is_measurable_imp_have_measure[K](m: Volume_Chain[K], a: Set[K]) {
     forall(ε: ℝ) {
         if ε > 0 {
             ε/2 > 0
+            /// Use that 0 is the infimum to find a close distance
             closely_gt_inf(set_of_dist_from_vol_chain(m, a), 0, ε/2)
             let r: ℝ satisfy {
                 r ∈ set_of_dist_from_vol_chain(m, a) and 0 <= r and r < 0 + ε/2
@@ -450,27 +566,21 @@ theorem is_measurable_imp_have_measure[K](m: Volume_Chain[K], a: Set[K]) {
             series_sum(compose(m.vol, f)) < ε
             forall(p1: Set[K], p2: Set[K]) {
                 if p1 ∈ m and p2 ∈ m and lte(a, p, p1) and lte(a, p, p2) {
+                    /// By definition of lte, symmetric differences with a shrink
                     sym_difference(a, p) ⊇ sym_difference(a, p1)
-
                     sym_difference(a, p) ⊇ sym_difference(a, p2)
-
+                    /// Apply triangle inequality for symmetric difference
                     sym_difference(p1, p2) ⊆ sym_difference(a, p1) ∪ sym_difference(a, p2)
-
+                    /// By monotonicity of lte
                     sym_difference(a, p1) ∪ sym_difference(a, p2) ⊆ sym_difference(a, p)
-
                     sym_difference(p1, p2) ⊆ sym_difference(a, p)
-
+                    /// By definition of covering
                     sym_difference(p1, p2) ⊆ union_index(f)
-
                     sym_difference(p1, p2) ∈ m
-
-                    // sub_additive used here
+                    /// Apply subadditivity (key property used here)
                     m.vol(sym_difference(p1, p2)) <= series_sum(compose(m.vol, f))
-
                     m.vol(sym_difference(p1, p2)) < ε
-
                     m.vol(sym_difference(p1, p2)) = vol_dist(m, p1, p2)
-                    
                     vol_dist(m, p1, p2) < ε
                 }
             }
@@ -482,6 +592,7 @@ theorem is_measurable_imp_have_measure[K](m: Volume_Chain[K], a: Set[K]) {
 
 // Todo: prove that after adding measurable set, it's still a Volume_Chain, and countable_addtive if the sum is < ∞
 
+/// Characteristic function of a set.
 define char_fn[K](a: Set[K]) -> (K -> ℝ) {
     function(x: K) {
         if x ∈ a {
@@ -492,17 +603,20 @@ define char_fn[K](a: Set[K]) -> (K -> ℝ) {
     }
 }
 
+/// Scalar multiplication of a Banach space valued function.
 define scal_by_fn[K, V: Banach](f: K -> ℝ, v: V) -> (K -> V) {
     function(x: K) {
         scal(f(x), v)
     }
 }
 
+/// Pair consisting of a set and a Banach space value for step functions.
 structure Step_Pair[K, V: Banach] {
     set: Set[K]
     value: V
 }
 
+/// Step function constructed from list of set-value pairs.
 define step_fn[K, V: Banach](l: List[Step_Pair[K, V]]) -> (K -> V) {
     match l {
         List[Step_Pair[K, V]].nil {
@@ -514,14 +628,17 @@ define step_fn[K, V: Banach](l: List[Step_Pair[K, V]]) -> (K -> V) {
     }
 }
 
+/// Function is nonnegative everywhere.
 define is_nonnegative_fn[K](f: K -> ℝ) -> Bool {
     forall(x: K) { f(x) >= 0 }
 }
 
+/// Control relation: f1 controls f2 if f1 is nonnegative and f1 ≤ f2 pointwise.
 define control[K](f1: K -> ℝ, f2: K -> ℝ) -> Bool {
     is_nonnegative_fn(f1) and forall(x: K) { f1(x) <= f2(x) }
 }
 
+/// If f1 controls f2, then f2 is nonnegative.
 theorem control_imp_is_nonnegative_fn[K](f1: K -> ℝ, f2: K -> ℝ) {
     control(f1, f2) implies is_nonnegative_fn(f2)
 }

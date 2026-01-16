@@ -9,12 +9,14 @@ from finite_set import Set, ℕ
 from type_class.ordered_ring import is_nonnegative_list
 from top.norm import Norm_Vec, Banach, norm_fn
 
+// All elements of s are nonnegative
 define is_nonnegative_set(s: Set[ℝ]) -> Bool {
     forall(x: ℝ) {
         x ∈ s implies x >= 0
     }
 }
 
+// All terms of sequence f are nonnegative
 define is_nonnegative_seq(f: ℕ -> ℝ) -> Bool {
     forall(n: ℕ) {
         f(n) >= 0
@@ -45,19 +47,22 @@ theorem nonnegtive_seq_to_set(f: ℕ -> ℝ) {
     is_nonnegative_seq(f) implies is_nonnegative_set(fn_image(f))
 }
 
+// r can be represented as finite sum of values from f
 define elem_in_finite_sum[V: Norm_Vec](f: ℕ -> V, r: V) -> Bool {
     exists(l: List[ℕ]) {
-        l.is_unique and r = sum(l.map(f)) 
+        l.is_unique and r = sum(l.map(f))
     }
 }
 
+// Set of all finite sums of values from f
 define set_of_finite_sum[V: Norm_Vec](f: ℕ -> V) -> Set[V] {
     Set[V].new(elem_in_finite_sum(f))
 }
 
+// The series of f: n-th partial sum is sum of first n terms
 define series[V: Norm_Vec](f: ℕ -> V) -> (ℕ -> V) {
     function(n: ℕ) {
-        range_sum(f, n) 
+        range_sum(f, n)
     }
 }
 
@@ -113,6 +118,7 @@ theorem nonnegtive_seq_to_series(f: ℕ -> ℝ) {
     }
 }
 
+// Nonnegative series has increasing partial sums
 theorem nonnegtive_series_increase(f: ℕ -> ℝ) {
     is_nonnegative_seq(f) implies is_increase(series(f))
 } by {
@@ -143,15 +149,17 @@ theorem series_image_set_subset_set_of_finite_sum[V: Norm_Vec](f: ℕ -> V) {
     }
 }
 
+// Nonnegative series with bounded partial sums converges to its supremum
 theorem nonnegtive_series_image_have_upper_bound_imp_converge(f: ℕ -> ℝ) {
     is_nonnegative_seq(f) and have_upper_bound(fn_image(series(f))) implies converge_to(series(f), sup(fn_image(series(f))))
 } by {
     is_increase(series(f))
 }
 
+// Every finite sum is bounded by some partial sum
 theorem series_image_set_have_same_upper_with_set_of_finite_sum(f: ℕ -> ℝ, r: ℝ) {
     is_nonnegative_seq(f) and r ∈ set_of_finite_sum(f) implies exists(n: ℕ) {
-        r <= series(f)(n) 
+        r <= series(f)(n)
     }
 } by {
     let l: List[ℕ] satisfy {
@@ -228,12 +236,14 @@ theorem nonnegtive_series_converge_imp_set_of_finite_sum_have_sup(f: ℕ -> ℝ)
     converge_to(series(f), sup(set_of_finite_sum(f))) 
 }
 
+// Sum of convergent series is its limit
 define series_sum(f: ℕ -> ℝ) -> ℝ {
     limit(series(f))
 }
 
+// Nonnegative convergent series sum equals supremum of partial sums
 theorem limit_of_nonneg_series(f: ℕ -> ℝ) {
-    is_nonnegative_seq(f) and converge(series(f)) implies series_sum(f) = sup(fn_image(series(f))) 
+    is_nonnegative_seq(f) and converge(series(f)) implies series_sum(f) = sup(fn_image(series(f)))
 } by {
     converge_to(series(f), sup(fn_image(series(f))))
 }
@@ -259,6 +269,7 @@ theorem norm_seq_is_nonneg[V: Norm_Vec](f: ℕ -> V) {
     }
 }
 
+// Series converges absolutely (norm of terms converges)
 define abs_converge[V: Norm_Vec](f: ℕ -> V) -> Bool {
     converge(series(norm_fn(f)))
 }

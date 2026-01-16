@@ -127,20 +127,24 @@ theorem color_dist_zero_imp_eq(x: Color, y: Color) {
 
 instance Color: Metric_Space 
 
+// y is in open ball centered at x with radius r
 define elem_in_ball[M: Distance_Space](x: M, r: ℝ, y: M) -> Bool {
     x.distance(y) < r
 }
 
 attributes M: Distance_Space {
+    // Open ball centered at self with given radius
     define ball(self, radius: ℝ) -> Set[M] {
         Set[M].new(elem_in_ball(self, radius))
     }
 }
 
+// Every point is in its own open ball (for positive radius)
 theorem self_in_ball[M: Distance_Space](x: M, r: ℝ) {
     r > 0 implies x ∈ x.ball(r)
 }
 
+// s is a ball in the net of neighborhoods of x
 define elem_in_ball_net[M: Distance_Space](x: M, s: Set[M]) -> Bool {
     exists(r: ℝ) {
         r > 0 and s = x.ball(r)
@@ -148,6 +152,7 @@ define elem_in_ball_net[M: Distance_Space](x: M, s: Set[M]) -> Bool {
 }
 
 attributes M: Distance_Space {
+    // Net of all open balls centered at self
     define ball_net(self) -> Set[Set[M]] {
         Set[Set[M]].new(elem_in_ball_net(self))
     }
@@ -244,6 +249,7 @@ theorem choose_ball[M: Distance_Net_System](s: Set[M], x: M) {
     x.net.sets = x.ball_net
 }
 
+// r is distance between some pair of points in s
 define elem_in_dist_set[M: Distance_Space](s: Set[M], r: ℝ) -> Bool {
     exists(x: M, y: M) {
         x ∈ s and y ∈ s and r = x.distance(y)
@@ -251,6 +257,7 @@ define elem_in_dist_set[M: Distance_Space](s: Set[M], r: ℝ) -> Bool {
 }
 
 // Todo: rename to diam?
+// Set of all distances between points in s
 define dist_set[M: Distance_Space](s: Set[M]) -> Set[ℝ] {
     Set[ℝ].new(elem_in_dist_set(s))
 }
@@ -279,6 +286,7 @@ theorem empty_to_empty_dist_set[M: Distance_Space] {
 }
 
 // Todo: rename to diam (diameter)?
+// Diameter of set s (supremum of distances between points)
 define dist[M: Distance_Space](s: Set[M]) -> ℝ {
     if s.is_empty {
         0
@@ -413,12 +421,14 @@ theorem have_sup_control[M: Distance_Space](s1: Set[M], s2: Set[M]) {
     (s1).is_nonempty and s1 ⊆ s2 and have_sup(dist_set(s2)) implies have_sup(dist_set(s1))
 }
 
+// r is distance from x to some point in s
 define elem_in_distance_from[M: Distance_Space](s: Set[M], x: M, r: ℝ) -> Bool {
     exists(y: M) {
         y ∈ s and x.distance(y) = r
     }
 }
 
+// Set of all distances from x to points in s
 define distance_from[M: Distance_Space](s: Set[M], x: M) -> Set[ℝ] {
     Set[ℝ].new(elem_in_distance_from(s, x))
 }
@@ -591,10 +601,12 @@ theorem net_limit_split_of_interior_boundary[M: Distance_Net_System](a: Set[M], 
     }
 }
 
+// Set is bounded if its diameter is finite
 define is_bounded[M: Distance_Space](s: Set[M]) -> Bool {
     s.is_empty or have_sup(dist_set(s))
 }
 
+// Collection of sets where each set is bounded
 define are_bounded[M: Distance_Space](n: Set[Set[M]]) -> Bool {
     forall(s: Set[M]) {
         s ∈ n implies is_bounded(s)
@@ -651,6 +663,7 @@ theorem distance_top_is_open_net_system[M: Distance_Top] {
 }
 
 /// also called Cauchy net
+// Net is Cauchy (vanishing distance) if for any ε > 0, there's a bounded set with diameter < ε
 define is_dist_vanish_net[M: Distance_Space](n: Net[M]) -> Bool {
     forall(ε: ℝ) {
         ε > 0 implies exists(s: Set[M]) {
@@ -667,11 +680,13 @@ theorem is_dist_vanish_net_helper[M: Distance_Space](n: Net[M]) {
     } implies is_dist_vanish_net(n)
 }
 
+// y is in zero-distance class of x (indistinguishable by metric)
 define elem_in_zero_dist_class[M: Distance_Space](x: M, y: M) -> Bool {
     x.distance(y) = 0
 }
 
 attributes M: Distance_Space {
+    // Equivalence class of points at zero distance from self
     define zero_dist_class(self) -> Set[M] {
         Set[M].new(elem_in_zero_dist_class(self))
     }
@@ -1038,12 +1053,14 @@ theorem to_closure_preserve_dist_vanish_net[M: Distance_Top](n: Net[M]) {
     }
 }
 
+// f maps δ-close points to ε-close points (uniform control)
 define uniform_control[X: Distance_Top, Y: Distance_Top](f: X -> Y, ε: ℝ, δ: ℝ) -> Bool {
     forall(x: X, y: X) {
         x.distance(y) < δ implies f(x).distance(f(y)) < ε
     }
 }
 
+// f is uniformly continuous: for every ε, there's a δ controlling all pairs
 define is_uniform_continuous[X: Distance_Top, Y: Distance_Top](f: X -> Y) -> Bool {
     forall(ε: ℝ) {
         ε > 0 implies exists(δ: ℝ) {

@@ -1,24 +1,115 @@
-This code is tricky, because it uses Acorn, a theorem proving language that you don't know.
+This code uses Acorn, a theorem proving language.
 
-Before writing a proof, look at at least one Acorn file to understand the syntax. For proofs by induction, look at nat.ac. For proofs involving limits, look at real_ring.ac.
+## Build/Test Commands
 
-You can run
-
+**Primary verification:**
+```bash
+acorn                    # Verify all files (default command)
+acorn verify             # Same as above
+acorn verify src/nat/nat_base.ac    # Verify specific file
+acorn verify src/nat/nat_base.ac:42 # Verify proof at specific line
 ```
-acorn
+
+**Advanced verification:**
+```bash
+acorn reverify           # Reverify all goals, erroring if any requires search
+acorn reprove            # Re-prove goals without using cache
+acorn verify --strict    # Reject any use of axiom keyword
+acorn verify --timeout 30 # Set 30-second timeout for proof search
 ```
 
-to run the verifier. This should be run after every change, to make sure the proof is verifiable.
+**Other commands:**
+```bash
+acorn serve              # Run language server for IDE integration
+acorn docs               # Generate documentation
+acorn clean              # Remove redundant claims from project
+acorn select <file> <line> # Display proof details for specific line
+```
 
-## Tips
+**Important:** Always run `acorn` after every change to verify proofs, but skip if only comments were added.
 
-Before proving a theorem, consider whether there is a lemma that could be factored out into a separate theorem. If there is, ask the user whether they would prefer you to prove the lemma first.
+## Development Workflow
 
-Before proving a theorem, check if the theorem statement is actually true. If the user asks you to prove a false theorem, explain why you can't.
+Before writing a proof, examine at least one Acorn file to understand syntax. For proof by mathematical induction on natural number `ℕ`, study `src/nat/nat_base.ac`, for proof by mathematical induction on `List`, study `src/list/list_base.ac`.
 
-Numeric literals must have a type specified. You can write `ℕ.0` to indicate zero, the natural number. `Real.0` indicates zero, the real number. A `numerals ℕ` statement will set the default, but don't add that if it isn't already there.
+If in an environment without the verifier, use the "acorn-installation" skill to set it up.
 
-Variable names must be lowercase.
+Make sure to run the verifier before telling the user you're finished. For large proofs in progress, comment out incomplete parts so user can check your work.
+
+
+## Code Style Guidelines
+
+### Documentation Style
+Every type, typeclass, and attribute should have a doc comment, starting with `///`.
+
+Comments should be written using mathematical language, not using programming language. It's best to use unicode math. You can also use typst (unicode math first, e.g. ℝ instead of RR), but shound not use LaTeX
+
+```acorn
+// Good:
+/// The smaller of two elements.
+
+// Bad: "returns" is what a programmer would say.
+/// Returns the smaller of two elements.
+
+// Good:
+/// True if f is continuous everywhere on the reals.
+
+// Bad: "checks" is what a programmer would say.
+/// Checks if f is continuous everywhere on the reals.
+```
+
+### Import and Module Organization
+- Use explicit imports: `from nat.nat_base import ℕ`
+- Place `numerals ℕ` after imports when needed
+- Organize imports by dependency: basic types first, then type classes, then specific modules
+- Import only what's needed - avoid wildcard imports
+
+### Naming Conventions
+- Variable names must be lowercase
+- Type names use capitalized snake_case: `List`, `Distance_Space`, `ℕ`, `ℝ`
+- Function names use snake_case: `add_zero`, `contains`
+- Theorem names use snake_case and describe the property: `add_one_right`, `one_plus_one`
+
+### Types and Literals
+- Numeric literals need explicit types: `ℕ.0`, `ℝ.0`
+- Check if `numerals` declaration already exists before adding
+- Use type annotations for function parameters and return types
+- Generic types use `[T]` syntax: `List[T]`
+
+### Error Handling and Proof Strategy
+- Check if theorem statement is actually true before attempting proof
+- Consider factoring out lemmas - ask user if lemma should be separate
+- For large proofs: start with outline, fill in details incrementally (partial completion is ok)
+- Check for similar existing theorems to leverage
+
+### Code Structure
+- Avoid inline lambdas: Define named helpers with explicit parameters. Example: `range_sum(f, m)` then use `range_sum(f)`, not `function(i) { ... }`
+- Avoid complex theorem statements: Extract inline `forall`/`exists`/`function` into separate definitions
+- Define helper functions to simplify expressions in theorem signatures
+- Place definitions and theorems in the most general file that applies
+- Example: `List` is in `list_base.ac`, not in `list_sum.ac` where it's used
+
+### Prover Capabilities
+- Rarely need to import theorems (prover is powerful)
+- Rarely need explicit theorem names in same file
+- Use bounded induction pattern: When inducting over bounded ranges with external constraints, induct on the _distance_ to enable automatic induction
+- Be explicit with inequalities - Acorn may not automatically prove `n - k >= big_n` from `big_n + k <= n`
+
+### File Organization
+- `src/` contains all source files organized by domain
+- `src/nat/` - natural numbers and basic arithmetic
+- `src/list/` - list data structures and operations
+- `src/real/` - real numbers and analysis
+- `src/type_class/` - algebraic structures and type classes
+- `src/top/` - topology and metric spaces
+- `build/` - auto-generated cache directory (never clean)
+
+## Development Tips
+
+**Always run `acorn` after every change, but skip it if only comments were added.**
+
+Never clean the build directory - it acts as a cache to speed up verification.
+
 
 ## Fixing Proofs
 

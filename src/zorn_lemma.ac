@@ -1,28 +1,33 @@
 from set import Set, empty, union, intersection, elem_in_union_general
 from order import Partial_Order
 
+/// Two elements are comparable if one is less than or equal to the other.
 define comparable[P: Partial_Order](a: P, b: P) -> Bool {
     a <= b or b <= a
 }
 
+/// Comparability is symmetric: a is comparable to b iff b is comparable to a.
 theorem comparable_comm[P: Partial_Order](a: P, b: P) {
     comparable(a, b) iff comparable(b, a)
 } by {
     comparable(a, b) implies comparable(b, a)
 }
 
+/// A chain is a set where any two elements are comparable.
 define is_chain[P: Partial_Order](c: Set[P]) -> Bool {
     forall(a: P, b: P) {
         a ∈ c and b ∈ c implies comparable(a, b)
     }
 } 
 
+/// A chain extension exists when s can be added to chain c to form a larger chain.
 define is_chain_extention[P: Partial_Order](c: Set[P], s: P) -> Bool {
     is_chain(c) and s ∉ c and forall(t: P) {
         t ∈ c implies comparable(t, s)
     }
 }
 
+/// Extend chain c by adding s if possible, otherwise return c unchanged.
 define chain_extension[P: Partial_Order](c: Set[P], s: P) -> Set[P] {
     if is_chain_extention(c, s) {
         c ∪ Set[P].singleton(s)
@@ -31,6 +36,7 @@ define chain_extension[P: Partial_Order](c: Set[P], s: P) -> Set[P] {
     }
 }
 
+/// Valid chain extensions produce larger chains.
 theorem chain_extension_is_chain_extension[P: Partial_Order](c: Set[P], s: P) {
     is_chain_extention(c, s) implies is_chain(chain_extension(c, s)) and c ⊂ chain_extension(c, s)
 } by {
@@ -68,12 +74,14 @@ theorem chain_extension_is_chain_extension[P: Partial_Order](c: Set[P], s: P) {
     c ⊂ chain_extension(c, s)
 }
 
+/// A maximal chain is a chain that cannot be extended by any element.
 define is_maximal_chain[P: Partial_Order](c: Set[P]) -> Bool {
     is_chain(c) and forall(s: P) {
         not is_chain_extention(c, s)
     }
 }
 
+/// Non-maximal chains can be extended.
 theorem not_maximal_chain_imp[P: Partial_Order](c: Set[P]) {
     is_chain(c) implies (
         not is_maximal_chain(c) implies exists(s: P) {
@@ -82,6 +90,7 @@ theorem not_maximal_chain_imp[P: Partial_Order](c: Set[P]) {
     )
 } 
 
+/// If a chain can be extended, it is not maximal.
 theorem not_maximal_chain_imp_rev[P: Partial_Order](c: Set[P]) {
     is_chain(c) implies (
         exists(s: P) {
@@ -90,13 +99,15 @@ theorem not_maximal_chain_imp_rev[P: Partial_Order](c: Set[P]) {
     )
 } 
 
+/// A non-maximal chain is a chain that can be extended.
 define is_non_maximal_chain[P: Partial_Order](c: Set[P]) -> Bool {
     is_chain(c) and not is_maximal_chain(c)
 }
 
+/// Placeholder element used when chain is maximal.
 let void[P]: P satisfy { true }
 
-/// using axiom of choice, which is much stronger that axiom of induction on ℕ
+/// Choice function extending non-maximal chains, using axiom of choice.
 let chain_extend_fn[P: Partial_Order](c: Set[P]) -> s: P satisfy {
     if is_non_maximal_chain(c) {
         is_chain_extention(c, s)
@@ -105,43 +116,50 @@ let chain_extend_fn[P: Partial_Order](c: Set[P]) -> s: P satisfy {
     }
 }
 
+/// Successor chain: extend c if possible, otherwise return c.
 define suc[P: Partial_Order](c: Set[P]) -> Set[P] {
     chain_extension(c, chain_extend_fn(c))
 }
 
-/// the "well order"
+/// A set of chains: collection of subsets of P that are all chains.
 define are_chains[P: Partial_Order](cs: Set[Set[P]]) -> Bool {
     forall(c: Set[P]) {
         c ∈ cs implies is_chain(c)
     }
 }
 
+/// Subsets of a set of chains are also sets of chains.
 theorem subchains[P: Partial_Order](cs: Set[Set[P]]) {
     are_chains(cs) implies forall(ds: Set[Set[P]]) {
         ds ⊆ cs implies are_chains(ds)
     }
 }
 
+/// Two chains are comparable if one is subset of the other.
 define is_chain_comparable[P: Partial_Order](c1: Set[P], c2: Set[P]) -> Bool {
     c1 ⊆ c2 or c2 ⊆ c1
 }
 
+/// Chain comparability is symmetric.
 theorem chain_comparable_comm[P: Partial_Order](c1: Set[P], c2: Set[P]) {
     is_chain_comparable(c1, c2) iff is_chain_comparable(c2, c1)
 } by {
     is_chain_comparable(c1, c2) implies is_chain_comparable(c2, c1)
 }
 
+/// Linear chains: all chains in the collection are pairwise comparable by subset relation.
 define is_linear_chains[P: Partial_Order](cs: Set[Set[P]]) -> Bool {
     forall(c1: Set[P], c2: Set[P]) {
         c1 ∈ cs and c2 ∈ cs implies is_chain_comparable(c1, c2)
     }
 }
 
+/// Subsets of linear chains are linear.
 theorem sub_chains_of_linear_chains_is_linear[P: Partial_Order](cs: Set[Set[P]], ds: Set[Set[P]]) {
     is_linear_chains(cs) and ds ⊆ cs implies is_linear_chains(ds)
 }
 
+/// Union of linear chains is a chain.
 theorem union_linear_chains_is_chain[P: Partial_Order](cs: Set[Set[P]]) {
     are_chains(cs) and is_linear_chains(cs) implies is_chain(union(cs))
 } by {
@@ -165,14 +183,14 @@ theorem union_linear_chains_is_chain[P: Partial_Order](cs: Set[Set[P]]) {
     }
 }
 
-/// direct induction, the "+1"
+/// Direct induction: closed under successor operation.
 define contains_suc[P: Partial_Order](cs: Set[Set[P]]) -> Bool {
     forall(c: Set[P]) {
         c ∈ cs implies suc(c) ∈ cs
     }
 }
 
-/// it seems like "strong induction & true below"
+/// Strong induction: closed under union of linear subchains.
 define contains_extension_of_linear_subchains[P: Partial_Order](cs: Set[Set[P]]) -> Bool {
     forall(ds: Set[Set[P]]) {
         ds ⊆ cs and is_linear_chains(ds) implies union(ds) ∈ cs
@@ -180,6 +198,7 @@ define contains_extension_of_linear_subchains[P: Partial_Order](cs: Set[Set[P]])
 }
 
 // from Halmos's Naive Set Theory
+/// Inductive chains: contain empty set, closed under successor and union of linear subchains.
 define are_inductive_chains[P: Partial_Order](cs: Set[Set[P]]) -> Bool {
     are_chains(cs) and
     // the starting element "0"
@@ -188,8 +207,10 @@ define are_inductive_chains[P: Partial_Order](cs: Set[Set[P]]) -> Bool {
     contains_extension_of_linear_subchains(cs)
 }
 
+/// Set of all chains in the partial order.
 let all_chains[P: Partial_Order] = Set[Set[P]].new(is_chain)
 
+/// The set of all chains is a set of chains.
 theorem all_chains_are_chains[P: Partial_Order] {
     are_chains(all_chains[P])
 } by {
@@ -198,6 +219,7 @@ theorem all_chains_are_chains[P: Partial_Order] {
     }
 }
 
+/// The set of all chains is inductive.
 theorem all_chains_are_inductive_chain[P: Partial_Order] {
     are_inductive_chains(all_chains[P])
 } by {
@@ -224,6 +246,7 @@ theorem all_chains_are_inductive_chain[P: Partial_Order] {
     contains_extension_of_linear_subchains(all_chains[P])
 }
 
+/// There exists an inductive set of chains.
 theorem exists_inductive_chain[P: Partial_Order] {
     exists(cs: Set[Set[P]]) {
         are_inductive_chains(cs)
@@ -233,18 +256,22 @@ theorem exists_inductive_chain[P: Partial_Order] {
 }
 
 // Or use intersection
+/// Smallest inductive chains: chains that belong to every inductive collection.
 define elem_in_smallest_inductive_chains[P: Partial_Order](c: Set[P]) -> Bool {
     forall(cs: Set[Set[P]]) {
         are_inductive_chains(cs) implies c ∈ cs
     }
 }
 
+/// The smallest inductive set of chains.
 let smallest_inductive_chains[P: Partial_Order] = Set[Set[P]].new(elem_in_smallest_inductive_chains)
 
+/// The smallest inductive chains are subset of every inductive collection.
 theorem smallest_inductive_chains_is_smallest [P: Partial_Order](cs: Set[Set[P]]) {
     are_inductive_chains(cs) implies smallest_inductive_chains[P] ⊆ cs
 }
 
+/// Empty chain is in the smallest inductive chains.
 theorem smallest_inductive_chains_contains_empty[P: Partial_Order] {
     Set[P].empty_set ∈ smallest_inductive_chains[P]
 } by {
@@ -253,6 +280,7 @@ theorem smallest_inductive_chains_contains_empty[P: Partial_Order] {
     }
 }
 
+/// Smallest inductive chains is a set of chains.
 theorem smallest_inductive_chains_are_chains[P: Partial_Order] {
     are_chains(smallest_inductive_chains[P])
 } by {
@@ -267,6 +295,7 @@ theorem smallest_inductive_chains_are_chains[P: Partial_Order] {
     }
 }
 
+/// Smallest inductive chains closed under successor.
 theorem smallest_inductive_chains_contains_suc[P: Partial_Order] {
     contains_suc(smallest_inductive_chains[P])
 } by {
@@ -284,6 +313,7 @@ theorem smallest_inductive_chains_contains_suc[P: Partial_Order] {
     }
 }
 
+/// Smallest inductive chains closed under union of linear subchains.
 theorem smallest_inductive_chains_contains_extension_of_linear_subchains[P: Partial_Order] {
     contains_extension_of_linear_subchains(smallest_inductive_chains[P])
 } by {
@@ -300,22 +330,26 @@ theorem smallest_inductive_chains_contains_extension_of_linear_subchains[P: Part
     }
 }
 
+/// The smallest inductive chains form an inductive collection.
 theorem smallest_inductive_chains_are_inductive_chains[P: Partial_Order] {
     are_inductive_chains(smallest_inductive_chains[P])
 }
 
+/// A comparable chain is comparable with every chain in smallest inductive collection.
 define is_comparable_chain[P: Partial_Order](c: Set[P]) -> Bool {
     c ∈ smallest_inductive_chains[P] and forall(d: Set[P]) {
         d ∈ smallest_inductive_chains[P] implies is_chain_comparable(c, d)
     }
 }
 
+/// Empty chain is comparable with all chains.
 theorem empty_is_comparable_chain[P: Partial_Order] {
     is_comparable_chain(Set[P].empty_set)
 }
 
 // we want to prove that suc(c) is also is_comparable_chain, start from empty, and hence they form a are_inductive_chains
 
+/// If comparable chain c strictly contains a, then successor of a is subset of c.
 theorem inductive_compare_subset_not_eq[P: Partial_Order](c: Set[P], a: Set[P]) {
     is_comparable_chain(c) and a ∈ smallest_inductive_chains[P] and a ⊂ c implies suc(a) ⊆ c
 } by {
@@ -349,18 +383,22 @@ theorem inductive_compare_subset_not_eq[P: Partial_Order](c: Set[P], a: Set[P]) 
     }
 }
 
+/// Elements of suc_compare are chains in smallest inductive comparable with c or containing suc(c).
 define elem_in_suc_compare[P: Partial_Order](c: Set[P], a: Set[P]) -> Bool {
     is_comparable_chain(c) and a ∈ smallest_inductive_chains[P] and (a ⊆ c or suc(c) ⊆ a)
 }
 
+/// Set of chains comparable with c or containing successor of c.
 define suc_compare[P: Partial_Order](c: Set[P]) -> Set[Set[P]] {
     Set[Set[P]].new(elem_in_suc_compare(c))
 }
 
+/// suc_compare is subset of smallest inductive chains.
 theorem inductive_compare_subset[P: Partial_Order](c: Set[P]) {
     suc_compare(c) ⊆ smallest_inductive_chains[P]
 }
 
+/// For comparable chains, suc_compare forms an inductive collection.
 theorem inductive_compare_are_inductive_chains[P: Partial_Order](c: Set[P]) {
     is_comparable_chain(c) implies are_inductive_chains(suc_compare(c))
 } by {
@@ -422,6 +460,7 @@ theorem inductive_compare_are_inductive_chains[P: Partial_Order](c: Set[P]) {
     contains_extension_of_linear_subchains(suc_compare(c))
 }
 
+/// For comparable chains, suc_compare equals the smallest inductive chains.
 theorem inductive_compare_is_smallest_inductive_chains[P: Partial_Order](c: Set[P]) {
     is_comparable_chain(c) implies suc_compare(c) = smallest_inductive_chains[P]
 } by {
@@ -432,6 +471,7 @@ theorem inductive_compare_is_smallest_inductive_chains[P: Partial_Order](c: Set[
     suc_compare(c) ⊆ smallest_inductive_chains[P]
 }
 
+/// Successor operation preserves the comparable chain property.
 theorem suc_preserve_comparable_chain[P: Partial_Order](c: Set[P]) {
     is_comparable_chain(c) implies is_comparable_chain(suc(c))
 } by {
@@ -450,16 +490,20 @@ theorem suc_preserve_comparable_chain[P: Partial_Order](c: Set[P]) {
     is_comparable_chain(suc(c))
 }
 
+/// Set of all comparable chains in smallest inductive collection.
 let comparable_chains[P: Partial_Order] = Set[Set[P]].new(is_comparable_chain)
 
+/// Comparable chains are subset of smallest inductive chains.
 theorem comparable_chains_subset[P: Partial_Order] {
     comparable_chains[P] ⊆ smallest_inductive_chains[P]
 }
 
+/// Comparable chains closed under successor.
 theorem suc_preserve_comparable_chain_by_comparable_chains[P: Partial_Order](c: Set[P]) {
     c ∈ comparable_chains[P] implies suc(c) ∈ comparable_chains[P]
 }
 
+/// Comparable chains equal the smallest inductive chains.
 theorem comparable_chains_is_smallest_inductive_chains[P: Partial_Order] {
     comparable_chains[P] = smallest_inductive_chains[P]
 } by {
@@ -507,6 +551,7 @@ theorem comparable_chains_is_smallest_inductive_chains[P: Partial_Order] {
     smallest_inductive_chains[P] ⊆ comparable_chains[P]
 }
 
+/// Smallest inductive chains form a linear collection (all pairwise comparable).
 theorem smallest_inductive_chains_is_linear_chains[P: Partial_Order] {
     is_linear_chains(smallest_inductive_chains[P])
 } by {
@@ -518,16 +563,20 @@ theorem smallest_inductive_chains_is_linear_chains[P: Partial_Order] {
     }
 }
 
+/// Chosen maximal chain: union of all chains in smallest inductive collection.
 let chosen_maximal_chain[P: Partial_Order] = union(smallest_inductive_chains[P])
 
+/// Chosen maximal chain is a chain.
 theorem chosen_maximal_chain_is_linear[P: Partial_Order] {
     is_chain(chosen_maximal_chain[P])
 } 
 
+/// Chosen maximal chain belongs to smallest inductive collection.
 theorem chosen_maximal_chain_in_smallest_inductive_chains[P: Partial_Order] {
     chosen_maximal_chain[P] ∈ smallest_inductive_chains[P]
 }
 
+/// The chosen maximal chain is indeed maximal.
 theorem chosen_maximal_chain_is_maximal[P: Partial_Order] {
     is_maximal_chain(chosen_maximal_chain[P])
 } by {

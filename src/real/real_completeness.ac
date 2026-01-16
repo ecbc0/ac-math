@@ -44,12 +44,14 @@ theorem uniqueness_of_greatest_lower_bound(u1: ℝ, u2: ℝ, s: Set[ℝ]) {
     u1.is_set_greatest_lower_bound(s) and u2.is_set_greatest_lower_bound(s) implies u1 = u2
 }
 
+// Two sets have the same upper bounds
 define same_upper_bound(s1: Set[ℝ], s2: Set[ℝ]) -> Bool {
     forall(r: ℝ) {
         r.is_set_upper_bound(s1) iff r.is_set_upper_bound(s2)
     }
 }
 
+// Two sets have the same least upper bounds (suprema)
 define same_least_upper_bound(s1: Set[ℝ], s2: Set[ℝ]) -> Bool {
     forall(r: ℝ) {
         r.is_set_least_upper_bound(s1) iff r.is_set_least_upper_bound(s2)
@@ -78,12 +80,14 @@ theorem same_upper_bound_imp_same_least_upper_bound(s1: Set[ℝ], s2: Set[ℝ]) 
     }
 }
 
+// Two sets have the same lower bounds
 define same_lower_bound(s1: Set[ℝ], s2: Set[ℝ]) -> Bool {
     forall(r: ℝ) {
         r.is_set_lower_bound(s1) iff r.is_set_lower_bound(s2)
     }
 }
 
+// Two sets have the same greatest lower bounds (infima)
 define same_greatest_lower_bound(s1: Set[ℝ], s2: Set[ℝ]) -> Bool {
     forall(r: ℝ) {
         r.is_set_greatest_lower_bound(s1) iff r.is_set_greatest_lower_bound(s2)
@@ -548,12 +552,14 @@ theorem directly_closely_gt_inf_directly(s: Set[ℝ], u: ℝ) {
     }
 }
 
+// f is within ε of a for all indices beyond n (tail bound)
 define tail_bound(f: ℕ -> ℝ, a: ℝ, n: ℕ, ε: ℝ) -> Bool {
     forall(m: ℕ) {
         m > n implies (f(m) - a).abs < ε
     }
 }
 
+// f converges to a if for every ε > 0, f is eventually within ε of a
 define converge_to(f: ℕ -> ℝ, a: ℝ) -> Bool {
     forall(ε: ℝ) {
         ε > 0 implies exists(n: ℕ) {
@@ -562,12 +568,14 @@ define converge_to(f: ℕ -> ℝ, a: ℝ) -> Bool {
     }
 }
 
+// f converges if there exists some limit a
 define converge(f: ℕ -> ℝ) -> Bool {
     exists(a: ℝ) {
         converge_to(f, a)
     }
 }
 
+// Return the limit of f if it converges, otherwise 0
 let limit(f: ℕ -> ℝ) -> a: ℝ satisfy {
     if converge(f) {
         converge_to(f, a)
@@ -576,22 +584,25 @@ let limit(f: ℕ -> ℝ) -> a: ℝ satisfy {
     }
 }
 
+// f is monotonically increasing
 define is_increase(f: ℕ -> ℝ) -> Bool {
     forall(n: ℕ, m: ℕ) {
         n < m implies f(n) <= f(m)
     }
 }
 
+// f is monotonically decreasing
 define is_decrease(f: ℕ -> ℝ) -> Bool {
     forall(n: ℕ, m: ℕ) {
         n < m implies f(n) >= f(m)
     }
 }
 
+// f increases at each successor step
 define is_suc_increase(f: ℕ -> ℝ) -> Bool {
     forall(n: ℕ) {
         f(n) <= f(n.suc)
-    } 
+    }
 }
 
 theorem suc_increase_imp_increase(f: ℕ -> ℝ) {
@@ -625,10 +636,11 @@ theorem suc_increase_imp_increase(f: ℕ -> ℝ) {
     }
 }
 
+// f decreases at each successor step
 define is_suc_decrease(f: ℕ -> ℝ) -> Bool {
     forall(n: ℕ) {
         f(n) >= f(n.suc)
-    } 
+    }
 }
 
 theorem suc_decrease_imp_decrease(f: ℕ -> ℝ) {
@@ -663,12 +675,14 @@ theorem suc_decrease_imp_decrease(f: ℕ -> ℝ) {
 }
 
 attributes ℝ {
+    // Upper bound for a sequence
     define is_seq_upper_bound(self, f: ℕ -> ℝ) -> Bool {
         forall(n: ℕ) {
             f(n) <= self
         }
     }
 
+    // Lower bound for a sequence
     define is_seq_lower_bound(self, f: ℕ -> ℝ) -> Bool {
         forall(n: ℕ) {
             self <= f(n)
@@ -676,12 +690,14 @@ attributes ℝ {
     }
 }
 
+// Sequence has an upper bound
 define have_seq_upper_bound(f: ℕ -> ℝ) -> Bool {
     exists(a: ℝ) {
         a.is_seq_upper_bound(f)
     }
 }
 
+// Sequence has a lower bound
 define have_seq_lower_bound(f: ℕ -> ℝ) -> Bool {
     exists(a: ℝ) {
         a.is_seq_lower_bound(f)
@@ -756,6 +772,7 @@ theorem seq_nonempty(f: ℕ -> ℝ) {
     f(ℕ.0) ∈ fn_image(f)
 }
 
+// Monotone convergence theorem: bounded increasing sequence converges to its supremum
 theorem bounded_increase_convergence_to(f: ℕ -> ℝ) {
     is_increase(f) and have_seq_upper_bound(f) implies converge_to(f, sup(fn_image(f)))
 } by {
@@ -800,6 +817,7 @@ theorem bounded_increase_convergence_ver_set(f: ℕ -> ℝ) {
     is_increase(f) and have_upper_bound(fn_image(f)) implies converge(f)
 }
 
+// Bounded decreasing sequence converges to its infimum
 theorem bounded_decrease_convergence_to(f: ℕ -> ℝ) {
     is_decrease(f) and have_seq_lower_bound(f) implies converge_to(f, inf(fn_image(f)))
 } by {

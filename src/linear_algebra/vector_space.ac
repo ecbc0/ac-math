@@ -6,25 +6,31 @@ from set import is_bijective
 // Temporarily not consider dimension, waiting for dependent type
 
 /// Temporarily just use ℝ, ignore ℂ, ℂ' and other field or division algebra
+/// Vector space over ℝ with scalar multiplication
 typeclass V: Vec extends Add {
     scal: (ℝ, V) -> V
-
+    
+    // Vector distributes over scalar addition
     vec_distrib(a: ℝ, v1: V, v2: V) {
         Vec.scal(a, v1 + v2) = Vec.scal(a, v1) + Vec.scal(a, v2)
     }
-
+    
+    // Scalar distributes over scalar addition
     scal_distrib(a1: ℝ, a2: ℝ, v: V) {
         Vec.scal(a1 + a2, v) = Vec.scal(a1, v) + Vec.scal(a2, v)
     }
-
+    
+    // Scalar 1 is identity for scalar multiplication
     unit_scal(v: V) {
         Vec.scal(ℝ.1, v) = v
     }
-
+    
+    // Scalar 0 maps everything to zero vector
     zero_scal(v: V) {
         Vec.scal(ℝ.0, v) = V.0
     }
     
+    // Scalar multiplication is associative
     scal_assco(a1: ℝ, a2: ℝ, v: V) {
         Vec.scal(a1, Vec.scal(a2, v)) = Vec.scal(a1 ⋅ a2, v)
     }
@@ -36,6 +42,7 @@ instance ℝ: Vec {
 
 let scal[V] = Vec.scal[V]
 
+// Multiplying by -1 is same as additive inverse
 theorem add_neg_is_scal_reverse[V: Vec](v: V) {
     scal(-ℝ.1, v) = -v
 } by {
@@ -44,28 +51,33 @@ theorem add_neg_is_scal_reverse[V: Vec](v: V) {
     scal(-ℝ.1 + ℝ.1, v) = scal(ℝ.0, v)
 }
 
+// f preserves scalar multiplication (homogeneous)
 define scal_hom[V: Vec, W: Vec](f: V -> W) -> Bool {
     forall(a: ℝ, v: V) {
-        f(scal[V](a, v)) = scal[W](a, f(v)) 
+        f(scal[V](a, v)) = scal[W](a, f(v))
     }
 }
 
+// f preserves addition (additive homomorphism)
 define add_hom[V: Vec, W: Vec](f: V -> W) -> Bool {
     forall(v: V, w: V) {
-        f(v + w) = f(v) + f(w) 
+        f(v + w) = f(v) + f(w)
     }
 }
 
+// f is linear: preserves both addition and scalar multiplication
 define is_linear[V: Vec, W: Vec](f: V -> W) -> Bool
  {
     scal_hom(f) and add_hom(f)
 }
 
+// f is linear isomorphism: linear bijection
 define is_linear_isom[V: Vec, W: Vec](f: V -> W) -> Bool {
     is_linear(f) and is_bijective(f)
 }
 
-// Temporarily workaround
+// Temporarily workaround for finite-dimensional vectors
+// dim-dimensional vector: only first dim components can be non-zero
 structure Vec_Product[V: Vec] {
     dim: ℕ
     c: ℕ -> V

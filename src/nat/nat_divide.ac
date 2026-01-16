@@ -38,7 +38,8 @@ theorem division_theorem(m: ℕ, n: ℕ) {
     division_theorem(m, n)
 }
 
-// swap 1,2 to get dual and then get all
+// Helper lemma: If two division representations exist, q1 >= q2
+// Prove by contradiction: assuming q1 < q2 leads to r1 >= n, contradicting r1 < n
 theorem division_theorem_uniqueness_helper(m: ℕ, n: ℕ, q1: ℕ, q2: ℕ, r1: ℕ, r2: ℕ) {
     (0 < n) and
     (r1 < n and m = q1 ⋅ n + r1) and
@@ -47,6 +48,7 @@ theorem division_theorem_uniqueness_helper(m: ℕ, n: ℕ, q1: ℕ, q2: ℕ, r1:
 } by {
     q1 ⋅ n + r1 = q2 ⋅ n + r2
     if q1 < q2 {
+        // Assume q1 < q2 and derive contradiction
         q2 ⋅ n > q1 ⋅ n
         r1 = (q2 ⋅ n + r2) - q1 ⋅ n
         (q2 ⋅ n + r2) - q1 ⋅ n = (q2 ⋅ n - q1 ⋅ n) + r2
@@ -54,45 +56,57 @@ theorem division_theorem_uniqueness_helper(m: ℕ, n: ℕ, q1: ℕ, q2: ℕ, r1:
         r1 = (q2 - q1) ⋅ n + r2
         q2 - q1 >= 1
         (q2 - q1) ⋅ n >= n
+        // Since r2 >= 0, we get r1 >= n, contradicting r1 < n
         r1 >= n
-        false 
+        false
     }
 }
 
+/// Uniqueness of division theorem: quotient and remainder are unique
 theorem division_theorem_uniqueness(m: ℕ, n: ℕ, q1: ℕ, q2: ℕ, r1: ℕ, r2: ℕ) {
     (0 < n) and
     (r1 < n and m = q1 ⋅ n + r1) and
     (r2 < n and m = q2 ⋅ n + r2) implies
     (r1 = r2) and (q1 = q2)
 } by {
+    // Use helper lemma to get q1 >= q2 and q2 >= q1
     q1 >= q2
     q2 >= q1
+    // Therefore q1 = q2
     q1 = q2
     q1 ⋅ n = q2 ⋅ n
+    // Then r1 = r2 follows from m = q1*n + r1 = q2*n + r2
     r1 = r2
 }
 
 attributes ℕ {
+    // a divides b means there exists c such that a * c = b
     define divides(self, a: ℕ) -> Bool {
         exists(b: ℕ) { self ⋅ b = a }
     }
 
+    // a properly divides b means a divides b, a is not 1 or a itself, and b is not 0
+    // In other words, a is a nontrivial divisor of b
     define proper_divides(self, a: ℕ) -> Bool {
-        a != 0 and exists(b: ℕ) { 
+        a != 0 and exists(b: ℕ) {
             (1 < self and self < a) and
-            self ⋅ b = a 
+            self ⋅ b = a
         }
     }
 }
 
+// Every number divides 0
 theorem divides_zero(n: ℕ) {
     n.divides(0)
 }
 
+// Only 0 divides 0 (0 divides no other number)
 theorem zero_divides(n: ℕ) {
     0.divides(n) implies n = 0
 }
 
+// If a * b = n (and n != 0), then a <= n
+// In fact, a is at most n, with equality only when b = 1
 theorem factor_lte(a: ℕ, b: ℕ, n: ℕ) {
     (n != 0 and a ⋅ b = n) implies a <= n
 } by {
@@ -100,30 +114,37 @@ theorem factor_lte(a: ℕ, b: ℕ, n: ℕ) {
         a != 0
         b != 0
         if b = 1 { a = n }
-        if b > 1 { 
-            a < a ⋅ b 
+        if b > 1 {
+            // Since a >= 1, a * b >= a * 2 > a
+            a < a ⋅ b
             a < n
         }
         a <= n
     }
 }
 
+// If a divides n, then either n = 0 or a <= n
 theorem divides_lte(a: ℕ, n: ℕ) {
     a.divides(n) implies n = 0 or a <= n
-} 
+}
 
+// Every number divides itself
 theorem divides_self(a: ℕ) { a.divides(a) }
 
+// If a is a proper divisor of n and n = a*b, then b is also a proper divisor
+// This requires proving 1 < b < n, done by contradiction
 theorem another_also_proper_divides(n: ℕ, a: ℕ, b: ℕ) {
-    a.proper_divides(n) and n = a ⋅ b implies b.proper_divides(n) 
+    a.proper_divides(n) and n = a ⋅ b implies b.proper_divides(n)
 } by {
-    // just need to prove 1 < b < n. proved by contradiction
-    if b = 0 { 
-        n = 0 
+    // Need to prove 1 < b < n by contradiction
+    if b = 0 {
+        n = 0
+        // But a properly divides n, which requires n != 0
         false
     }
-    if b = 1 { 
+    if b = 1 {
         a = n
+        // But a properly divides n, which requires a < n
         false
     }
     if b >= n {
@@ -131,28 +152,36 @@ theorem another_also_proper_divides(n: ℕ, a: ℕ, b: ℕ) {
         let m: ℕ satisfy { a = 1 + m and m != 0 }
         a ⋅ b = b + m ⋅ b
         m ⋅ b != 0
-        a ⋅ b > n 
+        // This gives a*b > n, contradicting a*b = n
+        a ⋅ b > n
         false
     }
+    // Therefore 1 < b and b < n
     1 < b and b < n
 }
 
+// If a properly divides b, then both a and b are greater than 1
 theorem proper_divides_gt_one(a: ℕ, b: ℕ) {
     a.proper_divides(b) implies 1 < a and 1 < b
-} 
+}
 
+// Divisibility is transitive: if a1 divides a2 and a2 divides a3, then a1 divides a3
 theorem divides_trans(a1: ℕ, a2: ℕ, a3: ℕ) {
     a1.divides(a2) and a2.divides(a3) implies a1.divides(a3)
 } by {
     let (b1: ℕ) satisfy { a1 ⋅ b1 = a2 }
     let (b2: ℕ) satisfy { a2 ⋅ b2 = a3 }
+    // Then a1 * (b1 * b2) = a3
     a1 ⋅ (b1 ⋅ b2) = a3
 }
 
+// If a divides a2, then a also divides a2 * a3
 theorem divides_mul(a1: ℕ, a2: ℕ, a3: ℕ) {
     a1.divides(a2) implies a1.divides(a2 ⋅ a3)
-} 
+}
 
+// If a divides both b and b+1, then a must be 1
+// This follows because consecutive integers are coprime
 theorem divides_suc(a: ℕ, b: ℕ) { a.divides(b) and a.divides(b + 1) implies a = 1 } by {
     let (c: ℕ) satisfy { a ⋅ c = b }
     let (d: ℕ) satisfy { a ⋅ d = b + 1 }
@@ -163,24 +192,28 @@ theorem divides_suc(a: ℕ, b: ℕ) { a.divides(b) and a.divides(b + 1) implies 
     a ⋅ (c + e) = b + 1
     a ⋅ c + a ⋅ e = b + 1
     b + a ⋅ e = b + 1
+    // So a * e = 1, which means a = 1
     a ⋅ e = 1
     a = 1
 }
 
 
 
+// If d divides both a and b, then d also divides a + b
 theorem divides_add(a: ℕ, b: ℕ, d: ℕ) {
     d.divides(a) and d.divides(b) implies d.divides(a + b)
 } by {
     let (qa: ℕ) satisfy { qa ⋅ d = a }
     let (qb: ℕ) satisfy { qb ⋅ d = b }
+    // Then (qa + qb) * d = a + b
     (qa + qb) ⋅ d = qa ⋅ d + b
     (qa + qb) ⋅ d = a + b
     d.divides((qa + qb) ⋅ d)
 }
 
-theorem divides_symm(a: ℕ, b: ℕ) { 
-    a.divides(b) and b.divides(a) implies a = b 
+// If a divides b and b divides a, then a = b (symmetry of divisibility for nonzero numbers)
+theorem divides_symm(a: ℕ, b: ℕ) {
+    a.divides(b) and b.divides(a) implies a = b
 } by {
     a = 0 implies b = 0
     b = 0 implies a = 0
@@ -189,16 +222,20 @@ theorem divides_symm(a: ℕ, b: ℕ) {
         a <= b
         b.divides(a)
         a >= b
+        // Combining a <= b and a >= b gives a = b
         a = b
     }
 }
 
+// Modulo operation: returns remainder r when a is divided by m
+// For m != 0, r < m and exists q such that q*m + r = a
+// For m = 0, we define a mod 0 = a (arbitrary but consistent choice)
 let mod(a: ℕ, m: ℕ) -> r: ℕ satisfy {
     if m != 0 {
         r < m and exists(q: ℕ) { q ⋅ m + r = a }
     } else {
-        // It doesn't really matter how we define "mod 0".
-        // We pick a mod 0 = a.
+        // Division by 0 is undefined, so we choose an arbitrary value
+        // We pick a mod 0 = a for consistency
         r = a
     }
 } by {
@@ -215,6 +252,7 @@ attributes ℕ {
     let mod = mod
 }
 
+// Express a as q*m + (a mod m) for some q
 theorem add_mod(a: ℕ, m: ℕ) {
     exists(q: ℕ) { q ⋅ m + a.mod(m) = a }
 } by {
@@ -228,8 +266,10 @@ theorem add_mod(a: ℕ, m: ℕ) {
     }
 }
 
+// By definition: a mod 0 = a
 theorem mod_by_zero(a: ℕ) { a.mod(0) = a }
 
+// 0 mod m = 0 for any m
 theorem mod_of_zero(m: ℕ) {
     0.mod(m) = 0
 } by {
@@ -240,6 +280,7 @@ theorem mod_of_zero(m: ℕ) {
     }
 }
 
+// The remainder is at most the dividend: a mod m <= a
 theorem mod_lte(a: ℕ, m: ℕ) {
     a.mod(m) <= a
 } by {
@@ -252,12 +293,15 @@ theorem mod_lte(a: ℕ, m: ℕ) {
     }
 }
 
+// a - (a mod m) is always divisible by m
+// This is because a = q*m + (a mod m), so a - (a mod m) = q*m
 theorem div_sub_mod(a: ℕ, m: ℕ) { m.divides(a - a.mod(m)) } by {
     let (q: ℕ) satisfy { q ⋅ m + a.mod(m) = a }
     a - a.mod(m) = q ⋅ m
     m.divides(q ⋅ m)
 }
 
+// If d divides both a and b, then d also divides a - b
 theorem divides_sub(a: ℕ, b: ℕ, d: ℕ) {
     d.divides(a) and d.divides(b) implies d.divides(a - b)
 } by {
@@ -269,6 +313,8 @@ theorem divides_sub(a: ℕ, b: ℕ, d: ℕ) {
     d.divides(a - b)
 }
 
+// If d divides both a and m, then d also divides a mod m
+// Because a mod m = a - q*m for some q
 theorem divides_mod(a: ℕ, m: ℕ, d: ℕ) {
     d.divides(a) and d.divides(m) implies d.divides(a.mod(m))
 } by {
@@ -280,11 +326,15 @@ theorem divides_mod(a: ℕ, m: ℕ, d: ℕ) {
     d.divides(a.mod(m))
 }
 
+// If m divides a, then a mod m = 0
+// The remainder is zero precisely when the division is exact
 theorem div_imp_mod(a: ℕ, m: ℕ) { m.divides(a) implies a.mod(m) = 0 } by {
     if m != 0 {
         m.divides(m)
         m.divides(a)
+        // From above, d divides (a mod m)
         m.divides(a.mod(m))
+        // But a mod m < m, and only 0 < m satisfies both conditions
         a.mod(m) < m
         not (m <= a.mod(m))
         a.mod(m) = 0
@@ -295,12 +345,15 @@ theorem div_imp_mod(a: ℕ, m: ℕ) { m.divides(a) implies a.mod(m) = 0 } by {
     a.mod(m) = 0
 }
 
+// If a < m, then a mod m = a
+// The remainder is the dividend itself when divisor is larger
 theorem small_mod(a: ℕ, m: ℕ) { a < m implies a.mod(m) = a } by {
     let (q: ℕ) satisfy { q ⋅ m + a.mod(m) = a }
     if q = 0 {
         0 + a.mod(m) = a
         a.mod(m) = a
     } else {
+        // q != 0 implies q*m >= m, but a < m gives contradiction
         m != 0
         q ⋅ m != 0
         m.divides(q ⋅ m)
@@ -311,6 +364,8 @@ theorem small_mod(a: ℕ, m: ℕ) { a < m implies a.mod(m) = a } by {
     a.mod(m) = a
 }
 
+// Taking modulo twice is idempotent: (a mod m) mod m = a mod m
+// Because a mod m < m, so taking mod m again does nothing
 theorem mod_mod(a: ℕ, m: ℕ) { a.mod(m).mod(m) = a.mod(m) } by {
     if m != 0 {
         a.mod(m) < m
@@ -322,10 +377,13 @@ theorem mod_mod(a: ℕ, m: ℕ) { a.mod(m).mod(m) = a.mod(m) } by {
     }
 }
 
+// Any multiple of m has remainder 0 when divided by m
 theorem mod_mul(m: ℕ, q: ℕ) { (q ⋅ m).mod(m) = 0 } by {
     m.divides(q ⋅ m)
 }
 
+// If d divides both m and (a mod m), then d divides a
+// Because a = q*m + (a mod m), so if d divides both terms, it divides the sum
 theorem divides_unmod(d: ℕ, a: ℕ, m: ℕ) {
     d.divides(m) and d.divides(a.mod(m)) implies d.divides(a)
 } by {
@@ -336,6 +394,8 @@ theorem divides_unmod(d: ℕ, a: ℕ, m: ℕ) {
     d.divides(a)
 }
 
+// Cancellation law: if a != 0 and a*b divides a*c, then b divides c
+// We can cancel the common factor a from both sides
 theorem divides_cancel_left(a: ℕ, b: ℕ, c: ℕ) {
     a != 0 and (a ⋅ b).divides(a ⋅ c) implies b.divides(c)
 } by {
@@ -343,13 +403,17 @@ theorem divides_cancel_left(a: ℕ, b: ℕ, c: ℕ) {
         a ⋅ b ⋅ d = a ⋅ c
     }
     a ⋅ (b ⋅ d) = a ⋅ c
+    // Since a != 0, we can cancel it
     b ⋅ d = c
 }
 
+// Right variant of cancellation: if a != 0 and b*a divides c*a, then b divides c
 theorem divides_cancel_right(a: ℕ, b: ℕ, c: ℕ) {
     a != 0 and (b ⋅ a).divides(c ⋅ a) implies b.divides(c)
 }
 
+// If a divides b, then (m*a) divides (m*b) for any m
+// Multiplying both sides by the same number preserves divisibility
 theorem mul_divides_left(a: ℕ, b: ℕ, m: ℕ) {
     a.divides(b) implies (m ⋅ a).divides(m ⋅ b)
 } by {
@@ -359,22 +423,28 @@ theorem mul_divides_left(a: ℕ, b: ℕ, m: ℕ) {
     m ⋅ a ⋅ d = m ⋅ b
 }
 
+// Right variant: if a divides b, then (a*m) divides (b*m)
 theorem mul_divides_right(a: ℕ, b: ℕ, m: ℕ) {
     a.divides(b) implies (a ⋅ m).divides(b ⋅ m)
 }
 
+// If p1 <= p2, then a^p1 divides a^p2
+// Because a^p2 = a^p1 * a^(p2-p1)
 theorem power_lt_divides(a: ℕ, p1: ℕ, p2: ℕ) {
     p1 <= p2 implies (a^p1).divides(a^p2)
 } by {
     a^(p1) ⋅ a^(p2 - p1) = a^(p2)
 }
 
+// For a > 1, if a^p1 divides a^p2, then p1 <= p2
+// This is the converse of the previous theorem
 theorem divides_power_lt(a: ℕ, p1: ℕ, p2: ℕ) {
     a > 1 and (a^p1).divides(a^p2) implies p1 <= p2
 } by {
     let q: ℕ satisfy { a^p1 ⋅ q = a^p2 }
     q != 0
     if p1 > p2 {
+        // For a > 1, a^p1 > a^p2 when p1 > p2
         a^p1 > a^p2
         a^p1 ⋅ q >= a^p1
         a^p1 ⋅ q > a^p2
@@ -382,12 +452,16 @@ theorem divides_power_lt(a: ℕ, p1: ℕ, p2: ℕ) {
     }
 }
 
+// If a > 1 and a^p1 doesn't divide a^p2, then p1 > p2
+// Contrapositive of divides_power_lt
 theorem not_divides_power_gt(a: ℕ, p1: ℕ, p2: ℕ) {
     a > 1 and not (a^p1).divides(a^p2) implies p1 > p2
 } by {
     p1 <= p2 implies (a^p1).divides(a^p2)
 }
 
+// If a^p1 doesn't divide b, then a^p2 also doesn't divide b for p2 >= p1
+// Higher powers are "stronger" - if a^p1 can't divide b, neither can a^p2
 theorem power_gt_preserve_not_divides(a: ℕ, p1: ℕ, p2: ℕ, b: ℕ) {
     not (a^(p1)).divides(b) and p2 >= p1 implies not (a^(p2)).divides(b)
 }

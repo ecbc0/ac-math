@@ -2,36 +2,44 @@ from limit.net import Net, Set, is_limit, is_net, directed, no_empty, directed_h
 from set import empty, universe, union, intersection, compl_of_sets, union_index
 from finite_set import list_to_set, List
 
+// Point_Net_System: a space where each point has a net (system of neighborhoods)
+// The net at x represents all "small" sets containing x
 typeclass X: Point_Net_System {
     net: X -> Net[X]
 
+    // Each neighborhood net contains sets that actually contain the point
     point_net(x: X) {
         X.net(x).have_common_pt(x)
     }
 }
 
+// If a set is in the neighborhood system of x, then x is in that set
 theorem contains_common_pt[X: Point_Net_System](x: X, s: Set[X]) {
     s ∈ x.net implies x ∈ s
 }
 
+// x is in interior of a if there's a neighborhood of x contained in a
 define elem_in_interior[X: Point_Net_System](a: Set[X], x: X) -> Bool {
     exists(b: Set[X]) {
         b ∈ X.net(x) and b ⊆ a
     }
-} 
+}
 
+// x is in exterior of a if there's a neighborhood of x contained in a's complement
 define elem_in_exterior[X: Point_Net_System](a: Set[X], x: X) -> Bool {
     exists(b: Set[X]) {
         b ∈ X.net(x) and b ⊆ a.c
     }
-} 
+}
 
+// x is in boundary of a if every neighborhood of x intersects both a and a's complement
 define elem_in_boundary[X: Point_Net_System](a: Set[X], x: X) -> Bool {
     forall(b: Set[X]) {
         b ∈ X.net(x) implies a ∩ b != empty[X] and a.c ∩ b != empty[X]
     }
 } 
 
+// Define interior, exterior, and boundary as sets of points with those properties
 attributes Set[X: Point_Net_System] {
     define interior(self) -> Set[X] {
         Set[X].new(elem_in_interior(self))
@@ -46,23 +54,28 @@ attributes Set[X: Point_Net_System] {
     }
 }
 
+// Helper: if every neighborhood of x intersects both a and a.c, then x is in boundary
 theorem boundary_helper[X: Point_Net_System](a: Set[X], x: X) {
     forall(b: Set[X]) {
         b ∈ X.net(x) implies a ∩ b != empty[X] and a.c ∩ b != empty[X]
-    } implies x ∈ a.boundary    
+    } implies x ∈ a.boundary
 }
 
+// Boundary is complement of interior union exterior
 theorem boundary_is_not_interior_or_exterior[X: Point_Net_System](a: Set[X]) {
     a.boundary = (a.interior ∪ a.exterior).c
 } by {
+    // Forward direction: boundary implies not (interior or exterior)
     forall(x: X) {
         if x ∈ a.boundary {
+            // Can't be in interior (would have neighborhood contained in a)
             if x ∈ a.interior {
                 let b: Set[X] satisfy {
                     b ∈ x.net and b ⊆ a
                 }
                 false
             }
+            // Can't be in exterior (would have neighborhood contained in a.c)
             if x ∈ a.exterior {
                 let b: Set[X] satisfy {
                     b ∈ x.net and b ⊆ a.c
@@ -74,6 +87,7 @@ theorem boundary_is_not_interior_or_exterior[X: Point_Net_System](a: Set[X]) {
         }
     }
     a.boundary ⊆ (a.interior ∪ a.exterior).c
+    // Reverse direction: not (interior or exterior) implies boundary
     forall(x: X) {
         if x ∈ (a.interior ∪ a.exterior).c {
             x ∈ a.interior.c ∩ a.exterior.c
@@ -81,6 +95,7 @@ theorem boundary_is_not_interior_or_exterior[X: Point_Net_System](a: Set[X]) {
             x ∈ a.exterior.c
             not x ∈ a.interior
             not x ∈ a.exterior
+            // No neighborhood is contained in a or a.c, so every neighborhood intersects both
             forall(b: Set[X]) {
                 if b ∈ x.net {
                     not b ⊆ a
@@ -91,11 +106,12 @@ theorem boundary_is_not_interior_or_exterior[X: Point_Net_System](a: Set[X]) {
             }
             boundary_helper(a, x)
             x ∈ a.boundary
-        }        
+        }
     }
     a.boundary ⊇ (a.interior ∪ a.exterior).c
 }
 
+// Interior is subset of the set
 theorem interior_subset[X: Point_Net_System](a: Set[X]) {
     a.interior ⊆ a
 } by {
@@ -110,6 +126,7 @@ theorem interior_subset[X: Point_Net_System](a: Set[X]) {
     }
 }
 
+// Exterior is subset of the complement
 theorem exterior_subset[X: Point_Net_System](a: Set[X]) {
     a.exterior ⊆ a.c
 } by {
@@ -124,6 +141,7 @@ theorem exterior_subset[X: Point_Net_System](a: Set[X]) {
     }
 }
 
+// Interior and exterior are disjoint
 theorem interior_exterior_separate[X: Point_Net_System](a: Set[X]) {
     a.interior ∩ a.exterior = empty[X]
 } by {
@@ -133,6 +151,7 @@ theorem interior_exterior_separate[X: Point_Net_System](a: Set[X]) {
     a.interior ∩ a.exterior ⊆ a ∩ a.c
 }
 
+// Boundary of complement equals boundary of set
 theorem boundary_is_compl_boundary[X: Point_Net_System](a: Set[X]) {
     a.c.boundary = a.boundary
 } by {
@@ -142,7 +161,7 @@ theorem boundary_is_compl_boundary[X: Point_Net_System](a: Set[X]) {
                 b ∈ x.net implies a.c ∩ b != empty[X] and a.c.c ∩ b != empty[X]
                 b ∈ x.net implies a ∩ b != empty[X] and a.c ∩ b != empty[X]
             }
-            x ∈ a.boundary            
+            x ∈ a.boundary
         }
         if x ∈ a.boundary {
             forall(b: Set[X]) {
@@ -151,14 +170,16 @@ theorem boundary_is_compl_boundary[X: Point_Net_System](a: Set[X]) {
                 b ∈ x.net implies a.c ∩ b != empty[X] and a.c.c ∩ b != empty[X]
             }
             x ∈ a.c.boundary
-        } 
+        }
         x ∈ a.c.boundary iff x ∈ a.boundary
     }
 }
 
+// Exterior of complement equals interior of set
 theorem interior_is_compl_exterior[X: Point_Net_System](a: Set[X]) {
     a.c.exterior = a.interior
 } by {
+    // Forward direction
     forall(x: X) {
         if x ∈ a.c.exterior {
             let b: Set[X] satisfy {
@@ -171,6 +192,7 @@ theorem interior_is_compl_exterior[X: Point_Net_System](a: Set[X]) {
 
     a.c.exterior ⊆ a.interior
 
+    // Reverse direction
     forall(x: X) {
         if x ∈ a.interior {
             let b: Set[X] satisfy {
@@ -208,12 +230,14 @@ theorem net_limit_split_of_exterior_boundary[X: Topology](a: Set[X], x: X) {
     }
 }
 
+// x is a limit point (or adherent point) of a if every neighborhood of x intersects a
 define limit_pt[X: Point_Net_System](a: Set[X], x: X) -> Bool {
     forall(b: Set[X]) {
         b ∈ x.net implies a ∩ b != empty[X]
     }
 }
 
+// If x is in a, then x is a limit point of a
 theorem contains_imp_limit_pt[X: Topology](a: Set[X], x: X) {
     x ∈ a implies limit_pt(a, x)
 } by {
@@ -223,20 +247,23 @@ theorem contains_imp_limit_pt[X: Topology](a: Set[X], x: X) {
             x ∈ a ∩ b
             a ∩ b != empty[X]
         }
-    }    
+    }
 }
 
+// Closure: set of all limit points of a set
 // expected param 0 to have typeclass None
 attributes Set[X: Point_Net_System] {
     define closure(self) -> Set[X] {
         Set[X].new(limit_pt(self))
-    }    
+    }
 }
 
+// Closure contains all limit points
 theorem closure_contains_limit_pt[X: Point_Net_System](a: Set[X], x: X) {
     limit_pt(a, x) implies x ∈ a.closure
 }
 
+// Every set is contained in its closure
 theorem subset_closure[X: Point_Net_System](a: Set[X]) {
     a ⊆ a.closure
 } by {
@@ -246,15 +273,18 @@ theorem subset_closure[X: Point_Net_System](a: Set[X]) {
     }
 }
 
+// Nonempty set has nonempty closure
 theorem closure_preserve_nonempty[X: Point_Net_System](a: Set[X], b: Set[X]) {
     (a).is_nonempty implies (a.closure).is_nonempty
 } by {
     a ⊆ a.closure
 }
 
+// Closure is complement of exterior
 theorem closure_is_not_exterior[X: Topology](a: Set[X]) {
     a.closure = a.exterior.c
 } by {
+    // Forward direction: closure points are not exterior
     forall(x: X) {
         if x ∈ a.closure {
             if x ∈ a.exterior {
@@ -268,7 +298,7 @@ theorem closure_is_not_exterior[X: Topology](a: Set[X]) {
         }
     }
     a.closure ⊆ a.exterior.c
-
+    // Reverse direction: non-exterior points are closure points
     forall(x: X) {
         if x ∈ a.exterior.c {
             not x ∈ a.exterior
@@ -282,13 +312,14 @@ theorem closure_is_not_exterior[X: Topology](a: Set[X]) {
     a.closure ⊇ a.exterior.c
 }
 
+// Closure is union of interior and boundary
 theorem closure_is_interior_or_boundary[X: Topology](a: Set[X]) {
     a.closure = a.interior ∪ a.boundary
 } by {
     a.closure = a.exterior.c
 
     a.boundary = (a.interior ∪ a.exterior).c
-    
+
     universe[X] = a.boundary ∪ (a.interior ∪ a.exterior)
 
     universe[X] = (a.boundary ∪ a.interior) ∪ a.exterior
@@ -300,26 +331,31 @@ theorem closure_is_interior_or_boundary[X: Topology](a: Set[X]) {
     a.exterior.c = a.boundary ∪ a.interior
 }
 
+// A set is closed if it equals its closure
 attributes Set[X: Topology] {
     define is_closed(self) -> Bool {
         self.closure = self
     }
 }
 
+// Closure of any set is closed
 theorem closure_is_closed[X: Topology](a: Set[X]) {
     a.closure.is_closed
 } by {
+    // Show closure and its closure are equal sets
     forall(x: X) {
         if x ∈ a.closure {
             x ∈ a.closure.closure
 
             a.closure.contains(x) = a.closure.closure.contains(x)
         } else {
+            // If x is not in closure, it's in exterior
             x ∉ a.closure
             x ∈ a.exterior
             let b: Set[X] satisfy {
                 b ∈ x.net and b ⊆ a.exterior
             }
+            // Neighborhood in exterior is disjoint from closure
             b ∩ a.closure = empty[X]
             x ∉ a.closure.closure
 
@@ -328,15 +364,18 @@ theorem closure_is_closed[X: Topology](a: Set[X]) {
     }
 }
 
+// Closed sets contain all their limit points
 theorem closed_contains_limit_pt[X: Topology](a: Set[X], x: X) {
     limit_pt(a, x) and a.is_closed implies x ∈ a
 }
 
+// Closure preserves subset relation
 theorem closure_preserve_subset[X: Point_Net_System](a: Set[X], b: Set[X]) {
     a ⊆ b implies a.closure ⊆ b.closure
 } by {
     forall(x: X) {
         if x ∈ a.closure {
+            // Every neighborhood of x intersects a, hence also b
             forall(c: Set[X]) {
                 if c ∈ x.net {
                     a ∩ c != empty[X]
@@ -348,46 +387,56 @@ theorem closure_preserve_subset[X: Point_Net_System](a: Set[X], b: Set[X]) {
     }
 }
 
+// Closure is the smallest closed set containing a
 theorem closure_is_smallest_closed_superset[X: Topology](a: Set[X], b: Set[X]) {
     a ⊆ b and b.is_closed implies a.closure ⊆ b
 } 
 
+// Closure of complement equals exterior union boundary
 theorem compl_closure_is_exterior_or_boundary[X: Topology](a: Set[X]) {
     a.c.closure = a.exterior ∪ a.boundary
 }
 
+// A set is open if it equals its interior
 attributes Set[X: Topology] {
     define is_open(self) -> Bool {
         self.interior = self
     }
 }
 
+// Complement of open set is closed
 theorem open_imp_compl_closed[X: Topology](a: Set[X]) {
     a.is_open implies a.c.is_closed
-} 
+}
 
+// Complement of closed set is open
 theorem closed_imp_compl_open[X: Topology](a: Set[X]) {
     a.is_closed implies a.c.is_open
-} 
+}
 
+// Set is open iff its complement is closed
 theorem open_iff_compl_closed[X: Topology](a: Set[X]) {
     a.is_open iff a.c.is_closed
 } by {
     a.is_open implies a.c.is_closed
 }
 
+// Set is closed iff its complement is open
 theorem closed_iff_compl_open[X: Topology](a: Set[X]) {
     a.is_closed iff a.c.is_open
-} 
+}
 
+// Interior of any set is open
 theorem interior_is_open[X: Topology](a: Set[X]) {
     a.interior.is_open
 }
 
+// Exterior of any set is open
 theorem exterior_is_open[X: Topology](a: Set[X]) {
     a.exterior.is_open
 }
 
+// Interior preserves subset relation
 theorem interior_preserve_subset[X: Point_Net_System](a: Set[X], b: Set[X]) {
     a ⊆ b implies a.interior ⊆ b.interior
 } by {
@@ -402,10 +451,12 @@ theorem interior_preserve_subset[X: Point_Net_System](a: Set[X], b: Set[X]) {
     }
 }
 
+// Interior is the largest open subset of a set
 theorem interior_is_largest_open_subset[X: Topology](a: Set[X], b: Set[X]) {
     b ⊆ a and b.is_open implies b ⊆ a.interior
 }
 
+// In an open set, each point has a neighborhood contained in the set
 theorem open_contains_set_in_net[X: Topology](x: X , a: Set[X]) {
     a.is_open and x ∈ a implies exists(s: Set[X]) {
         s ∈ x.net and s ⊆ a
@@ -419,17 +470,21 @@ theorem open_contains_set_in_net[X: Topology](x: X , a: Set[X]) {
     s ⊆ a
 }
 
+// Empty set is open
 theorem empty_is_open[X: Topology](a: Set[X]) {
     a.is_empty implies a.is_open
 }
 
+// Universe (whole space) is closed
 theorem universe_is_closed[X: Topology](a: Set[X]) {
     a.is_universal implies a.is_closed
 } 
 
+// Universe (whole space) is open
 theorem universe_is_open[X: Topology](a: Set[X]) {
     a.is_universal implies a.is_open
 } by {
+    // Every point in universe has a neighborhood contained in universe
     forall(x: X) {
         if x ∈ a {
             let b: Set[X] satisfy {
@@ -445,19 +500,23 @@ theorem universe_is_open[X: Topology](a: Set[X]) {
     a.interior = a
 }
 
+// Empty set is closed
 theorem empty_is_closed[X: Topology](a: Set[X]) {
     a.is_empty implies a.is_closed
 } 
 
+// A set of sets is "open" if each member is an open set
 define are_open[X: Topology](n: Set[Set[X]]) -> Bool {
     forall(s: Set[X]) {
         s ∈ n implies s.is_open
     }
 }
 
+// Arbitrary union of open sets is open
 theorem union_preserve_open[X: Topology](c: Set[Set[X]]) {
     are_open(c) implies union(c).is_open
 } by {
+    // Each point in the union is in some open set in the collection
     forall(x: X) {
         if x ∈ union(c) {
             let s: Set[X] satisfy {
@@ -477,12 +536,14 @@ theorem union_preserve_open[X: Topology](c: Set[Set[X]]) {
     union(c).is_open
 }
 
+// A set of sets is "closed" if each member is a closed set
 define are_closed[X: Topology](n: Set[Set[X]]) -> Bool {
     forall(s: Set[X]) {
         s ∈ n implies s.is_closed
     }
 }
 
+// Complements of closed sets form an open collection
 theorem are_closed_compl[X: Topology](n: Set[Set[X]]) {
     are_closed(n) implies are_open(compl_of_sets(n))
 } by {
@@ -492,16 +553,19 @@ theorem are_closed_compl[X: Topology](n: Set[Set[X]]) {
             s.c.is_closed
             s.is_open
         }
-    }    
+    }
 }
 
+// Complements of open sets form a closed collection
 theorem are_open_compl[X: Topology](n: Set[Set[X]]) {
     are_open(n) implies are_closed(compl_of_sets(n))
 }
 
+// Arbitrary intersection of closed sets is closed
 theorem intersection_preserve_closed[X: Topology](c: Set[Set[X]]) {
     are_closed(c) implies intersection(c).is_closed
 } by {
+    // Take complement: use de Morgan's law
     forall(s: Set[X]) {
         if s ∈ compl_of_sets(c) {
             s.c ∈ c
@@ -509,6 +573,7 @@ theorem intersection_preserve_closed[X: Topology](c: Set[Set[X]]) {
             s.is_open
         }
     }
+    // Union of complements (open) is open
     union(compl_of_sets(c)).is_open
     union(compl_of_sets(c)).c.is_closed
     union(compl_of_sets(c)).c = intersection(compl_of_sets(compl_of_sets(c)))
@@ -516,6 +581,7 @@ theorem intersection_preserve_closed[X: Topology](c: Set[Set[X]]) {
     intersection(c).is_closed
 }
 
+// Intersection of two closed sets is closed
 theorem two_intersection_preserve_closed[X: Topology](a1: Set[X], a2: Set[X]) {
     a1.is_closed and a2.is_closed implies (a1 ∩ a2).is_closed
 } by {
@@ -528,11 +594,13 @@ theorem two_intersection_preserve_closed[X: Topology](a1: Set[X], a2: Set[X]) {
     are_closed(list_to_set(List.cons(a1, List.singleton(a2))))
 }
 
+// Intersection of two open sets is open
 theorem two_intersection_preserve_open[X: Topology](a: Set[X], b: Set[X]) {
     a.is_open and b.is_open implies (a ∩ b).is_open
 } by {
     forall(x: X) {
         if x ∈ a ∩ b {
+            // Get neighborhoods in a and b containing x
             x ∈ a
             a.interior = a
             x ∈ a.interior
@@ -545,6 +613,7 @@ theorem two_intersection_preserve_open[X: Topology](a: Set[X], b: Set[X]) {
             let sb: Set[X] satisfy {
                 sb ∈ x.net and sb ⊆ b
             }
+            // Net is directed: exists neighborhood contained in both sa and sb
             is_net(x.net.sets)
             directed(x.net.sets)
             let s: Set[X] satisfy {
@@ -556,17 +625,20 @@ theorem two_intersection_preserve_open[X: Topology](a: Set[X], b: Set[X]) {
     }
     (a ∩ b) ⊆ (a ∩ b).interior
     (a ∩ b) = (a ∩ b).interior
-    (a ∩ b).is_open    
+    (a ∩ b).is_open
 }
 
+// Interior distributes over finite intersection
 theorem two_intersection_preserve_interior[X: Topology](a: Set[X], b: Set[X]) {
     a.interior ∩ b.interior = (a ∩ b).interior
 } by {
+    // Forward: interior of intersection contains intersection of interiors
     a.interior ⊆ a
     b.interior ⊆ b
     a.interior ∩ b.interior ⊆ a ∩ b
     a.interior ∩ b.interior ⊆ (a ∩ b).interior
 
+    // Reverse: any point in interior of intersection is in both interiors
     forall(x: X) {
         if x ∈ (a ∩ b).interior {
             let s: Set[X] satisfy {
@@ -584,6 +656,7 @@ theorem two_intersection_preserve_interior[X: Topology](a: Set[X], b: Set[X]) {
     a.interior ∩ b.interior ⊇ (a ∩ b).interior
 }
 
+// Indexed union of open sets is open
 theorem union_index_preserve_open[I, X: Topology](f: I -> Set[X]) {
     forall(i: I) {
         f(i).is_open
@@ -609,6 +682,7 @@ theorem union_index_preserve_open[I, X: Topology](f: I -> Set[X]) {
 }
 
 /// If all sets in net are already open, then continuous is equivalent to limit at every point, and for every net system of topology, if every interior of set in x.net contains x, we can construct equivalent open net system
+// Standard definition: f is continuous if preimage of open set is open
 define is_continuous[X: Topology, Y: Topology](f: X -> Y) -> Bool {
     forall(x: X, v: Set[Y]) {
         v.is_open and f(x) ∈ v implies exists(u: Set[X]) {
@@ -617,6 +691,7 @@ define is_continuous[X: Topology, Y: Topology](f: X -> Y) -> Bool {
     }
 }
 
+// f has limit at every point (net-based definition)
 define limit_at_every_point[X: Point_Net_System, Y: Point_Net_System](f: X -> Y) -> Bool {
     forall(x: X, v: Set[Y]) {
         v ∈ f(x).net implies exists(u: Set[X]) {
@@ -625,21 +700,25 @@ define limit_at_every_point[X: Point_Net_System, Y: Point_Net_System](f: X -> Y)
     }
 }
 
+// A net consists entirely of open sets
 define is_open_net[X: Topology](n: Net[X]) -> Bool {
     forall(s: Set[X]) {
         s ∈ n implies s.is_open
     }
 }
 
+// A net system assigns an open net to each point
 define is_open_net_system[X: Topology](net: X -> Net[X]) -> Bool {
     forall(x: X) {
         is_open_net(net(x))
     }
 }
 
+// Equivalence: continuity = limit at every point (for open net systems)
 theorem continuous_iff_limit_at_every_point_in_open_net[X: Topology, Y: Topology](f: X -> Y) {
     is_open_net_system(X.net) and is_open_net_system(Y.net) implies is_continuous(f) iff limit_at_every_point(f)
 } by {
+    // Forward: continuous implies limit at every point
     if is_continuous(f) {
         forall(x: X, v: Set[Y]) {
             if v ∈ f(x).net {
@@ -659,6 +738,7 @@ theorem continuous_iff_limit_at_every_point_in_open_net[X: Topology, Y: Topology
         }
         limit_at_every_point(f)
     }
+    // Reverse: limit at every point implies continuous
     if limit_at_every_point(f) {
         forall(x: X, v: Set[Y]) {
             if v.is_open and f(x) ∈ v {
@@ -671,22 +751,25 @@ theorem continuous_iff_limit_at_every_point_in_open_net[X: Topology, Y: Topology
                 u.is_open and x ∈ u and u.image(f) ⊆ v
             }
         }
-        is_continuous(f)    
+        is_continuous(f)
     }
 }
 
+// Every set in collection has nonempty interior
 define is_interior_nomempty_sets[X: Topology](n: Set[Set[X]]) -> Bool {
     forall(x: X, s: Set[X]) {
         s ∈ n implies (s.interior).is_nonempty
     }
 }
 
+// s is in transformed collection if s is interior of some set in original collection
 define elem_in_to_interior_sets[X: Topology](n: Set[Set[X]], s: Set[X]) -> Bool {
     exists(s1: Set[X]) {
         s1 ∈ n and s = s1.interior
     }
 }
 
+// Transform collection by taking interior of each set
 define to_interior_sets[X: Topology](n: Set[Set[X]]) -> Set[Set[X]] {
     Set[Set[X]].new(elem_in_to_interior_sets(n))
 }
@@ -697,9 +780,11 @@ theorem to_interior_sets_helper[X: Topology](n: Set[Set[X]], s: Set[X]) {
     }
 }
 
+// Taking interiors preserves net structure (if all interiors nonempty)
 theorem interior_preserve_net[X: Topology](n: Set[Set[X]]) {
     is_interior_nomempty_sets(n) and is_net(n) implies is_net(to_interior_sets(n))
 } by {
+    // No empty sets in transformed collection
     forall(s: Set[X]) {
         if s ∈ to_interior_sets(n) {
             let s1: Set[X] satisfy {
@@ -709,6 +794,7 @@ theorem interior_preserve_net[X: Topology](n: Set[Set[X]]) {
         }
     }
     no_empty(to_interior_sets(n))
+    // Directed: for any two sets in transformed collection, exists a third contained in both
     forall(a1: Set[X], a2: Set[X]) {
         if a1 ∈ to_interior_sets(n) and a2 ∈ to_interior_sets(n) {
             let s1: Set[X] satisfy {
@@ -720,8 +806,8 @@ theorem interior_preserve_net[X: Topology](n: Set[Set[X]]) {
             let s: Set[X] satisfy {
                 s ∈ n and s ⊆ s1 ∩ s2
             }
-            s.interior ∈ to_interior_sets(n) 
-            s.interior ⊆ s1 ∩ s2 
+            s.interior ∈ to_interior_sets(n)
+            s.interior ⊆ s1 ∩ s2
             s.interior ⊆ (s1 ∩ s2).interior
             s.interior ⊆ s1.interior ∩ s2.interior
             s.interior ∈ to_interior_sets(n) and s.interior ⊆ a1 and s.interior ⊆ a2
@@ -731,6 +817,7 @@ theorem interior_preserve_net[X: Topology](n: Set[Set[X]]) {
     directed(to_interior_sets(n))
 }
 
+// Transform net by taking interior of each set (if all interiors nonempty)
 define to_interior_net[X: Topology](n: Net[X]) -> Net[X] {
     if is_interior_nomempty_sets(n.sets) {
         Net[X].new(to_interior_sets(n.sets))
@@ -774,12 +861,14 @@ theorem to_interior_net_is_open_net[X: Topology](n: Net[X]) {
     }
 }
 
+// Net system where each set's interior is also in the system
 define is_interior_point_net[X: Topology](net: X -> Net[X]) -> Bool {
     net = X.net and forall(x: X, s: Set[X]) {
         s ∈ x.net implies s.interior ∈ x.net
     }
 }
 
+// Interior point nets have nonempty interiors
 theorem is_interior_point_net_have_interior_nomempty_sets[X: Topology] {
     is_interior_point_net(X.net) implies forall(x: X) {
         is_interior_nomempty_sets(x.net.sets)
@@ -798,18 +887,21 @@ theorem is_interior_point_net_have_interior_nomempty_sets[X: Topology] {
     }
 }
 
+// Interior transformation preserves limit (same limits)
 theorem to_interior_sets_same_limit[X: Topology] {
     is_interior_point_net(X.net) implies forall(x: X) {
         x.net.same_limit(to_interior_net(x.net))
     }
 } by {
     forall(x: X) {
+        // Original net is finer than interior net (interior sets are subsets)
         forall(s: Set[X]) {
             if s ∈ x.net {
                 s.interior ∈ to_interior_net(x.net) and s.interior ⊆ s
             }
         }
         to_interior_net(x.net).finer(x.net)
+        // Interior net is also finer than original (interior contains point, net is directed)
         forall(s: Set[X]) {
             if s ∈ to_interior_net(x.net) {
                 s.is_open
@@ -824,9 +916,10 @@ theorem to_interior_sets_same_limit[X: Topology] {
             }
         }
         x.net.finer(to_interior_net(x.net))
-    } 
+    }
 }
 
+// Characterization of open sets: if each point has open neighborhood in set, set is open
 theorem contains_open_imp_open[X: Topology](v: Set[X]) {
     forall(x: X) {
         x ∈ v implies exists(u: Set[X]) {
@@ -834,6 +927,7 @@ theorem contains_open_imp_open[X: Topology](v: Set[X]) {
         }
     } implies v.is_open
 } by {
+    // Construct open cover of v using neighborhoods
     let open_cover(x: X) -> u: Set[X] satisfy {
         if x ∈ v {
             u.is_open and x ∈ u and u ⊆ v
@@ -841,10 +935,11 @@ theorem contains_open_imp_open[X: Topology](v: Set[X]) {
             u = empty[X]
         }
     }
-    forall(x: X) { 
-        open_cover(x) ⊆ v 
+    forall(x: X) {
+        open_cover(x) ⊆ v
     }
     union_index(open_cover) ⊆ v
+    // Cover equals v (each point in v is covered by its neighborhood)
     forall(x: X) {
         if x ∈ v {
             x ∈ open_cover(x)
@@ -857,10 +952,11 @@ theorem contains_open_imp_open[X: Topology](v: Set[X]) {
         v.is_open
 }
 
+// Continuous functions have preimages of open sets that are open
 theorem continuous_imp_inv_image_preserve_open[X: Topology, Y: Topology](f: X -> Y) {
     is_continuous(f) implies forall(v: Set[Y]) {
         v.is_open implies v.inv_image(f).is_open
-    } 
+    }
 } by {
     forall(v: Set[Y]) {
         if v.is_open {
@@ -875,13 +971,14 @@ theorem continuous_imp_inv_image_preserve_open[X: Topology, Y: Topology](f: X ->
             }
             v.inv_image(f).is_open
         }
-    } 
+    }
 }
 
+// If preimages of open sets are open, function is continuous
 theorem inv_image_preserve_open_imp_continuous[X: Topology, Y: Topology](f: X -> Y) {
     forall(v: Set[Y]) {
         v.is_open implies v.inv_image(f).is_open
-    } implies is_continuous(f) 
+    } implies is_continuous(f)
 } by {
     forall(x: X, v: Set[Y]) {
         if v.is_open and f(x) ∈ v {
@@ -891,18 +988,21 @@ theorem inv_image_preserve_open_imp_continuous[X: Topology, Y: Topology](f: X ->
     }
 }
 
+// Continuous functions preserve closed sets under preimage
 theorem continuous_imp_inv_image_preserve_closed[X: Topology, Y: Topology](f: X -> Y) {
     is_continuous(f) implies forall(b: Set[Y]) {
         b.is_closed implies b.inv_image(f).is_closed
-    } 
+    }
 }
 
+// If preimages of closed sets are closed, function is continuous
 theorem inv_image_preserve_closed_imp_continuous[X: Topology, Y: Topology](f: X -> Y) {
     forall(b: Set[Y]) {
         b.is_closed implies b.inv_image(f).is_closed
-    } implies is_continuous(f) 
+    } implies is_continuous(f)
 }
 
+// Continuous: closure of preimage is subset of preimage of closure
 theorem continuous_imp_inv_image_closure_subset_closure_inv_image[X: Topology, Y: Topology](f: X -> Y, b: Set[Y]) {
     is_continuous(f) implies b.inv_image(f).closure ⊆ b.closure.inv_image(f)
 } by {
@@ -911,6 +1011,7 @@ theorem continuous_imp_inv_image_closure_subset_closure_inv_image[X: Topology, Y
     b.closure.inv_image(f).is_closed
 }
 
+// Continuous: preimage of interior is subset of interior of preimage
 theorem continuous_imp_interior_inv_image_subset_inv_image_interior[X: Topology, Y: Topology](f: X -> Y, v: Set[Y]) {
     is_continuous(f) implies v.interior.inv_image(f) ⊆ v.inv_image(f).interior
 } by {
@@ -921,12 +1022,14 @@ theorem continuous_imp_interior_inv_image_subset_inv_image_interior[X: Topology,
 
 // Topology from open set version to net version: supplement all finite intersections to the open sets to get a net at each point. Then prove two definition of open set is the same
 
-/// Topology converge is not defined by intersection of image of source_net, which have a too weak control of the order relation, say, if you consider the ℝ subset defined as distance of all of intersection of subcollection of source_net, then there are too many arbitrary infinite intersection, while net only assure that it have some element subset finite intersection.  
-/// Topology does have some extra property that concern the intersection of image of source_net, i.e. the theory of compactness
+/// Topology converge is not defined by intersection of image of source_net, which have a too weak control of order relation, say, if you consider the ℝ subset defined as distance of all of intersection of subcollection of source_net, then there are too many arbitrary infinite intersection, while net only assure that it have some element subset finite intersection.
+/// Topology does have some extra property that concern intersection of image of source_net, i.e. theory of compactness
+// Net convergence: source_net converges to target via function f
 define converge_to[K, X: Topology](source_net: Net[K], target: X, f: K -> X) -> Bool {
     is_limit(source_net, target.net, f)
 }
 
+// Expanded definition of net convergence
 theorem converge_to_definition_expand[K, X: Topology](source_net: Net[K], target: X, f: K -> X) {
     forall(b: Set[X]) {
         b ∈ target.net implies exists(a: Set[K]) {

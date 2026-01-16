@@ -163,14 +163,17 @@ attributes ℝ {
     }
 }
 
+/// Transitivity of less-than-or-equal-to.
 theorem lte_trans(a: ℝ, b: ℝ, c: ℝ) {
     a <= b and b <= c implies a <= c
 }
 
+/// Non-reflexivity of strict less-than.
 theorem lt_is_not_self(a: ℝ) {
     not a < a
 }
 
+/// Reflexivity of less-than-or-equal-to.
 theorem lte_self(r: ℝ) {
     r <= r
 }
@@ -190,13 +193,16 @@ theorem gt_rat_sorts(z: ℝ, r1: ℚ, r2: ℚ) {
     }
 }
 
+/// Total order: any two reals are comparable by <=.
 theorem lte_or_gte(a: ℝ, b: ℝ) {
     a <= b or b <= a
 } by {
+    // If a is not less than or equal to b, find a separating rational
     if not a <= b {
         let r1: ℚ satisfy {
             a.gt_rat(r1) and not b.gt_rat(r1)
         }
+        // Any rational less than b is also less than a (by downward closure)
         forall(r2: ℚ) {
             if b.gt_rat(r2) {
                 r2 < r1
@@ -207,6 +213,7 @@ theorem lte_or_gte(a: ℝ, b: ℝ) {
     }
 }
 
+/// Antisymmetry: if each real is <= the other, they are equal.
 theorem lte_both_ways_imp_eq(a: ℝ, b: ℝ) {
     a <= b and b <= a implies a = b
 } by {
@@ -332,6 +339,7 @@ theorem gte_self(r: ℝ) {
 theorem gt_rat_imp_gt_from_rat(a: ℝ, r: ℚ) {
     a.gt_rat(r) implies a > ℝ.from_rat(r)
 } by {
+    // Show ℝ.from_rat(r) <= a by comparing their Dedekind cuts
     forall(q: ℚ) {
         if ℝ.from_rat(r).gt_rat(q) {
             q < r
@@ -340,6 +348,7 @@ theorem gt_rat_imp_gt_from_rat(a: ℝ, r: ℚ) {
     }
     ℝ.from_rat(r) <= a
 
+    // Show they cannot be equal (since r is not in ℝ.from_rat(r)'s cut)
     if ℝ.from_rat(r) = a {
         ℝ.from_rat(r).gt_rat(r)
         false
@@ -354,6 +363,7 @@ theorem gt_from_rat_imp_gt_rat(a: ℝ, r: ℚ) {
     not a <= ℝ.from_rat(r)
     // see def of ℝ.lt
     // r <= r2 < a
+    // Find a rational in a's cut but not in ℝ.from_rat(r)'s cut
     let r2: ℚ satisfy {
         a.gt_rat(r2) and not ℝ.from_rat(r).gt_rat(r2)
     }
@@ -451,6 +461,7 @@ define add_gt(z1: ℝ, z2: ℝ, r: ℚ) -> Bool {
     }
 }
 
+/// Symmetry of addition: the set {r1+r2 : r1∈ℚ_(<z1), r2∈ℚ_(<z2)} equals the set {r2+r1 : r2∈ℚ_(<z2), r1∈ℚ_(<z1)}.
 theorem add_gt_symm(z1: ℝ, z2: ℝ, r: ℚ) {
     add_gt(z1, z2, r) implies add_gt(z2, z1, r)
 } by {
@@ -506,6 +517,7 @@ theorem add_gt_is_cut(z1: ℝ, z2: ℝ) {
     }
 }
 
+/// The sum cut is downward-closed: if r is representable as r1+r2 with r1<z1 and r2<z2, and x<r, then x is also representable.
 theorem add_gt_is_lower_interval(z1: ℝ, z2: ℝ) {
     is_lower_interval(add_gt(z1, z2))
 } by {
@@ -514,6 +526,7 @@ theorem add_gt_is_lower_interval(z1: ℝ, z2: ℝ) {
             let (y1: ℚ, y2: ℚ) satisfy {
                 z1.gt_rat(y1) and z2.gt_rat(y2) and y = y1 + y2
             }
+            // To get x < y1+y2 with x<y, split the difference (y-x)/2 evenly
             let x1 = y1 - (y - x)/ℚ.2
             let x2 = y2 - (y - x)/ℚ.2
             x1 + x2 = (y1 + -(y - x)/ℚ.2) + (y2 + -(y - x)/ℚ.2)
@@ -530,6 +543,7 @@ theorem add_gt_is_lower_interval(z1: ℝ, z2: ℝ) {
     }
 }
 
+/// The sum cut has no greatest element: if we have a maximal sum f1+f2, find a larger f1'>f1 since z1 has no greatest element.
 theorem add_gt_has_no_greatest(z1: ℝ, z2: ℝ) {
     not has_greatest(add_gt(z1, z2))
 } by {
@@ -645,10 +659,12 @@ theorem add_assoc(a: ℝ, b: ℝ, c: ℝ) {
     (a + b + c).gt_rat = (a + (b + c)).gt_rat
 }
 
+/// Strict inequality implies not less-than-or-equal (by definition).
 theorem gt_imp_not_lte(a: ℝ, b: ℝ) {
     a > b implies not a <= b
 }
 
+/// Total order: if not a <= b, then a > b.
 theorem not_lte_imp_gt(a: ℝ, b: ℝ) {
     not a <= b implies a > b
 }
@@ -661,6 +677,7 @@ theorem not_lt_imp_gte(a: ℝ, b: ℝ) {
     not a < b implies a >= b
 }
 
+/// Between any two distinct reals, there is a separating rational.
 theorem rat_separating(a: ℝ, b: ℝ) {
     a < b implies exists(r: ℚ) {
         b.gt_rat(r) and not a.gt_rat(r)
@@ -690,7 +707,8 @@ theorem rat_between_rat_and_ℝ(z: ℝ, r1: ℚ) {
     }
 }
 
-// Strict version of rat_separating.
+/// Between any two distinct reals, there exists a rational.
+/// Strict version of rat_separating.
 theorem rat_between_reals(a: ℝ, b: ℝ) {
     a < b implies exists(r: ℚ) {
         a < ℝ.from_rat(r) and ℝ.from_rat(r) < b
@@ -710,6 +728,7 @@ theorem rat_between_reals(a: ℝ, b: ℝ) {
     ℝ.from_rat(r2) < b
 }
 
+/// Between any two distinct reals, there exists another real (density of ℝ).
 theorem real_between_reals(a: ℝ, b: ℝ) {
     a < b implies exists(c: ℝ) {
         a < c and c < b
@@ -720,6 +739,7 @@ theorem real_between_reals(a: ℝ, b: ℝ) {
     }
 }
 
+/// Between any two reals with a <= b, there exists c such that a <= c <= b.
 theorem real_between_reals_with_eq(a: ℝ, b: ℝ) {
     a <= b implies exists(c: ℝ) {
         a <= c and c <= b
@@ -753,6 +773,7 @@ theorem rat_between_reals_gt(a: ℝ, b: ℝ) {
     }
 }
 
+/// Every positive real has a smaller positive real (no least positive element).
 theorem smaller_pos(a: ℝ) {
     a > 0 implies exists(b: ℝ) {
         b > 0 and b < a
@@ -777,6 +798,7 @@ theorem gt_from_rat_imp_add_gt(z1: ℝ, z2: ℝ, r: ℚ) {
     ℝ.new(add_gt(z1, z2)).gt_rat(r)
 }
 
+/// Transitivity: a < b and b <= c implies a < c.
 theorem lt_lte_trans(a: ℝ, b: ℝ, c: ℝ) {
     a < b and b <= c implies a < c
 } by {
@@ -784,6 +806,7 @@ theorem lt_lte_trans(a: ℝ, b: ℝ, c: ℝ) {
     not c <= a
 }
 
+/// Transitivity: a <= b and b < c implies a < c.
 theorem lte_lt_trans(a: ℝ, b: ℝ, c: ℝ) {
     a <= b and b < c implies a < c
 } by {
@@ -791,6 +814,7 @@ theorem lte_lt_trans(a: ℝ, b: ℝ, c: ℝ) {
     not c < a
 }
 
+/// Transitivity of strict inequality.
 theorem lt_trans(a: ℝ, b: ℝ, c: ℝ) {
     a < b and b < c implies a < c
 } 
@@ -846,6 +870,7 @@ theorem add_from_rat(p: ℚ, q: ℚ) {
     (ℝ.from_rat(p) + ℝ.from_rat(q)).gt_rat = ℝ.from_rat(p + q).gt_rat
 }
 
+/// Addition preserves order on the right.
 theorem lte_add_right(a: ℝ, b: ℝ, c: ℝ) {
     a <= b implies a + c <= b + c
 } by {
@@ -893,6 +918,7 @@ theorem add_from_rat_zero(r: ℚ) {
     ℝ.from_rat(r) + 0 = ℝ.from_rat(r)
 }
 
+/// Adding zero on the right leaves a number unchanged.
 theorem add_zero_right(a: ℝ) {
     a + 0 = a
 } by {
@@ -908,8 +934,9 @@ theorem add_zero_right(a: ℝ) {
 
             (a + 0).gt_rat(r) = a.gt_rat(r)
         } else {
+            // If a > r but a+0 is not > r, find contradiction
             if a.gt_rat(r) {
-                let ra: ℚ satisfy { 
+                let ra: ℚ satisfy {
                     r < ra and a.gt_rat(ra)
                 }
                 let r0 = r - ra
@@ -950,6 +977,7 @@ theorem neg_gt_is_lower_interval(a: ℝ) {
     }
 }
 
+/// Every real is bounded above by some rational.
 theorem lte_some_rat(a: ℝ) {
     exists(r: ℚ) {
         a <= ℝ.from_rat(r)
@@ -960,6 +988,7 @@ theorem lte_some_rat(a: ℝ) {
     }
 }
 
+/// Every real is strictly less than some rational.
 theorem lt_some_rat(a: ℝ) {
     exists(r: ℚ) {
         a < ℝ.from_rat(r)
@@ -1060,6 +1089,7 @@ theorem neg_gt_imp_not_gt_neg(a: ℝ, r: ℚ) {
     neg_gt(a, r) implies not a.gt_rat(-r)
 }
 
+/// Multiplying an inequality by -1 reverses the direction.
 theorem lte_swap_neg(a: ℝ, b: ℝ) {
     a <= b implies -b <= -a
 } by {
@@ -1235,10 +1265,12 @@ theorem neg_eq(a: ℝ, b: ℝ) {
     }
 }
 
+/// Multiplying a strict inequality by -1 reverses the direction.
 theorem lt_swap_neg(a: ℝ, b: ℝ) {
     a < b implies -b < -a
 }
 
+/// Double negation returns the original number.
 theorem neg_neg(a: ℝ) {
     -(-a) = a
 } by {
@@ -1416,6 +1448,7 @@ theorem sub_zero_imp_eq(x: ℝ, y: ℝ) {
     x + -y = 0
 }
 
+/// Addition and subtraction cancel: a + b - b = a.
 theorem sub_cancels(a: ℝ, b: ℝ) {
     a + b - b = a
 } by {
@@ -1423,25 +1456,30 @@ theorem sub_cancels(a: ℝ, b: ℝ) {
     a + b + -b = a
 }
 
+/// Move term to other side of equation: if a + b = c, then a = c - b.
 theorem sub_moves_sides(a: ℝ, b: ℝ, c: ℝ) {
     a + b = c implies a = c - b
 }
 
+/// Cancel right addition: if a + c = b + c, then a = b.
 theorem add_cancel_right(a: ℝ, b: ℝ, c: ℝ) {
     a + c = b + c implies a = b
-} 
+}
 
+/// Cancel left addition: if c + a = c + b, then a = b.
 theorem add_cancel_left(a: ℝ, b: ℝ, c: ℝ) {
     c + a = c + b implies a = b
 }
 
+/// Addition on right preserves strict inequality.
 theorem lt_add_right(a: ℝ, b: ℝ, c: ℝ) {
     a < b implies a + c < b + c
-} 
+}
 
 instance ℝ: Ordered_P_Add
 instance ℝ: Ordered_Add
 
+/// Addition on left preserves strict inequality.
 theorem lt_add_left(a: ℝ, b: ℝ, c: ℝ) {
     a < b implies c + a < c + b
 }
@@ -1542,6 +1580,7 @@ theorem lt_some_int_cancel(m: ℤ, n: ℤ) {
     ℚ.from_int(m) < ℚ.from_int(n)
 }
 
+/// Every real number has a floor (greatest integer ≤ the real).
 theorem floor_exists(a: ℝ) {
     exists(n: ℤ) {
         ℝ.from_int(n) <= a and a < ℝ.from_int(n + ℤ.1)
@@ -1604,11 +1643,13 @@ theorem floor_exists(a: ℝ) {
     }
 }
 
+/// Computes the floor function: greatest integer ≤ a.
 let floor_impl(a: ℝ) -> n: ℤ satisfy {
     ℝ.from_int(n) <= a and a < ℝ.from_int(n + ℤ.1)
 }
 
 attributes ℝ {
+    /// The greatest integer ≤ this real number.
     define floor(self) -> ℤ {
         floor_impl(self)
     }
@@ -1673,18 +1714,22 @@ theorem neg_lt_neg_swap_neg(a: ℝ, b: ℝ) {
     -a < -b implies b < a
 } 
 
+/// Negation of a positive number is negative.
 theorem neg_pos_is_neg(a: ℝ) {
     a > 0 implies (-a) < 0
 }
 
+/// If a number's negation is negative, the number is positive.
 theorem neg_neg_is_pos(a: ℝ) {
     (-a) < 0 implies a > 0
 }
 
+/// Adding a negative number decreases the result.
 theorem gt_add_neg(a: ℝ, b: ℝ) {
     b < 0 implies a > a + b
 }
 
+/// Subtracting a smaller number gives a larger result.
 theorem sub_lt_is_gt(a: ℝ, b: ℝ, c: ℝ) {
     b < c implies a - b > a - c
 }
@@ -1698,18 +1743,22 @@ theorem sub_lt_is_gt(a: ℝ, b: ℝ, c: ℝ) {
 //     }
 // }
 
+/// For positive numbers, the absolute value is the number itself.
 theorem pos_imp_eq_abs(a: ℝ) {
     a > 0 implies a = a.abs
 }
 
+/// Every number is less than or equal to its absolute value.
 theorem lte_abs(a: ℝ) {
     a <= a.abs
-} 
+}
 
+/// Absolute value of a number equals absolute value of its negation.
 theorem abs_neg(a: ℝ) {
     (-a).abs = a.abs
-} 
+}
 
+/// The negation of a number is ≤ its absolute value.
 theorem neg_lte_abs(a: ℝ) {
     -a <= a.abs
 } 
@@ -1764,46 +1813,57 @@ theorem max_pos_pos(a: ℝ, b: ℝ) {
     }
 }
 
+/// Minimum is ≤ each operand.
 theorem min_lte_left(a: ℝ, b: ℝ) {
     a.min(b) <= a
-} 
+}
 
+/// Maximum is ≥ each operand.
 theorem max_gte_left(a: ℝ, b: ℝ) {
     a.max(b) >= a
-} 
+}
 
+/// Minimum is ≤ each operand.
 theorem min_lte_right(a: ℝ, b: ℝ) {
     a.min(b) <= b
-} 
+}
 
+/// Maximum is ≥ each operand.
 theorem max_gte_right(a: ℝ, b: ℝ) {
     a.max(b) >= b
 } 
 
+/// If a is less than both, it's less than their minimum.
 theorem lt_both_imp_lt_min(a: ℝ, b: ℝ, c: ℝ) {
     a < b and a < c implies a < b.min(c)
-} 
+}
 
+/// If a is less than min, it's less than first operand.
 theorem lt_min_imp_lt_left(a: ℝ, b: ℝ, c: ℝ) {
     a < b.min(c) implies a < b
-} 
+}
 
+/// If a is less than min, it's less than second operand.
 theorem lt_min_imp_lt_right(a: ℝ, b: ℝ, c: ℝ) {
     a < b.min(c) implies a < c
 } 
 
+/// If a is greater than both, it's greater than their maximum.
 theorem gt_both_imp_gt_max(a: ℝ, b: ℝ, c: ℝ) {
     a > b and a > c implies a > b.max(c)
-} 
+}
 
+/// If a is greater than max, it's greater than first operand.
 theorem gt_max_imp_gt_left(a: ℝ, b: ℝ, c: ℝ) {
     a > b.max(c) implies a > b
-} 
+}
 
+/// If a is greater than max, it's greater than second operand.
 theorem gt_max_imp_gt_right(a: ℝ, b: ℝ, c: ℝ) {
     a > b.max(c) implies a > c
 } 
 
+/// Any two reals have a common rational upper bound.
 theorem rat_dual_upper_bound(a: ℝ, b: ℝ) {
     exists(r: ℚ) {
         a < ℝ.from_rat(r) and b < ℝ.from_rat(r)
@@ -1907,6 +1967,7 @@ theorem abs_lte(a: ℝ, b: ℝ) {
     }
 }
 
+/// Triangle inequality: |a + b| ≤ |a| + |b|.
 theorem triangle_ineq(a: ℝ, b: ℝ) {
     (a + b).abs <= a.abs + b.abs
 } by {
@@ -1916,11 +1977,13 @@ theorem triangle_ineq(a: ℝ, b: ℝ) {
     (a + b).abs <= a.abs + b.abs
 }
 
-// port from int. indeed it should be inherited from "normed space"
-theorem triangle_ineq_sub(a: ℝ, b: ℝ) { 
+/// Reverse triangle inequality: ||a| - |b|| ≤ |a - b|.
+/// Port from int. Should be inherited from "normed space".
+theorem triangle_ineq_sub(a: ℝ, b: ℝ) {
     (a).abs - (b).abs <= (a - b).abs
 } by {
-    // prove |a| <= |(a - b) + b| => |a| - |b| <= |a - b|
+    // Prove |a| - |b| <= |a - b| using triangle inequality:
+    // |a| = |(a - b) + b| <= |a - b| + |b|
     (a).abs = ((a - b) + b).abs
     (a).abs <= (a - b).abs + (b).abs
 
@@ -1928,7 +1991,7 @@ theorem triangle_ineq_sub(a: ℝ, b: ℝ) {
     
     (a).abs - (b).abs <= (a - b).abs
 
-    // prove |b| <= |(a - b) + a| => |b| - |a| <= |a - b|
+    // Similarly prove |b| - |a| <= |b - a| = |a - b|
     (b).abs = ((b - a) + a).abs
     (b).abs <= (b - a).abs + (a).abs
 
@@ -1955,7 +2018,7 @@ theorem close_reals_imp_close_rats(q: ℚ, r: ℚ, ε: ℚ) {
     (q - r).abs < ε
 }
 
-// Every ℝ can be approximated by a rational.
+/// Every real number can be approximated by rationals to any desired precision.
 theorem rat_approx_exists(x: ℝ, ε: ℚ) {
     ε > ℚ.0 implies exists(r: ℚ) {
         (x - ℝ.from_rat(r)).abs < ℝ.from_rat(ε)
@@ -2203,6 +2266,7 @@ theorem pos_mul_truncated_is_cut(a: ℝ, b: ℝ) {
     not pos_mul_truncated_gt(a, b, q)
 }
 
+/// The product of two positive cuts is a cut (has both elements in and out).
 theorem pos_mul_is_cut(a: ℝ, b: ℝ) {
     a > 0 and b > 0 implies exists(x: ℚ) {
         pos_mul_gt(a, b, x)
@@ -2212,15 +2276,15 @@ theorem pos_mul_is_cut(a: ℝ, b: ℝ) {
 } by {
     is_cut_truncated(pos_mul_truncated_gt(a, b))
 
-    let r: ℚ satisfy { 
-        r > ℚ.0 and pos_mul_truncated_gt(a, b, r) 
+    let r: ℚ satisfy {
+        r > ℚ.0 and pos_mul_truncated_gt(a, b, r)
     }
 
-    let q: ℚ satisfy { 
-        q > ℚ.0 and not pos_mul_truncated_gt(a, b, q) 
+    let q: ℚ satisfy {
+        q > ℚ.0 and not pos_mul_truncated_gt(a, b, q)
     }
 
-    pos_mul_gt(a, b, r) 
+    pos_mul_gt(a, b, r)
     not pos_mul_gt(a, b, q)
 }
 
@@ -2320,7 +2384,7 @@ theorem pos_mul_is_dedekind_cut(a: ℝ, b: ℝ) {
     not has_greatest(pos_mul_gt(a, b))
 }
 
-// truncated mul. when a <= 0 or b <= 0, it reture 0, or ℚ_(< 0)
+/// Truncated multiplication: when a <= 0 or b <= 0, return 0 (i.e., ℚ_(< 0)).
 define pos_mul(a: ℝ, b: ℝ) -> ℝ {
     if not (a > 0 and b > 0) {
         0
@@ -2379,6 +2443,7 @@ theorem mul_zero_right(a: ℝ) {
     not 0 > 0
 }
 
+/// Zero times any number is zero.
 theorem zero_mul(a: ℝ, b: ℝ) {
     a = 0 or b = 0 implies a ⋅ b = 0
 } by {
@@ -2470,6 +2535,7 @@ theorem mul_neg_neg_lt_zero(a: ℝ, b: ℝ) {
     a < 0 and b < 0 implies a ⋅ b > 0
 } 
 
+/// Multiplying by negative on right distributes negation.
 theorem mul_neg_right(a: ℝ, b: ℝ) {
     a ⋅ -b = -(a ⋅ b)
 } by {
@@ -2604,6 +2670,7 @@ theorem mul_comm(a: ℝ, b: ℝ) {
   }
 }
 
+/// Multiplying by negative on left distributes negation.
 theorem mul_neg_left(a: ℝ, b: ℝ) {
     -a ⋅ b = -(a ⋅ b)
 }
@@ -2730,7 +2797,8 @@ theorem mul_3_zero(a: ℝ, b: ℝ, c: ℝ) {
     a ⋅ (b ⋅ c) = 0
 }
 
-// tedious ... have totally 1 + 2^3 = 9 cases
+/// Associativity of multiplication.
+/// Tedious proof with 1 + 2^3 = 9 cases to handle sign combinations.
 theorem mul_assoc(a: ℝ, b: ℝ, c: ℝ) {
     (a ⋅ b) ⋅ c = a ⋅ (b ⋅ c)
 } by {
@@ -3480,6 +3548,7 @@ theorem pos_mul_other_distrib(a: ℝ, b: ℝ, c: ℝ) {
     pos_mul_other_distrib(a, b, c)
 }
 
+/// Right distributive law: a(b + c) = ab + ac.
 theorem mul_distrib_right(a: ℝ, b: ℝ, c: ℝ) {
     a ⋅ (b + c) = a ⋅ b + a ⋅ c
 } by {
@@ -3515,20 +3584,24 @@ theorem mul_distrib_sub_left(a: ℝ, b: ℝ, c: ℝ) {
     (a - b) ⋅ c = a ⋅ c - b ⋅ c
 }
 
-theorem real_lt_mul_pos(a: ℝ, b: ℝ, c: ℝ) { 
+/// Multiplication by positive preserves strict inequality.
+theorem real_lt_mul_pos(a: ℝ, b: ℝ, c: ℝ) {
     a < b and c > 0 implies a ⋅ c < b ⋅ c
 } by {
     lt_mul_pos(a, b, c)
 }
 
+/// Multiplication on left by positive preserves strict inequality.
 theorem lt_imp_pos_mul_lt_left(a: ℝ, b: ℝ, c: ℝ) {
     a < b and c > 0 implies c ⋅ a < c ⋅ b
 }
 
+/// Multiplication on right by negative reverses strict inequality.
 theorem lt_imp_neg_mul_gt_right(a: ℝ, b: ℝ, c: ℝ) {
     a < b and c < 0 implies a ⋅ c > b ⋅ c
 }
 
+/// Multiplication on left by negative reverses strict inequality.
 theorem lt_imp_neg_mul_gt_left(a: ℝ, b: ℝ, c: ℝ) {
     a < b and c < 0 implies c ⋅ a > c ⋅ b
 }
@@ -3726,7 +3799,7 @@ theorem pos_reciprocal_is_dedekind_cut(a: ℝ) {
     not has_greatest(pos_reciprocal_gt(a))
 }
 
-// truncated mul. when a <= 0 or b <= 0, it reture 0, or ℚ_(< 0)
+/// Truncated reciprocal: when a <= 0, return 0 (i.e., ℚ_(< 0)).
 define pos_reciprocal(a: ℝ) -> ℝ {
     if not (a > 0) {
         0
@@ -3766,16 +3839,18 @@ theorem pos_reciprocal_gt_helper_positive_rat(a: ℝ, r: ℚ) {
 }
 
 attributes ℝ {
+    /// The reciprocal of this real number.
     define reciprocal(self) -> ℝ {
         if self > 0 {
             pos_reciprocal(self)
         } else {
-            // self <= 0
+            // self <= 0: use reciprocal of absolute value with appropriate sign
             -pos_reciprocal(-self)
-        }   
+        }
     }
 }
 
+/// The reciprocal of zero is zero (by our definition).
 theorem field_reciprocal_zero(a: ℝ) {
     a = 0 implies a.reciprocal = 0
 } by {
@@ -3783,6 +3858,7 @@ theorem field_reciprocal_zero(a: ℝ) {
     not -a > 0
 }
 
+/// Reciprocal preserves positivity: positive numbers have positive reciprocals.
 theorem reciprocal_preserve_positive(a: ℝ) {
     a > 0 implies a.reciprocal > 0
 }
@@ -3940,6 +4016,7 @@ theorem reciprocal_is_field_reciprocal(a: ℝ) {
     }
 }
 
+/// Zero and one are distinct elements of ℝ.
 theorem zero_and_one_are_distinct {
     1 != 0
 } by {
@@ -3950,12 +4027,14 @@ instance ℝ: Field {
     let reciprocal = ℝ.reciprocal
 }
 
+/// Field property: for f ≠ 0, f⁻¹ ⋅ f = 1.
 theorem field_reciprocal_left(f: ℝ) {
     f != 0 implies f.reciprocal ⋅ f = 1
 }
 
 instance ℝ: Ordered_Field
 
+/// If a < b + ε for all ε > 0, then a ≤ b.
 theorem lt_limit_to_lte_add(a: ℝ, b: ℝ) {
     forall(ε: ℝ) {
         ε > 0 implies a < b + ε
@@ -3970,6 +4049,7 @@ theorem lt_limit_to_lte_add(a: ℝ, b: ℝ) {
     }
 }
 
+/// If a - ε < b for all ε > 0, then a ≤ b.
 theorem lt_limit_to_lte_sub(a: ℝ, b: ℝ) {
     forall(ε: ℝ) {
         ε > 0 implies a - ε < b
@@ -3980,6 +4060,7 @@ theorem lt_limit_to_lte_sub(a: ℝ, b: ℝ) {
     }
 }
 
+/// If a ≤ b + ε for all ε > 0, then a ≤ b.
 theorem lte_limit_to_lte_add(a: ℝ, b: ℝ) {
     forall(ε: ℝ) {
         ε > 0 implies a <= b + ε
@@ -3998,6 +4079,7 @@ theorem lte_limit_to_lte_add(a: ℝ, b: ℝ) {
     }
 }
 
+/// If a - ε ≤ b for all ε > 0, then a ≤ b.
 theorem lte_limit_to_lte_sub(a: ℝ, b: ℝ) {
     forall(ε: ℝ) {
         ε > 0 implies a - ε <= b
@@ -4008,18 +4090,22 @@ theorem lte_limit_to_lte_sub(a: ℝ, b: ℝ) {
     }
 }
 
+/// The number 2 is positive.
 theorem two_is_pos {
     2 > 0
 }
 
+/// The number 1/2 is positive.
 theorem half_is_pos {
     1/2 > 0
 }
 
+/// 1 + 1 = 2.
 theorem one_plus_one_eq_two(r: ℝ) {
     1 + 1 = 2
 }
 
+/// r + r = 2r.
 theorem times_two(r: ℝ) {
     r + r = 2 ⋅ r
 } by {
@@ -4032,6 +4118,7 @@ theorem times_two(r: ℝ) {
     }
 }
 
+/// r/2 + r/2 = r.
 theorem times_two_half(r: ℝ) {
     r/2 + r/2 = r
 } by {
@@ -4039,6 +4126,7 @@ theorem times_two_half(r: ℝ) {
     2 ⋅ r/2 = r
 }
 
+/// 1/2 < 1.
 theorem half_lt_one {
     1/2 < 1
 } by {

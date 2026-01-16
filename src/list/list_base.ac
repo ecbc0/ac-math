@@ -49,42 +49,51 @@ attributes List[T] {
     }
 }
 
+/// If a list contains no elements of type T, then it must be empty.
 theorem not_contains_any_imp_nil[T](list: List[T]) {
     (forall(x: T) { x ∉ list }) implies list = List[T].nil
 } 
 
+/// If a list is empty, then it contains no elements of type T.
 theorem nil_imp_not_contains_any[T](list: List[T]) {
     list = List[T].nil implies (forall(x: T) { x ∉ list })
 }
 
+/// If a list contains some element, then it is not empty.
 theorem contains_any_imp_non_nil[T](list: List[T]) {
     (exists(x: T) { x ∈ list }) implies list != List[T].nil
 }
 
+/// If a list is not empty, then it contains some element.
 theorem non_nil_imp_contains_any[T](list: List[T]) {
     list != List[T].nil implies (exists(x: T) { x ∈ list })
 }
 
-// helper
+/// The negation of membership is equivalent to non-membership.
 theorem not_contains_is_not_contains[T](list: List[T], item: T) {
     (not item ∈ list) iff item ∉ list
 }
 
+/// Adding an empty list on the right yields the original list.
 theorem add_nil_right[T](list: List[T]) {
     list + List.nil[T] = list
 }
 
+/// Adding an empty list on the left yields the original list.
 theorem add_nil_left[T](list: List[T]) {
     List.nil[T] + list = list
 }
 
+/// An item in the left list is contained in the concatenated list.
 theorem add_contains_left[T](left: List[T], right: List[T], item: T) {
     item ∈ left implies item ∈ (left + right)
 } by {
+    // Base case: empty list contains no items
     define f(l: List[T]) -> Bool {
         item ∈ l implies item ∈ (l + right)
     }
     f(List.nil)
+    // Inductive step
     forall(head: T, tail: List[T]) {
         if f(tail) {
             f(List.cons(head, tail))
@@ -93,9 +102,11 @@ theorem add_contains_left[T](left: List[T], right: List[T], item: T) {
     }
 }
 
+/// An item in the right list is contained in the concatenated list.
 theorem add_contains_right[T](left: List[T], right: List[T], item: T) {
     item ∈ right implies item ∈ (left + right)
 } by {
+    // Check if item is in x + right by induction
     define f(x: List[T]) -> Bool {
         item ∈ (x + right) // this helper function is different from that defined in add_contains_left
     }
@@ -107,10 +118,12 @@ theorem add_contains_right[T](left: List[T], right: List[T], item: T) {
     }
 }
 
+/// If an item is in neither list, it is not in their concatenation.
 theorem not_contains_add[T](left: List[T], right: List[T], item: T) {
     item ∉ left and item ∉ right implies item ∉ (left + right)
 } by {
     // if item ∉ right
+    // Prove by induction on the left list
     define f(x: List[T]) -> Bool {
         not item ∈ x implies not item ∈ (x + right)
     }
@@ -135,6 +148,7 @@ theorem not_contains_add[T](left: List[T], right: List[T], item: T) {
     }
 }
 
+/// If an item is in the concatenated list, it is in at least one of the lists.
 theorem contains_add[T](left: List[T], right: List[T], item: T) {
     item ∈ (left + right) implies item ∈ left or item ∈ right
 }
@@ -205,15 +219,18 @@ attributes List[T] {
         }
     }
 
+    /// True if removing duplicates yields the same list (i.e., list has no duplicates).
     define is_unique(self) -> Bool {
         self.unique = self
     }
 }
 
+/// A singleton list contains no duplicates.
 theorem singleton_unique[T](item: T) {
     List.singleton(item).is_unique
 }
 
+/// Removing duplicates cannot increase list length.
 theorem unique_length[T](list: List[T]) {
     list.unique.length <= list.length
 } by {
@@ -237,6 +254,7 @@ theorem unique_length[T](list: List[T]) {
     }
 }
 
+/// Decomposition of unique based on whether head appears in tail.
 theorem unique_decomposition[T](head: T, tail: List[T]) {
     if head ∈ tail { 
         List.cons(head, tail).unique = tail.unique 
@@ -249,6 +267,7 @@ theorem unique_decomposition[T](head: T, tail: List[T]) {
     head ∈ tail implies List.cons(head, tail).unique = tail.unique 
 }
 
+/// Membership in a cons cell decomposes to head equality or tail membership.
 theorem contains_decomposition[T](head: T, tail: List[T], item: T) {
     item ∈ List.cons(head, tail) iff head = item or item ∈ tail
 } by {
@@ -256,6 +275,7 @@ theorem contains_decomposition[T](head: T, tail: List[T], item: T) {
     head = item or item ∈ tail implies item ∈ List.cons(head, tail)
 }
 
+/// Non-membership in a cons cell decomposes to head inequality and tail non-membership.
 theorem contains_decomposition_neg_dual[T](head: T, tail: List[T], item: T) {
     not item ∈ List.cons(head, tail) iff head != item and not item ∈ tail
 } by {
@@ -263,6 +283,7 @@ theorem contains_decomposition_neg_dual[T](head: T, tail: List[T], item: T) {
     contains_decomposition[T](head, tail, item)
 }
 
+/// When head does not equal item, membership depends only on tail.
 theorem contains_when_head_not_eq_item[T](head: T, tail: List[T], item: T) {
     if head != item {
         // def of contains
@@ -273,6 +294,7 @@ theorem contains_when_head_not_eq_item[T](head: T, tail: List[T], item: T) {
     item ∈ List.cons(head, tail) implies item ∈ tail
 }
 
+/// When tail contains head, membership in cons depends only on tail.
 theorem contains_when_tail_contains_head[T](head: T, tail: List[T], item: T) {
     if head ∈ tail {
         item ∈ List.cons(head, tail) iff item ∈ tail 
@@ -291,6 +313,7 @@ theorem contains_when_tail_contains_head[T](head: T, tail: List[T], item: T) {
     }
 }
 
+/// When tail does not contain head and head equals item, membership depends on head.
 theorem contains_when_tail_not_contains_head[T](head: T, tail: List[T], item: T) {
     if head ∉ tail {
         if head = item {
@@ -301,6 +324,7 @@ theorem contains_when_tail_not_contains_head[T](head: T, tail: List[T], item: T)
     }
 } 
 
+/// Removing duplicates preserves membership of any item.
 theorem unique_preserves_contains[T](list: List[T], item: T) {
     item ∈ list.unique iff item ∈ list
 } by {
@@ -316,31 +340,31 @@ theorem unique_preserves_contains[T](list: List[T], item: T) {
 
         if p(tail) {
             if head ∈ tail {
+                // Case 1: head appears in tail, so it gets removed by unique
                 List.cons(head, tail).unique = tail.unique
-
                 item ∈ List.cons(head, tail) iff item ∈ tail
                 // p(tail)
                 item ∈ tail.unique iff item ∈ tail
                 // induction success
                 p(List.cons(head, tail))
-            } 
-            if head ∉ tail {           
+            }
+            if head ∉ tail {
+                // Case 2: head does not appear in tail, so it is kept
                 List.cons(head, tail).unique = List.cons(head, tail.unique)
-                
                 if head = item {
+                    // Subcase 2a: head equals item
                     item ∈ List.cons(head, tail) iff head = item
                     // similar
                     item ∈ List.cons(head, tail.unique) iff head = item
-                    
                     p(List.cons(head, tail))
                 }
                 if head != item {
+                    // Subcase 2b: head does not equal item
                     item ∈ List.cons(head, tail) iff item ∈ tail
                     // similar
                     item ∈ List.cons(head, tail.unique) iff item ∈ tail.unique
                     // p(tail)
                     item ∈ tail.unique iff item ∈ tail
-                    
                     p(List.cons(head, tail))
                 }
                 p(List.cons(head, tail))
@@ -350,6 +374,7 @@ theorem unique_preserves_contains[T](list: List[T], item: T) {
     }
 }
 
+/// Removing duplicates twice yields same result as removing once.
 theorem unique_indemp[T](list: List[T]) {
     list.unique.unique = list.unique
 } by {
@@ -359,10 +384,10 @@ theorem unique_indemp[T](list: List[T]) {
         x.unique.unique = x.unique
     }
 
-    // Base case
+    // Base case: empty list
     f(List.nil)
 
-    // Induction
+    // Inductive step
     forall(head: T, tail: List[T]) {
         if f(tail) {
             tail.unique.unique = tail.unique
@@ -388,10 +413,12 @@ theorem unique_indemp[T](list: List[T]) {
     }
 }
 
+/// The result of removing duplicates contains no duplicates.
 theorem unique_list_is_unique[T](list: List[T]) {
     list.unique.is_unique
 }
 
+/// If a cons list is unique, then its tail is unique.
 theorem unique_implies_tail_unique[T](head: T, tail: List[T]) {
     List.cons(head, tail).is_unique implies tail.is_unique
 } by {
@@ -410,6 +437,7 @@ theorem unique_implies_tail_unique[T](head: T, tail: List[T]) {
 }
 
 attributes List[T] {
+    /// Counts the number of occurrences of an item in the list.
     define count(self, item: T) -> ℕ {
         match self {
             List.nil[T] {
@@ -426,10 +454,12 @@ attributes List[T] {
     }
 }
 
+/// Adding a head cannot decrease the count of any item.
 theorem count_increase[T](head: T, tail: List[T], item: T) {
     List.cons(head, tail).count(item) >= tail.count(item)
 }
 
+/// Counting in concatenated list is additive.
 theorem count_add[T](l1: List[T], l2: List[T], item: T) {
     (l1 + l2).count(item) = l1.count(item) + l2.count(item)
 } by {
@@ -464,6 +494,7 @@ theorem count_add[T](l1: List[T], l2: List[T], item: T) {
     f(l1)
 }
 
+/// If an item is in a list, it occurs at least once.
 theorem list_contains_implies_count_geq_one[T](list: List[T], item: T) {
     item ∈ list implies list.count(item) >= 1
 } by {
@@ -494,6 +525,7 @@ theorem list_contains_implies_count_geq_one[T](list: List[T], item: T) {
     p(list)
 }
 
+/// An item is not in a list iff its count is zero.
 theorem list_not_contains_iff_count_zero[T](list: List[T], item: T) {
     not item ∈ list iff list.count(item) = 0
 } by {
@@ -515,18 +547,19 @@ theorem list_not_contains_iff_count_zero[T](list: List[T], item: T) {
     p(list)
 }
 
+/// An item is in a list iff its count is nonzero.
 theorem list_contains_iff_not_count_zero[T](list: List[T], item: T) {
     item ∈ list iff list.count(item) != 0
 } by {
     item ∈ list implies list.count(item) != 0
 }
 
-// obvious direction 
+/// If a list is a singleton, then it only contains that element and has count 1.
 theorem singleton_imp_only_have_and_count_one[T](x: T, list: List[T]) {
     list = List.singleton(x) implies forall(y: T) { y ∈ list implies y = x } and list.count(x) = 1
 } 
 
-// need induction
+/// If a list only contains x with count 1, then it must be a singleton.
 theorem only_have_and_count_one_imp_singleton[T](x: T, list: List[T]) {
     forall(y: T) { y ∈ list implies y = x } and list.count(x) = 1 implies list = List.singleton(x)
 } by {
@@ -560,6 +593,7 @@ theorem only_have_and_count_one_imp_singleton[T](x: T, list: List[T]) {
     f(list)
 }
 
+/// If a list is unique, each element appears at most once.
 theorem unique_implies_no_duplicate[T](list: List[T], item: T) {
     list.is_unique implies list.count(item) <= 1
 } by {
@@ -595,6 +629,7 @@ theorem unique_implies_no_duplicate[T](list: List[T], item: T) {
     p(list)
 }
 
+/// If an item is in a list, it appears exactly once in the unique version.
 theorem unique_contains_count_one[T](list: List[T], item: T) {
     item ∈ list implies list.unique.count(item) = 1
 } by {
@@ -604,11 +639,13 @@ theorem unique_contains_count_one[T](list: List[T], item: T) {
 }
 
 attributes List[T] {
+    /// True if every element appears at most once in the list.
     define no_duplicate(self) -> Bool {
         forall(item: T) { 
             self.count(item) <= 1 
         }
     }
+    /// True if some element appears more than once in the list.
     define duplicate(self) -> Bool {
         exists(item: T) { 
             self.count(item) > 1 
@@ -616,6 +653,7 @@ attributes List[T] {
     }
 }
 
+/// Having no duplicates is equivalent to not being duplicate.
 theorem no_duplicate_is_not_duplicate[T](list: List[T]) {
     list.no_duplicate iff not list.duplicate
 } by {
@@ -623,6 +661,7 @@ theorem no_duplicate_is_not_duplicate[T](list: List[T]) {
     list.no_duplicate implies not list.duplicate
 }
 
+/// If a list has no duplicates, then removing duplicates yields the same list.
 theorem no_duplicate_implies_unique[T](list: List[T]) {
     list.no_duplicate implies list.is_unique
 } by {
@@ -653,6 +692,7 @@ theorem no_duplicate_implies_unique[T](list: List[T]) {
     p(list)
 }
 
+/// Having no duplicates is equivalent to being unique.
 theorem no_duplicate_iff_unique[T](list: List[T]) {
     list.no_duplicate iff list.is_unique
 } by {
@@ -660,6 +700,7 @@ theorem no_duplicate_iff_unique[T](list: List[T]) {
     list.is_unique implies list.no_duplicate
 }
 
+/// Not being unique is equivalent to being duplicate.
 theorem duplicate_iff_not_unique[T](list: List[T]) {
     not list.is_unique iff list.duplicate
 } 
@@ -706,7 +747,7 @@ attributes List[T] {
         }
     }
 
-    /// Remove all instances of an element from the list.
+    /// Removes all instances of an element from the list.
     define difference(self, elem: T) -> List[T] {
         match self {
             List.nil {
@@ -723,10 +764,12 @@ attributes List[T] {
     }
 }
 
+/// True if elem is not equal to item.
 define not_expect[T](elem: T, item: T) -> Bool {
     elem != item
 }
 
+/// Removing an element is equivalent to filtering with inequality.
 theorem remove_elem_is_filter[T](list: List[T], elem: T) {
     list ∖ elem = list.filter(not_expect(elem))   
 } by {
@@ -765,6 +808,7 @@ theorem remove_elem_is_filter[T](list: List[T], elem: T) {
     p(list)
 }
 
+/// Removing an element ensures it no longer appears in the list.
 theorem remove_elem_does_remove[T](list: List[T], elem: T) {
     elem ∉ (list ∖ elem)  
 } by {
@@ -790,6 +834,7 @@ theorem remove_elem_does_remove[T](list: List[T], elem: T) {
     p(list)
 }
 
+/// The count of an item cannot exceed the list length.
 theorem count_lte_lenght[T](list: List[T], item: T) {
     list.count(item) <= list.length
 } by {
@@ -819,6 +864,7 @@ theorem count_lte_lenght[T](list: List[T], item: T) {
     p(list)
 }
 
+/// List length equals length after removal plus count of removed elements.
 theorem remove_length_ver_add[T](list: List[T], elem: T) {
     (list ∖ elem).length + list.count(elem) = list.length
 } by {
@@ -869,6 +915,7 @@ theorem remove_length_ver_add[T](list: List[T], elem: T) {
     p(list)
 }
 
+/// Length after removal equals original length minus count of removed elements.
 theorem remove_length[T](list: List[T], elem: T) {
     (list ∖ elem).length = list.length - list.count(elem)
     // this is nat sub
@@ -878,14 +925,17 @@ theorem remove_length[T](list: List[T], elem: T) {
     list.count(elem) <= list.length
 }
 
+/// Removing elements cannot increase list length.
 theorem remove_length_lte[T](list: List[T], elem: T) {
     (list ∖ elem).length <= list.length
 } 
 
+/// Removing an element that appears in the list decreases length.
 theorem remove_contains_length_lt[T](list: List[T], elem: T) {
     elem ∈ list implies (list ∖ elem).length < list.length
 } 
 
+/// Removing an element not in the list leaves the list unchanged.
 theorem remove_not_contains_do_nothing[T](list: List[T], item: T) {
     item ∉ list iff list ∖ item = list
 } by {
@@ -919,6 +969,7 @@ theorem remove_not_contains_do_nothing[T](list: List[T], item: T) {
     p(list)
 }
 
+/// If an item is not in a list, it remains not present after removing any element.
 theorem remove_preserve_not_conatins[T](list: List[T], item: T, elem: T) {
     item ∉ list implies item ∉ list ∖ elem
     // the reverse direction is rarely used and need forall(elem: T){ elem != item implies ...}, which make the proof too long
@@ -959,6 +1010,7 @@ theorem remove_preserve_not_conatins[T](list: List[T], item: T, elem: T) {
     p(list)
 }
 
+/// Removing a different element preserves count of another element.
 theorem remove_count[T](list: List[T], item: T, elem: T) {
     item != elem implies list.count(item) = (list ∖ elem).count(item) 
     // although maybe list != list ∖ elem
@@ -1033,10 +1085,10 @@ theorem remove_count[T](list: List[T], item: T, elem: T) {
     p(list)
 }
 
+/// Removing an element from a unique list preserves uniqueness and reduces length by 1.
 theorem remove_unique[T](list: List[T], elem: T) {
     if list.is_unique and elem ∈ list {
         (list ∖ elem).is_unique and
-
         (list ∖ elem).length + 1 = list.length 
     } // the reverse direction seems true, but rarely used, I think
 } by {
@@ -1094,6 +1146,7 @@ theorem remove_unique[T](list: List[T], elem: T) {
     p(list)
 }
 
+/// Filtering cannot increase list length.
 theorem filter_length_lte[T](list: List[T], f: T -> Bool) {
     list.filter(f).length <= list.length
 } by {
@@ -1130,6 +1183,7 @@ theorem filter_length_lte[T](list: List[T], f: T -> Bool) {
     p(list)
 }
 
+/// An item that is in the list and satisfies the predicate is in the filter.
 theorem filter_contains_and[T](list: List[T], f: T -> Bool, item: T) {
     (item ∈ list and f(item)) implies item ∈ list.filter(f)
 } by {
@@ -1170,6 +1224,7 @@ theorem filter_contains_and[T](list: List[T], f: T -> Bool, item: T) {
     p(list)
 }
 
+/// An item in the filter must be in the list and satisfy the predicate.
 theorem filter_contained_by_and[T](list: List[T], f: T -> Bool, item: T) {
     item ∈ list.filter(f) implies (item ∈ list and f(item))
 } by {
@@ -1204,6 +1259,7 @@ theorem filter_contained_by_and[T](list: List[T], f: T -> Bool, item: T) {
     p(list)
 }
 
+/// Item in filter is equivalent to being in list and satisfying predicate.
 theorem filter_equivalent_to_and[T](list: List[T], f: T -> Bool, item: T) {
     (item ∈ list and f(item)) = item ∈ list.filter(f)
 } by {
@@ -1211,6 +1267,7 @@ theorem filter_equivalent_to_and[T](list: List[T], f: T -> Bool, item: T) {
     (item ∈ list and f(item)) implies item ∈ list.filter(f)
 }
 
+/// If predicate is true for all elements, filter returns original list.
 theorem filter_of_super_is_self[T](list: List[T], contains: T -> Bool) {
     forall(x: T) {
         x ∈ list implies contains(x)
@@ -1253,11 +1310,12 @@ theorem filter_of_super_is_self[T](list: List[T], contains: T -> Bool) {
     f(list)
 }
 
+/// Filtering with the list's own membership predicate returns the list.
 theorem filter_of_self_is_self[T](list: List[T]) {
     list.filter(list.contains) = list
 }
 
-// Length theorems
+/// Length of range from 0 to n-1 is n.
 theorem length_range(n: ℕ) {
     n.range.length = n
 } by {
@@ -1278,8 +1336,7 @@ theorem length_range(n: ℕ) {
             (x + 1).range = x.range.append(x)
             (x + 1).range = x.range + List.singleton(x)
 
-            // Use add_length theorem
-
+            // Using add_length theorem
             (x + 1).range.length = x.range.length + List.singleton(x).length
 
             // Simplify the left side
@@ -1296,6 +1353,7 @@ theorem length_range(n: ℕ) {
     f(n)
 }
 
+/// n is in the range from 0 to n.
 theorem suc_range_contains(n: ℕ) {
     n ∈ (n + 1).range
 } by {
@@ -1304,6 +1362,7 @@ theorem suc_range_contains(n: ℕ) {
     n ∈ (n + 1).range
 }
 
+/// Every number less than n appears in range from 0 to n-1.
 theorem range_contains_all_leq(n: ℕ) {
     forall(x: ℕ) {
         x < n implies x ∈ n.range
@@ -1327,7 +1386,7 @@ theorem range_contains_all_leq(n: ℕ) {
                     if x < m {
                         x ∈ m.range
                         x ∈ (m + 1).range
-                    } 
+                    }
                     if x = m {
                         x = m
                         m ∈ (m + 1).range
@@ -1344,6 +1403,7 @@ theorem range_contains_all_leq(n: ℕ) {
     p(n)
 }
 
+/// No number greater than or equal to m is in range from 0 to m-1.
 theorem range_does_not_contain_geq(m: ℕ, n: ℕ) {
     n >= m implies n ∉ m.range
 } by {
@@ -1362,7 +1422,7 @@ theorem range_does_not_contain_geq(m: ℕ, n: ℕ) {
         if p(x) {
             forall(y: ℕ) {
                 if y >= x + 1 {
-                    y > x 
+                    y > x
                     y ∉ x.range
                     y ∉ List.singleton(x)
 
@@ -1374,6 +1434,7 @@ theorem range_does_not_contain_geq(m: ℕ, n: ℕ) {
     }
 }
 
+/// Being less than n is equivalent to being in range from 0 to n-1.
 theorem range_iff_contains_all_leq(n: ℕ) {
     forall(x: ℕ) {
         x < n iff x ∈ n.range
@@ -1388,6 +1449,7 @@ theorem range_iff_contains_all_leq(n: ℕ) {
     }
 }
 
+/// Each element in range appears exactly once.
 theorem range_count(n: ℕ, m: ℕ) {
     m ∈ n.range implies n.range.count(m) = 1
 } by {
@@ -1405,12 +1467,14 @@ theorem range_count(n: ℕ, m: ℕ) {
                 m < x.suc
                 m <= x
                 if m < x {
+                    // Case 1: m is in x.range but not the new element
                     m ∈ x.range
                     m != x
                     List.singleton(x).count(m) = 0
                     x.suc.range.count(m) = 1
                 } else {
-                    m = x 
+                    // Case 2: m equals the new element x
+                    m = x
                     m ∉ x.range
                     x.range.count(m) = 0
                     List.singleton(x).count(m) = 1
@@ -1424,6 +1488,7 @@ theorem range_count(n: ℕ, m: ℕ) {
     p(n)
 }
 
+/// Range contains no duplicates.
 theorem range_is_unique(n: ℕ) {
     n.range.is_unique
 } by {
@@ -1440,6 +1505,7 @@ theorem range_is_unique(n: ℕ) {
     }
 }
 
+/// List concatenation is associative.
 theorem add_assoc[T](a: List[T], b: List[T], c: List[T]) {
     (a + b) + c = a + (b + c)
 } by {
@@ -1503,18 +1569,22 @@ attributes List[T] {
     }
 }
 
+/// Tail of cons returns the tail component.
 theorem tail_cancels_cons[T](a: T, b: List[T]) {
     List.cons(a, b).tail = b
 }
 
+/// Dropping zero elements returns the original list.
 theorem drop_zero[T](a: List[T]) {
     a.drop(0) = a
 }
 
+/// Dropping one element returns the tail.
 theorem drop_one[T](a: List[T]) {
     a.drop(1) = a.tail
 }
 
+/// Dropping the length of the first list from concatenation returns the second.
 theorem drop_cancels_add[T](a: List[T], b: List[T]) {
     (a + b).drop(a.length) = b
 } by {
@@ -1546,6 +1616,7 @@ theorem drop_cancels_add[T](a: List[T], b: List[T]) {
     }
 }
 
+/// Dropping m then n elements is equivalent to dropping m+n elements at once.
 theorem drop_twice[T](a: List[T], m: ℕ, n: ℕ) {
     a.drop(m).drop(n) = a.drop(m + n)
 } by {
@@ -1581,7 +1652,7 @@ theorem drop_twice[T](a: List[T], m: ℕ, n: ℕ) {
                 l.drop(x + 1 + k) = l.drop((x + k).suc)
 
                 l.drop((x + k).suc) = l.tail.drop(x + k)
-                
+
                 l.drop(x + 1).drop(k) = l.drop(x + 1 + k)
             }
             f(x + 1)
@@ -1593,6 +1664,7 @@ theorem drop_twice[T](a: List[T], m: ℕ, n: ℕ) {
 
 attributes List[T] {
     /// Removes the last n elements from the list.
+    /// Yields empty list if n >= list length.
     define drop_last(self, n: ℕ) -> List[T] {
         match self {
             List.nil {
@@ -1610,6 +1682,7 @@ attributes List[T] {
     }
 }
 
+/// Dropping zero elements from end returns the original list.
 theorem drop_last_zero[T](a: List[T]) {
     a.drop_last(0) = a
 } by {
@@ -1629,6 +1702,7 @@ theorem drop_last_zero[T](a: List[T]) {
     q(a)
 }
 
+/// Dropping all elements from end returns empty list.
 theorem drop_last_all[T](l: List[T]) {
     l.drop_last(l.length) = List.nil[T]
 } by {
@@ -1648,6 +1722,7 @@ theorem drop_last_all[T](l: List[T]) {
     r(l)
 }
 
+/// Dropping length of second list from end of concatenation returns first list.
 theorem drop_last_cancels_add[T](a: List[T], b: List[T]) {
     (a + b).drop_last(b.length) = a
 } by {
@@ -1691,12 +1766,14 @@ attributes ℕ {
     }
 }
 
+/// Range from 0 to n-1 equals 0.until(n).
 theorem zero_until(n: ℕ) {
     0.until(n) = n.range
 } by {
     drop_zero(n.range)
 }
 
+/// Range from n to n is empty.
 theorem until_self(n: ℕ) {
     n.until(n) = List.nil[ℕ]
 } by {
@@ -1704,6 +1781,7 @@ theorem until_self(n: ℕ) {
     drop_cancels_add(n.range, List.nil[ℕ])
 }
 
+/// Range from n to n+1 is singleton containing n.
 theorem until_suc(n: ℕ) {
     n.until(n.suc) = List.singleton(n)
 } by {
@@ -1712,14 +1790,17 @@ theorem until_suc(n: ℕ) {
     drop_cancels_add(n.range, List.singleton(n))
 }
 
+/// Range from 0 to n inclusive equals (n+1).range.
 theorem zero_upto(n: ℕ) {
     0.upto(n) = n.suc.range
 }
 
+/// Range from n to n inclusive is singleton containing n.
 theorem upto_self(n: ℕ) {
     n.upto(n) = List.singleton(n)
 }
 
+/// Range from a to b-1 can be decomposed as a.range plus a.until(b).
 theorem range_add_until(a: ℕ, b: ℕ) {
     a <= b implies a.range + a.until(b) = b.range
 } by {
@@ -1762,18 +1843,22 @@ theorem range_add_until(a: ℕ, b: ℕ) {
     a + k = b
 }
 
+/// A list with length zero must be empty.
 theorem length_zero_imp_nil[T](list: List[T]) {
     list.length = ℕ.0 implies list = List.nil[T]
 }
 
+/// If concatenation is empty, both lists must be empty.
 theorem add_to_nil[T](a: List[T], b: List[T]) {
     a + b = List.nil[T] implies a = List.nil[T] and b = List.nil[T]
 }
 
+/// Appending to any list never results in an empty list.
 theorem append_not_nil[T](a: List[T], t: T) {
     a.append(t) != List.nil[T]
 }
 
+/// Returns maximum element of list using max operation, with nil_elem for empty lists.
 define max_list[L: Linear_Order](list: List[L], nil_elem: L) -> L {
     match list {
         List[L].nil {
@@ -1785,6 +1870,7 @@ define max_list[L: Linear_Order](list: List[L], nil_elem: L) -> L {
     }
 }
 
+/// Every element in list is less than or equal to its maximum.
 theorem list_has_max[L: Linear_Order](list: List[L], nil_elem: L) {
     forall(a: L) {
         a ∈ list implies a <= max_list(list, nil_elem)
@@ -1818,6 +1904,7 @@ theorem list_has_max[L: Linear_Order](list: List[L], nil_elem: L) {
     f(list)
 }
 
+/// Returns minimum element of list using min operation, with nil_elem for empty lists.
 define min_list[L: Linear_Order](list: List[L], nil_elem: L) -> L {
     match list {
         List[L].nil {
@@ -1829,6 +1916,7 @@ define min_list[L: Linear_Order](list: List[L], nil_elem: L) -> L {
     }
 }
 
+/// Every element in list is greater than or equal to its minimum.
 theorem list_has_min[L: Linear_Order](list: List[L], nil_elem: L) {
     forall(a: L) {
         a ∈ list implies a >= min_list(list, nil_elem)
@@ -1862,6 +1950,7 @@ theorem list_has_min[L: Linear_Order](list: List[L], nil_elem: L) {
     f(list)
 }
 
+/// Every list of natural numbers misses some natural number.
 theorem no_list_contains_nat(list: List[ℕ]) {
     exists(n: ℕ) {
         n ∉ list
@@ -1869,6 +1958,7 @@ theorem no_list_contains_nat(list: List[ℕ]) {
 }
 
 attributes List[T] {
+    /// Returns the index of first occurrence of item, or 0 if not found.
     define find_first_idx(self, item: T) -> ℕ {
         match self {
             List.nil{
@@ -1884,6 +1974,7 @@ attributes List[T] {
         }
     }
 
+    /// Gets the element at index i, returning None if out of bounds.
     define get(self, i: ℕ) -> Option[T] {
         match self {
             List.nil {
@@ -1899,6 +1990,7 @@ attributes List[T] {
         }
     }
 
+    /// Removes the first occurrence of elem from the list.
     define remove_first(self, elem: T) -> List[T] {
         match self {
             List.nil {
@@ -1916,6 +2008,7 @@ attributes List[T] {
 }
 
 attributes List[T] {
+    /// Two lists are permutations if they have the same count for each element.
     define is_permutation(self, l: List[T]) -> Bool {
         forall(item: T) {
             self.count(item) = l.count(item)
@@ -1923,14 +2016,17 @@ attributes List[T] {
     }
 }
 
+/// Every list is a permutation of itself.
 theorem self_permutation[T](list: List[T]) {
     list.is_permutation(list)
 } 
 
+/// Permutation relation is symmetric.
 theorem permutation_comm[T](l1: List[T], l2: List[T]) {
     l1.is_permutation(l2) implies l2.is_permutation(l1)
 }
 
+/// Permutation relation is transitive.
 theorem permutation_is_transitive[T](l1: List[T], l2: List[T], l3: List[T]) {
     l1.is_permutation(l2) and l2.is_permutation(l3) implies l1.is_permutation(l3)
 } by {
@@ -1941,6 +2037,7 @@ theorem permutation_is_transitive[T](l1: List[T], l2: List[T], l3: List[T]) {
     }
 }
 
+/// Empty list is only a permutation of empty list.
 theorem nil_permutation[T](list: List[T]) {
     (List[T].nil).is_permutation(list) iff list = List[T].nil 
 } by {
@@ -1948,6 +2045,7 @@ theorem nil_permutation[T](list: List[T]) {
     // all count = 0 <==> nil
 }
 
+/// Removing same element from both lists preserves permutation relation.
 theorem remove_preserve_permutation[T](l1: List[T], l2: List[T], item: T) {
     l1.is_permutation(l2) implies (l1 ∖ item).is_permutation(l2 ∖ item)
 } by {
@@ -1968,6 +2066,7 @@ theorem remove_preserve_permutation[T](l1: List[T], l2: List[T], item: T) {
     }
 }
 
+/// Permutations have equal length.
 theorem permutation_length[T](list_1: List[T], list_2: List[T]) {
     list_1.is_permutation(list_2) implies list_1.length = list_2.length
 } by {
@@ -2001,7 +2100,7 @@ theorem permutation_length[T](list_1: List[T], list_2: List[T]) {
 
                         (l1 ∖ item).length < k
 
-                        // true_below
+                        // By true_below induction
                         f((l1 ∖ item).length)
 
                         (l1 ∖ item).length = (l2 ∖ item).length
@@ -2017,6 +2116,7 @@ theorem permutation_length[T](list_1: List[T], list_2: List[T]) {
     f(list_1.length)
 }
 
+/// Permutations have identical membership predicates.
 theorem permutation_imp_same_contains[T](l1: List[T], l2: List[T]) {
     l1.is_permutation(l2) implies l1.contains = l2.contains
 } by {
@@ -2038,6 +2138,7 @@ theorem permutation_imp_same_contains[T](l1: List[T], l2: List[T]) {
     l1.contains = l2.contains
 }
 
+/// Two unique lists with same membership are permutations.
 theorem unique_and_same_contains_imp_permutation[T](l1: List[T], l2: List[T]) {
     l1.is_unique and l2.is_unique and l1.contains = l2.contains implies l1.is_permutation(l2)
 } by {
@@ -2056,6 +2157,7 @@ theorem unique_and_same_contains_imp_permutation[T](l1: List[T], l2: List[T]) {
     }
 }
 
+/// Permutations remain permutations after removing duplicates.
 theorem permutation_unique_permutation[T](l1: List[T], l2: List[T]) {
     l1.is_permutation(l2) implies l1.unique.is_permutation(l2.unique)
 } by {
@@ -2063,6 +2165,7 @@ theorem permutation_unique_permutation[T](l1: List[T], l2: List[T]) {
     l1.unique.contains = l2.unique.contains
 }
 
+/// Any list permutation of a singleton must be that singleton.
 theorem singleton_permutation[T](l: List[T], x: T) {
     List[T].singleton(x).is_permutation(l) implies l = List[T].singleton(x)
 } by {
@@ -2081,16 +2184,19 @@ theorem singleton_permutation[T](l: List[T], x: T) {
 }
 
 attributes List[T] {
+    /// List is subset if each element's count is at most the count in other.
     define subset_eq(self, other: List[T]) -> Bool {
         forall(x: T) {
             x ∈ self implies self.count(x) <= other.count(x)
         }
     }
+    /// List is superset if other is a subset.
     define superset_eq(self, other: List[T]) -> Bool {
         other ⊆ self
     }
 }
 
+/// Subset relation implies count inequality for each element.
 theorem subset_eq_more[T](l1: List[T], l2: List[T]) {
     l1 ⊆ l2 implies forall(x: T) {
         l1.count(x) <= l2.count(x)
@@ -2108,6 +2214,7 @@ theorem subset_eq_more[T](l1: List[T], l2: List[T]) {
     } 
 }
 
+/// Two lists are permutations if each is subset of the other.
 theorem subset_superset_to_permutation[T](l1: List[T], l2: List[T]) {
     l1 ⊆ l2 and l1 ⊇ l2 implies l1.is_permutation(l2)
 } by {
@@ -2118,6 +2225,7 @@ theorem subset_superset_to_permutation[T](l1: List[T], l2: List[T]) {
     }
 }
 
+/// If l1 is subset of l and l1 permutes to l2, then l2 is subset of l.
 theorem permutation_preserve_subset[T](l1: List[T], l2: List[T], l: List[T]) {
     l1 ⊆ l and l1.is_permutation(l2) implies l2 ⊆ l
 } by {
@@ -2140,6 +2248,7 @@ theorem permutation_preserve_superset[T](l1: List[T], l2: List[T], l: List[T]) {
     }
 }
 
+/// Removing same element preserves subset relation.
 theorem remove_preserve_subset[T](l1: List[T], l2: List[T], x: T) {
     l1 ⊆ l2 implies (l1 ∖ x) ⊆ (l2 ∖ x)
 } by {
@@ -2173,6 +2282,7 @@ theorem subset_trans[T](l1: List[T], l2: List[T], l3: List[T]) {
     }
 }
 
+/// Subset relation implies length inequality.
 theorem subset_imp_length_lte[T](list_1: List[T], list_2: List[T]) {
     list_1 ⊆ list_2 implies list_1.length <= list_2.length
 } by {
@@ -2217,6 +2327,7 @@ theorem subset_imp_length_lte[T](list_1: List[T], list_2: List[T]) {
     f(list_1.length)
 }
 
+/// If unique list l1 has elements only appearing in l2, then l1 is subset of l2.
 theorem unique_subset[T](l1: List[T], l2: List[T]) {
     l1.is_unique and forall(x: T) {
         x ∈ l1 implies x ∈ l2
@@ -2260,7 +2371,7 @@ define map[T, U](items: List[T], f: T -> U) -> List[U] {
     }
 }
 
-// The two definitions of map are the same
+/// The attribute and non-attribute definitions of map are equivalent.
 theorem map_equivalence[T, U] {
     List.map[T, U] = map[T, U]
 } by {
@@ -2280,10 +2391,12 @@ theorem map_equivalence[T, U] {
     }
 }
 
+/// Mapping a singleton yields a singleton of mapped element.
 theorem map_singleton[T, U](f: T -> U, x: T) {
     List.singleton(x).map(f) = List.singleton(f(x))
 }
 
+/// Mapping distributes over concatenation.
 theorem map_add[T, U](left: List[T], right: List[T], f: T -> U) {
     (left + right).map(f) = left.map(f) + right.map(f)
 } by {
@@ -2323,10 +2436,12 @@ theorem map_add[T, U](left: List[T], right: List[T], f: T -> U) {
     }
 }
 
+/// Mapping an append operation yields append of mapped elements.
 theorem map_append[T, U](initial: List[T], last: T, f: T -> U) {
     (initial.append(last)).map(f) = initial.map(f).append(f(last))
 }
 
+/// Mapping twice is equivalent to mapping with composition.
 theorem map_map[T, U, V](items: List[T], f: T -> U, g: U -> V) {
     (items.map(f)).map(g) = items.map(compose(g, f))
 } by {
@@ -2361,6 +2476,7 @@ theorem map_map[T, U, V](items: List[T], f: T -> U, g: U -> V) {
     }
 }
 
+/// Mapping with identity function returns the list unchanged.
 theorem map_id_map[T](list: List[T]) {
     list.map(id_map[T]) = list
 } by {
@@ -2378,6 +2494,7 @@ theorem map_id_map[T](list: List[T]) {
     p(list)
 }
 
+/// If no element maps to y, then y is not in the mapped list.
 theorem map_image_to_exists_imp_dual[T, U](list: List[T], f: T -> U, y: U) {
     forall(x: T) {
         x ∈ list implies f(x) != y
@@ -2412,12 +2529,14 @@ theorem map_image_to_exists_imp_dual[T, U](list: List[T], f: T -> U, y: U) {
     p(list)
 }
 
+/// If y is in the mapped list, some element maps to it.
 theorem map_image_to_exists[T, U](list: List[T], f: T -> U, y: U) {
     y ∈ list.map(f) implies exists(x: T) {
         x ∈ list and f(x) = y
     }
 }
 
+/// Returns the list of elements from list that map to y under f.
 define fiber_list[T, U](list: List[T], f: T -> U, y: U) -> List[T] {
     match list {
         List[T].nil {
@@ -2433,6 +2552,7 @@ define fiber_list[T, U](list: List[T], f: T -> U, y: U) -> List[T] {
     }
 }
 
+/// Count of y in mapped list equals length of fiber list of y.
 theorem map_count_is_fiber_length[T, U](list: List[T], f: T -> U, y: U) {
     list.map(f).count(y) = fiber_list(list, f, y).length
 } by {
@@ -2463,6 +2583,7 @@ theorem map_count_is_fiber_length[T, U](list: List[T], f: T -> U, y: U) {
     p(list)
 }
 
+/// Any element in fiber list maps to y.
 theorem fiber_list_is_inv_image_imp[T, U](list: List[T], f: T -> U, x: T, y: U) {
     x ∈ fiber_list(list, f, y) implies f(x) = y
 } by {
@@ -2495,6 +2616,7 @@ theorem fiber_list_is_inv_image_imp[T, U](list: List[T], f: T -> U, x: T, y: U) 
     p(list)
 }
 
+/// If x is in list and maps to y, then fiber list is non-empty and contains x.
 theorem fiber_list_is_inv_image_imp_by[T, U](list: List[T], f: T -> U, x: T, y: U) {
     x ∈ list and f(x) = y implies fiber_list(list, f, y) != List[T].nil and x ∈ fiber_list(list, f, y)
 } by {
@@ -2534,6 +2656,7 @@ theorem fiber_list_is_inv_image_imp_by[T, U](list: List[T], f: T -> U, x: T, y: 
     p(list)
 }
 
+/// Any element in fiber list is in the original list.
 theorem in_fiber_list[T, U](list: List[T], f: T -> U, x: T, y: U) {
     x ∈ fiber_list(list, f, y) implies x ∈ list
 } by {
@@ -2563,6 +2686,7 @@ theorem in_fiber_list[T, U](list: List[T], f: T -> U, x: T, y: U) {
     p(list)
 }
 
+/// If x is in fiber list for y, its count in fiber equals its count in list.
 theorem fiber_list_count[T, U](list: List[T], f: T -> U, x: T, y: U) {
     x ∈ fiber_list(list, f, y) implies fiber_list(list, f, y).count(x) = list.count(x)
 } by {
@@ -2611,10 +2735,12 @@ theorem fiber_list_count[T, U](list: List[T], f: T -> U, x: T, y: U) {
     p(list)
 }
 
+/// Fiber list is a subset of the original list.
 theorem fiber_list_subset_list[T, U](list: List[T], f: T -> U, y: U) {
     fiber_list(list, f, y) ⊆ list
 } 
 
+/// Subset relation is preserved under fiber list construction.
 theorem map_preserve_fiber_list_length[T, U](l1: List[T], l2: List[T], f: T -> U, y: U) {
     l1 ⊆ l2 implies fiber_list(l1, f, y) ⊆ fiber_list(l2, f, y)
 } by {
@@ -2630,6 +2756,7 @@ theorem map_preserve_fiber_list_length[T, U](l1: List[T], l2: List[T], f: T -> U
     }
 }
 
+/// Subset relation is preserved under mapping.
 theorem map_preserve_subset[T, U](l1: List[T], l2: List[T], f: T -> U) {
     l1 ⊆ l2 implies l1.map(f) ⊆ l2.map(f)
 } by {
@@ -2642,6 +2769,7 @@ theorem map_preserve_subset[T, U](l1: List[T], l2: List[T], f: T -> U) {
     }
 }
 
+/// Reduces a non-empty list using binary operator, applying right-to-left.
 define two_to_finite[T](op: (T, T) -> T, list: List[T], nil_elem: T) -> T {
     match list {
         List[T].nil {
@@ -2657,6 +2785,7 @@ define two_to_finite[T](op: (T, T) -> T, list: List[T], nil_elem: T) -> T {
     }
 }
 
+/// Concatenates a list of lists into a single list.
 define flatten[T](ls: List[List[T]]) -> List[T] {
     match ls {
         List[List[T]].nil {
@@ -2668,16 +2797,19 @@ define flatten[T](ls: List[List[T]]) -> List[T] {
     }
 }
 
+/// Predicate is preserved under binary operation on its elements.
 define preserve_two[T](op: (T, T) -> T, contains: T -> Bool) -> Bool {
     forall(x: T, y: T) {
         contains(x) and contains(y) implies contains(op(x, y))
     }
 }
 
+/// If all list elements satisfy predicate and op preserves it, then reduction satisfies it.
 define preserve_finite[T](op: (T, T) -> T, list: List[T], nil_elem: T, contains: T -> Bool) -> Bool {
     list.length != 0 and (forall(x: T) { list.contains(x) implies contains(x) }) implies contains(two_to_finite(op, list, nil_elem))
 }
 
+/// If binary operation preserves predicate, then reduction also preserves it.
 theorem preserve_two_to_finite[T](op: (T, T) -> T, list: List[T], nil_elem: T, contains: T -> Bool) {
     preserve_two(op, contains) implies preserve_finite(op, list, nil_elem, contains)
 } by {
@@ -2721,12 +2853,14 @@ theorem preserve_two_to_finite[T](op: (T, T) -> T, list: List[T], nil_elem: T, c
     f(list)
 }
 
+/// f1 is subset of f2 if f1 implies f2 for all elements.
 define contains_subset[T](f1: T -> Bool, f2: T -> Bool) -> Bool {
     forall(x: T) {
         f1(x) implies f2(x)
     }
 }
 
+/// l1 is subset of l2 if membership predicate of l1 implies that of l2.
 define contains_subset_list[T](l1: List[T], l2: List[T]) -> Bool {
     contains_subset(l1.contains, l2.contains)
 }
