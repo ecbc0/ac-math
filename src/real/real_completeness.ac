@@ -36,28 +36,32 @@ attributes ℝ {
     }
 }
 
+/// The least upper bound of a set is unique.
 theorem uniqueness_of_least_upper_bound(u1: ℝ, u2: ℝ, s: Set[ℝ]) {
     u1.is_set_least_upper_bound(s) and u2.is_set_least_upper_bound(s) implies u1 = u2
 }
 
+/// The greatest lower bound of a set is unique.
 theorem uniqueness_of_greatest_lower_bound(u1: ℝ, u2: ℝ, s: Set[ℝ]) {
     u1.is_set_greatest_lower_bound(s) and u2.is_set_greatest_lower_bound(s) implies u1 = u2
 }
 
-// Two sets have the same upper bounds
+/// True if s1 and s2 have the same set of upper bounds.
 define same_upper_bound(s1: Set[ℝ], s2: Set[ℝ]) -> Bool {
     forall(r: ℝ) {
         r.is_set_upper_bound(s1) iff r.is_set_upper_bound(s2)
     }
 }
 
-// Two sets have the same least upper bounds (suprema)
+/// True if s1 and s2 have the same least upper bounds (suprema).
 define same_least_upper_bound(s1: Set[ℝ], s2: Set[ℝ]) -> Bool {
     forall(r: ℝ) {
         r.is_set_least_upper_bound(s1) iff r.is_set_least_upper_bound(s2)
     }
 }
 
+/// If two sets have the same upper bounds, then a least upper bound for one set
+/// is also a least upper bound for the other set.
 theorem same_upper_bound_imp_same_least_upper_bound_lemma(s1: Set[ℝ], s2: Set[ℝ], r: ℝ) {
     same_upper_bound(s1, s2) and r.is_set_least_upper_bound(s1) implies r.is_set_least_upper_bound(s2)
 } by {
@@ -70,6 +74,7 @@ theorem same_upper_bound_imp_same_least_upper_bound_lemma(s1: Set[ℝ], s2: Set[
     r.is_set_least_upper_bound(s2)
 }
 
+/// If two sets have the same upper bounds, then they have the same least upper bounds.
 theorem same_upper_bound_imp_same_least_upper_bound(s1: Set[ℝ], s2: Set[ℝ]) {
     same_upper_bound(s1, s2) implies same_least_upper_bound(s1, s2)
 } by {
@@ -80,20 +85,22 @@ theorem same_upper_bound_imp_same_least_upper_bound(s1: Set[ℝ], s2: Set[ℝ]) 
     }
 }
 
-// Two sets have the same lower bounds
+/// True if s1 and s2 have the same set of lower bounds.
 define same_lower_bound(s1: Set[ℝ], s2: Set[ℝ]) -> Bool {
     forall(r: ℝ) {
         r.is_set_lower_bound(s1) iff r.is_set_lower_bound(s2)
     }
 }
 
-// Two sets have the same greatest lower bounds (infima)
+/// True if s1 and s2 have the same greatest lower bounds (infima).
 define same_greatest_lower_bound(s1: Set[ℝ], s2: Set[ℝ]) -> Bool {
     forall(r: ℝ) {
         r.is_set_greatest_lower_bound(s1) iff r.is_set_greatest_lower_bound(s2)
     }
 }
 
+/// If two sets have the same lower bounds, then a greatest lower bound for one set
+/// is also a greatest lower bound for the other set.
 theorem same_lower_bound_imp_same_greatest_lower_bound_lemma(s1: Set[ℝ], s2: Set[ℝ], r: ℝ) {
     same_lower_bound(s1, s2) and r.is_set_greatest_lower_bound(s1) implies r.is_set_greatest_lower_bound(s2)
 } by {
@@ -106,6 +113,7 @@ theorem same_lower_bound_imp_same_greatest_lower_bound_lemma(s1: Set[ℝ], s2: S
     r.is_set_greatest_lower_bound(s2)
 }
 
+/// If two sets have the same lower bounds, then they have the same greatest lower bounds.
 theorem same_lower_bound_imp_same_least_lower_bound(s1: Set[ℝ], s2: Set[ℝ]) {
     same_lower_bound(s1, s2) implies same_greatest_lower_bound(s1, s2)
 } by {
@@ -116,6 +124,7 @@ theorem same_lower_bound_imp_same_least_lower_bound(s1: Set[ℝ], s2: Set[ℝ]) 
     }
 }
 
+/// Any lower bound of a nonempty set is less than or equal to any upper bound of the set.
 theorem lower_lte_upper_bound(s: Set[ℝ], l: ℝ, u: ℝ) {
     (s).is_nonempty and l.is_set_lower_bound(s) and u.is_set_upper_bound(s) implies l <= u
 } by {
@@ -125,6 +134,7 @@ theorem lower_lte_upper_bound(s: Set[ℝ], l: ℝ, u: ℝ) {
     l <= u
 }
 
+/// The greatest lower bound of a nonempty set is less than or equal to its least upper bound.
 theorem greatest_lower_lte_least_upper_bound(s: Set[ℝ], l: ℝ, u: ℝ) {
     (s).is_nonempty and l.is_set_greatest_lower_bound(s) and u.is_set_least_upper_bound(s) implies l <= u
 }
@@ -139,6 +149,7 @@ define sup_cut(s: Set[ℝ], r: ℚ) -> Bool {
     not ℝ.from_rat(r).is_set_upper_bound(s)
 }
 
+/// If s is nonempty and has an upper bound, then sup_cut(s) is a cut (nonempty and has a complement).
 theorem sup_cut_is_cut(s: Set[ℝ], ub: ℝ) {
     (s).is_nonempty and ub.is_set_upper_bound(s)
     implies
@@ -172,6 +183,8 @@ theorem sup_cut_is_cut(s: Set[ℝ], ub: ℝ) {
     not sup_cut(s, r2)
 }
 
+/// If s is nonempty and has an upper bound, then sup_cut(s) is a lower interval
+/// (downward closed: if q is in the cut and p < q, then p is in the cut).
 theorem sup_cut_is_lower_interval(s: Set[ℝ], ub: ℝ) {
     (s).is_nonempty and ub.is_set_upper_bound(s)
     implies
@@ -232,18 +245,22 @@ define have_upper_bound(s: Set[ℝ]) -> Bool {
     }
 }
 
+/// If s is nonempty and has an upper bound, then sup_cut(s) is a Dedekind cut.
 theorem sup_cut_is_dedekind_cut(s: Set[ℝ], ub: ℝ) {
     (s).is_nonempty and have_upper_bound(s)
     implies
     is_dedekind_cut(sup_cut(s))
 }
 
+/// If sup_cut(s) is a Dedekind cut, then s is nonempty and has an upper bound.
 theorem sup_dedekind_cut_imp_no_empty_and_have_upper_bound(s: Set[ℝ]) {
     is_dedekind_cut(sup_cut(s)) implies (s).is_nonempty and have_upper_bound(s)
 } by {
     is_cut(sup_cut(s))
 }
 
+/// The supremum (least upper bound) of s, if it exists.
+/// Returns 0 if s is empty or has no upper bound.
 let sup = function(s: Set[ℝ]) {
     if (s).is_nonempty and have_upper_bound(s) {
         ℝ.new(sup_cut(s))
@@ -252,10 +269,13 @@ let sup = function(s: Set[ℝ]) {
     }
 }
 
+/// True if s is nonempty and has an upper bound (so sup(s) exists).
 define have_sup(s: Set[ℝ]) -> Bool {
     (s).is_nonempty and have_upper_bound(s)
 }
 
+/// If s is nonempty and has an upper bound, then sup(s) is its least upper bound.
+/// This proves the existence of the supremum for bounded nonempty sets.
 theorem ub_imp_lub(s: Set[ℝ], x: ℝ) {
     have_sup(s)
     implies sup(s).is_set_least_upper_bound(s)
@@ -307,14 +327,18 @@ theorem ub_imp_lub(s: Set[ℝ], x: ℝ) {
     }
 }
 
+/// Any upper bound of a nonempty bounded set is greater than or equal to its supremum.
 theorem upper_bound_lte_sup(s: Set[ℝ], u: ℝ) {
     (s).is_nonempty and u.is_set_upper_bound(s) implies sup(s) <= u
 }
 
+/// Any element of s is less than or equal to its least upper bound.
 theorem lte_sup(s: Set[ℝ], y: ℝ, a: ℝ) {
     y.is_set_least_upper_bound(s) and a ∈ s implies a <= y
 }
 
+/// For any ε > 0, there exists an element of s within ε of the least upper bound y,
+/// and this element is greater than y - ε.
 theorem closely_lt_sup(s: Set[ℝ], y: ℝ, ε: ℝ) {
     y.is_set_least_upper_bound(s) and ε > 0 implies exists(a: ℝ) {
         a ∈ s and y - ε < a and a <= y
@@ -335,6 +359,8 @@ theorem closely_lt_sup(s: Set[ℝ], y: ℝ, ε: ℝ) {
     a ∈ s and y - ε < a and a <= y
 }
 
+/// For any ε > 0, there exists an element of s within ε of sup(s),
+/// and this element is greater than sup(s) - ε.
 theorem closely_lt_sup_directly(s: Set[ℝ], ε: ℝ) {
     have_sup(s) and ε > 0 implies exists(a: ℝ) {
         a ∈ s and sup(s) - ε < a and a <= sup(s)
@@ -343,6 +369,8 @@ theorem closely_lt_sup_directly(s: Set[ℝ], ε: ℝ) {
     sup(s).is_set_least_upper_bound(s)
 }
 
+/// If l is less than the least upper bound y of s, then there exists an element of s
+/// between l and y.
 theorem directly_closely_lt_sup(s: Set[ℝ], y: ℝ, l: ℝ) {
     y.is_set_least_upper_bound(s) and l < y implies exists(a: ℝ) {
         a ∈ s and l < a and a <= y
@@ -354,16 +382,19 @@ theorem directly_closely_lt_sup(s: Set[ℝ], y: ℝ, l: ℝ) {
     y - ε = l
 }
 
+/// If l is less than sup(s), then there exists an element of s between l and sup(s).
 theorem directly_closely_lt_sup_directly(s: Set[ℝ], l: ℝ) {
     have_sup(s) and l < sup(s) implies exists(a: ℝ) {
         a ∈ s and l < a and a <= sup(s)
     }
 } 
 
+/// Transform a predicate f to its negated form.
 define flip_fn(f: ℝ -> Bool, x: ℝ) -> Bool {
     f(-x)
 }
 
+/// Flipping a predicate twice returns the original predicate.
 theorem flip_flip_fn(f: ℝ -> Bool) {
     flip_fn(flip_fn(f)) = f
 } by {
@@ -373,10 +404,12 @@ theorem flip_flip_fn(f: ℝ -> Bool) {
     }
 }
 
+/// The set obtained by negating all elements of s.
 define flip(s: Set[ℝ]) -> Set[ℝ] {
     Set[ℝ].new(flip_fn(s.contains))
 }
 
+/// Negating all elements twice returns the original set.
 theorem flip_flip(s: Set[ℝ]) {
     flip(flip(s)) = s
 } by {
@@ -385,6 +418,7 @@ theorem flip_flip(s: Set[ℝ]) {
     flip(flip(s)).contains = s.contains
 }
 
+/// If x is a lower bound of s, then -x is an upper bound of flip(s).
 theorem lb_imp_flip_ub(s: Set[ℝ], x: ℝ) {
     x.is_set_lower_bound(s) implies (-x).is_set_upper_bound(flip(s))
 } by {
@@ -397,10 +431,12 @@ theorem lb_imp_flip_ub(s: Set[ℝ], x: ℝ) {
     }
 }
 
+/// If -a ≤ b, then -b ≤ a.
 theorem neg_lte(a: ℝ, b: ℝ) {
     -a <= b implies -b <= a
 } 
 
+/// If x is an upper bound of s, then -x is a lower bound of flip(s).
 theorem ub_imp_flip_lb(s: Set[ℝ], x: ℝ) {
     x.is_set_upper_bound(s) implies (-x).is_set_lower_bound(flip(s))
 } by {
@@ -413,6 +449,7 @@ theorem ub_imp_flip_lb(s: Set[ℝ], x: ℝ) {
     }
 }
 
+/// If x is the greatest lower bound of s, then -x is the least upper bound of flip(s).
 theorem glb_imp_flip_lub(s: Set[ℝ], x: ℝ) {
     x.is_set_greatest_lower_bound(s)
     implies (-x).is_set_least_upper_bound(flip(s))
@@ -431,6 +468,7 @@ theorem glb_imp_flip_lub(s: Set[ℝ], x: ℝ) {
     (-x).is_set_least_upper_bound(flip(s))
 }
 
+/// If x is the least upper bound of s, then -x is the greatest lower bound of flip(s).
 theorem lub_imp_flip_glb(s: Set[ℝ], x: ℝ) {
     x.is_set_least_upper_bound(s)
     implies (-x).is_set_greatest_lower_bound(flip(s))
@@ -448,6 +486,7 @@ theorem lub_imp_flip_glb(s: Set[ℝ], x: ℝ) {
     }
 }
 
+/// Negating a nonempty set yields another nonempty set.
 theorem flip_preserve_nonempty(s: Set[ℝ]) {
     (s).is_nonempty implies (flip(s)).is_nonempty
 } by {
@@ -461,6 +500,8 @@ define have_lower_bound(s: Set[ℝ]) -> Bool {
     }
 }
 
+/// The infimum (greatest lower bound) of s, if it exists.
+/// Returns 0 if s is empty or has no lower bound.
 let inf = function(s: Set[ℝ]) {
     if (s).is_nonempty and have_lower_bound(s) {
         -ℝ.new(sup_cut(flip(s)))
@@ -469,10 +510,13 @@ let inf = function(s: Set[ℝ]) {
     }
 }
 
+/// True if s is nonempty and has a lower bound (so inf(s) exists).
 define have_inf(s: Set[ℝ]) -> Bool {
     (s).is_nonempty and have_lower_bound(s)
 }
 
+/// If s is nonempty and has a lower bound, then inf(s) is its greatest lower bound.
+/// This proves the existence of the infimum for bounded nonempty sets.
 theorem lb_imp_glb(s: Set[ℝ]) {
     have_inf(s)
     implies inf(s).is_set_greatest_lower_bound(s)
@@ -495,14 +539,17 @@ theorem lb_imp_glb(s: Set[ℝ]) {
     (-y).is_set_greatest_lower_bound(s)
 }
 
+/// Any lower bound of a nonempty bounded set is less than or equal to its infimum.
 theorem low_bound_gte_inf(s: Set[ℝ], u: ℝ) {
     (s).is_nonempty and u.is_set_lower_bound(s) implies inf(s) >= u
 }
 
+/// Any element of s is greater than or equal to its greatest lower bound.
 theorem gte_inf(s: Set[ℝ], y: ℝ, a: ℝ) {
     y.is_set_greatest_lower_bound(s) and a ∈ s implies a >= y
 }
 
+/// The infimum of a set is less than or equal to its supremum.
 theorem inf_lte_sup(s: Set[ℝ]) {
     have_inf(s) and have_sup(s) implies inf(s) <= sup(s)
 } by {
@@ -513,6 +560,8 @@ theorem inf_lte_sup(s: Set[ℝ]) {
     x <= sup(s)
 }
 
+/// For any ε > 0, there exists an element of s within ε of the greatest lower bound y,
+/// and this element is less than y + ε.
 theorem closely_gt_inf(s: Set[ℝ], y: ℝ, ε: ℝ) {
     y.is_set_greatest_lower_bound(s) and ε > 0 implies exists(a: ℝ) {
         a ∈ s and y <= a and a < y + ε 
@@ -529,6 +578,8 @@ theorem closely_gt_inf(s: Set[ℝ], y: ℝ, ε: ℝ) {
     a ∈ s and y <= a and a < y + ε 
 }
 
+/// For any ε > 0, there exists an element of s within ε of inf(s),
+/// and this element is less than inf(s) + ε.
 theorem closely_gt_inf_directly(s: Set[ℝ], ε: ℝ) {
     have_inf(s) and ε > 0 implies exists(a: ℝ) {
         a ∈ s and inf(s) <= a and a < inf(s) + ε 
@@ -537,6 +588,8 @@ theorem closely_gt_inf_directly(s: Set[ℝ], ε: ℝ) {
     inf(s).is_set_greatest_lower_bound(s)
 }
 
+/// If u is greater than the greatest lower bound y of s, then there exists an element of s
+/// between y and u.
 theorem directly_closely_gt_inf(s: Set[ℝ], y: ℝ, u: ℝ) {
     y.is_set_greatest_lower_bound(s) and u > y implies exists(a: ℝ) {
         a ∈ s and y <= a and a < u 
@@ -551,20 +604,21 @@ theorem directly_closely_gt_inf(s: Set[ℝ], y: ℝ, u: ℝ) {
     a < u
 }
 
+/// If u is greater than inf(s), then there exists an element of s between inf(s) and u.
 theorem directly_closely_gt_inf_directly(s: Set[ℝ], u: ℝ) {
     have_inf(s) and u > inf(s) implies exists(a: ℝ) {
         a ∈ s and inf(s) <= a and a < u 
     }
 }
 
-// f is within ε of a for all indices beyond n (tail bound)
+/// The sequence f is within ε of a for all indices beyond n (tail bound).
 define tail_bound(f: ℕ -> ℝ, a: ℝ, n: ℕ, ε: ℝ) -> Bool {
     forall(m: ℕ) {
         m > n implies (f(m) - a).abs < ε
     }
 }
 
-// f converges to a if for every ε > 0, f is eventually within ε of a
+/// The sequence f converges to a if for every ε > 0, f is eventually within ε of a.
 define converge_to(f: ℕ -> ℝ, a: ℝ) -> Bool {
     forall(ε: ℝ) {
         ε > 0 implies exists(n: ℕ) {
@@ -573,14 +627,14 @@ define converge_to(f: ℕ -> ℝ, a: ℝ) -> Bool {
     }
 }
 
-// f converges if there exists some limit a
+/// The sequence f converges if there exists some limit a.
 define converge(f: ℕ -> ℝ) -> Bool {
     exists(a: ℝ) {
         converge_to(f, a)
     }
 }
 
-// Return the limit of f if it converges, otherwise 0
+/// Returns the limit of f if it converges, otherwise returns 0.
 let limit(f: ℕ -> ℝ) -> a: ℝ satisfy {
     if converge(f) {
         converge_to(f, a)
@@ -589,27 +643,28 @@ let limit(f: ℕ -> ℝ) -> a: ℝ satisfy {
     }
 }
 
-// f is monotonically increasing
+/// The sequence f is monotonically increasing.
 define is_increase(f: ℕ -> ℝ) -> Bool {
     forall(n: ℕ, m: ℕ) {
         n < m implies f(n) <= f(m)
     }
 }
 
-// f is monotonically decreasing
+/// The sequence f is monotonically decreasing.
 define is_decrease(f: ℕ -> ℝ) -> Bool {
     forall(n: ℕ, m: ℕ) {
         n < m implies f(n) >= f(m)
     }
 }
 
-// f increases at each successor step
+/// The sequence f increases at each successor step.
 define is_suc_increase(f: ℕ -> ℝ) -> Bool {
     forall(n: ℕ) {
         f(n) <= f(n.suc)
     }
 }
 
+/// If f increases at each successor step, then f is monotonically increasing.
 theorem suc_increase_imp_increase(f: ℕ -> ℝ) {
     is_suc_increase(f) implies is_increase(f)
 } by {
@@ -641,13 +696,14 @@ theorem suc_increase_imp_increase(f: ℕ -> ℝ) {
     }
 }
 
-// f decreases at each successor step
+/// The sequence f decreases at each successor step.
 define is_suc_decrease(f: ℕ -> ℝ) -> Bool {
     forall(n: ℕ) {
         f(n) >= f(n.suc)
     }
 }
 
+/// If f decreases at each successor step, then f is monotonically decreasing.
 theorem suc_decrease_imp_decrease(f: ℕ -> ℝ) {
     is_suc_decrease(f) implies is_decrease(f)
 } by {
@@ -680,14 +736,14 @@ theorem suc_decrease_imp_decrease(f: ℕ -> ℝ) {
 }
 
 attributes ℝ {
-    // Upper bound for a sequence
+    /// True if this real number is an upper bound for the sequence f.
     define is_seq_upper_bound(self, f: ℕ -> ℝ) -> Bool {
         forall(n: ℕ) {
             f(n) <= self
         }
     }
 
-    // Lower bound for a sequence
+    /// True if this real number is a lower bound for the sequence f.
     define is_seq_lower_bound(self, f: ℕ -> ℝ) -> Bool {
         forall(n: ℕ) {
             self <= f(n)
@@ -695,20 +751,21 @@ attributes ℝ {
     }
 }
 
-// Sequence has an upper bound
+/// True if the sequence f has an upper bound.
 define have_seq_upper_bound(f: ℕ -> ℝ) -> Bool {
     exists(a: ℝ) {
         a.is_seq_upper_bound(f)
     }
 }
 
-// Sequence has a lower bound
+/// True if the sequence f has a lower bound.
 define have_seq_lower_bound(f: ℕ -> ℝ) -> Bool {
     exists(a: ℝ) {
         a.is_seq_lower_bound(f)
     }
 }
 
+/// If a sequence has an upper bound, then its image set has an upper bound.
 theorem seq_upper_bound_to_upper_bound(f: ℕ -> ℝ) {
     have_seq_upper_bound(f) implies have_upper_bound(fn_image(f))
 } by {
@@ -726,6 +783,7 @@ theorem seq_upper_bound_to_upper_bound(f: ℕ -> ℝ) {
     have_upper_bound(fn_image(f))
 }
 
+/// If the image set of a sequence has an upper bound, then the sequence has an upper bound.
 theorem upper_bound_to_seq_upper_bound(f: ℕ -> ℝ) {
     have_upper_bound(fn_image(f)) implies have_seq_upper_bound(f)
 } by {
@@ -740,6 +798,7 @@ theorem upper_bound_to_seq_upper_bound(f: ℕ -> ℝ) {
     have_seq_upper_bound(f)
 }
 
+/// If a sequence has a lower bound, then its image set has a lower bound.
 theorem seq_lower_bound_to_lower_bound(f: ℕ -> ℝ) {
     have_seq_lower_bound(f) implies have_lower_bound(fn_image(f))
 } by {
@@ -757,6 +816,7 @@ theorem seq_lower_bound_to_lower_bound(f: ℕ -> ℝ) {
     have_lower_bound(fn_image(f))
 }
 
+/// If the image set of a sequence has a lower bound, then the sequence has a lower bound.
 theorem lower_bound_to_seq_lower_bound(f: ℕ -> ℝ) {
     have_lower_bound(fn_image(f)) implies have_seq_lower_bound(f)
 } by {
@@ -771,13 +831,14 @@ theorem lower_bound_to_seq_lower_bound(f: ℕ -> ℝ) {
     have_seq_lower_bound(f)
 }
 
+/// The image set of any sequence is nonempty.
 theorem seq_nonempty(f: ℕ -> ℝ) {
     (fn_image(f)).is_nonempty
 } by {
     f(ℕ.0) ∈ fn_image(f)
 }
 
-// Monotone convergence theorem: bounded increasing sequence converges to its supremum
+/// Monotone convergence theorem: a bounded increasing sequence converges to its supremum.
 theorem bounded_increase_convergence_to(f: ℕ -> ℝ) {
     is_increase(f) and have_seq_upper_bound(f) implies converge_to(f, sup(fn_image(f)))
 } by {
@@ -810,19 +871,22 @@ theorem bounded_increase_convergence_to(f: ℕ -> ℝ) {
     converge_to(f, a)
 }
 
+/// A bounded increasing sequence converges.
 theorem bounded_increase_convergence(f: ℕ -> ℝ) {
     is_increase(f) and have_seq_upper_bound(f) implies converge(f)
 }
 
+/// A monotonically increasing sequence whose image has an upper bound converges to its supremum.
 theorem bounded_increase_convergence_to_ver_set(f: ℕ -> ℝ) {
     is_increase(f) and have_upper_bound(fn_image(f)) implies converge_to(f, sup(fn_image(f)))
 }
 
+/// A monotonically increasing sequence whose image has an upper bound converges.
 theorem bounded_increase_convergence_ver_set(f: ℕ -> ℝ) {
     is_increase(f) and have_upper_bound(fn_image(f)) implies converge(f)
 }
 
-// Bounded decreasing sequence converges to its infimum
+/// Bounded decreasing sequence converges to its infimum.
 theorem bounded_decrease_convergence_to(f: ℕ -> ℝ) {
     is_decrease(f) and have_seq_lower_bound(f) implies converge_to(f, inf(fn_image(f)))
 } by {
@@ -854,18 +918,22 @@ theorem bounded_decrease_convergence_to(f: ℕ -> ℝ) {
     converge_to(f, a)
 }
 
+/// A bounded decreasing sequence converges.
 theorem bounded_decrease_convergence(f: ℕ -> ℝ) {
     is_decrease(f) and have_seq_lower_bound(f) implies converge(f)
 }
 
+/// A monotonically decreasing sequence whose image has a lower bound converges to its infimum.
 theorem bounded_decrease_convergence_to_ver_set(f: ℕ -> ℝ) {
     is_decrease(f) and have_lower_bound(fn_image(f)) implies converge_to(f, inf(fn_image(f)))
 } 
 
+/// A monotonically decreasing sequence whose image has a lower bound converges.
 theorem bounded_decrease_convergence_ver_set(f: ℕ -> ℝ) {
     is_decrease(f) and have_lower_bound(fn_image(f)) implies converge(f)
 }
 
+/// If a is a subset of b and both have infima, then inf(a) ≥ inf(b).
 theorem real_set_subset_to_inf_gte(a: Set[ℝ], b: Set[ℝ]) {
     have_inf(a) and have_inf(b) and a ⊆ b implies inf(a) >= inf(b)
 } by {
@@ -879,6 +947,7 @@ theorem real_set_subset_to_inf_gte(a: Set[ℝ], b: Set[ℝ]) {
     inf(a) >= inf(b)
 }
 
+/// If a is a subset of b and both have suprema, then sup(a) ≤ sup(b).
 theorem real_set_subset_to_sup_lte(a: Set[ℝ], b: Set[ℝ]) {
     have_sup(a) and have_sup(b) and a ⊆ b implies sup(a) <= sup(b)
 } by {
@@ -892,6 +961,7 @@ theorem real_set_subset_to_sup_lte(a: Set[ℝ], b: Set[ℝ]) {
     sup(a) <= sup(b)
 }
 
+/// If a is a subset of b and u is an upper bound of b, then u is an upper bound of a.
 theorem subset_preserve_set_upper_bound(a: Set[ℝ], b: Set[ℝ], u: ℝ) {
     a ⊆ b and u.is_set_upper_bound(b) implies u.is_set_upper_bound(a)
 } by {
@@ -903,10 +973,12 @@ theorem subset_preserve_set_upper_bound(a: Set[ℝ], b: Set[ℝ], u: ℝ) {
     }
 }
 
+/// If a is a subset of b and b has an upper bound, then a has an upper bound.
 theorem subset_preserve_have_upper_bound(a: Set[ℝ], b: Set[ℝ]) {
     a ⊆ b and have_upper_bound(b) implies have_upper_bound(a)
 }
 
+/// If a is a subset of b and l is a lower bound of b, then l is a lower bound of a.
 theorem subset_preserve_set_lower_bound(a: Set[ℝ], b: Set[ℝ], l: ℝ) {
     a ⊆ b and l.is_set_lower_bound(b) implies l.is_set_lower_bound(a)
 } by {
@@ -918,6 +990,7 @@ theorem subset_preserve_set_lower_bound(a: Set[ℝ], b: Set[ℝ], l: ℝ) {
     }
 }
 
+/// If a is a subset of b and b has a lower bound, then a has a lower bound.
 theorem subset_preserve_have_lower_bound(a: Set[ℝ], b: Set[ℝ]) {
     a ⊆ b and have_lower_bound(b) implies have_lower_bound(a)
 }
