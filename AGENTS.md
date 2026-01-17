@@ -1,31 +1,5 @@
 This code uses Acorn, a theorem proving language.
 
-## Build/Test Commands
-
-**Primary verification:**
-```bash
-acorn                    # Verify all files (default command)
-acorn verify             # Same as above
-acorn verify src/nat/nat_base.ac    # Verify specific file
-acorn verify src/nat/nat_base.ac:42 # Verify proof at specific line
-```
-
-**Advanced verification:**
-```bash
-acorn reverify           # Reverify all goals, erroring if any requires search
-acorn reprove            # Re-prove goals without using cache
-acorn verify --strict    # Reject any use of axiom keyword
-acorn verify --timeout 30 # Set 30-second timeout for proof search
-```
-
-**Other commands:**
-```bash
-acorn serve              # Run language server for IDE integration
-acorn docs               # Generate documentation
-acorn clean              # Remove redundant claims from project
-acorn select <file> <line> # Display proof details for specific line
-```
-
 **Important:** Always run `acorn` after every change to verify proofs, but skip if only comments were added.
 
 ## Development Workflow

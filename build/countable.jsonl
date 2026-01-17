@@ -1,13 +1,13 @@
 {"goal":"range_sum_suc_one","proof":["partial_sum(ℕ.suc, 0, 0) = range_sum(ℕ.suc, 0.suc)","partial_sum(ℕ.suc, 0, 0) = 0.suc","1 + 0 = 0.suc","1 + 0 = 1"]}
-{"goal":"range_sum(ℕ.suc, 2) = range_sum(ℕ.suc, 1) + 1.suc","proof":["range_sum(ℕ.suc, 1) + 1.suc = range_sum(ℕ.suc, 1.suc)","range_sum(ℕ.suc, 1.suc) != range_sum(ℕ.suc, 2)","1.suc != 2"]}
+{"goal":"range_sum(ℕ.suc, 2) = range_sum(ℕ.suc, 1) + 1.suc","proof":["lib(type_class.add).P_Add.add[ℕ](range_sum(ℕ.suc, 1), 1.suc) = range_sum(ℕ.suc, 1.suc)","lib(type_class.add).P_Add.add[ℕ](range_sum(ℕ.suc, 1), 1.suc) = range_sum(ℕ.suc, 1) + 1.suc","1 + 1 = 1.suc"]}
 {"goal":"range_sum(ℕ.suc, 1) + 1.suc = 1 + 2","proof":["range_sum(ℕ.suc, 1) + 1.suc = range_sum(ℕ.suc, 1).suc + 1","range_sum(ℕ.suc, 1).suc + 1 != 1 + 2","1 + 2 = 2.suc","range_sum(ℕ.suc, 1).suc + 1 = range_sum(ℕ.suc, 1).suc.suc","range_sum(ℕ.suc, 1).suc.suc != 1 + 2","range_sum(ℕ.suc, 1).suc.suc != 2.suc","range_sum(ℕ.suc, 1).suc != 2","1.suc != 2"]}
 {"goal":"1 + 2 = 3","proof":[]}
 {"goal":"range_sum_suc_two","proof":[]}
 {"goal":"cantor_pair(0, 0) = range_sum(ℕ.suc, 0)","proof":["range_sum(ℕ.suc, 0 + 0) + 0 = cantor_pair(0, 0)","0 + 0 = 0","range_sum(ℕ.suc, 0) + 0 = range_sum(ℕ.suc, 0)"]}
-{"goal":"cantor_pair_at_zero_zero","proof":["range_sum(ℕ.suc, 0) != 0","range_sum(ℕ.suc, 0) = 0"]}
+{"goal":"cantor_pair_at_zero_zero","proof":["range_sum(ℕ.suc, 0) != 0","range_sum(ℕ.suc, 0) = 0","0 != 0"]}
 {"goal":"cantor_pair(0, 2) = range_sum(ℕ.suc, 2)","proof":["range_sum(ℕ.suc, 0 + 2) + 0 = cantor_pair(0, 2)","range_sum(ℕ.suc, 2) + 0 = range_sum(ℕ.suc, 2)","0 + 2 = 2"]}
 {"goal":"cantor_pair_at_zero_two","proof":["range_sum(ℕ.suc, 2) != 3"]}
-{"goal":"range_sum_suc","proof":["n.range.map(ℕ.suc).append(n.suc) = n.range.append(n).map(ℕ.suc)","n.suc != n.suc or n.range.append(n) = n.suc.range","sum[ℕ](n.range.map(ℕ.suc)) = range_sum(ℕ.suc, n)","sum[ℕ](n.suc.range.map(ℕ.suc)) = range_sum(ℕ.suc, n.suc)","sum[ℕ](n.range.map(ℕ.suc)) + n.suc = sum[ℕ](n.range.map(ℕ.suc).append(n.suc))","n.range.append(n) = n.suc.range"]}
+{"goal":"range_sum_suc","proof":["lib(type_class.add).P_Add.add[ℕ](range_sum(ℕ.suc, n), n.suc) = range_sum(ℕ.suc, n.suc)","lib(type_class.add).P_Add.add[ℕ](range_sum(ℕ.suc, n), n.suc) = range_sum(ℕ.suc, n) + n.suc"]}
 {"goal":"a1 <= a1 + b1","proof":["a1 + b1 - b1 = a1","a1 + b1 - b1 <= a1 + b1","not a1 + b1 - b1 <= a1 + b1"]}
 {"goal":"0 <= a2","proof":["a2 - a2 <= a2","a2 - a2 = 0","not a2 - a2 <= a2"]}
 {"goal":"cantor_pair(a1, b1) <= range_sum(ℕ.suc, a1 + b1) + (a1 + b1)","proof":["range_sum(ℕ.suc, a1 + b1) + (a1 + b1) = range_sum(ℕ.suc, a1 + b1) + a1 + b1","not cantor_pair(a1, b1) <= range_sum(ℕ.suc, a1 + b1) + a1 + b1","range_sum(ℕ.suc, a1 + b1) + a1 = cantor_pair(a1, b1)","cantor_pair(a1, b1) + b1 != cantor_pair(a1, b1) + b1 or cantor_pair(a1, b1) < cantor_pair(a1, b1) + b1 or 0 = b1","not cantor_pair(a1, b1) < cantor_pair(a1, b1) + b1 or cantor_pair(a1, b1) <= cantor_pair(a1, b1) + b1","0 != b1 or cantor_pair(a1, b1) + b1 = cantor_pair(a1, b1)","not cantor_pair(a1, b1) <= cantor_pair(a1, b1) + b1","cantor_pair(a1, b1) + b1 != cantor_pair(a1, b1) or cantor_pair(a1, b1) <= cantor_pair(a1, b1) + b1","cantor_pair(a1, b1) < cantor_pair(a1, b1) + b1 or 0 = b1","cantor_pair(a1, b1) + b1 != cantor_pair(a1, b1)","not cantor_pair(a1, b1) < cantor_pair(a1, b1) + b1","0 != b1","0 = b1"]}
@@ -39,7 +39,7 @@
 {"goal":"a1 + b1 != a2 + b2","proof":[]}
 {"goal":"cantor_pair(a1, b1) != cantor_pair(a2, b2)","proof":["cantor_pair(a2, b2) != cantor_pair(a1, b1) or a2 + b2 = a1 + b1"]}
 {"goal":"cantor_pair_is_injective_raw","proof":[]}
-{"goal":"range_sum(ℕ.suc, 0) = 0","proof":["range_sum(ℕ.suc, 0) = 0"]}
+{"goal":"range_sum(ℕ.suc, 0) = 0","proof":["range_sum(ℕ.suc, 0) = 0","0 != 0"]}
 {"goal":"p(0)","proof":["not 0 < range_sum(ℕ.suc, 0.suc) or not range_sum(ℕ.suc, 0) <= 0 or p(0)","range_sum(ℕ.suc, 0) < 0 + 1 = range_sum(ℕ.suc, 0) <= 0","range_sum(ℕ.suc, 0) != 0 or range_sum(ℕ.suc, 0) <= 0","0 + 1 = 1","range_sum(ℕ.suc, 0) <= 0","not 0 < range_sum(ℕ.suc, 0.suc)"]}
 {"goal":"exists(k0: ℕ) { range_sum(ℕ.suc, k0) <= x and x < range_sum(ℕ.suc, k0.suc) }","proof":["let s0: ℕ -> ℕ satisfy { forall(x0: ℕ) { not p(x0) or range_sum(ℕ.suc, s0(x0)) <= x0 } and forall(x1: ℕ) { not p(x1) or x1 < range_sum(ℕ.suc, s0(x1).suc) } and forall(x2: ℕ, x3: ℕ) { not x2 < range_sum(ℕ.suc, x3.suc) or not range_sum(ℕ.suc, x3) <= x2 or p(x2) } }","not x < range_sum(ℕ.suc, s0(x).suc) or not range_sum(ℕ.suc, s0(x)) <= x","not p(x) or range_sum(ℕ.suc, s0(x)) <= x","not p(x) or x < range_sum(ℕ.suc, s0(x).suc)","range_sum(ℕ.suc, s0(x)) <= x","x < range_sum(ℕ.suc, s0(x).suc)","not x < range_sum(ℕ.suc, s0(x).suc)"]}
 {"goal":"x.suc <= range_sum(ℕ.suc, m.suc)","proof":["x + 1 <= range_sum(ℕ.suc, m.suc) = x < range_sum(ℕ.suc, m.suc)","x + 1 = x.suc"]}

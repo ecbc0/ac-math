@@ -2,8 +2,10 @@ from nat import ℕ
 from int import ℤ
 from rat.rat_base import ℚ, reduce
 from order import Linear_Order
+from type_class.ordered_add import triangle_ineq
 from type_class.ordered_ring import lt_pos_mul_lt_pos, lte_mul_lte
 from type_class.field import recip_diff
+from type_class.ordered_field import lt_make_right_denom
 
 numerals ℚ
 
@@ -313,9 +315,11 @@ theorem reduce_lte(a: ℤ, b: ℤ, c: ℤ) {
     }
 }
 
-theorem triangle_ineq(a: ℚ, b: ℚ) {
+theorem rat_triangle_ineq(a: ℚ, b: ℚ) {
     (a + b).abs <= a.abs + b.abs
-} 
+} by {
+    triangle_ineq(a, b)
+}
 
 theorem nonneg_lt_imp_pos(a: ℚ, b: ℚ) {
     a >= 0 and a < b implies
@@ -372,7 +376,9 @@ theorem rat_recip_diff(a: ℚ, b: ℚ) {
     a != 0 and b != 0 implies
     1/a - 1/b = (b - a) / (a ⋅ b)
 } by {
-    recip_diff(a, b)
+    b / (a ⋅ b) = ℚ.1/a
+    a / (a ⋅ b) = ℚ.1/b
+    (b - a) / (a ⋅ b) = (b / (a ⋅ b)) - (a / (a ⋅ b))
 }
 
 theorem lt_mul_lte(a: ℚ, b: ℚ, c: ℚ, d: ℚ) {
@@ -424,9 +430,14 @@ theorem lt_make_left_denom(a: ℚ, b: ℚ, c: ℚ) {
     c > 0 and a < b ⋅ c implies a/c < b
 }
 
-theorem lt_make_right_denom(a: ℚ, b: ℚ, c: ℚ) {
+theorem rat_lt_make_right_denom(a: ℚ, b: ℚ, c: ℚ) {
     b > 0 and a ⋅ b < c implies a < c/b
-} 
+} by {
+    ℚ.1/b > ℚ.0
+    a ⋅ b ⋅ ℚ.1/b < c ⋅ ℚ.1/b
+    a ⋅ b ⋅ ℚ.1/b = a
+    a < c ⋅ ℚ.1/b
+}
 
 theorem lt_elim_left_denom(a: ℚ, b: ℚ, c: ℚ) {
     b > 0 and a/b < c implies a < c ⋅ b

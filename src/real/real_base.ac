@@ -1732,6 +1732,9 @@ theorem gt_add_neg(a: ℝ, b: ℝ) {
 /// Subtracting a smaller number gives a larger result.
 theorem sub_lt_is_gt(a: ℝ, b: ℝ, c: ℝ) {
     b < c implies a - b > a - c
+} by {
+    -b > -c
+    a + (-b) > a + (-c)
 }
 
 // /// The absolute value of this ℝ number.
@@ -2076,7 +2079,10 @@ theorem rat_intersect_lemma(a: ℝ, c: ℝ, r: ℝ, ε: ℚ, q: ℚ) {
     (a - ℝ.from_rat(q)).abs < ℝ.from_rat(ε) implies 
     (ℝ.from_rat(q) - c).abs < r
 } by {
-    ℝ.from_rat(q) - c = ℝ.from_rat(q) - c + -a + a
+    ℝ.from_rat(q) - c = ℝ.from_rat(q) + -c 
+    ℝ.from_rat(q) + -c = ℝ.from_rat(q) + (-a + a) + -c
+    ℝ.from_rat(q) + (-a + a) + -c = (ℝ.from_rat(q) + -a) + (a + -c)
+    (ℝ.from_rat(q) + -a) + (a + -c) = (ℝ.from_rat(q) - a) + (a - c)
     ℝ.from_rat(q) - c = (ℝ.from_rat(q) - a) + (a - c)
 
     (ℝ.from_rat(q) - c).abs <= (ℝ.from_rat(q) - a).abs + (a - c).abs
@@ -3121,8 +3127,8 @@ theorem pos_mul_from_rat(a: ℚ, b: ℚ) {
                 q/x < ℚ.1
                 rb < ℚ.1 ⋅ b
                 rb < b
-                ℚ.0 < ra
-                ℚ.0 < rb
+                ra > ℚ.0
+                rb > ℚ.0
                 ra ⋅ rb = a ⋅ x ⋅ q/x ⋅ b
                 ra ⋅ rb = a ⋅ (x ⋅ q/x) ⋅ b
                 (x ⋅ q/x) = q
@@ -3224,6 +3230,7 @@ theorem add_gt_pos_lemma(z1: ℝ, z2: ℝ, r: ℚ, q1: ℚ, q2: ℚ) {
 
     a > ℚ.0
     b > ℚ.0
+    a.min(b) > ℚ.0
     r1 > ℚ.0
 
     a.min(b) <= a
@@ -3641,7 +3648,21 @@ theorem pos_right_lte_imp_mul_lt(a: ℝ, b: ℝ, c: ℝ, d: ℝ) {
 theorem real_lte_mul_lte(a: ℝ, b: ℝ, c: ℝ, d: ℝ) {
     a > 0 and a <= b and c >= 0 and c <= d implies a ⋅ c <= b ⋅ d
 } by {
-    lte_mul_lte(a, b, c, d)
+    not b < ℝ.0
+    not d < ℝ.0
+    if a = b {
+        c ⋅ b <= d ⋅ b
+        a ⋅ c <= b ⋅ d
+    } else {
+        a < b
+        if c = d {
+            a ⋅ c <= b ⋅ d
+        } else {
+            c < d
+            a ⋅ c < b ⋅ d
+            a ⋅ c <= b ⋅ d
+        }
+    }
 }
 
 theorem pos_neg_decomposition(a: ℝ) {
@@ -4056,7 +4077,10 @@ theorem lt_limit_to_lte_sub(a: ℝ, b: ℝ) {
     } implies a <= b
 } by {
     forall(ε: ℝ) {
-        ε > 0 implies a < b + ε
+        if ε > 0 {
+            a - ε < b
+            a < b + ε
+        }
     }
 }
 
@@ -4086,7 +4110,10 @@ theorem lte_limit_to_lte_sub(a: ℝ, b: ℝ) {
     } implies a <= b
 } by {
     forall(ε: ℝ) {
-        ε > 0 implies a <= b + ε
+        if ε > 0 {
+            a - ε <= b
+            a <= b + ε
+        }
     }
 }
 

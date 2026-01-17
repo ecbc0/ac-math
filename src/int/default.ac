@@ -741,7 +741,9 @@ theorem member_abs_nonpos(a: ℤ) {
 
 theorem int_triangle_ineq(a: ℤ, b: ℤ) { 
     (a + b).abs <= (a).abs + (b).abs 
-} 
+} by {
+    triangle_ineq(a, b)
+}
 
 theorem int_triangle_ineq_sub(a: ℤ, b: ℤ) { 
     (a).abs - (b).abs <= (a - b).abs

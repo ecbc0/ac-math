@@ -544,6 +544,11 @@ theorem directly_closely_gt_inf(s: Set[ℝ], y: ℝ, u: ℝ) {
 } by {
     let ε = u - y
     ε > 0
+    let (a: ℝ) satisfy {
+        a ∈ s and y <= a and a < y + ε 
+    }
+    y + ε = u
+    a < u
 }
 
 theorem directly_closely_gt_inf_directly(s: Set[ℝ], u: ℝ) {

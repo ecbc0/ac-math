@@ -907,6 +907,12 @@ theorem sets_of_finite_intersection_superset[K](n: Set[Set[K]]) {
     }
 }
 
+theorem sets_of_finite_intersection_preserve_non_empty[K](n: Set[Set[K]]) {
+    n.is_nonempty implies sets_of_finite_intersection(n).is_nonempty
+} by {
+    sets_of_finite_intersection(n) ⊇ n
+}
+
 theorem sets_of_finite_intersection_preserve_intersection[K](n: Set[Set[K]]) {
     intersection(sets_of_finite_intersection(n)) = intersection(n)
 } by {

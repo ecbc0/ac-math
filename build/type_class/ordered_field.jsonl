@@ -61,7 +61,7 @@
 {"goal":"p <= q","proof":["q != p","not p < q or p.min(q) = p","p.min(q) = q or p <= q","p.min(q) = q","p.min(q) = p","p.min(q) != p"]}
 {"goal":"lte_cancel_mul_pos","proof":[]}
 {"goal":"a / b = a ⋅ F.1 / b","proof":["a ⋅ F.1 / b = a / b"]}
-{"goal":"F.1 / b < F.0","proof":["F.1 / -b = -F.1 / b","F.1 / -F.1 / b > F.0 = -F.1 / b > F.0","F.0 - F.1 / b > F.0 = F.0 > F.1 / b","F.0 - b > F.0 = F.0 > b","F.1 / (F.1 / -b) = -b","F.0 > F.1 / b = F.1 / b < F.0","F.0 > b = b < F.0","F.0 - F.1 / b = -F.1 / b","F.0 - b = -b"]}
+{"goal":"F.1 / b < F.0","proof":["F.1 / -b = -F.1 / b","F.1 / -F.1 / b > F.0 = -F.1 / b > F.0","F.0 - b > F.0 = F.0 > b","F.0 - b.reciprocal > F.0 = F.0 > b.reciprocal","not b < F.0 or b.abs = -b","F.1 / (F.1 / b.abs) = b.abs","F.1 / b = b.reciprocal","let s0: F satisfy { true }","F.0 - s0 = -s0","F.0 > b = b < F.0","F.0 > b.reciprocal = b.reciprocal < F.0","F.0.sub = F.neg","b.abs = -b"]}
 {"goal":"div_neg_neg","proof":["not a < F.0 or not b.reciprocal < F.0 or a ⋅ b.reciprocal > F.0","a ⋅ b.reciprocal = a / b","not a ⋅ b.reciprocal > F.0","F.1 / b = b.reciprocal","not b.reciprocal < F.0","b.reciprocal < F.0"]}
 {"goal":"-F.1 != F.0","proof":["-F.1 != F.0 or (-F.1).abs = F.0","(-F.1).abs = F.0","F.1.abs != F.0 or F.1 = F.0","(-F.1).abs = F.1.abs","F.1.abs = F.0","F.1 = F.0"]}
 {"goal":"(-F.1 ⋅ a) / (-F.1 ⋅ b) = a / b","proof":["(-F.1 ⋅ a) / (-F.1 ⋅ b) = a / b or -F.1 = F.0"]}
@@ -70,9 +70,9 @@
 {"goal":"a.abs = a","proof":["not a >= F.0 or a.abs = a"]}
 {"goal":"(F.1 / a).abs = F.1 / a.abs","proof":["(F.1 / a).abs != F.1 / a","not F.0 <= a or F.0 < a or F.0 = a","-F.1 / -F.0 = F.1 / F.0","-F.1 / -a = F.1 / a","F.1 / a > F.0 = a > F.0","lib(order).lte_from(lib(order).lt_from[F](F.lte), F.0, F.1 / a) = F.0 <= F.1 / a","lib(order).lte_from(lib(order).lt_from[F](F.lte), a.abs, a) = a.abs <= a","F.1 / a >= F.0 = F.0 <= F.1 / a","a >= F.0 = F.0 <= a","F.0 <= a","a > F.0 = F.0 < a","not F.1 / a >= F.0 or (F.1 / a).abs = F.1 / a","not F.1 / a > F.0 or (F.1 / a).abs = F.1 / a","-F.1 ⋅ F.0 = -F.0","-F.1 ⋅ a = -a","a.abs != a or a.abs <= a","not F.1 / a > F.0","not a > F.0","not F.1 / a >= F.0","not F.0 < a","a.abs <= a","F.0 = a"]}
 {"goal":"a < F.0","proof":["a.max(F.0) = a or a < F.0","a.max(F.0) = a","a.max(F.0) >= F.0"]}
-{"goal":"F.1 / a < F.0","proof":["F.0 - F.1 / a > F.0 = F.0 > F.1 / a","F.0 - a > F.0 = F.0 > a","F.1 / -a = -F.1 / a","F.1 / -F.1 / a > F.0 = -F.1 / a > F.0","F.0 > F.1 / a = F.1 / a < F.0","F.0 > a = a < F.0","F.1 / (F.1 / -a) = -a","F.0 - F.1 / a = -F.1 / a","F.0 - a = -a"]}
+{"goal":"F.1 / a < F.0","proof":["F.1 / -a = -F.1 / a","F.1 / -F.1 / a > F.0 = -F.1 / a > F.0","F.0 - a > F.0 = F.0 > a","F.0 - a.reciprocal > F.0 = F.0 > a.reciprocal","not a < F.0 or a.abs = -a","F.1 / (F.1 / a.abs) = a.abs","F.0 > F.1 / a = F.1 / a < F.0","F.0 > a = a < F.0","let s0: F satisfy { true }","F.0 - s0 = -s0","F.1 / a = a.reciprocal","F.0.sub = F.neg","a.abs = -a"]}
 {"goal":"a.abs = -a","proof":["not a < F.0 or a.abs = -a"]}
-{"goal":"(F.1 / a).abs = F.1 / a.abs","proof":["(F.1 / a).abs != F.1 / -a","F.1 / -a = -F.1 / a","(F.1 / a).abs != -F.1 / a","not F.1 / a < F.0 or (F.1 / a).abs = -F.1 / a"]}
+{"goal":"(F.1 / a).abs = F.1 / a.abs","proof":["(F.1 / a).abs != F.1 / -a","F.1 / -a = -F.1 / a","not F.1 / a < F.0 or (F.1 / a).abs = -F.1 / a","(F.1 / a).abs != -F.1 / a","(F.1 / a).abs = -F.1 / a"]}
 {"goal":"abs_reciprocal","proof":[]}
 {"goal":"abs_div","proof":["a.abs ⋅ b.reciprocal.abs = (a ⋅ b.reciprocal).abs","F.1 / b.abs = (F.1 / b).abs","a ⋅ b.reciprocal = a / b","a.abs ⋅ b.abs.reciprocal = a.abs / b.abs","F.1 / b = b.reciprocal","F.1 / b.abs = b.abs.reciprocal"]}
 {"goal":"abs_of_div","proof":["a.abs / b.abs = (a / b).abs or F.0 = b","F.0 = b","a.abs ⋅ b.reciprocal.abs = (a ⋅ b.reciprocal).abs","a ⋅ b.reciprocal = a / b","a.abs ⋅ b.abs.reciprocal = a.abs / b.abs","F.1 / F.0 = F.0.reciprocal","F.0 != F.0 or F.0.abs = F.0","F.0.abs = F.0"]}

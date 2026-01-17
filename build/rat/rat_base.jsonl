@@ -227,7 +227,7 @@
 {"goal":"forall(x0: ℚ, x1: ℚ, x2: ℚ) { x0 + (x1 + x2) = x0 + x1 + x2 }","proof":["let (s0: ℚ, s1: ℚ, s2: ℚ) satisfy { s0 + (s1 + s2) != s0 + s1 + s2 }","s0 + (s1 + s2) = s0 + s1 + s2"]}
 {"goal":"forall(x0: ℚ, x1: ℚ) { x0 + x1 = x1 + x0 }","proof":["let (s0: ℚ, s1: ℚ) satisfy { s1 + s0 != s0 + s1 }","s1 + s0 = s0 + s1"]}
 {"goal":"forall(x0: ℚ) { x0 + ℚ.0 = x0 }","proof":["let s0: ℚ satisfy { s0 + ℚ.0 != s0 }","s0 + ℚ.0 = ℚ.0 + s0","ℚ.0 + s0 != s0","ℚ.0 + s0 = s0"]}
-{"goal":"forall(x0: ℚ) { P_Add.add[ℚ](x0, -x0) = lib(type_class.add).P_Add.0[ℚ] }","proof":["let s0: ℚ satisfy { s0 + -s0 != ℚ.0 }","reduce(s0.num ⋅ (-s0).denom + (-s0).num ⋅ s0.denom, s0.denom ⋅ (-s0).denom) = s0 + -s0","s0.num ⋅ s0.denom + -s0.num ⋅ s0.denom = (s0.num + -s0.num) ⋅ s0.denom","(-s0).num = -s0.num","(-s0).denom = s0.denom","s0.num + -s0.num = ℤ.0","reduce(ℤ.0, s0.denom ⋅ (-s0).denom) = ℚ.0","ℤ.0 ⋅ s0.denom = ℤ.0","reduce(s0.num ⋅ (-s0).denom + (-s0).num ⋅ s0.denom, s0.denom ⋅ (-s0).denom) != ℚ.0","reduce(s0.num ⋅ (-s0).denom + -s0.num ⋅ s0.denom, s0.denom ⋅ (-s0).denom) != ℚ.0","reduce(s0.num ⋅ s0.denom + -s0.num ⋅ s0.denom, s0.denom ⋅ (-s0).denom) != ℚ.0","reduce((s0.num + -s0.num) ⋅ s0.denom, s0.denom ⋅ (-s0).denom) != ℚ.0","reduce(ℤ.0 ⋅ s0.denom, s0.denom ⋅ (-s0).denom) != ℚ.0"]}
+{"goal":"forall(x0: ℚ) { P_Add.add[ℚ](x0, -x0) = ℚ.0 }","proof":["let s0: ℚ satisfy { P_Add.add[ℚ](s0, -s0) != ℚ.0 }","reduce(s0.num ⋅ (-s0).denom + (-s0).num ⋅ s0.denom, s0.denom ⋅ (-s0).denom) = s0 + -s0","s0.num ⋅ s0.denom + (-s0).num ⋅ s0.denom = (s0.num + (-s0).num) ⋅ s0.denom","P_Add.add[ℚ](s0, -s0) = s0 + -s0","s0 + -s0 != ℚ.0","(-s0).num = -s0.num","(-s0).denom = s0.denom","s0.num + -s0.num = ℤ.0","reduce(ℤ.0, s0.denom ⋅ (-s0).denom) = ℚ.0","ℤ.0 ⋅ s0.denom = ℤ.0","reduce(s0.num ⋅ (-s0).denom + (-s0).num ⋅ s0.denom, s0.denom ⋅ (-s0).denom) != ℚ.0","reduce(s0.num ⋅ s0.denom + (-s0).num ⋅ s0.denom, s0.denom ⋅ (-s0).denom) != ℚ.0","reduce((s0.num + (-s0).num) ⋅ s0.denom, s0.denom ⋅ (-s0).denom) != ℚ.0","reduce((s0.num + -s0.num) ⋅ s0.denom, s0.denom ⋅ (-s0).denom) != ℚ.0","reduce(ℤ.0 ⋅ s0.denom, s0.denom ⋅ (-s0).denom) != ℚ.0","reduce(ℤ.0, s0.denom ⋅ (-s0).denom) != ℚ.0"]}
 {"goal":"d != ℤ.0","proof":["r1.denom ⋅ r2.denom != ℤ.0 or r1.denom = ℤ.0 or r2.denom = ℤ.0","r1.denom ⋅ r2.denom = ℤ.0","r1.denom != ℤ.0","r2.denom != ℤ.0"]}
 {"goal":"r1 = reduce(r1.num ⋅ r2.denom, r1.denom ⋅ r2.denom)","proof":["reduce(r1.num ⋅ r2.denom, r1.denom ⋅ r2.denom) = reduce(r1.num, r1.denom) or r2.denom = ℤ.0","reduce(r1.num, r1.denom) = r1","r2.denom != ℤ.0","reduce(r1.num ⋅ r2.denom, r1.denom ⋅ r2.denom) != reduce(r1.num, r1.denom)"]}
 {"goal":"r1 = reduce(n1, d)","proof":[]}
@@ -243,8 +243,8 @@
 {"goal":"r1 ⋅ r3 = reduce(r1.num ⋅ b, r1.denom ⋅ c)","proof":["reduce(r1.num, r1.denom) ⋅ reduce(b, c) = reduce(r1.num ⋅ b, r1.denom ⋅ c)","reduce(r1.num, r1.denom) = r1"]}
 {"goal":"r1 ⋅ r2 + r1 ⋅ r3 = reduce(r1.num ⋅ a + r1.num ⋅ b, r1.denom ⋅ c)","proof":["reduce(r1.num ⋅ a, r1.denom ⋅ c) + reduce(r1.num ⋅ b, r1.denom ⋅ c) = reduce(r1.num ⋅ a + r1.num ⋅ b, r1.denom ⋅ c)"]}
 {"goal":"distrib_left","proof":["reduce(r1.num * a + r1.num * b, r1.denom * c) != r1 * r2 + r1 * r3"]}
-{"goal":"forall(x0: ℚ, x1: ℚ, x2: ℚ) { Mul.mul[ℚ](x0, P_Add.add[ℚ](x1, x2)) = P_Add.add[ℚ](Mul.mul[ℚ](x0, x1), Mul.mul[ℚ](x0, x2)) }","proof":["let (s0: ℚ, s1: ℚ, s2: ℚ) satisfy { s0 ⋅ s1 + s0 ⋅ s2 != s0 ⋅ (s1 + s2) }","s0 ⋅ s1 + s0 ⋅ s2 = s0 ⋅ (s1 + s2)"]}
-{"goal":"forall(x0: ℚ) { Mul.mul[ℚ](x0, lib(type_class.add).P_Add.0[ℚ]) = lib(type_class.add).P_Add.0[ℚ] }","proof":["let s0: ℚ satisfy { s0 ⋅ ℚ.0 != ℚ.0 }","--s0 = s0","--s0 ⋅ ℚ.0 != ℚ.0","--s0 ⋅ ℚ.0 = ℚ.0"]}
+{"goal":"forall(x0: ℚ, x1: ℚ, x2: ℚ) { Mul.mul[ℚ](x0, P_Add.add[ℚ](x1, x2)) = P_Add.add[ℚ](Mul.mul[ℚ](x0, x1), Mul.mul[ℚ](x0, x2)) }","proof":["let  (s0: ℚ, s1: ℚ, s2: ℚ) satisfy { P_Add.add[ℚ](Mul.mul[ℚ](s0, s1), Mul.mul[ℚ](s0, s2)) != Mul.mul[ℚ](s0, P_Add.add[ℚ](s1, s2)) }","s0 ⋅ s1 + s0 ⋅ s2 = s0 ⋅ (s1 + s2)","P_Add.add[ℚ](s1, s2) = s1 + s2","Mul.mul[ℚ](s0, P_Add.add[ℚ](s1, s2)) = s0 ⋅ P_Add.add[ℚ](s1, s2)","Mul.mul[ℚ](s0, s1) = s0 ⋅ s1","Mul.mul[ℚ](s0, s2) = s0 ⋅ s2"]}
+{"goal":"forall(x0: ℚ) { Mul.mul[ℚ](x0, ℚ.0) = ℚ.0 }","proof":["let s0: ℚ satisfy { Mul.mul[ℚ](s0, ℚ.0) != ℚ.0 }","Mul.mul[ℚ](s0, ℚ.0) = s0 ⋅ ℚ.0","s0 ⋅ ℚ.0 = ℚ.0"]}
 {"goal":"distrib_right","proof":["r3 ⋅ r1 + r3 ⋅ r2 = r3 ⋅ (r1 + r2)","r3 ⋅ (r1 + r2) = (r1 + r2) ⋅ r3","r3 ⋅ r1 = r1 ⋅ r3","r3 ⋅ r2 = r2 ⋅ r3"]}
 {"goal":"a + -a = reduce(a.num + -a.num, a.denom)","proof":["reduce(-a.num, a.denom) + reduce(a.num, a.denom) = reduce(-a.num + a.num, a.denom)","a + -a = -a + a","(-a).num = -a.num","reduce((-a).num, (-a).denom) = -a","reduce(a.num, a.denom) = a","a.num + -a.num = -a.num + a.num","(-a).denom = a.denom"]}
 {"goal":"add_inv_cancels_right","proof":["a.num + -a.num = ℤ.0","reduce(ℤ.0, a.denom) = ℚ.0","a + -a = reduce(ℤ.0, a.denom)"]}
@@ -270,11 +270,11 @@
 {"goal":"reciprocal_inverts_raw","proof":["1 ⋅ a.reciprocal.reciprocal = a.reciprocal.reciprocal"]}
 {"goal":"one_neq_zero","proof":["ℚ.from_int(ℤ.1) != ℚ.from_int(ℤ.0) or ℤ.1 = ℤ.0","ℚ.new(ℤ.0, ℤ.1) = ℚ.from_int(ℤ.0)","ℚ.from_int(ℤ.1) = 0","ℚ.new(ℤ.0, ℤ.1) = ℚ.from_int(ℤ.1)","ℚ.from_int(ℤ.1) = ℚ.from_int(ℤ.0)","ℤ.1 = ℤ.0"]}
 {"goal":"field_inverse_zero","proof":["reduce(a.denom, a.num) = a.reciprocal","a.num != ℤ.0 or reduce(a.denom, a.num) = 0","reduce(a.denom, a.num) != 0","a.num != ℤ.0","a.num = ℤ.0"]}
-{"goal":"forall(x0: ℚ) { x0 != lib(type_class.add).P_Add.0[ℚ] implies Mul.mul[ℚ](x0, x0.reciprocal) = lib(type_class.mul).Mul.1[ℚ] }","proof":["let s0: ℚ satisfy { 0 != s0 and s0 ⋅ s0.reciprocal != 1 }","s0 ⋅ s0.reciprocal = 1 or 0 = s0"]}
-{"goal":"lib(type_class.add).P_Add.0[ℚ].reciprocal = lib(type_class.add).P_Add.0[ℚ]","proof":["reduce(0.denom, 0.num) = 0.reciprocal","0.num != ℤ.0 or reduce(0.denom, 0.num) = 0","reduce(0.denom, 0.num) != 0","0.num != ℤ.0"]}
-{"goal":"lib(type_class.add).P_Add.0[ℚ] != lib(type_class.mul).Mul.1[ℚ]","proof":[]}
+{"goal":"forall(x0: ℚ) { x0 != 0 implies Mul.mul[ℚ](x0, x0.reciprocal) = 1 }","proof":["let s0: ℚ satisfy { 0 != s0 and Mul.mul[ℚ](s0, s0.reciprocal) != 1 }","s0 ⋅ s0.reciprocal = 1 or 0 = s0","Mul.mul[ℚ](s0, s0.reciprocal) = s0 ⋅ s0.reciprocal","s0 ⋅ s0.reciprocal != 1","s0 ⋅ s0.reciprocal = 1","1 != 1"]}
+{"goal":"0.reciprocal = 0","proof":["0 != 0 or 0.reciprocal = 0"]}
+{"goal":"0 != 1","proof":["let s0: ℚ satisfy { true }","1 != 0 or P_Add.add[ℚ](Add.sub[ℚ](Add.sub[ℚ](s0, 0), s0), 1) = 0","P_Add.add[ℚ](Add.sub[ℚ](Add.sub[ℚ](s0, 0), s0), 1) = 0","P_Add.add[ℚ](Add.sub[ℚ](Add.sub[ℚ](s0, 0), s0), 1) != 0 or Add.sub[ℚ](Add.sub[ℚ](s0, 0), s0) = Add.neg[ℚ](1)","Add.sub[ℚ](Add.sub[ℚ](s0, 0), s0) = Add.neg[ℚ](1)","Add.sub[ℚ](Add.sub[ℚ](s0, 0), s0) != Add.neg[ℚ](1) or P_Add.add[ℚ](Add.sub[ℚ](s0, 0), 1) = s0","P_Add.add[ℚ](Add.sub[ℚ](s0, 0), 1) = s0","P_Add.add[ℚ](Add.sub[ℚ](s0, 0), 1) != s0 or Add.sub[ℚ](s0, 1) = Add.sub[ℚ](s0, 0)","Add.sub[ℚ](s0, 1) = Add.sub[ℚ](s0, 0)","Add.sub[ℚ](s0, 1) != Add.sub[ℚ](s0, 0) or 1 = 0"]}
 {"goal":"reciprocal_by_div","proof":["ℚ.1 ⋅ a.reciprocal = ℚ.1 / a","ℚ.1 ⋅ a.reciprocal != a.reciprocal","ℚ.1 ⋅ a.reciprocal = a.reciprocal"]}
-{"goal":"div_by_reciprocal","proof":["p ⋅ q.reciprocal = p / q","ℚ.1 / q = q.reciprocal"]}
+{"goal":"div_by_reciprocal","proof":["Mul.mul[ℚ](p, Field.reciprocal[ℚ](q)) = p / q","Mul.mul[ℚ](p, 1 / q) = p ⋅ 1 / q","1 / q = q.reciprocal","Field.reciprocal[ℚ](q) = q.reciprocal"]}
 {"goal":"mul_inv_cancels_right","proof":["a ⋅ 1 / a = a / a","a / a != 1","a ⋅ a.reciprocal = 1 or 0 = a","a ⋅ a.reciprocal = a / a","a ⋅ a.reciprocal = 1","a ⋅ a.reciprocal != 1"]}
 {"goal":"mul_inv_cancels_left","proof":["a ⋅ 1 / a = 1 or 0 = a","a ⋅ 1 / a = 1 / a ⋅ a","a ⋅ 1 / a = 1","a ⋅ 1 / a != 1"]}
 {"goal":"reciprocal_inverts","proof":["a.reciprocal.reciprocal = a or 0 = a","1 / a = a.reciprocal","1 / a.reciprocal = a.reciprocal.reciprocal","1 / a.reciprocal != a","a.reciprocal.reciprocal = a","a.reciprocal.reciprocal != a"]}
@@ -321,7 +321,7 @@
 {"goal":"neg_neg_is_pos","proof":["(0 - a).is_positive = a < 0","0 + -a = 0 - a","-a > 0 = 0 < -a","0 < -a = (-a).is_positive","0 + -a = -a"]}
 {"goal":"neg_pos_is_neg","proof":["a > 0 = 0 < a","(-a).num = -a.num","-a < 0 = (-a).is_negative","0 < a = a.is_positive","(-a).num.is_negative = (-a).is_negative","a.num.is_positive = a.is_positive","(-a.num).is_negative = a.num.is_positive"]}
 {"goal":"zero_minus","proof":["0 + -a = 0 - a","0 + -a != -a","0 + -a = -a"]}
-{"goal":"mul_cancels_div","proof":["a ⋅ (b.reciprocal ⋅ b) = a ⋅ b.reciprocal ⋅ b","b ⋅ b.reciprocal = 1 or 0 = b","a ⋅ b.reciprocal = a / b","b ⋅ b.reciprocal = b.reciprocal ⋅ b","a ⋅ 1 = a","b ⋅ b.reciprocal = 1"]}
+{"goal":"mul_cancels_div","proof":["Mul.mul[ℚ](a / b, b) = a or 0 = b","0 != b","Mul.mul[ℚ](a / b, b) != a"]}
 {"goal":"b - a > 0","proof":["(b - a).is_positive = a < b","b - a > 0 = 0 < b - a","0 < b - a = (b - a).is_positive"]}
 {"goal":"c - b > 0","proof":["(c - b).is_positive = b < c","c - b > 0 = 0 < c - b","0 < c - b = (c - b).is_positive"]}
 {"goal":"c - a = c - b + (b - a)","proof":["c - b + (b + -a) = c - b + b + -a","b + -a = b - a","c + -a = c - a","c - b + b = c","c - b + (b + -a) != c - a","c - b + b + -a != c - a"]}
@@ -341,12 +341,12 @@
 {"goal":"rat_is_acyclic","proof":["let (s0: ((ℚ, ℚ) -> Bool) -> ℚ, s1: ((ℚ, ℚ) -> Bool) -> ℚ) satisfy { forall(x0: (ℚ, ℚ) -> Bool, x1: ℚ, x2: ℚ) { not is_acyclic[ℚ](x0) or not x0(x1, x2) or not x0(x2, x1) } and forall(x3: (ℚ, ℚ) -> Bool) { x3(s0(x3), s1(x3)) or is_acyclic[ℚ](x3) } and forall(x4: (ℚ, ℚ) -> Bool) { x4(s1(x4), s0(x4)) or is_acyclic[ℚ](x4) } }","s1(ℚ.lt) < s0(ℚ.lt) or is_acyclic[ℚ](ℚ.lt)","s1(ℚ.lt) < s0(ℚ.lt)","s0(ℚ.lt) < s1(ℚ.lt) or is_acyclic[ℚ](ℚ.lt)","s0(ℚ.lt) < s1(ℚ.lt)","not s0(ℚ.lt) < s1(ℚ.lt) or not s1(ℚ.lt) < s0(ℚ.lt)"]}
 {"goal":"is_acyclic[ℚ](ℚ.lt)","proof":[]}
 {"goal":"is_transitive[ℚ](ℚ.lt)","proof":[]}
-{"goal":"Partial_Order.lte[ℚ](r1, r2) implies r1 <= r2","proof":["not Partial_Order.lte[ℚ](r1, r2) or r1 < r2 or r2 = r1","not r1 < r2 or r1 <= r2","not r1 < r2","r2 = r1","r2 != r1 or r1 <= r2"]}
-{"goal":"Partial_Order.lte[ℚ](r1, r2) = r1 <= r2","proof":["r1 <= r2 or Partial_Order.lte[ℚ](r1, r2)","r1 <= r2","not Partial_Order.lte[ℚ](r1, r2)","not r1 <= r2 or r1 < r2 or r2 = r1","not r1 < r2 or Partial_Order.lte[ℚ](r1, r2)","r2 != r1 or Partial_Order.lte[ℚ](r1, r2)","r2 != r1","not r1 < r2","r1 < r2"]}
+{"goal":"Partial_Order.lte[ℚ](r1, r2) implies r1 <= r2","proof":["not Partial_Order.lte[ℚ](r1, r2) or Partial_Order.lt[ℚ](r1, r2) or r2 = r1","Partial_Order.lt[ℚ](r1, r2) = r1 < r2","not r1 < r2 or r1 <= r2","not r1 < r2","r2 != r1 or r1 <= r2","r2 != r1","not Partial_Order.lt[ℚ](r1, r2)","Partial_Order.lt[ℚ](r1, r2)"]}
+{"goal":"Partial_Order.lte[ℚ](r1, r2) = r1 <= r2","proof":["Partial_Order.lte[ℚ](r1, r2) or r1 <= r2","r1 <= r2","not Partial_Order.lte[ℚ](r1, r2)","not Partial_Order.lt[ℚ](r1, r2) or Partial_Order.lte[ℚ](r1, r2)","not r1 <= r2 or r1 < r2 or r2 = r1","Partial_Order.lt[ℚ](r1, r2) = r1 < r2","r2 != r1 or Partial_Order.lte[ℚ](r1, r2)","r2 != r1","not Partial_Order.lt[ℚ](r1, r2)","r1 < r2","not r1 < r2"]}
 {"goal":"lte_cover","proof":["let (s0: ℚ, s1: ℚ) satisfy { s0 <= s1 != Partial_Order.lte[ℚ](s0, s1) }","s0 <= s1 = Partial_Order.lte[ℚ](s0, s1)"]}
-{"goal":"gt_cover","proof":["let (s0: ℚ, s1: ℚ) satisfy { s0 > s1 != Partial_Order.gt[ℚ](s0, s1) }","let (s2: ℚ, s3: ℚ) satisfy { forall(x0: ℚ, x1: ℚ) { not gt_cover or x0 > x1 = Partial_Order.gt[ℚ](x0, x1) } and (s2 > s3 != Partial_Order.gt[ℚ](s2, s3) or gt_cover) }","not gt_cover or s0 > s1 = Partial_Order.gt[ℚ](s0, s1)","not gt_cover","s2 > s3 != Partial_Order.gt[ℚ](s2, s3)","s3 < s2 = Partial_Order.gt[ℚ](s2, s3)","s2 > s3 = s3 < s2"]}
-{"goal":"Partial_Order.gte[ℚ](r1, r2) implies r1 >= r2","proof":["not Partial_Order.lte[ℚ](r2, r1) or r2 < r1 or r2 = r1","Partial_Order.gte[ℚ](r1, r2) = Partial_Order.lte[ℚ](r2, r1)","Partial_Order.lte[ℚ](r2, r1)","not r1 > r2 or r1 >= r2","not r1 > r2","r1 > r2 = r2 < r1","not r2 < r1","r2 != r1 or r1 >= r2","r2 = r1","r2 != r1"]}
-{"goal":"Partial_Order.gte[ℚ](r1, r2) = r1 >= r2","proof":["r1 >= r2 or Partial_Order.gte[ℚ](r1, r2)","r1 >= r2","not r1 >= r2 or r1 > r2 or r2 = r1","Partial_Order.gte[ℚ](r1, r2) = Partial_Order.lte[ℚ](r2, r1)","r1 >= r2 != Partial_Order.lte[ℚ](r2, r1)","not Partial_Order.lte[ℚ](r2, r1)","not r2 < r1 or Partial_Order.lte[ℚ](r2, r1)","r1 > r2 = r2 < r1","r2 != r1 or Partial_Order.lte[ℚ](r2, r1)","r1 > r2 or r2 = r1","r2 != r1","not r2 < r1","r1 > r2","not r1 > r2"]}
+{"goal":"gt_cover","proof":["let  (s0: ℚ, s1: ℚ) satisfy { Partial_Order.gt[ℚ](s0, s1) != s0 > s1 }","Partial_Order.gt[ℚ](s0, s1) = Partial_Order.lt[ℚ](s1, s0)","Partial_Order.lt[ℚ](s1, s0) != s0 > s1","Partial_Order.lt[ℚ](s1, s0) = s1 < s0","s0 > s1 != s1 < s0","s0 > s1 = s1 < s0"]}
+{"goal":"Partial_Order.gte[ℚ](r1, r2) implies r1 >= r2","proof":["Partial_Order.gte[ℚ](r1, r2) = Partial_Order.lte[ℚ](r2, r1)","Partial_Order.lte[ℚ](r2, r1)","not r2 <= r1 or r2 < r1 or r2 = r1","Partial_Order.lte[ℚ](r2, r1) = r2 <= r1","r2 <= r1","not r1 > r2 or r1 >= r2","not r1 > r2","r1 > r2 = r2 < r1","not r2 < r1","r2 != r1 or r1 >= r2","r2 = r1","r2 != r1"]}
+{"goal":"Partial_Order.gte[ℚ](r1, r2) = r1 >= r2","proof":["Partial_Order.gte[ℚ](r1, r2) or r1 >= r2","r1 >= r2","Partial_Order.gte[ℚ](r1, r2) = Partial_Order.lte[ℚ](r2, r1)","Partial_Order.lte[ℚ](r2, r1) != r1 >= r2","not Partial_Order.lte[ℚ](r2, r1)","not Partial_Order.lt[ℚ](r2, r1) or Partial_Order.lte[ℚ](r2, r1)","not r1 >= r2 or r1 > r2 or r2 = r1","Partial_Order.lt[ℚ](r2, r1) = r2 < r1","r2 != r1 or Partial_Order.lte[ℚ](r2, r1)","r1 > r2 = r2 < r1","r2 != r1","not Partial_Order.lt[ℚ](r2, r1)","not r2 < r1","r1 > r2","not r1 > r2"]}
 {"goal":"gte_cover","proof":["let (s0: ℚ, s1: ℚ) satisfy { s0 <= s1 != Partial_Order.lte[ℚ](s0, s1) }","s0 <= s1 = Partial_Order.lte[ℚ](s0, s1)"]}
 {"goal":"gt_trans","proof":["not c < b or not b < a or c < a","a > b = b < a","a > c = c < a","b > c = c < b","not c < a","c < b","b < a","not c < b or not b < a"]}
 {"goal":"lib(util).is_reflexive[ℚ](Partial_Order.lte[ℚ]) and is_transitive[ℚ](Partial_Order.lte[ℚ]) and lib(util).is_antisymmetric[ℚ](Partial_Order.lte[ℚ])","proof":["not lib(util).is_reflexive[ℚ](Partial_Order.lte[ℚ]) or not is_transitive[ℚ](Partial_Order.lte[ℚ])","not lib(util).is_reflexive[ℚ](Partial_Order.lte[ℚ])"]}
@@ -393,7 +393,7 @@
 {"goal":"a - b = 0","proof":["a - b > 0 or a - b < 0 or a - b = 0"]}
 {"goal":"a = b","proof":["a - b + b = a","0 + b = b","0 + b != a"]}
 {"goal":"trichotomy","proof":["b - a > 0 = b > a","-(a - b) = b - a","-(a - b) > 0 = a - b < 0","b > a = a < b"]}
-{"goal":"forall(x0: ℚ, x1: ℚ) { x0.comparable(x1) }","proof":["let (s0: ℚ, s1: ℚ) satisfy { not s0.comparable(s1) }","s0 > s1 or s0 < s1 or s1 = s0","not s1 < s0 or s0.comparable(s1)","not s1 < s0","not s0 < s1 or s0.comparable(s1)","not s0 < s1","s0 > s1 = s1 < s0","s1 != s0 or s0.comparable(s1)","s1 != s0","not s0 > s1","s0 > s1"]}
+{"goal":"forall(x0: ℚ, x1: ℚ) { x0.comparable(x1) }","proof":["let  (s0: ℚ, s1: ℚ) satisfy { not s0.comparable(s1) }","not Partial_Order.lt[ℚ](s1, s0) or s0.comparable(s1)","not Partial_Order.lt[ℚ](s1, s0)","not Partial_Order.lt[ℚ](s0, s1) or s0.comparable(s1)","not Partial_Order.lt[ℚ](s0, s1)","s1 > s0 or s1 < s0 or s1 = s0","Partial_Order.lt[ℚ](s0, s1) = s0 < s1","Partial_Order.lt[ℚ](s1, s0) = s1 < s0","not s0 < s1","not s1 < s0","s1 != s0 or s0.comparable(s1)","s1 != s0","s1 > s0 = s0 < s1","s1 > s0","not s1 > s0"]}
 {"goal":"a > 0 implies not a <= 0","proof":["not a <= 0 or a < 0 or 0 = a","a < 0 or 0 = a","not a > 0 or not a < 0","a > 0 = 0 < a","0 < a","not a < a","not a < 0","0 = a"]}
 {"goal":"pos_is_not_lte_zero","proof":["not a > 0 or a <= 0","not a > 0","not a <= 0","a > 0 or a < 0 or 0 = a","not a < 0 or a <= 0","0 != a or a <= 0","0 != a","not a < 0","a < 0"]}
 {"goal":"a < 0 implies not a >= 0","proof":["not a >= 0 or a > 0 or 0 = a","a > 0 or 0 = a","not a > 0 or not a < 0","not a < a","not a > 0","0 = a"]}
@@ -403,7 +403,7 @@
 {"goal":"a < b implies not a >= b","proof":["not a >= b or a > b or b = a","a > b or b = a","not b < a or not a < b","a > b = b < a","not a < a","not b < a","not a > b","b = a"]}
 {"goal":"lt_is_not_gte","proof":["not a >= b or a < b","not a >= b","not a < b","a > b or a < b or b = a","not a > b or a >= b","not a > b","b != a or a >= b","b = a","b != a"]}
 {"goal":"neg_order","proof":["-a < 0 = a > 0"]}
-{"goal":"neg_reciprocal_iff","proof":["1 / -a = -1 / a","1 / -1 / a > 0 = -1 / a > 0","-1 / a > 0 = 1 / a < 0","-a > 0 = a < 0","1 / (1 / -a) = -a"]}
+{"goal":"neg_reciprocal_iff","proof":["-1 / a = 1 / -a","1 / -a > 0 = -a > 0","-1 / a > 0 = 1 / a < 0","-a > 0 = a < 0"]}
 {"goal":"b - a > 0","proof":["b - a > 0 = b > a","not b > a","b > a = a < b"]}
 {"goal":"b + c - (a + c) = b + c + -(a + c)","proof":["b + c + -(a + c) = b + c - (a + c)"]}
 {"goal":"-a + -c = -(a + c)","proof":["a ⋅ -1 + c ⋅ -1 = (a + c) ⋅ -1","(a + c) ⋅ -1 = -(a + c)","a ⋅ -1 = -a","c ⋅ -1 = -c"]}
@@ -411,8 +411,8 @@
 {"goal":"b + c - (a + c) = b + -a","proof":["b + (c + -c + -a) = b + (c + -c) + -a","c + -c = 0","0 + -a = -a"]}
 {"goal":"b + c - (a + c) > 0","proof":["not b + -a > 0","b + -a = b - a"]}
 {"goal":"lt_add_right","proof":["(b + c - (a + c)).is_positive = a + c < b + c","(b - a).is_positive = a < b","b + -a = b - a"]}
-{"goal":"forall(x0: ℚ, x1: ℚ, x2: ℚ) { Partial_Order.lt[ℚ](x0, x1) implies Partial_Order.lt[ℚ](P_Add.add[ℚ](x0, x2), P_Add.add[ℚ](x1, x2)) }","proof":["let (s0: ℚ, s1: ℚ, s2: ℚ) satisfy { s0 < s1 and not s0 + s2 < s1 + s2 }","not s0 < s1 or s0 + s2 < s1 + s2"]}
-{"goal":"forall(x0: ℚ, x1: ℚ) { Partial_Order.gt[ℚ](x0, lib(type_class.add).P_Add.0[ℚ]) and Partial_Order.gt[ℚ](x1, lib(type_class.add).P_Add.0[ℚ]) implies Partial_Order.gt[ℚ](Mul.mul[ℚ](x0, x1), lib(type_class.add).P_Add.0[ℚ]) }","proof":["let (s0: ℚ, s1: ℚ) satisfy { Partial_Order.gt[ℚ](s0, 0) and Partial_Order.gt[ℚ](s1, 0) and not Partial_Order.gt[ℚ](s0 ⋅ s1, 0) }","not s0 > 0 or not s1 > 0 or s0 ⋅ s1 > 0","s0 > 0 = Partial_Order.gt[ℚ](s0, 0)","s0 ⋅ s1 > 0 = Partial_Order.gt[ℚ](s0 ⋅ s1, 0)","s1 > 0 = Partial_Order.gt[ℚ](s1, 0)","s1 > 0","s0 > 0","not s0 ⋅ s1 > 0"]}
+{"goal":"forall(x0: ℚ, x1: ℚ, x2: ℚ) { Partial_Order.lt[ℚ](x0, x1) implies Partial_Order.lt[ℚ](P_Add.add[ℚ](x0, x2), P_Add.add[ℚ](x1, x2)) }","proof":["let  (s0: ℚ, s1: ℚ, s2: ℚ) satisfy { Partial_Order.lt[ℚ](s0, s1) and not Partial_Order.lt[ℚ](P_Add.add[ℚ](s0, s2), P_Add.add[ℚ](s1, s2)) }","not s0 < s1 or s0 + s2 < s1 + s2","Partial_Order.lt[ℚ](P_Add.add[ℚ](s0, s2), s1 + s2) = P_Add.add[ℚ](s0, s2) < s1 + s2","Partial_Order.lt[ℚ](s0, s1) = s0 < s1","s0 < s1","P_Add.add[ℚ](s0, s2) = s0 + s2","P_Add.add[ℚ](s1, s2) = s1 + s2","not Partial_Order.lt[ℚ](P_Add.add[ℚ](s0, s2), s1 + s2)","not P_Add.add[ℚ](s0, s2) < s1 + s2","not s0 + s2 < s1 + s2"]}
+{"goal":"forall(x0: ℚ, x1: ℚ) { Partial_Order.gt[ℚ](x0, 0) and Partial_Order.gt[ℚ](x1, 0) implies Partial_Order.gt[ℚ](Mul.mul[ℚ](x0, x1), 0) }","proof":["let  (s0: ℚ, s1: ℚ) satisfy { Partial_Order.gt[ℚ](s0, 0) and Partial_Order.gt[ℚ](s1, 0) and not Partial_Order.gt[ℚ](Mul.mul[ℚ](s0, s1), 0) }","not s0 > 0 or not s1 > 0 or s0 ⋅ s1 > 0","Partial_Order.gt[ℚ](s0 ⋅ s1, 0) = s0 ⋅ s1 > 0","Partial_Order.gt[ℚ](s0, 0) = s0 > 0","Partial_Order.gt[ℚ](s1, 0) = s1 > 0","Mul.mul[ℚ](s0, s1) = s0 ⋅ s1","s1 > 0","s0 > 0","not Partial_Order.gt[ℚ](s0 ⋅ s1, 0)","not s0 ⋅ s1 > 0"]}
 {"goal":"lt_add_left","proof":["not a < b or a + c < b + c","c + a = a + c","c + b = b + c","not a + c < c + b","not a + c < b + c"]}
 {"goal":"lte_add_right","proof":["not a < b or a + c < b + c","not a <= b or a < b or b = a","not a + c < b + c or a + c <= b + c","b + c != a + c or a + c <= b + c","b + c != a + c","b != a","a < b","not a + c < b + c"]}
 {"goal":"lte_add_left","proof":["not a <= b or a + c <= b + c","c + a = a + c","c + b = b + c","not a + c <= c + b","not a + c <= b + c"]}
@@ -424,7 +424,7 @@
 {"goal":"ℚ.from_int(a) - ℚ.from_int(b) = ℚ.from_int(a) + -ℚ.from_int(b)","proof":["ℚ.from_int(a) + -ℚ.from_int(b) = ℚ.from_int(a) - ℚ.from_int(b)"]}
 {"goal":"ℚ.from_int(a) - ℚ.from_int(b) = ℚ.from_int(a) + ℚ.from_int(-b)","proof":["ℚ.new(-ℚ.from_int(b).num, ℚ.from_int(b).denom) = -ℚ.from_int(b)","ℚ.from_int(a) + -ℚ.from_int(b) = ℚ.from_int(a) - ℚ.from_int(b)","ℚ.new(-b, ℤ.1) = ℚ.from_int(-b)","ℚ.from_int(b).denom = ℤ.1","ℚ.from_int(b).num = b","ℚ.from_int(a) + -ℚ.from_int(b) != ℚ.from_int(a) + ℚ.from_int(-b)","-ℚ.from_int(b) != ℚ.from_int(-b)"]}
 {"goal":"ℚ.from_int(a) - ℚ.from_int(b) = ℚ.from_int(a + -b)","proof":["ℚ.from_int(a) + ℚ.from_int(-b) = ℚ.from_int(a + -b)"]}
-{"goal":"ℚ.from_int(a) - ℚ.from_int(b) = ℚ.from_int(a - b)","proof":["ℚ.from_int(a + -b) != ℚ.from_int(a - b)","a + -b != a - b","a + -b = a - b"]}
+{"goal":"ℚ.from_int(a) - ℚ.from_int(b) = ℚ.from_int(a - b)","proof":["ℚ.from_int(a + -b) != ℚ.from_int(a - b)","P_Add.add[ℤ](a, Add.neg[ℤ](b)) = a - b","a + -b != a - b","P_Add.add[ℤ](a, -b) = a + -b","Add.neg[ℤ](b) = -b"]}
 {"goal":"sub_from_int","proof":[]}
 {"goal":"ℚ.from_int(b) - ℚ.from_int(a) = ℚ.from_int(b - a)","proof":["ℚ.from_int(b) - ℚ.from_int(a) = ℚ.from_int(b - a)"]}
 {"goal":"lt_from_int","proof":["(ℚ.from_int(b) - ℚ.from_int(a)).is_positive = ℚ.from_int(a) < ℚ.from_int(b)","(b - a).is_positive = a < b","(ℚ.from_int(b) - ℚ.from_int(a)).num.is_positive = (ℚ.from_int(b) - ℚ.from_int(a)).is_positive","ℚ.from_int(b - a).num = b - a"]}
@@ -435,8 +435,8 @@
 {"goal":"lte_mul_pos","proof":["not c > 0 or not a < b or a ⋅ c < b ⋅ c","not a <= b or a < b or b = a","not a ⋅ c < b ⋅ c or a ⋅ c <= b ⋅ c","b ⋅ c != a ⋅ c or a ⋅ c <= b ⋅ c","b ⋅ c != a ⋅ c","b != a","a < b","not a ⋅ c < b ⋅ c"]}
 {"goal":"lt_div_pos","proof":["not 1 / c > 0 or not a < b or a ⋅ 1 / c < b ⋅ 1 / c","not c > 0 or 1 / c > 0","a ⋅ 1 / c = a / c","b ⋅ 1 / c = b / c","not a / c < b ⋅ 1 / c","1 / c > 0","not 1 / c > 0 or a ⋅ 1 / c < b ⋅ 1 / c","not a ⋅ 1 / c < b ⋅ 1 / c","a ⋅ 1 / c < b ⋅ 1 / c"]}
 {"goal":"lte_div_pos","proof":["not c > 0 or not a < b or a / c < b / c","not a <= b or a < b or b = a","not a / c < b / c or a / c <= b / c","b / c != a / c or a / c <= b / c","b / c != a / c","b != a","a < b","not a / c < b / c"]}
-{"goal":"mul_div_cancels","proof":["a ⋅ (b ⋅ b.reciprocal) = a ⋅ b ⋅ b.reciprocal","b ⋅ b.reciprocal = 1 or 0 = b","a ⋅ b ⋅ b.reciprocal = (a ⋅ b) / b","a ⋅ 1 = a","b ⋅ b.reciprocal = 1"]}
-{"goal":"ℚ.from_int(a.num) / ℚ.from_int(a.denom) = reduce(a.num, ℤ.1) ⋅ reduce(ℤ.1, a.denom)","proof":["ℚ.from_int(a.num) ⋅ reduce(ℤ.1, ℤ.1) = reduce(a.num ⋅ ℤ.1, ℤ.1)","ℚ.from_int(a.num) ⋅ ℚ.from_int(a.denom).reciprocal = ℚ.from_int(a.num) / ℚ.from_int(a.denom)","reduce(ℚ.from_int(a.denom).denom, ℚ.from_int(a.denom).num) = ℚ.from_int(a.denom).reciprocal","reduce(a.num, ℤ.1) ⋅ reduce(ℤ.1, a.denom) = reduce(ℤ.1, a.denom) ⋅ reduce(a.num, ℤ.1)","ℚ.from_int(a.denom).reciprocal ⋅ ℚ.from_int(a.num) = ℚ.from_int(a.num) ⋅ ℚ.from_int(a.denom).reciprocal","a.num ⋅ ℤ.1 = ℤ.1 ⋅ a.num","ℚ.from_int(a.num) ⋅ 1 = ℚ.from_int(a.num)","ℚ.from_int(a.denom).denom = ℤ.1","ℚ.from_int(a.denom).num = a.denom","ℤ.1 ⋅ a.num = a.num"]}
+{"goal":"mul_div_cancels","proof":["Mul.mul[ℚ](a, b) / b = a or 0 = b","0 != b","Mul.mul[ℚ](a, b) / b != a"]}
+{"goal":"ℚ.from_int(a.num) / ℚ.from_int(a.denom) = reduce(a.num, ℤ.1) ⋅ reduce(ℤ.1, a.denom)","proof":["reduce(reduce(a.num, ℤ.1).num ⋅ reduce(ℤ.1, a.denom).num, reduce(a.num, ℤ.1).denom ⋅ reduce(ℤ.1, a.denom).denom) = reduce(a.num, ℤ.1) ⋅ reduce(ℤ.1, a.denom)","reduce(ℚ.from_int(a.num).num ⋅ (1 / ℚ.from_int(a.denom)).num, ℚ.from_int(a.num).denom ⋅ (1 / ℚ.from_int(a.denom)).denom) = ℚ.from_int(a.num) ⋅ 1 / ℚ.from_int(a.denom)","ℚ.from_int(a.num) ⋅ reduce(ℤ.1, ℤ.1) = reduce(a.num ⋅ ℤ.1, ℤ.1)","ℚ.from_int(a.num) ⋅ 1 / ℚ.from_int(a.denom) = ℚ.from_int(a.num) / ℚ.from_int(a.denom)","reduce(ℚ.from_int(a.denom).denom, ℚ.from_int(a.denom).num) = ℚ.from_int(a.denom).reciprocal","Mul.mul[ℚ](ℚ.from_int(a.num), 1) = ℚ.from_int(a.num)","let s0: ℚ satisfy { true }","1 / s0 = s0.reciprocal","a.num ⋅ ℤ.1 = ℤ.1 ⋅ a.num","ℚ.from_int(a.denom).denom = ℤ.1","ℚ.from_int(a.denom).num = a.denom","ℚ.from_int(a.num).num = a.num","ℤ.1 ⋅ a.num = a.num","1.div = ℚ.reciprocal"]}
 {"goal":"rat_from_div_int","proof":["reduce(a.num, ℤ.1) ⋅ reduce(ℤ.1, a.denom) = reduce(a.num ⋅ ℤ.1, ℤ.1 ⋅ a.denom)","reduce(a.num, a.denom) = a","a.num ⋅ ℤ.1 = a.num","ℤ.1 ⋅ a.denom = a.denom"]}
 {"goal":"ℚ.from_int(a.num) < ℚ.from_int(n ⋅ a.denom)","proof":["not a.num < n ⋅ a.denom or ℚ.from_int(a.num) < ℚ.from_int(n ⋅ a.denom)"]}
 {"goal":"ℚ.from_int(a.num) < ℚ.from_int(n) ⋅ ℚ.from_int(a.denom)","proof":["ℚ.from_int(n) ⋅ ℚ.from_int(a.denom) = ℚ.from_int(n ⋅ a.denom)"]}
@@ -495,16 +495,16 @@
 {"goal":"ℚ.from_int(r.num) / ℚ.from_int(r.denom) ⋅ ℚ.from_int(r.denom) = ℚ.from_int(r.num)","proof":["ℚ.from_int(r.num) / ℚ.from_int(r.denom) ⋅ ℚ.from_int(r.denom) = ℚ.from_int(r.num) or ℚ.from_int(r.denom) = 0"]}
 {"goal":"mul_denom","proof":["ℚ.from_int(r.num) / ℚ.from_int(r.denom) = r"]}
 {"goal":"1 / 2 > 0","proof":[]}
-{"goal":"half_pos","proof":["not r > 0 or not 2.reciprocal > 0 or r ⋅ 2.reciprocal > 0","1 / 2 > 0 = 2 > 0","2 > 0","not 2 > 0 or 2.reciprocal > 0","r ⋅ 2.reciprocal = r / 2","not r ⋅ 2.reciprocal > 0","2.reciprocal > 0","not 2.reciprocal > 0"]}
+{"goal":"half_pos","proof":["not r > 0 or not 1 / 2 > 0 or r ⋅ 1 / 2 > 0","r ⋅ 1 / 2 = r / 2","not r ⋅ 1 / 2 > 0"]}
 {"goal":"lt_neg","proof":["-p - -q > 0 = -p > -q","-(0 - q) = q - 0","(q - p).is_positive = p < q","-p + --q = -p - -q","q + -p = q - p","-p - -q > 0 = 0 < -p - -q","q + -p = -p + q","0 - q = -q","0 < q - p = (q - p).is_positive","q - 0 = q"]}
 {"goal":"lte_neg","proof":["not p < q or -p > -q","not p <= q or p < q or q = p","not -p > -q or -p >= -q","not -p > -q","-q != -p or -p >= -q","-q != -p","q != p","not p < q","p < q"]}
 {"goal":"lt_lte_trans","proof":["not a < b or not b < c or a < c","not b <= c or b < c or c = b","not b < c or not a < b","not b < c","c = b"]}
 {"goal":"lte_lt_trans","proof":["not a < b or not b < c or a < c","not a <= b or a < b or b = a","not b < c or not a < b","not a < b","b = a"]}
 {"goal":"a / 2 < b / 2","proof":["not 2 > 0 or not a < b or a / 2 < b / 2","not 2 > 0"]}
 {"goal":"a < a / 2 + b / 2","proof":["not a / 2 < b / 2 or a / 2 + a / 2 < b / 2 + a / 2","a / 2 + a / 2 = a","b / 2 + a / 2 = a / 2 + b / 2","not a / 2 + a / 2 < a / 2 + b / 2","a / 2 + a / 2 < b / 2 + a / 2"]}
-{"goal":"a < (a + b) / 2","proof":["a ⋅ 2.reciprocal + b ⋅ 2.reciprocal = (a + b) ⋅ 2.reciprocal","(a + b) ⋅ 2.reciprocal = (a + b) / 2","a ⋅ 2.reciprocal = a / 2","b ⋅ 2.reciprocal = b / 2","(a + b) / 2 > a = a < (a + b) / 2","a / 2 + b / 2 > a = a < a / 2 + b / 2"]}
+{"goal":"a < (a + b) / 2","proof":["P_Add.add[ℚ](a / 2, b / 2) = P_Add.add[ℚ](a, b) / 2","P_Add.add[ℚ](a / 2, b / 2) = a / 2 + b / 2","P_Add.add[ℚ](a, b) = a + b","(a + b) / 2 > a = a < (a + b) / 2","a / 2 + b / 2 > a = a < a / 2 + b / 2"]}
 {"goal":"a / 2 + b / 2 < b","proof":["not a / 2 < b / 2 or a / 2 + b / 2 < b / 2 + b / 2","b / 2 + b / 2 = b","not a / 2 + b / 2 < b / 2 + b / 2"]}
-{"goal":"(a + b) / 2 < b","proof":["a ⋅ 2.reciprocal + b ⋅ 2.reciprocal = (a + b) ⋅ 2.reciprocal","(a + b) ⋅ 2.reciprocal = (a + b) / 2","a ⋅ 2.reciprocal = a / 2","b ⋅ 2.reciprocal = b / 2","b > (a + b) / 2 = (a + b) / 2 < b","b > a / 2 + b / 2 = a / 2 + b / 2 < b"]}
+{"goal":"(a + b) / 2 < b","proof":["P_Add.add[ℚ](a / 2, b / 2) = P_Add.add[ℚ](a, b) / 2","P_Add.add[ℚ](a / 2, b / 2) = a / 2 + b / 2","P_Add.add[ℚ](a, b) = a + b","b > (a + b) / 2 = (a + b) / 2 < b","b > a / 2 + b / 2 = a / 2 + b / 2 < b"]}
 {"goal":"lt_imp_rat_between","proof":["not (a + b) / 2 < b or not a < (a + b) / 2","not a < (a + b) / 2"]}
 {"goal":"gt_imp_rat_between","proof":["let s0: ℚ satisfy { not b < a or b < s0 and (not b < a or s0 < a) }","not s0 > b or not a > s0","a > b = b < a","a > s0 = s0 < a","s0 > b = b < s0","b < a","b < s0","s0 < a","a > s0","s0 > b","not s0 > b"]}
 {"goal":"lt_cancel_pos_mul_right","proof":["not c > 0 or not b <= a or b ⋅ c <= a ⋅ c","not b ⋅ c <= a ⋅ c or not a ⋅ c < b ⋅ c or a ⋅ c < a ⋅ c","b > a != b <= a","b > a = a < b","not b > a","not a ⋅ c < a ⋅ c","b > a or b <= a","not b ⋅ c <= a ⋅ c or a ⋅ c < a ⋅ c","not b ⋅ c <= a ⋅ c","b <= a","not b <= a"]}
@@ -514,35 +514,46 @@
 {"goal":"cancel_positivity_left","proof":["not a ⋅ b > a ⋅ 0 or not a > 0 or b > 0","a ⋅ 0 = 0","not a ⋅ b > a ⋅ 0 or not a > 0","not a ⋅ b > a ⋅ 0"]}
 {"goal":"cancel_positivity_right","proof":["not b ⋅ a > 0 or not b > 0 or a > 0","a ⋅ b = b ⋅ a","b ⋅ a > 0"]}
 {"goal":"mul_cancels_div_left","proof":["a / b ⋅ b = a or 0 = b","b ⋅ a / b = a / b ⋅ b","a / b ⋅ b != a"]}
-{"goal":"a.abs = -a","proof":["not a < 0 or a.abs = -a"]}
-{"goal":"(-a).abs = -a","proof":["(-a).abs != a.abs","(-a).abs = a.abs"]}
+{"goal":"a.abs = -a","proof":["not Partial_Order.lt[ℚ](a, 0) or a.abs = Add.neg[ℚ](a)","Partial_Order.lt[ℚ](a, 0) = a < 0","Add.neg[ℚ](a) = -a","a.abs != Add.neg[ℚ](a)","not Partial_Order.lt[ℚ](a, 0)","Partial_Order.lt[ℚ](a, 0)"]}
+{"goal":"(-a).abs = -a","proof":["not Partial_Order.gte[ℚ](-a, 0) or (-a).abs = -a","Partial_Order.gte[ℚ](a.abs, 0)","not Partial_Order.gte[ℚ](-a, 0)"]}
 {"goal":"(-a).abs = a.abs","proof":["(-a).abs != -a"]}
 {"goal":"(-a).abs = a.abs","proof":["-a != a","0 - a = -a","0 - 0 = 0"]}
 {"goal":"a > 0","proof":["a > 0 or a < 0 or 0 = a"]}
-{"goal":"a.abs = a","proof":["-a < 0 = Partial_Order.gt[ℚ](a, 0)","-a < 0 = a > 0","not Partial_Order.gt[ℚ](a, 0) or a.abs = a","not Partial_Order.gt[ℚ](a, 0)"]}
+{"goal":"a.abs = a","proof":["not Partial_Order.gt[ℚ](a, 0) or a.abs = a","not Partial_Order.gt[ℚ](a, 0)","Partial_Order.gt[ℚ](a, 0) = a > 0","not a > 0"]}
 {"goal":"-a < 0","proof":["-a < 0 = a > 0"]}
-{"goal":"(-a).abs = a","proof":["not -a < 0 or (-a).abs = --a","-(0 - a) = a - 0","0 - a.abs = -a.abs","a.abs - 0 = a.abs","(-a).abs = --a"]}
+{"goal":"(-a).abs = a","proof":["Add.neg[ℚ](-a).abs = (-a).abs","Add.neg[ℚ](Add.neg[ℚ](a.abs)) = a.abs","Add.neg[ℚ](a) = -a"]}
 {"goal":"(-a).abs = a.abs","proof":["(-a).abs != a"]}
 {"goal":"neg_abs","proof":[]}
-{"goal":"abs_non_pos","proof":["Partial_Order.gt[ℚ](a, 0) or -a = a.abs","Partial_Order.gt[ℚ](a, 0)","-a < 0 = Partial_Order.gt[ℚ](a, 0)","-a < 0 = a > 0"]}
-{"goal":"abs_non_neg","proof":["-a > 0 or --a = (-a).abs","-a > 0 = a < 0","(-a).abs = a.abs","(-a).abs != a","--a = a","not -a > 0","--a != (-a).abs","--a = (-a).abs"]}
+{"goal":"abs_non_pos","proof":["Partial_Order.gt[ℚ](a, 0) or a.abs = Add.neg[ℚ](a)","Partial_Order.gt[ℚ](a, 0) = a > 0","Add.neg[ℚ](a) = -a","a.abs != Add.neg[ℚ](a)","Partial_Order.gt[ℚ](a, 0)","not Partial_Order.gt[ℚ](a, 0)"]}
+{"goal":"abs_non_neg","proof":["not Partial_Order.gt[ℚ](a, 0) or a.abs = a","not Partial_Order.gt[ℚ](a, 0)","not Partial_Order.gte[ℚ](a, 0) or a.abs = a","not Partial_Order.gte[ℚ](a, 0)","a > 0 or a < 0 or a = 0","Partial_Order.gte[ℚ](a, 0) = a >= 0","Partial_Order.gt[ℚ](a, 0) = a > 0","a != 0 or a >= 0","not a > 0","not a >= 0","a = 0","a != 0"]}
 {"goal":"mul_neg_abs","proof":["-b ⋅ a = -(b ⋅ a)","a ⋅ -b = -b ⋅ a","b ⋅ a = a ⋅ b","(-(b ⋅ a)).abs = (b ⋅ a).abs"]}
-{"goal":"abs_mul_abs_right","proof":["a ⋅ b.abs != a ⋅ b","b.abs != b","(a ⋅ -b).abs = (a ⋅ b).abs","not b < 0 or b.abs = -b","b < 0 or b.abs = b","b < 0","(a ⋅ b.abs).abs != (a ⋅ -b).abs","a ⋅ b.abs != a ⋅ -b","b.abs = -b","b.abs != -b"]}
+{"goal":"abs_mul_abs_right","proof":["a ⋅ b.abs != a ⋅ b","b.abs != b","(a ⋅ -b).abs = (a ⋅ b).abs","Add.neg[ℚ](b.abs) = b or b.abs = b","Add.neg[ℚ](Add.neg[ℚ](b.abs)) = b.abs","Add.neg[ℚ](b.abs) = b"]}
 {"goal":"abs_mul_abs_left","proof":["(b ⋅ a.abs).abs = (b ⋅ a).abs","b ⋅ a = a ⋅ b","b ⋅ a.abs = a.abs ⋅ b","(a.abs ⋅ b).abs != (b ⋅ a).abs"]}
 {"goal":"mul_to_zero","proof":["0 ⋅ b != a ⋅ b or 0 = b or 0 = a","b ⋅ 0 = 0 ⋅ b","b ⋅ 0 = 0","0 ⋅ b != a ⋅ b or 0 = b","0 ⋅ b != a ⋅ b","0 ⋅ b != 0"]}
 {"goal":"rat_zero_mul_to_zero","proof":[]}
 {"goal":"mul_non_neg","proof":["not a > 0 or not b > 0 or a ⋅ b > 0","a > 0 or a < 0 or 0 = a","not b >= 0 or b > 0 or 0 = b","0 != b or a ⋅ b = 0","0 != a or a ⋅ b = 0","a >= 0 != a < 0","not a ⋅ b > 0 or a ⋅ b >= 0","not a ⋅ b > 0","a ⋅ b != 0 or a ⋅ b >= 0","a ⋅ b != 0","not a >= 0 or not a < 0","not a < 0","b > 0 or 0 = b","0 != a","0 != b","not b > 0 or not a > 0","b > 0","a > 0","not a > 0"]}
-{"goal":"rat_abs_distrib_mul","proof":["a.abs ⋅ b.abs = (a ⋅ b).abs"]}
-{"goal":"a.abs = 0 implies a = 0","proof":["a.abs != 0 or 0 = a"]}
+{"goal":"rat_abs_distrib_mul","proof":["Mul.mul[ℚ](a.abs, b.abs) = Mul.mul[ℚ](a, b).abs","a.abs ⋅ b.abs != Mul.mul[ℚ](a, b).abs"]}
+{"goal":"a.abs = 0 implies a = 0","proof":["a.abs != 0 or 0 = a","P_Add.add[ℚ](0, 0) = 0 + 0","P_Add.add[ℚ](0, 0) = 0","P_Add.add[ℚ](0, 0) != a","0 + 0 = 0","0 + 0 != a","0 != a","a.abs != 0"]}
 {"goal":"abs_zero_iff_zero","proof":["0 = a","a.abs != 0","0.abs != 0","0 < 0 or 0.abs = 0","not 0 < 0"]}
-{"goal":"not a.abs < 0","proof":["(1 ⋅ a.abs).abs = (1 ⋅ a).abs","not a.abs < 0 or a.abs.abs = -a.abs","(0 - a.abs).is_positive = a.abs < 0","not a.abs > 0 or not a.abs < 0","not a.abs > 0","a.abs > 0 = 0 < a.abs","a.abs.abs = -a.abs","(-a).abs = a.abs","0 - a.abs = -a.abs","0 < a.abs = a.abs.is_positive","(-a).abs - 0 = (-a).abs","a - 0 = a","1 ⋅ (a - 0) = a - 0","1 ⋅ (a.abs - 0) = a.abs - 0"]}
+{"goal":"not a.abs < 0","proof":["Partial_Order.gte[ℚ](a.abs, 0)","Partial_Order.gte[ℚ](a.abs, 0) = a.abs >= 0","a.abs >= 0 != a.abs < 0","not a.abs >= 0 or not a.abs < 0","not Partial_Order.gte[ℚ](a.abs, 0) or a.abs >= 0","not a.abs >= 0"]}
 {"goal":"zero_lte_abs","proof":["a.abs > 0 or a.abs < 0 or a.abs = 0","a.abs > 0 = 0 < a.abs","not 0 < a.abs or 0 <= a.abs","not 0 < a.abs","a.abs != 0 or 0 <= a.abs","a.abs != 0","not a.abs > 0","a.abs > 0"]}
-{"goal":"pos_inverses_lt","proof":["not r / p < r / q or not Partial_Order.gt[ℚ](r, 0) or not Partial_Order.gt[ℚ](p, 0) or not Partial_Order.gt[ℚ](q, 0) or Partial_Order.gt[ℚ](p, q)","not r / p < r / q or not Partial_Order.gt[ℚ](p, 0) or not Partial_Order.gt[ℚ](q, 0) or not Partial_Order.gt[ℚ](r, 0) or Partial_Order.gt[ℚ](p, q)","p > 0 = Partial_Order.gt[ℚ](p, 0)","p > q = Partial_Order.gt[ℚ](p, q)","q > 0 = Partial_Order.gt[ℚ](q, 0)","r > 0 = Partial_Order.gt[ℚ](r, 0)","not Partial_Order.gt[ℚ](p, q)","Partial_Order.gt[ℚ](r, 0)","Partial_Order.gt[ℚ](q, 0)","Partial_Order.gt[ℚ](p, 0)","not Partial_Order.gt[ℚ](p, 0)"]}
+{"goal":"r ⋅ 1 / p < r ⋅ 1 / q","proof":["r ⋅ 1 / p = r / p","r ⋅ 1 / q = r / q"]}
+{"goal":"1 / p < 1 / q","proof":["not r ⋅ 1 / p < r ⋅ 1 / q or not r > 0 or 1 / p < 1 / q"]}
+{"goal":"1 / (1 / q) < 1 / (1 / p)","proof":["not 1 / p > 0 or not 1 / p < 1 / q or 1 / (1 / q) < 1 / (1 / p)","1 / p > 0 = p > 0","not 1 / p > 0","1 / p > 0"]}
+{"goal":"1 / (1 / q) = q","proof":["1 / (1 / q) = q or q = 0","q = 0","0 > 0","not 0 > 0 or not 0 < 0","0 > 0 = 0 < 0","not 0 < 0","0 < 0"]}
+{"goal":"1 / (1 / p) = p","proof":["1 / (1 / p) = p or p = 0","p = 0","0 > 0","not 0 > 0 or not 0 < 0","0 > 0 = 0 < 0","not 0 < 0","0 < 0"]}
+{"goal":"rat_pos_inverses_lt","proof":["Partial_Order.gt[ℚ](p, q) = Partial_Order.lt[ℚ](q, p)","Partial_Order.gt[ℚ](p, q) = p > q","Partial_Order.lt[ℚ](q, p) = q < p"]}
 {"goal":"reciprocal_eq","proof":["p.reciprocal.reciprocal = p or 0 = p","q.reciprocal.reciprocal = q or 0 = q","1 / p = p.reciprocal","1 / q = q.reciprocal","p.reciprocal.reciprocal = p","q.reciprocal.reciprocal = q"]}
-{"goal":"inverses_eq","proof":["1 / q != 1 / p or 0 = q or 0 = p or q = p","(p.reciprocal ⋅ r) / r = p.reciprocal or 0 = r","(q.reciprocal ⋅ r) / r = q.reciprocal or 0 = r","r ⋅ p.reciprocal = r / p","r ⋅ q.reciprocal = r / q","r ⋅ p.reciprocal = p.reciprocal ⋅ r","r ⋅ q.reciprocal = q.reciprocal ⋅ r","1 / q != 1 / p","1 / p = p.reciprocal","1 / q = q.reciprocal","(p.reciprocal ⋅ r) / r = p.reciprocal","(q.reciprocal ⋅ r) / r = q.reciprocal"]}
-{"goal":"pos_inverses_lte","proof":["not Partial_Order.lte[ℚ](r / p, r / q) or not Partial_Order.gt[ℚ](r, 0) or not Partial_Order.gt[ℚ](p, 0) or not Partial_Order.gt[ℚ](q, 0) or Partial_Order.gte[ℚ](p, q)","not Partial_Order.lte[ℚ](r / p, r / q) or not Partial_Order.gt[ℚ](p, 0) or not Partial_Order.gt[ℚ](q, 0) or not Partial_Order.gt[ℚ](r, 0) or Partial_Order.gte[ℚ](p, q)","p >= q = Partial_Order.gte[ℚ](p, q)","not Partial_Order.gte[ℚ](p, q)","p > 0 = Partial_Order.gt[ℚ](p, 0)","q > 0 = Partial_Order.gt[ℚ](q, 0)","r > 0 = Partial_Order.gt[ℚ](r, 0)","Partial_Order.gt[ℚ](r, 0)","Partial_Order.gt[ℚ](q, 0)","Partial_Order.gt[ℚ](p, 0)","r / p <= r / q = Partial_Order.lte[ℚ](r / p, r / q)","Partial_Order.lte[ℚ](r / p, r / q)"]}
+{"goal":"inverses_eq","proof":["r / q != r / p or 0 = q or 0 = p or 0 = r or q = p","0 != p","0 != q","0 != r","0 = r"]}
+{"goal":"p != 0","proof":["Partial_Order.gt[ℚ](0, 0) = Partial_Order.lt[ℚ](0, 0)","Partial_Order.gt[ℚ](0, 0) = 0 > 0","not Partial_Order.lt[ℚ](p, 0) or p != 0","not Partial_Order.lt[ℚ](p, 0)"]}
+{"goal":"q != 0","proof":["Partial_Order.gt[ℚ](0, 0) = Partial_Order.lt[ℚ](0, 0)","Partial_Order.gt[ℚ](0, 0) = 0 > 0","not Partial_Order.lt[ℚ](q, 0) or q != 0","not Partial_Order.lt[ℚ](q, 0)"]}
+{"goal":"r != 0","proof":["Partial_Order.gt[ℚ](0, 0) = Partial_Order.lt[ℚ](0, 0)","Partial_Order.gt[ℚ](0, 0) = 0 > 0","not Partial_Order.lt[ℚ](r, 0) or r != 0","not Partial_Order.lt[ℚ](r, 0)"]}
+{"goal":"p = q","proof":["r / q != r / p or p = 0 or q = 0 or r = 0 or q = p"]}
+{"goal":"r / p < r / q","proof":["not r / p <= r / q or r / p < r / q or r / q = r / p"]}
+{"goal":"p > q","proof":["not r / p < r / q or not p > 0 or not q > 0 or not r > 0 or p > q"]}
+{"goal":"rat_pos_inverses_lte","proof":["not p > q or p >= q","not p > q","q != p or p >= q","q != p","r / q = r / p","r / q != r / p"]}
 {"goal":"pos_inverses_gt","proof":["not r / q < r / p or not r > 0 or not q > 0 or not p > 0 or q > p","not r / q < r / p or not q > 0 or not p > 0 or not r > 0 or q > p","q > p = p < q","r / p > r / q = r / q < r / p","not q > p","r / q < r / p"]}
-{"goal":"pos_inverses_gte","proof":["not Partial_Order.gte[ℚ](r / p, r / q) or not Partial_Order.gt[ℚ](r, 0) or not Partial_Order.gt[ℚ](p, 0) or not Partial_Order.gt[ℚ](q, 0) or Partial_Order.lte[ℚ](p, q)","not Partial_Order.gte[ℚ](r / p, r / q) or not Partial_Order.gt[ℚ](p, 0) or not Partial_Order.gt[ℚ](q, 0) or not Partial_Order.gt[ℚ](r, 0) or Partial_Order.lte[ℚ](p, q)","r / p >= r / q = Partial_Order.gte[ℚ](r / p, r / q)","p > 0 = Partial_Order.gt[ℚ](p, 0)","q > 0 = Partial_Order.gt[ℚ](q, 0)","r > 0 = Partial_Order.gt[ℚ](r, 0)","Partial_Order.gt[ℚ](r, 0)","Partial_Order.gt[ℚ](q, 0)","Partial_Order.gt[ℚ](p, 0)","p <= q = Partial_Order.lte[ℚ](p, q)","not Partial_Order.lte[ℚ](p, q)","Partial_Order.gte[ℚ](r / p, r / q)"]}
+{"goal":"pos_inverses_gte","proof":["not r / q <= r / p or not q > 0 or not p > 0 or not r > 0 or q >= p","Partial_Order.gte[ℚ](r / p, r / q) = Partial_Order.lte[ℚ](r / q, r / p)","Partial_Order.lte[ℚ](r / q, r / p) = r / q <= r / p","q >= p != q < p","p > q != p <= q","p > q = q < p","p > q or p <= q","p > q","q < p","not q >= p or not q < p","Partial_Order.gte[ℚ](r / p, r / q)","Partial_Order.lte[ℚ](r / q, r / p)","r / q <= r / p","not q >= p","q >= p"]}
 {"goal":"lt_cancel_add_right","proof":["not q <= p or q + r <= p + r","not q + r <= p + r or not p + r < q + r or p + r < p + r","q > p != q <= p","q > p = p < q","not q > p","not p + r < p + r","q > p or q <= p","not q + r <= p + r or p + r < p + r","not q + r <= p + r","q <= p","not q <= p"]}
 {"goal":"sub_distrib","proof":["p ⋅ (q - r) + p ⋅ r = p ⋅ (q - r + r)","p ⋅ (q - r) + p ⋅ r != p ⋅ q or p ⋅ q - p ⋅ r = p ⋅ (q - r)","q - r + r = q","p ⋅ (q - r) + p ⋅ r != p ⋅ q","p ⋅ (q - r + r) != p ⋅ q"]}
 {"goal":"1 / 2 > 0","proof":[]}
@@ -563,7 +574,9 @@
 {"goal":"exists(k0: ℚ) { k0 > 0 and k0 < b }","proof":["let s0: ℚ -> ℚ satisfy { forall(x0: ℚ) { not x0 > 0 or s0(x0) > 0 } and forall(x1: ℚ) { not x1 > 0 or s0(x1) < x1 } }","not s0(b) > 0 or not s0(b) < b","not b > 0 or s0(b) < b","not b > 0 or s0(b) > 0","s0(b) > 0","s0(b) < b","not s0(b) < b"]}
 {"goal":"r > 0 and r < a and r < b","proof":["not r < a","not b <= a or not r < b or r < a","not r < b or not b < a or r < a","b > a or b < a or b = a","b > a = a < b","b != a or b <= a","not b > a","not r < b or not b < a","not b < a","not r < b or not b <= a","not b <= a","b = a","b != a"]}
 {"goal":"lt_both_pos","proof":["let s0: ℚ satisfy { s0 > 0 and s0 < a and s0 < b }","not s0 > 0 or not s0 < b or not s0 < a","not s0 > 0"]}
-{"goal":"lt_rhs_div_pos","proof":["not a < b / c or not Partial_Order.gt[ℚ](c, 0) or a ⋅ c < b","not Partial_Order.gt[ℚ](c, 0)","-c < 0 = Partial_Order.gt[ℚ](c, 0)","-c < 0 = c > 0"]}
+{"goal":"a ⋅ c < b / c ⋅ c","proof":["not c > 0 or not a < b / c or a ⋅ c < b / c ⋅ c"]}
+{"goal":"b / c ⋅ c = b","proof":["b / c ⋅ c = b or c = 0","c = 0","0 > 0","not 0 > 0 or not 0 < 0","0 > 0 = 0 < 0","not 0 < 0","0 < 0"]}
+{"goal":"rat_lt_rhs_div_pos","proof":["not a ⋅ c < b / c ⋅ c"]}
 {"goal":"lte_abs","proof":["not q <= 0 or not 0 <= q.abs or q <= q.abs","q < 0 or q.abs = q","not q < 0 or q <= 0","q.abs != q or q <= q.abs","q.abs != q","0 <= q.abs","not 0 <= q.abs or not q <= 0","not q <= 0","q < 0","not q < 0"]}
 {"goal":"close_comm","proof":["(b - a).abs != (a - b).abs","-(a - b) = b - a","(-(a - b)).abs = (a - b).abs"]}
 {"goal":"(a - b).abs < ε","proof":[]}
@@ -580,7 +593,7 @@
 {"goal":"a + ε + -ε > b + -ε","proof":["not b < a + ε or b + -ε < a + ε + -ε","a + ε + -ε > b + -ε = b + -ε < a + ε + -ε","a + ε > b = b < a + ε","not b + -ε < a + ε + -ε","b < a + ε","not b < a + ε"]}
 {"goal":"a > b + -ε","proof":["a + ε + -ε = a + ε - ε","a + ε - ε = a","a + ε - ε > b + -ε"]}
 {"goal":"close_imp_bounds","proof":["not a > b - ε","b + -ε = b - ε"]}
-{"goal":"(a - b).abs = b - a","proof":["not a - b < 0 or (a - b).abs = -(a - b)","-(a - b) = b - a","(a - b).abs = -(a - b)","(a - b).abs != -(a - b)"]}
+{"goal":"(a - b).abs = b - a","proof":["a - b > 0 or (a - b).abs = -(a - b)","-(a - b) = b - a","not a - b > 0 or not a - b < 0","(a - b).abs != -(a - b)","not a - b > 0","a - b > 0"]}
 {"goal":"a > b + -ε","proof":["b + -ε = b - ε"]}
 {"goal":"-a < -(b + -ε)","proof":["not b - ε < a or -(b - ε) > -a","b + -ε = b - ε","not -a < -(b - ε)","-(b - ε) > -a = -a < -(b - ε)","a > b - ε = b - ε < a","b - ε < a","not -(b - ε) > -a","-(b - ε) > -a"]}
 {"goal":"b - a < ε","proof":["ε - b - -a = ε - (b + -a)","-(b - ε) = ε - b","(-(b + -ε) - -a).is_positive = -a < -(b + -ε)","(ε - (b - a)).is_positive = b - a < ε","b + -a = b - a","b + -ε = b - ε","0 < -(b + -ε) - -a = (-(b + -ε) - -a).is_positive","0 < ε - (b - a) = (ε - (b - a)).is_positive"]}
@@ -602,12 +615,12 @@
 {"goal":"from_nat_one","proof":["ℚ.from_int(ℤ.from_nat(ℕ.1)) = ℚ.from_nat(ℕ.1)","ℚ.from_int(ℤ.from_nat(ℕ.1)) != 1"]}
 {"goal":"ℚ.from_nat(a + b) = ℚ.from_int(ℤ.from_nat(a) + ℤ.from_nat(b))","proof":["ℤ.from_nat(a) + ℤ.from_nat(b) = ℤ.from_nat(a + b)","ℚ.from_int(ℤ.from_nat(a + b)) != ℚ.from_nat(a + b)","ℚ.from_int(ℤ.from_nat(a + b)) = ℚ.from_nat(a + b)"]}
 {"goal":"from_nat_add","proof":["ℚ.from_int(ℤ.from_nat(a)) + ℚ.from_int(ℤ.from_nat(b)) = ℚ.from_int(ℤ.from_nat(a) + ℤ.from_nat(b))","ℚ.from_int(ℤ.from_nat(a)) = ℚ.from_nat(a)","ℚ.from_int(ℤ.from_nat(b)) = ℚ.from_nat(b)"]}
-{"goal":"f(ℕ.0)","proof":["ℚ.from_int(a^ℕ.0) != x^ℕ.0 or f(ℕ.0)","ℕ.0 != ℕ.0 or x^ℕ.0 = 1","a^ℕ.0 = ℤ.1","ℚ.from_int(a^ℕ.0) != x^ℕ.0","x^ℕ.0 != ℚ.from_int(ℤ.1)","x^ℕ.0 != 1"]}
-{"goal":"x^m.suc = x^m ⋅ x","proof":["m.suc != m.suc or x ⋅ x^m = x^m.suc","x^m ⋅ x = x ⋅ x^m","x ⋅ x^m != x^m.suc"]}
+{"goal":"f(ℕ.0)","proof":["ℚ.from_int(a^ℕ.0) != x^ℕ.0 or f(ℕ.0)","ℕ.0 != ℕ.0 or x^ℕ.0 = 1","a^ℕ.0 = ℤ.1","ℚ.from_int(a^ℕ.0) != x^ℕ.0","x^ℕ.0 != ℚ.from_int(ℤ.1)","x^ℕ.0 != 1","x^ℕ.0 = 1"]}
+{"goal":"x^m.suc = x^m ⋅ x","proof":["m.suc != m.suc or Mul.mul[ℚ](x, x^m) = x^m.suc","x ⋅ x^m = x^m ⋅ x","Mul.mul[ℚ](x, x^m) = x^m.suc"]}
 {"goal":"x^m = ℚ.from_int(a^m)","proof":["ℚ.from_int(a) != x or not f(m) or ℚ.from_int(a^m) = x^m","not f(m) or ℚ.from_int(a^m) = x^m"]}
 {"goal":"x^m ⋅ x = ℚ.from_int(a^m) ⋅ ℚ.from_int(a)","proof":[]}
 {"goal":"ℚ.from_int(a^m) ⋅ ℚ.from_int(a) = ℚ.from_int(a^m ⋅ a)","proof":["ℚ.from_int(a^m) ⋅ ℚ.from_int(a) = ℚ.from_int(a^m ⋅ a)"]}
-{"goal":"ℚ.from_int(a^m ⋅ a) = ℚ.from_int(a^m.suc)","proof":["a^m ⋅ a != a^m.suc","m.suc != m.suc or a ⋅ a^m = a^m.suc","a^m ⋅ a = a ⋅ a^m","a ⋅ a^m != a^m.suc"]}
+{"goal":"ℚ.from_int(a^m ⋅ a) = ℚ.from_int(a^m.suc)","proof":["a^m ⋅ a != a^m.suc","m.suc != m.suc or Mul.mul[ℤ](a, a^m) = a^m.suc","a ⋅ a^m = a^m ⋅ a","Mul.mul[ℤ](a, a^m) = a^m.suc"]}
 {"goal":"x^m.suc = ℚ.from_int(a^m.suc)","proof":[]}
 {"goal":"f(m.suc)","proof":["ℚ.from_int(a^m.suc) != x^m.suc or f(m.suc)"]}
 {"goal":"from_int_pow","proof":["let s0: (ℕ -> Bool) -> ℕ satisfy { forall(x0: ℕ -> Bool, x1: ℕ) { not x0(ℕ.0) or x0(s0(x0)) or x0(x1) } and forall(x2: ℕ -> Bool, x3: ℕ) { not x2(s0(x2).suc) or not x2(ℕ.0) or x2(x3) } }","not f(s0(f)) or f(s0(f).suc)","ℚ.from_int(a) != x or not f(n) or ℚ.from_int(a^n) = x^n","not f(n) or ℚ.from_int(a^n) = x^n","not f(n)","not f(s0(f).suc) or not f(ℕ.0) or f(n)","not f(ℕ.0) or f(s0(f)) or f(n)","f(s0(f)) or f(n)","f(s0(f))","not f(s0(f).suc)","f(s0(f).suc)"]}
@@ -624,15 +637,15 @@
 {"goal":"q > ℤ.0","proof":["q > ℤ.0 = ℤ.0 < q","not ℤ.0 < q","ℤ.0 < q = q.is_positive","not q.is_positive","not x.denom.is_positive","x.denom.is_positive"]}
 {"goal":"q^n > ℤ.0","proof":["not q > ℤ.0 or q^n > ℤ.0"]}
 {"goal":"x^n = 1","proof":["n != ℕ.0 or x^n = 1"]}
-{"goal":"p^n = ℤ.1","proof":["n != ℕ.0 or p^n = ℤ.1"]}
-{"goal":"q^n = ℤ.1","proof":["n != ℕ.0 or q^n = ℤ.1"]}
+{"goal":"p^n = ℤ.1","proof":["p^ℕ.0 != ℤ.1","p^ℕ.0 = ℤ.1"]}
+{"goal":"q^n = ℤ.1","proof":["q^ℕ.0 != ℤ.1","q^ℕ.0 = ℤ.1"]}
 {"goal":"(x^n).num = p^n","proof":["ℚ.new(0.num, 0.denom) = 0","ℚ.new(p, ℤ.1) = ℚ.from_int(p)","ℚ.from_int(p^n).num = p^n"]}
 {"goal":"(x^n).denom = q^n","proof":["(x^n).denom != ℤ.1","1.denom != ℤ.1","ℚ.from_int(ℤ.1).denom = ℤ.1"]}
 {"goal":"(x^n).num = p^n and (x^n).denom = q^n","proof":["(x^n).num != p^n"]}
 {"goal":"n != ℕ.0","proof":[]}
 {"goal":"x.num = ℤ.0","proof":["0.num != ℤ.0"]}
 {"goal":"x.denom = ℤ.1","proof":["0.denom != ℤ.1"]}
-{"goal":"x^n = 0","proof":["0^n != 0","0^n = 0 or n = ℕ.0"]}
+{"goal":"x^n = 0","proof":["0^n = 0 or n = ℕ.0","0^n != 0","0^n = 0"]}
 {"goal":"(x^n).num = ℤ.0","proof":[]}
 {"goal":"(x^n).denom = ℤ.1","proof":[]}
 {"goal":"ℤ.1^n = ℤ.1","proof":["ℤ.1^n = ℤ.1"]}
@@ -660,7 +673,7 @@
 {"goal":"q^n = ℤ.1","proof":["y.denom != ℤ.1","not y.is_int or y.denom = ℤ.1"]}
 {"goal":"q = ℤ.1 or q = -ℤ.1","proof":["q^n != ℤ.1 or -ℤ.1 = q or ℤ.1 = q or ℕ.0 = n"]}
 {"goal":"q > ℤ.0","proof":["q > ℤ.0 = ℤ.0 < q","not ℤ.0 < q","ℤ.0 < q = q.is_positive","not q.is_positive","not x.denom.is_positive","x.denom.is_positive"]}
-{"goal":"q = ℤ.1","proof":["-ℤ.1 < ℤ.0 = Partial_Order.gt[ℤ](ℤ.1, ℤ.0)","ℤ.1 - q != ℤ.0 or ℤ.1 = q","ℤ.1 - q != ℤ.0","not ℤ.0 < -ℤ.1 or not -ℤ.1 < ℤ.0","q > ℤ.0 = ℤ.0 < q","ℤ.0 < q","ℤ.0 < -ℤ.1","ℤ.1 != ℤ.0 or ℤ.1 - q = ℤ.0","ℤ.1 != ℤ.0","Partial_Order.gt[ℤ](ℤ.1, ℤ.0)","not -ℤ.1 < ℤ.0","-ℤ.1 < ℤ.0"]}
+{"goal":"q = ℤ.1","proof":["q > ℤ.0 = ℤ.0 < q","ℤ.0 < q","ℤ.0 < q = q.is_positive","q.is_positive","ℤ.neg_suc(ℕ.0) != q or q.is_negative","-ℤ.pos_suc(ℕ.0) = ℤ.neg_suc(ℕ.0)","not q.is_positive or not q.is_negative","-ℤ.pos_suc(ℕ.0) = q","ℤ.neg_suc(ℕ.0) = q","not q.is_negative","q.is_negative"]}
 {"goal":"square_roof_of_int","proof":["x.denom != ℤ.1 or x.is_int","x.denom = ℤ.1","x.denom != ℤ.1"]}
 {"goal":"x^ℕ.2 = ℚ.new(p^ℕ.2, q^ℕ.2)","proof":["x.denom != q or x.num != x.num or (x^ℕ.2).denom = q^ℕ.2","x.denom != x.denom or x.num != p or (x^ℕ.2).num = p^ℕ.2","ℚ.new((x^ℕ.2).num, (x^ℕ.2).denom) = x^ℕ.2","x.num != p or (x^ℕ.2).num = p^ℕ.2","x.denom != q or (x^ℕ.2).denom = q^ℕ.2","(x^ℕ.2).denom = q^ℕ.2","(x^ℕ.2).num = p^ℕ.2"]}
 {"goal":"2 = ℚ.new(p^ℕ.2, q^ℕ.2)","proof":["ℚ.new(p^ℕ.2, q^ℕ.2) != x^ℕ.2"]}

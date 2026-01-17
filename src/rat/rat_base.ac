@@ -6,7 +6,7 @@ from type_class.add import P_Add
 from type_class.ring import Mul, zero_mul_to_zero
 from type_class.ordered_ring import Add, Ring, Ordered_P_Add, Ordered_Add, Ordered_Ring, lt_mul_pos, mul_lt_lt
 from type_class.field import Field
-from type_class.ordered_field import Ordered_Field, lt_pos_reciprocal, square_lt_imp_lt
+from type_class.ordered_field import Ordered_Field, lt_pos_reciprocal, square_lt_imp_lt, lt_rhs_div_pos, pos_inverses_lt, pos_inverses_lte
 
 /// True if a fraction a/b is in reduced form (lowest terms).
 /// The denominator must be positive and gcd(a,b) must be 1.  
@@ -1560,12 +1560,18 @@ theorem zero_lte_abs(a: ℚ) {
     not a.abs < 0
 }
 
-theorem pos_inverses_lt(p: ℚ, q: ℚ, r: ℚ) {
+theorem rat_pos_inverses_lt(p: ℚ, q: ℚ, r: ℚ) {
     p > 0 and q > 0 and r > 0
     and r/p < r/q
     implies
     p > q
-} 
+} by {
+    r ⋅ ℚ.1/p < r ⋅ ℚ.1/q
+    ℚ.1/p < ℚ.1/q
+    ℚ.1/(ℚ.1/q) < ℚ.1/(ℚ.1/p)
+    ℚ.1/(ℚ.1/q) = q
+    ℚ.1/(ℚ.1/p) = p
+}
 
 theorem reciprocal_eq(p: ℚ, q: ℚ) {
     p != 0 and q != 0 and 1/p = 1/q implies p = q
@@ -1578,12 +1584,22 @@ theorem inverses_eq(p: ℚ, q: ℚ, r: ℚ) {
     p = q
 } 
 
-theorem pos_inverses_lte(p: ℚ, q: ℚ, r: ℚ) {
+theorem rat_pos_inverses_lte(p: ℚ, q: ℚ, r: ℚ) {
     p > 0 and q > 0 and r > 0
     and r/p <= r/q
     implies
     p >= q
-} 
+} by {
+    p != ℚ.0 
+    q != ℚ.0 
+    r != ℚ.0
+    if r/p = r/q { 
+        p = q 
+    } else {
+        r/p < r/q
+        p > q
+    }
+}
 
 theorem pos_inverses_gt(p: ℚ, q: ℚ, r: ℚ) {
     p > 0 and q > 0 and r > 0
@@ -1669,9 +1685,12 @@ theorem lt_both_pos(a: ℚ, b: ℚ) {
     }
 }
 
-theorem lt_rhs_div_pos(a: ℚ, b: ℚ, c: ℚ) {
+theorem rat_lt_rhs_div_pos(a: ℚ, b: ℚ, c: ℚ) {
     c > 0 and a < b/c implies a ⋅ c < b
-} 
+} by {
+    a ⋅ c < b/c ⋅ c
+    b/c ⋅ c = b
+}
 
 theorem lte_abs(q: ℚ) {
     q <= q.abs
