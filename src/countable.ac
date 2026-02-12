@@ -305,18 +305,18 @@ define preserve_countable[T](op: (ℕ -> T) -> T, s: Set[T]) -> Bool {
 /// If op preserves countability and f is a family of functions whose images are subsets of s,
 /// then op composed with the family of functions produces an element of s.
 theorem countable_preserve_countable[T](op: (ℕ -> T) -> T, s: Set[T], f: ℕ -> (ℕ -> T)) {
-    preserve_countable(op, s) and forall(n: ℕ) { fn_image(f(n)) ⊆ s } implies op(compose[ℕ, ℕ -> T, T](op, f)) ∈ s
+    preserve_countable(op, s) and forall(n: ℕ) { fn_image(f(n)) ⊆ s } implies op(compose(op, f)) ∈ s
 } by {
     // Show that the image of the composed function is a subset of s
     forall(x: T) {
-        if x ∈ fn_image(compose[ℕ, ℕ -> T, T](op, f)) {
+        if x ∈ fn_image(compose(op, f)) {
             let n: ℕ satisfy {
-                x = compose[ℕ, ℕ -> T, T](op, f)(n)
+                x = compose(op, f)(n)
             }
             x = op(f(n))
             x ∈ s
         }
-        fn_image(compose[ℕ, ℕ -> T, T](op, f)) ⊆ s
     }
-    op(compose[ℕ, ℕ -> T, T](op, f)) ∈ s
+    fn_image(compose(op, f)) ⊆ s
+    op(compose(op, f)) ∈ s
 }

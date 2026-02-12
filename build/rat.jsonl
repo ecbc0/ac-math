@@ -129,10 +129,6 @@
 {"goal":"mul_fractions","proof":["lib(type_class.mul).Mul.mul[ℚ](a / b, c / d) = lib(type_class.mul).Mul.mul[ℚ](a, c) / lib(type_class.mul).Mul.mul[ℚ](b, d)","lib(type_class.mul).Mul.mul[ℚ](a / b, c / d) = a / b ⋅ c / d","lib(type_class.mul).Mul.mul[ℚ](a, c) = a ⋅ c","lib(type_class.mul).Mul.mul[ℚ](b, d) = b ⋅ d"]}
 {"goal":"cancel_left_num_denom","proof":["a / a ⋅ b / c = (a ⋅ b) / (a ⋅ c)","lib(type_class.mul).Mul.mul[ℚ](a, 1 / a) = a / a","a ⋅ a.reciprocal = 1 or a = 0","let s0: ℚ satisfy { true }","1 / s0 = s0.reciprocal","1 ⋅ b / c = b / c","1.div = ℚ.reciprocal","a ⋅ a.reciprocal = 1"]}
 {"goal":"cancel_to_reciprocal","proof":["(a ⋅ 1) / (a ⋅ b) = 1 / b or 0 = a","a ⋅ 1 = a","(a ⋅ 1) / (a ⋅ b) != 1 / b"]}
-{"goal":"b / (a ⋅ b) = 1 / a","proof":["b / (b ⋅ a) = 1 / a or b = 0 or a = 0","b ⋅ a = a ⋅ b","b / (b ⋅ a) != 1 / a"]}
-{"goal":"a / (a ⋅ b) = 1 / b","proof":["a / (a ⋅ b) = 1 / b or a = 0 or b = 0"]}
-{"goal":"(b - a) / (a ⋅ b) = b / (a ⋅ b) - a / (a ⋅ b)","proof":["b / (a ⋅ b) - a / (a ⋅ b) = (b - a) / (a ⋅ b)"]}
-{"goal":"rat_recip_diff","proof":["(b - a) ⋅ (a ⋅ b).reciprocal = (b - a) / (a ⋅ b)","lib(type_class.add).Add.sub[ℚ](b, a) ⋅ (a ⋅ b).reciprocal = lib(type_class.add).Add.sub[ℚ](b, a) / (a ⋅ b)","1 / a + -1 / b = lib(type_class.add).Add.sub[ℚ](1 / a, 1 / b)","b + -a = lib(type_class.add).Add.sub[ℚ](b, a)","1 / a + -1 / b = 1 / a - 1 / b","b + -a = b - a"]}
 {"goal":"lt_mul_lte","proof":["not a >= 0 or not c >= 0 or not a < b or not c < d or a ⋅ c < b ⋅ d","not c > 0 or not a < b or a ⋅ c < b ⋅ c","not c <= d or c < d or d = c","not c > 0 or c >= 0","not c >= 0 or not c < d","c >= 0","not c < d","d = c","not a ⋅ c < b ⋅ c"]}
 {"goal":"a ⋅ reduce(0.denom, ℤ.0) = 0","proof":["reduce(0.denom, ℤ.0) != 0 or a ⋅ reduce(0.denom, ℤ.0) = 0","reduce(0.denom, ℤ.0) != 0","ℤ.0 != ℤ.0 or reduce(0.denom, ℤ.0) = 0"]}
 {"goal":"a ⋅ 1 / 0 = 0","proof":["reduce(0.denom, 0.num) = 0.reciprocal","a ⋅ 1 / 0 = 1 / 0 ⋅ a","a ⋅ reduce(0.denom, ℤ.0) = reduce(0.denom, ℤ.0) ⋅ a","1 / 0 = 0.reciprocal","ℚ.new(ℤ.0, ℤ.1) = ℚ.from_int(ℤ.0)","ℚ.from_int(ℤ.0).num = ℤ.0"]}
@@ -145,10 +141,6 @@
 {"goal":"abs_div","proof":["a.abs / b.abs = (a / b).abs or 0 = b","0 = b","0 != 0"]}
 {"goal":"abs_of_div","proof":["a.abs / b.abs = (a / b).abs"]}
 {"goal":"lt_make_left_denom","proof":["not a < b / (1 / c) or not 1 / c > 0 or a ⋅ 1 / c < b","a ⋅ 1 / c = a / c","b ⋅ 1 / (1 / c) = b / (1 / c)","not c > 0 or 1 / c > 0","1 / (1 / c) = c","not a ⋅ 1 / c < b","1 / c > 0","a < b ⋅ 1 / (1 / c)","not a < b / (1 / c)","a < b / (1 / c)"]}
-{"goal":"1 / b > 0","proof":["1 / b > 0 = b > 0"]}
-{"goal":"a ⋅ b ⋅ 1 / b < c ⋅ 1 / b","proof":["not 1 / b > 0 or not a ⋅ b < c or a ⋅ b ⋅ 1 / b < c ⋅ 1 / b"]}
-{"goal":"a ⋅ b ⋅ 1 / b = a","proof":["a ⋅ b ⋅ 1 / b = (a ⋅ b) / b","(a ⋅ b) / b != a","(a ⋅ b) / b = a or b = 0","b = 0","0 > 0","not 0 > 0 or not 0 < 0","0 > 0 = 0 < 0","not 0 < 0","0 < 0"]}
-{"goal":"a < c ⋅ 1 / b","proof":["not a ⋅ b ⋅ 1 / b < c ⋅ 1 / b"]}
 {"goal":"rat_lt_make_right_denom","proof":["c ⋅ 1 / b = c / b"]}
 {"goal":"lt_elim_left_denom","proof":["not a ⋅ 1 / b < c or not 1 / b > 0 or a < c / (1 / b)","a ⋅ 1 / b = a / b","c ⋅ 1 / (1 / b) = c / (1 / b)","not b > 0 or 1 / b > 0","1 / (1 / b) = b","not a < c ⋅ 1 / (1 / b)","1 / b > 0","not a < c / (1 / b)","a ⋅ 1 / b < c","not a ⋅ 1 / b < c"]}
 {"goal":"mul_div_swap","proof":["lib(type_class.mul).Mul.mul[ℚ](a, b / c) = lib(type_class.mul).Mul.mul[ℚ](a / c, b)","lib(type_class.mul).Mul.mul[ℚ](a, b / c) = a ⋅ b / c","lib(type_class.mul).Mul.mul[ℚ](a / c, b) != a ⋅ b / c"]}

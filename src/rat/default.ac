@@ -373,13 +373,8 @@ theorem cancel_to_reciprocal(a: ℚ, b: ℚ) {
 }
 
 theorem rat_recip_diff(a: ℚ, b: ℚ) {
-    a != 0 and b != 0 implies
-    1/a - 1/b = (b - a) / (a ⋅ b)
-} by {
-    b / (a ⋅ b) = ℚ.1/a
-    a / (a ⋅ b) = ℚ.1/b
-    (b - a) / (a ⋅ b) = (b / (a ⋅ b)) - (a / (a ⋅ b))
-}
+    recip_diff(a, b) 
+} 
 
 theorem lt_mul_lte(a: ℚ, b: ℚ, c: ℚ, d: ℚ) {
     a >= 0 and c > 0 and a < b and c <= d
@@ -433,10 +428,7 @@ theorem lt_make_left_denom(a: ℚ, b: ℚ, c: ℚ) {
 theorem rat_lt_make_right_denom(a: ℚ, b: ℚ, c: ℚ) {
     b > 0 and a ⋅ b < c implies a < c/b
 } by {
-    ℚ.1/b > ℚ.0
-    a ⋅ b ⋅ ℚ.1/b < c ⋅ ℚ.1/b
-    a ⋅ b ⋅ ℚ.1/b = a
-    a < c ⋅ ℚ.1/b
+    lt_make_right_denom(a, b, c)
 }
 
 theorem lt_elim_left_denom(a: ℚ, b: ℚ, c: ℚ) {

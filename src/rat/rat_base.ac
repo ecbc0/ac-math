@@ -1566,11 +1566,7 @@ theorem rat_pos_inverses_lt(p: ℚ, q: ℚ, r: ℚ) {
     implies
     p > q
 } by {
-    r ⋅ ℚ.1/p < r ⋅ ℚ.1/q
-    ℚ.1/p < ℚ.1/q
-    ℚ.1/(ℚ.1/q) < ℚ.1/(ℚ.1/p)
-    ℚ.1/(ℚ.1/q) = q
-    ℚ.1/(ℚ.1/p) = p
+    pos_inverses_lt(p, q, r)
 }
 
 theorem reciprocal_eq(p: ℚ, q: ℚ) {
@@ -1590,15 +1586,7 @@ theorem rat_pos_inverses_lte(p: ℚ, q: ℚ, r: ℚ) {
     implies
     p >= q
 } by {
-    p != ℚ.0 
-    q != ℚ.0 
-    r != ℚ.0
-    if r/p = r/q { 
-        p = q 
-    } else {
-        r/p < r/q
-        p > q
-    }
+    pos_inverses_lte(p, q, r)
 }
 
 theorem pos_inverses_gt(p: ℚ, q: ℚ, r: ℚ) {
@@ -1688,8 +1676,7 @@ theorem lt_both_pos(a: ℚ, b: ℚ) {
 theorem rat_lt_rhs_div_pos(a: ℚ, b: ℚ, c: ℚ) {
     c > 0 and a < b/c implies a ⋅ c < b
 } by {
-    a ⋅ c < b/c ⋅ c
-    b/c ⋅ c = b
+    lt_rhs_div_pos(a, b, c)
 }
 
 theorem lte_abs(q: ℚ) {

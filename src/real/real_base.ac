@@ -3802,24 +3802,8 @@ theorem pos_right_lte_imp_mul_lt(a: ℝ, b: ℝ, c: ℝ, d: ℝ) {
 }
 
 theorem real_lte_mul_lte(a: ℝ, b: ℝ, c: ℝ, d: ℝ) {
-    a > 0 and a <= b and c >= 0 and c <= d implies a ⋅ c <= b ⋅ d
-} by {
-    not b < ℝ.0
-    not d < ℝ.0
-    if a = b {
-        c ⋅ b <= d ⋅ b
-        a ⋅ c <= b ⋅ d
-    } else {
-        a < b
-        if c = d {
-            a ⋅ c <= b ⋅ d
-        } else {
-            c < d
-            a ⋅ c < b ⋅ d
-            a ⋅ c <= b ⋅ d
-        }
-    }
-}
+    lte_mul_lte(a, b, c, d)
+} 
 
 theorem pos_neg_decomposition(a: ℝ) {
     a = a.pos_part - a.neg_part
@@ -4048,7 +4032,6 @@ theorem field_reciprocal_zero(a: ℝ) {
 }
 
 /// Reciprocal preserves positivity: positive numbers have positive reciprocals.
-/// Reciprocal preserves positivity.
 theorem reciprocal_preserve_positive(a: ℝ) {
     a > 0 implies a.reciprocal > 0
 }
