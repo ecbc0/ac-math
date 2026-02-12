@@ -1,9 +1,9 @@
-from util import is_acyclic, is_transitive, is_reflexive, is_antisymmetric, is_nonreflexive
+from util import is_acyclic, is_transitive, is_reflexive, is_antisymmetric, is_nonreflexive, Inhabited
 from set import Set
 
 /// A partial order is a relation that is reflexive, transitive, and antisymmetric.
 /// Not all elements need to be comparable.
-typeclass P: Partial_Order {
+typeclass P: Partial_Order extends Inhabited {
     /// The less-than relation defining the partial order.
     lt: (P, P) -> Bool
 
@@ -285,7 +285,7 @@ theorem typeclass_lte_to_lt_to_lte[P: Partial_Order] {
     lte_from(lt_from(P.lte)) = P.lte
 }
 
-typeclass P: Partial_Order_Lte {
+typeclass P: Partial_Order_Lte extends Inhabited {
     /// The less-than relation defining the partial order.
     lte: (P, P) -> Bool
 

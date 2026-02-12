@@ -1,10 +1,11 @@
 from limit.net import Net, Set, is_limit, is_net, directed, no_empty, directed_helper
 from set import empty, universe, union, intersection, compl_of_sets, union_index
+from util import Inhabited
 from finite_set import list_to_set, List
 
 // Point_Net_System: a space where each point has a net (system of neighborhoods)
 // The net at x represents all "small" sets containing x
-typeclass X: Point_Net_System {
+typeclass X: Point_Net_System extends Inhabited {
     net: X -> Net[X]
 
     // Each neighborhood net contains sets that actually contain the point
@@ -1025,12 +1026,12 @@ theorem continuous_imp_interior_inv_image_subset_inv_image_interior[X: Topology,
 /// Topology converge is not defined by intersection of image of source_net, which have a too weak control of order relation, say, if you consider the ℝ subset defined as distance of all of intersection of subcollection of source_net, then there are too many arbitrary infinite intersection, while net only assure that it have some element subset finite intersection.
 /// Topology does have some extra property that concern intersection of image of source_net, i.e. theory of compactness
 // Net convergence: source_net converges to target via function f
-define converge_to[K, X: Topology](source_net: Net[K], target: X, f: K -> X) -> Bool {
+define converge_to[K: Inhabited, X: Topology](source_net: Net[K], target: X, f: K -> X) -> Bool {
     is_limit(source_net, target.net, f)
 }
 
 // Expanded definition of net convergence
-theorem converge_to_definition_expand[K, X: Topology](source_net: Net[K], target: X, f: K -> X) {
+theorem converge_to_definition_expand[K: Inhabited, X: Topology](source_net: Net[K], target: X, f: K -> X) {
     forall(b: Set[X]) {
         b ∈ target.net implies exists(a: Set[K]) {
             a ∈ source_net and a.image(f) ⊆ b

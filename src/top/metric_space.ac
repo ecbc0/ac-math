@@ -4,7 +4,7 @@ numerals ℝ
 from set import Set, intersection
 from limit.net import Net, no_empty, directed, is_net, directed_helper, directed_helper_imp_by_ver_intersection, is_limit, image_of_net, net_contains_imp_directed, set_intersect_sets, subnet_sets, elem_in_subnet_sets, subnet, finer_helper
 from top.top_base import Point_Net_System, Topology, converge_to, is_open_net, is_open_net_system, is_continuous, limit_at_every_point
-from util import id_map
+from util import id_map, Inhabited
 from top.compact import common_limit_pt, to_closure, to_closure_net
 
 /// A metric space is a set equipped with a distance function that satisfies specific axioms.
@@ -210,7 +210,13 @@ theorem ball_net_is_net[M: Distance_Space](x: M) {
     directed(x.ball_net)
 }
 
-theorem point_net[M: Distance_Space](x: M) {
+typeclass M: Distance_Net_System extends Inhabited, Distance_Space, Point_Net_System {
+    net_from_ball(x: M) {
+        M.net(x) = Net.new(M.ball_net(x))
+    }
+}
+
+theorem point_net[M: Distance_Net_System](x: M) {
     Net.new(x.ball_net).have_common_pt(x)
 } by {
     forall(s: Set[M]) {
@@ -224,12 +230,6 @@ theorem point_net[M: Distance_Space](x: M) {
             x.distance(x) < r
             x ∈ s
         }
-    }
-}
-
-typeclass M: Distance_Net_System extends Distance_Space, Point_Net_System {
-    net_from_ball(x: M) {
-        M.net(x) = Net.new(M.ball_net(x))
     }
 }
 
@@ -664,7 +664,7 @@ theorem distance_top_is_open_net_system[M: Distance_Top] {
 
 /// also called Cauchy net
 // Net is Cauchy (vanishing distance) if for any ε > 0, there's a bounded set with diameter < ε
-define is_dist_vanish_net[M: Distance_Space](n: Net[M]) -> Bool {
+define is_dist_vanish_net[M: Distance_Net_System](n: Net[M]) -> Bool {
     forall(ε: ℝ) {
         ε > 0 implies exists(s: Set[M]) {
             s ∈ n and is_bounded(s) and dist(s) < ε
@@ -672,7 +672,7 @@ define is_dist_vanish_net[M: Distance_Space](n: Net[M]) -> Bool {
     }
 }
 
-theorem is_dist_vanish_net_helper[M: Distance_Space](n: Net[M]) {
+theorem is_dist_vanish_net_helper[M: Distance_Net_System](n: Net[M]) {
     forall(ε: ℝ) {
         ε > 0 implies exists(s: Set[M]) {
             s ∈ n and is_bounded(s) and dist(s) < ε
@@ -743,12 +743,12 @@ theorem distance_space_finer_definition_expand_ball_imp_by[M: Distance_Top](n: N
     n.finer(x.net) 
 }
 
-theorem distance_space_converge_to_definition_expand_ball_imp[K, M: Distance_Top](source_net: Net[K], target: M, f: K -> M) {
+theorem distance_space_converge_to_definition_expand_ball_imp[K: Inhabited, M: Distance_Top](source_net: Net[K], target: M, f: K -> M) {
     converge_to(source_net, target, f) implies (
-        forall(ε: ℝ) { 
-            ε > 0 implies exists(a: Set[K]) { 
-                a ∈ source_net and a.image(f) ⊆ target.ball(ε) 
-            } 
+        forall(ε: ℝ) {
+            ε > 0 implies exists(a: Set[K]) {
+                a ∈ source_net and a.image(f) ⊆ target.ball(ε)
+            }
         }
     )
 } by {
@@ -763,7 +763,7 @@ theorem distance_space_converge_to_definition_expand_ball_imp[K, M: Distance_Top
     }
 }
 
-theorem distance_space_converge_to_definition_expand_ball_imp_by[K, M: Distance_Top](source_net: Net[K], target: M, f: K -> M) {
+theorem distance_space_converge_to_definition_expand_ball_imp_by[K: Inhabited, M: Distance_Top](source_net: Net[K], target: M, f: K -> M) {
     forall(ε: ℝ) { 
         ε > 0 implies exists(a: Set[K]) { 
             a ∈ source_net and a.image(f) ⊆ target.ball(ε) 
@@ -821,15 +821,15 @@ theorem limit_unique[M: Distance_Top](n: Net[M], x: M, y: M) {
     x.distance(y) = 0    
 }
 
-theorem fn_limit_unique[K, M: Distance_Top](n: Net[K], x: M, y: M, f: K -> M) {
+theorem fn_limit_unique[K: Inhabited, M: Distance_Top](n: Net[K], x: M, y: M, f: K -> M) {
     converge_to(n, x, f) and converge_to(n, y, f) implies x.distance(y) = 0
-} 
+}
 
 theorem limit_unique_ver_metric[M: Metric_Top](n: Net[M], x: M, y: M) {
     n.finer(x.net) and n.finer(y.net) implies x = y
-} 
+}
 
-theorem fn_limit_unique_ver_metric[K, M: Metric_Top](n: Net[K], x: M, y: M, f: K -> M) {
+theorem fn_limit_unique_ver_metric[K: Inhabited, M: Metric_Top](n: Net[K], x: M, y: M, f: K -> M) {
     converge_to(n, x, f) and converge_to(n, y, f) implies x = y
 } 
 
@@ -867,7 +867,7 @@ theorem finer_imp_dist_vanish_net[M: Distance_Top](n: Net[M], x: M) {
     }
 }
 
-theorem converge_to_imp_dist_vanish_net[K, M: Distance_Top](n: Net[K], x: M, f: K -> M) {
+theorem converge_to_imp_dist_vanish_net[K: Inhabited, M: Distance_Top](n: Net[K], x: M, f: K -> M) {
     converge_to(n, x, f) implies is_dist_vanish_net(image_of_net(n, f))
 } 
 

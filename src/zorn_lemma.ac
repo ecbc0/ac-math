@@ -104,15 +104,13 @@ define is_non_maximal_chain[P: Partial_Order](c: Set[P]) -> Bool {
     is_chain(c) and not is_maximal_chain(c)
 }
 
-/// Placeholder element used when chain is maximal.
-let void[P]: P satisfy { true }
-
 /// Choice function extending non-maximal chains, using axiom of choice.
 let chain_extend_fn[P: Partial_Order](c: Set[P]) -> s: P satisfy {
     if is_non_maximal_chain(c) {
         is_chain_extention(c, s)
     } else {
-        s = void
+        // Placeholder element used when chain is maximal.
+        s = Partial_Order.default
     }
 }
 

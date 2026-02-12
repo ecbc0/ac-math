@@ -293,6 +293,11 @@ theorem real_is_transitive {
 }
 
 from order import Partial_Order, Linear_Order
+from util import Inhabited
+
+instance ℝ: Inhabited {
+    let default = ℝ.0
+}
 
 instance ℝ: Partial_Order {
     let lt = ℝ.lt

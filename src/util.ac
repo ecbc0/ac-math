@@ -28,7 +28,11 @@ theorem constant_is_constant[T, U](u: U) {
     is_constant(constant[T, U](u))
 }
 
-theorem is_constant_imp_eq_constant[T, U](f: T -> U) {
+typeclass I: Inhabited {
+    default: I
+}
+
+theorem is_constant_imp_eq_constant[T: Inhabited, U](f: T -> U) {
     is_constant(f) implies exists(u: U) {
         constant[T, U](u) = f
     }

@@ -974,6 +974,12 @@ theorem rat_is_acyclic {
     is_acyclic(ℚ.lt)
 }
 
+from util import Inhabited
+
+instance ℚ: Inhabited {
+    let default = 0
+}
+
 instance ℚ: Partial_Order {
     let lt = ℚ.lt
 }

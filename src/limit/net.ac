@@ -1,5 +1,5 @@
 from finite_set import Set, List, list_to_set, intersection_of_list_recursion, intersection_of_list, sets_of_finite_intersection, is_set_of_finite_intersection
-from set import intersection, elem_in_intersection_general
+from set import intersection, elem_in_intersection_general, Inhabited
 from order import Partial_Order, Linear_Order, is_acyclic, is_transitive, is_reflexive, is_antisymmetric, is_nonreflexive, lte_from, lt_from, lte_to_lt_partial_order, Partial_Order_Lte, lte_max
 from nat import ℕ
 from list.list_base import flatten, max_list
@@ -93,7 +93,7 @@ define is_net[K](sets: Set[Set[K]]) -> Bool {
 }
 
 // A Net structure encapsulates a collection of sets that is a net
-structure Net[K] {
+structure Net[K: Inhabited] {
     sets: Set[Set[K]]
 } constraint {
     is_net(sets)
@@ -124,19 +124,19 @@ structure Net[K] {
 }
 
 // Attribute: check if a set is contained in the net
-attributes Net[K] {
+attributes Net[K: Inhabited] {
     define contains(self, s: Set[K]) -> Bool {
         self.sets.contains(s)
     }
 }
 
 // Membership in a net is equivalent to membership in its underlying set of sets
-theorem equivalent_of_contains[K](n: Net[K], s: Set[K]) {
+theorem equivalent_of_contains[K: Inhabited](n: Net[K], s: Set[K]) {
     s ∈ n iff s ∈ n.sets
 } 
 
 // Helper for creating a new net: membership is preserved
-theorem net_new_helper[K](n: Net[K], n_sets: Set[Set[K]], s: Set[K]) {
+theorem net_new_helper[K: Inhabited](n: Net[K], n_sets: Set[Set[K]], s: Set[K]) {
     is_net(n_sets) and n = Net[K].new(n_sets) implies (
         s ∈ n iff s ∈ n_sets
     )
@@ -148,12 +148,12 @@ theorem net_new_helper[K](n: Net[K], n_sets: Set[Set[K]], s: Set[K]) {
 }
 
 // Any set in a net is nonempty
-theorem net_contains_imp_nonempty[K](n: Net[K], s: Set[K]) {
+theorem net_contains_imp_nonempty[K: Inhabited](n: Net[K], s: Set[K]) {
     s ∈ n implies (s).is_nonempty
 } 
 
 // For any two sets in a net, there exists a third set in their intersection
-theorem net_contains_imp_directed[K](n: Net[K], a1: Set[K], a2: Set[K]) {
+theorem net_contains_imp_directed[K: Inhabited](n: Net[K], a1: Set[K], a2: Set[K]) {
     a1 ∈ n and a2 ∈ n implies exists(b: Set[K]) {
         b ∈ n and b ⊆ a1 ∩ a2
     }
@@ -170,7 +170,7 @@ theorem net_contains_imp_directed[K](n: Net[K], a1: Set[K], a2: Set[K]) {
 }
 
 // The intersection of any two sets in a net is nonempty
-theorem two_intersection_nonempty_in_net[K](n: Net[K], a1: Set[K], a2: Set[K]) {
+theorem two_intersection_nonempty_in_net[K: Inhabited](n: Net[K], a1: Set[K], a2: Set[K]) {
     a1 ∈ n and a2 ∈ n implies (a1 ∩ a2).is_nonempty
 } by {
     let (b: Set[K]) satisfy {
@@ -221,14 +221,14 @@ define have_common_pt[K](n: Set[Set[K]], x: K) -> Bool {
     }
 }
 
-attributes Net[K] {
+attributes Net[K: Inhabited] {
     define have_common_pt(self, x: K) -> Bool {
         have_common_pt(self.sets, x)
     }
 }
 
 // Net attributes for comparing nets
-attributes Net[K] {
+attributes Net[K: Inhabited] {
     // n1 is finer than n2 if for every set in n2, there's a subset in n1
     define finer(self, other: Net[K]) -> Bool {
         forall(b: Set[K]) {
@@ -245,7 +245,7 @@ attributes Net[K] {
 }
 
 // Helper: the condition in the definition of finer is equivalent to finer
-theorem finer_helper[K](n1: Net[K], n2: Net[K]) {
+theorem finer_helper[K: Inhabited](n1: Net[K], n2: Net[K]) {
     forall(b: Set[K]) {
         b ∈ n2 implies exists(a: Set[K]) {
             a ∈ n1 and a ⊆ b
@@ -254,7 +254,7 @@ theorem finer_helper[K](n1: Net[K], n2: Net[K]) {
 }
 
 // If a net is finer than another, their intersection of all sets is contained in the other's intersection
-theorem finer_imp_intersection_subset[K](n1: Net[K], n2: Net[K]) {
+theorem finer_imp_intersection_subset[K: Inhabited](n1: Net[K], n2: Net[K]) {
     (n1).finer(n2) implies intersection(n1.sets) ⊆ intersection(n2.sets)
 } by {
     forall(x: K) {
@@ -277,7 +277,7 @@ theorem finer_imp_intersection_subset[K](n1: Net[K], n2: Net[K]) {
 }
 
 // If two nets have the same limit, their intersections are equal
-theorem same_limit_imp_same_intersection[K](n1: Net[K], n2: Net[K]) {
+theorem same_limit_imp_same_intersection[K: Inhabited](n1: Net[K], n2: Net[K]) {
     (n1).same_limit(n2) implies intersection(n1.sets) = intersection(n2.sets)
 } by {
     intersection(n1.sets) ⊆ intersection(n2.sets)
@@ -285,7 +285,7 @@ theorem same_limit_imp_same_intersection[K](n1: Net[K], n2: Net[K]) {
 }
 
 // The finer relation is transitive
-theorem finer_trans[K](n1: Net[K], n2: Net[K], n3: Net[K]) {
+theorem finer_trans[K: Inhabited](n1: Net[K], n2: Net[K], n3: Net[K]) {
     (n1).finer(n2) and (n2).finer(n3) implies (n1).finer(n3)
 } by {
     forall(a3: Set[K]) {
@@ -302,7 +302,7 @@ theorem finer_trans[K](n1: Net[K], n2: Net[K], n3: Net[K]) {
 }
 
 // Alternative, you can use "image of net" and then use finer
-define is_limit[K, L](source_net: Net[K], target_net: Net[L], f: K -> L) -> Bool {
+define is_limit[K: Inhabited, L: Inhabited](source_net: Net[K], target_net: Net[L], f: K -> L) -> Bool {
     forall(b: Set[L]) {
         b ∈ target_net implies exists(a: Set[K]) {
             a ∈ source_net and a.image(f) ⊆ b
@@ -366,17 +366,17 @@ theorem image_of_sets_preserve_nets[K, L](n: Set[Set[K]], f: K -> L) {
 }
 
 // Construct the image of a net under a function f
-define image_of_net[K, L](n: Net[K], f: K -> L) -> Net[L] {
+define image_of_net[K: Inhabited, L: Inhabited](n: Net[K], f: K -> L) -> Net[L] {
     Net[L].new(image_of_sets(n.sets, f))
 }
 
 // Helper: the underlying sets of the image of a net is the image of its underlying sets
-theorem image_of_net_expand[K, L](n: Net[K], f: K -> L) {
+theorem image_of_net_expand[K: Inhabited, L: Inhabited](n: Net[K], f: K -> L) {
     image_of_net(n, f).sets = image_of_sets(n.sets, f)
 }
 
 // If s is in n, then its image under f is in the image of the net
-theorem image_of_net_contains_helper[K, L](n: Net[K], f: K -> L, s: Set[K]) {
+theorem image_of_net_contains_helper[K: Inhabited, L: Inhabited](n: Net[K], f: K -> L, s: Set[K]) {
     s ∈ n implies s.image(f) ∈ image_of_net(n, f)
 } by {
     s ∈ n.sets
@@ -386,7 +386,7 @@ theorem image_of_net_contains_helper[K, L](n: Net[K], f: K -> L, s: Set[K]) {
 }
 
 // f is a limit from source_net to target_net iff the image of source_net under f is finer than target_net
-theorem is_limit_imp_image_of_net_finer[K, L](source_net: Net[K], target_net: Net[L], f: K -> L) {
+theorem is_limit_imp_image_of_net_finer[K: Inhabited, L: Inhabited](source_net: Net[K], target_net: Net[L], f: K -> L) {
     is_limit(source_net, target_net, f) implies image_of_net(source_net, f).finer(target_net)
 } by {
     forall(b: Set[L]) {
@@ -403,7 +403,7 @@ theorem is_limit_imp_image_of_net_finer[K, L](source_net: Net[K], target_net: Ne
 }
 
 // Converse: if the image of source_net under f is finer than target_net, then f is a limit
-theorem image_of_net_finer_imp_is_limit[K, L](source_net: Net[K], target_net: Net[L], f: K -> L) {
+theorem image_of_net_finer_imp_is_limit[K: Inhabited, L: Inhabited](source_net: Net[K], target_net: Net[L], f: K -> L) {
     image_of_net(source_net, f).finer(target_net) implies is_limit(source_net, target_net, f)
 } by {
     forall(b: Set[L]) {
@@ -738,7 +738,7 @@ theorem subnet_sets_is_net[K](n: Set[Set[K]], s: Set[K]) {
 }
 
 // Construct a subnet from a net n with respect to a set s; if s doesn't intersect all sets, return n unchanged
-define subnet[K](n: Net[K], s: Set[K]) -> Net[K] {
+define subnet[K: Inhabited](n: Net[K], s: Set[K]) -> Net[K] {
     if set_intersect_sets(n.sets, s) {
         Net[K].new(subnet_sets(n.sets, s))
     } else {
@@ -747,7 +747,7 @@ define subnet[K](n: Net[K], s: Set[K]) -> Net[K] {
 }
 
 // If s intersects all sets in n, then the intersection of s with any set t from n is in the subnet
-theorem two_intersection_in_subnet[K](n: Net[K], s: Set[K], t: Set[K]) {
+theorem two_intersection_in_subnet[K: Inhabited](n: Net[K], s: Set[K], t: Set[K]) {
     set_intersect_sets(n.sets, s) and t ∈ n implies s ∩ t ∈ subnet(n, s)
 } by {
     elem_in_subnet_sets(n.sets, s, s ∩ t)
@@ -756,7 +756,7 @@ theorem two_intersection_in_subnet[K](n: Net[K], s: Set[K], t: Set[K]) {
 }
 
 // Helper: any set in the subnet can be expressed as the intersection of s with some set from n
-theorem subnet_sets_helper[K](n: Net[K], s: Set[K], sub: Set[K]) {
+theorem subnet_sets_helper[K: Inhabited](n: Net[K], s: Set[K], sub: Set[K]) {
     set_intersect_sets(n.sets, s) and sub ∈ subnet(n, s) implies exists(t: Set[K]) {
         t ∈ n and sub = s ∩ t
     }

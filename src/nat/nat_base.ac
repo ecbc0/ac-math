@@ -359,6 +359,12 @@ theorem nat_is_acyclic {
     is_acyclic(ℕ.lt)
 }
 
+from util import Inhabited
+
+instance ℕ: Inhabited {
+    let default = 0
+}
+
 instance ℕ: Partial_Order {
     let lt = ℕ.lt
 }

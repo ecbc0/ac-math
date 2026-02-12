@@ -1014,6 +1014,11 @@ theorem int_is_acyclic {
 }
 
 from order import Partial_Order, Linear_Order
+from util import Inhabited
+
+instance ℤ: Inhabited {
+    let default = 0
+}
 
 instance ℤ: Partial_Order {
     let lt = ℤ.lt
