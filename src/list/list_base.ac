@@ -118,6 +118,10 @@ theorem add_contains_right[T](left: List[T], right: List[T], item: T) {
     }
 }
 
+theorem add_contains_left_or_right[T](left: List[T], right: List[T], item: T) {
+    item ∈ left or item ∈ right implies item ∈ (left + right)
+}
+
 /// If an item is in neither list, it is not in their concatenation.
 theorem not_contains_add[T](left: List[T], right: List[T], item: T) {
     item ∉ left and item ∉ right implies item ∉ (left + right)

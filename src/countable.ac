@@ -154,6 +154,9 @@ theorem cantor_pair_is_surjective_lemma(n: ℕ) {
     }
     // Base case: 0 lies on diagonal 0
     range_sum(ℕ.suc, 0) = 0
+    range_sum(ℕ.suc, 1) = 1
+    0 <= 0
+    0 < 1
     p(0)
     // Inductive step
     forall(x: ℕ) {
@@ -234,6 +237,8 @@ theorem cantor_pair_is_surjective {
             cantor_pair(a, b) = n
         }
         let p = Product.new(a, b)
+        c_pair(p) = cantor_pair(p.first, p.second)
+        cantor_pair(p.first, p.second) = cantor_pair(a, b)
         c_pair(p) = n
     }
 }

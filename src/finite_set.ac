@@ -56,10 +56,23 @@ attributes Set[K] {
 
 theorem is_finite_imp_have_super_list[K](a: Set[K]) {
     a.is_finite implies exists(l: List[K]) { a.have_super_list(l) }
-} 
+} by {
+    let (super: List[K]) satisfy {
+        forall(x: K) {
+            a.contains(x) implies super.contains(x)
+        }
+    }
+}
 
 theorem have_super_list_imp_is_finite[K](a: Set[K]) {
     exists(l: List[K]) { a.have_super_list(l) } implies a.is_finite
+} by {
+    let (l: List[K]) satisfy { a.have_super_list(l) }
+    forall(x: K) {
+        x ∈ a implies x ∈ l
+        a.contains(x) implies l.contains(x)
+    }
+    finite_constraint(a.contains)
 }
 
 theorem have_exact_list_imp_same_contains[K](s: Set[K], l: List[K]) {
@@ -244,10 +257,19 @@ theorem union_is_at_most_length[K](a: Set[K], b: Set[K], n1: ℕ, n2: ℕ) {
     let l = la + lb
 
     forall(x: K) {
-        x ∈ a ∪ b implies x ∈ l
+        if x ∈ a ∪ b {
+            x ∈ a or x ∈ b
+            x ∈ la or x ∈ lb
+            x ∈ la + lb
+            x ∈ l
+        }
     }
 
+    (a ∪ b).have_super_list(l)
+
     l.length = la.length + lb.length
+    la.length <= n1
+    lb.length <= n2
     la.length + lb.length <= n1 + n2
     l.length <= n1 + n2
 }
@@ -339,6 +361,12 @@ define elem_in_intersection_of_list[K](l: List[Set[K]], x: K) -> Bool {
 
 define intersection_of_list[K](l: List[Set[K]]) -> Set[K] {
     Set[K].new(elem_in_intersection_of_list(l))
+}
+
+theorem intersection_of_list_helper[K](l: List[Set[K]], x: K) {
+    forall(s: Set[K]) {
+        s ∈ l implies x ∈ s
+    } implies x ∈ intersection_of_list(l)
 }
 
 // I want to use
@@ -555,6 +583,10 @@ define elem_in_union_of_list[K](l: List[Set[K]], x: K) -> Bool {
 
 define union_of_list[K](l: List[Set[K]]) -> Set[K] {
     Set[K].new(elem_in_union_of_list(l))
+}
+
+theorem elem_in_union_of_list_helper[K](l: List[Set[K]], x: K) {
+    x ∈ union_of_list(l) implies exists(s: Set[K]) { s ∈ l and x ∈ s }
 }
 
 theorem equivalent_of_union_of_list_and_set[K](l: List[Set[K]]) {
@@ -795,6 +827,12 @@ define sets_of_finite_intersection[K](n: Set[Set[K]]) -> Set[Set[K]] {
     Set[Set[K]].new(is_set_of_finite_intersection(n))
 }
 
+theorem elem_in_sets_of_finite_intersection_helper[K](n: Set[Set[K]], s: Set[K]) {
+    s ∈ sets_of_finite_intersection(n) implies exists(c: Set[Set[K]]) {
+        c ⊆ n and c.is_finite and s = intersection(c)
+    }
+}
+
 theorem sets_of_finite_intersection_preserve_two_intersection[K](n: Set[Set[K]], s1: Set[K], s2: Set[K]) {
     s1 ∈ sets_of_finite_intersection(n) and s2 ∈ sets_of_finite_intersection(n) implies s1 ∩ s2 ∈ sets_of_finite_intersection(n)
 } by {
@@ -944,6 +982,12 @@ define is_set_of_finite_union[K](n: Set[Set[K]], s: Set[K]) -> Bool {
 
 define sets_of_finite_union[K](n: Set[Set[K]]) -> Set[Set[K]] {
     Set[Set[K]].new(is_set_of_finite_union(n))
+}
+
+theorem elem_in_sets_of_finite_union_helper[K](n: Set[Set[K]], s: Set[K]) {
+    s ∈ sets_of_finite_union(n) implies exists(c: Set[Set[K]]) {
+        c ⊆ n and c.is_finite and s = union(c)
+    }
 }
 
 theorem sets_of_finite_intersection_union_dual[K](n: Set[Set[K]]) {
@@ -1102,10 +1146,48 @@ attributes Finite_Set[T] {
 
 theorem functional_insert_preserve_finite_constraint[T](f: T -> Bool, item: T) {
     finite_constraint(f) implies finite_constraint(functional_insert(f, item))
+} by {
+    let (super: List[T]) satisfy {
+        forall(x: T) {
+            f(x) implies super.contains(x)
+        }
+    }
+    let super_insert = super.append(item)
+    forall(x: T) {
+        if functional_insert(f, item, x) {
+            if x = item {
+                x ∈ super + List.singleton(item)
+                x ∈ super_insert
+            } else {
+                f(x)
+                x ∈ super
+                x ∈ super + List.singleton(item)
+                x ∈ super_insert
+            }
+        }
+    }
+    finite_constraint(functional_insert(f, item))
 }
 
 theorem functional_remove_preserve_finite_constraint[T](f: T -> Bool, item: T) {
     finite_constraint(f) implies finite_constraint(functional_remove(f, item))
+} by {
+    let (super: List[T]) satisfy {
+        forall(x: T) {
+            f(x) implies super.contains(x)
+        }
+    }
+    forall(x: T) {
+        if functional_remove(f, item, x) {
+            if x = item {
+                false
+            } else {
+                f(x)
+                x ∈ super
+            }
+        }
+    }
+    finite_constraint(functional_remove(f, item))
 }
 
 theorem functional_insert_preserve_finite[T](s: Set[T], item: T) {
@@ -1148,6 +1230,7 @@ theorem insert_contains[T](a: Finite_Set[T], item: T) {
 } by {
     a.set.is_finite
     a.set.insert(item).is_finite
+    item ∈ a.set.insert(item)
 }
 
 theorem remove_does_not_contain[T](a: Finite_Set[T], item: T) {
@@ -1155,12 +1238,15 @@ theorem remove_does_not_contain[T](a: Finite_Set[T], item: T) {
 } by {
     a.set.is_finite
     a.set.remove(item).is_finite
+    not item ∈ a.set.remove(item)
 }
 
 theorem insert_other_contains_eq[T](a: Finite_Set[T], item: T, other: T) {
     item != other implies item ∈ a = item ∈ a.insert(other)
 } by {
     a.set.is_finite
+    finite_constraint(a.set.contains)
+    finite_constraint(functional_insert(a.set.contains, other))
     a.set.insert(other).is_finite
 }
 
@@ -1168,7 +1254,8 @@ theorem remove_other_contains_eq[T](a: Finite_Set[T], item: T, other: T) {
     item != other implies item ∈ a = item ∈ a.remove(other)
 } by {
     a.set.is_finite
-    a.set.insert(other).is_finite
+    finite_constraint(a.set.contains)
+    finite_constraint(functional_remove(a.set.contains, other))
     a.set.remove(other).is_finite
 }
 
@@ -1176,14 +1263,20 @@ theorem remove_then_insert[T](a: Finite_Set[T], item: T) {
     item ∈ a implies a.remove(item).insert(item) = a
 } by {
     a.set.is_finite
+    finite_constraint(a.set.contains)
+    finite_constraint(functional_remove(a.set.contains, item))
     a.set.remove(item).is_finite
-    a.set.remove(item).insert(item).is_finite
+    item ∈ a.set
+    a.set.remove(item).insert(item) = a.set
 }
 
 theorem insert_then_remove[T](a: Finite_Set[T], item: T) {
     not item ∈ a implies a.insert(item).remove(item) = a
 } by {
     a.set.is_finite
+    finite_constraint(a.set.contains)
+    finite_constraint(functional_insert(a.set.contains, item))
     a.set.insert(item).is_finite
-    a.set.insert(item).remove(item).is_finite
+    not item ∈ a.set
+    a.set.insert(item).remove(item) = a.set
 }

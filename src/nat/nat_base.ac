@@ -454,6 +454,10 @@ theorem left_lte_lt(a: ℕ, b: ℕ, c: ℕ, d: ℕ) {
     a <= b and c < d implies a + c < b + d
 }
 
+theorem lte_to_add_lte(a: ℕ, b: ℕ, c: ℕ, d: ℕ) {
+    a <= b and c <= d implies a + c <= b + d
+}
+
 theorem trichotomy(a: ℕ, b: ℕ) { a < b or b < a or a = b } by {
     define f(x: ℕ) -> Bool { trichotomy(a, x) }
     0 = a or 0 < a

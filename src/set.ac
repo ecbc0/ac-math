@@ -1,4 +1,4 @@
-from util import compose, id_map
+from util import compose, id_map, Inhabited
 
 /// Sets with elements of type `K` are defined as Boolean functions over `K`, in the form of named wrapper structure
 structure Set[K] {
@@ -86,7 +86,7 @@ attributes Set[K] {
 let empty[K] = Set[K].empty_set
 let universe[K] = Set[K].universal_set
 
-theorem empty_is_not_universal[K] {
+theorem empty_is_not_universal[K: Inhabited] {
     empty[K] != universe[K]
 } by {
     let x: K satisfy { true }
@@ -1141,6 +1141,10 @@ define union[K](c: Set[Set[K]]) -> Set[K] {
     Set[K].new(elem_in_union_general(c))
 }
 
+theorem elem_in_union_helper[K](c: Set[Set[K]], x: K) {
+    x ∈ union(c) implies exists(s: Set[K]) { s ∈ c and x ∈ s }
+}
+
 theorem subset_union_general_is_subset[K](c: Set[Set[K]], a: Set[K]) {
     forall(s: Set[K]) {
         s ∈ c implies s ⊆ a
@@ -1192,6 +1196,12 @@ define elem_in_intersection_general[K](c: Set[Set[K]], x: K) -> Bool {
 
 define intersection[K](c: Set[Set[K]]) -> Set[K] {
     Set[K].new(elem_in_intersection_general(c))
+}
+
+theorem intersection_helper[K](c: Set[Set[K]], x: K) {
+    forall(s: Set[K]) {
+        s ∈ c implies x ∈ s
+    } implies x ∈ intersection(c)
 }
 
 /// Subset of sets implies superset of intersections.
