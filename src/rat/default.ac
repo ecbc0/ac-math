@@ -40,13 +40,13 @@ theorem iop_recip(n: ℕ) {
 }
 
 theorem iop_mul_lt_one(n: ℕ) {
-    iop(n) ⋅ ℚ.from_nat(n) < 1
+    iop(n) * ℚ.from_nat(n) < 1
 } by {
-    iop(n) ⋅ 1/iop(n) = 1
-    iop(n) ⋅ ℚ.from_nat(n + ℕ.1) = 1
-    iop(n) ⋅ 1 + iop(n) ⋅ ℚ.from_nat(n) = 1
-    iop(n) + iop(n) ⋅ ℚ.from_nat(n) = 1
-    iop(n) ⋅ ℚ.from_nat(n) = 1 - iop(n)
+    iop(n) * 1/iop(n) = 1
+    iop(n) * ℚ.from_nat(n + ℕ.1) = 1
+    iop(n) * 1 + iop(n) * ℚ.from_nat(n) = 1
+    iop(n) + iop(n) * ℚ.from_nat(n) = 1
+    iop(n) * ℚ.from_nat(n) = 1 - iop(n)
 }
 
 theorem pos_lte_num(a: ℚ) {
@@ -57,7 +57,7 @@ theorem pos_lte_num(a: ℚ) {
     a.denom >= ℤ.1
     a = ℚ.from_int(a.num) / ℚ.from_int(a.denom)
     1 <= ℚ.from_int(a.denom)
-    a <= ℚ.from_int(a.denom) ⋅ a
+    a <= ℚ.from_int(a.denom) * a
 }
 
 theorem lt_some_int(a: ℚ) {
@@ -96,10 +96,10 @@ theorem iop_gets_lt(ε: ℚ) {
         if n <= i {
             ℚ.from_nat(n) <= ℚ.from_nat(i)
             1/ε < ℚ.from_nat(i)
-            1/ε ⋅ ε < ℚ.from_nat(i) ⋅ ε
-            1 < ℚ.from_nat(i) ⋅ ε
-            ℚ.from_nat(i) ⋅ iop(i) < 1
-            ℚ.from_nat(i) ⋅ iop(i) < ℚ.from_nat(i) ⋅ ε
+            1/ε * ε < ℚ.from_nat(i) * ε
+            1 < ℚ.from_nat(i) * ε
+            ℚ.from_nat(i) * iop(i) < 1
+            ℚ.from_nat(i) * iop(i) < ℚ.from_nat(i) * ε
             iop(i) < ε
         }
     }
@@ -110,34 +110,34 @@ theorem three_is_positive {
 }
 
 theorem times_three(x: ℚ) {
-    3 ⋅ x = x + x + x
+    3 * x = x + x + x
 } by {
     ℤ.3 = ℤ.2 + ℤ.1
     3 = 2 + 1
-    3 ⋅ x = (2 + 1) ⋅ x
-    3 ⋅ x = 2 ⋅ x + 1 ⋅ x
+    3 * x = (2 + 1) * x
+    3 * x = 2 * x + 1 * x
 }
 
 theorem three_thirds(x: ℚ) {
     (x / 3) + (x / 3) + (x / 3) = x
 } by {
     (x / 3) + (x / 3) + (x / 3) = (x + x + x) / 3
-    (x / 3) + (x / 3) + (x / 3) = (3 ⋅ x) / 3
-    (x ⋅ 3) / 3 = x
+    (x / 3) + (x / 3) + (x / 3) = (3 * x) / 3
+    (x * 3) / 3 = x
 }
 
 theorem some_mul_lt(a: ℚ, b: ℚ) {
     0 <= a and b > 0 implies
     exists(ε: ℚ) {
-        ε > 0 and a ⋅ ε < b
+        ε > 0 and a * ε < b
     }
 } by {
     if a = 0 {
         let ε = 1
         ε > 0
-        a ⋅ ε = 0
-        a ⋅ ε < b
-        ε > 0 and a ⋅ ε < b
+        a * ε = 0
+        a * ε < b
+        ε > 0 and a * ε < b
     } else {
         a > 0
         let c: ℚ satisfy {
@@ -145,19 +145,19 @@ theorem some_mul_lt(a: ℚ, b: ℚ) {
         }
         let ε = c / a
         ε > 0
-        a ⋅ ε = c
-        a ⋅ ε < b
-        ε > 0 and a ⋅ ε < b
+        a * ε = c
+        a * ε < b
+        ε > 0 and a * ε < b
     }
 }
 
 theorem close_mul_pos(a: ℚ, b: ℚ, ε: ℚ, r: ℚ) {
     r > 0 and (a - b).abs < ε
     implies
-    (a ⋅ r - b ⋅ r).abs < ε ⋅ r
+    (a * r - b * r).abs < ε * r
 } by {
     not r < 0
-    (a - b).abs ⋅ r = (a ⋅ r - b ⋅ r).abs
+    (a - b).abs * r = (a * r - b * r).abs
 }
 
 theorem close_neg(a: ℚ, b: ℚ, ε: ℚ) {
@@ -168,7 +168,7 @@ theorem close_neg(a: ℚ, b: ℚ, ε: ℚ) {
 }
 
 theorem lte_mul_nonneg(a: ℚ, b: ℚ, c: ℚ) {
-    a <= b and 0 <= c implies a ⋅ c <= b ⋅ c
+    a <= b and 0 <= c implies a * c <= b * c
 } 
 
 theorem bounding_both(a: ℚ, b: ℚ) {
@@ -292,7 +292,7 @@ theorem reduce_abs(a: ℤ, b: ℤ) {
 }
 
 theorem lte_cancel_mul_pos(p: ℚ, q: ℚ, r: ℚ) {
-    r > 0 and p ⋅ r <= q ⋅ r
+    r > 0 and p * r <= q * r
     implies
     p <= q
 } 
@@ -306,10 +306,10 @@ theorem reduce_lte(a: ℤ, b: ℤ, c: ℤ) {
         reduce(a, c) <= reduce(b, c)
     } else {
         c > ℤ.0
-        reduce(a, c) ⋅ ℚ.from_int(c) = ℚ.from_int(a)
-        reduce(b, c) ⋅ ℚ.from_int(c) = ℚ.from_int(b)
+        reduce(a, c) * ℚ.from_int(c) = ℚ.from_int(a)
+        reduce(b, c) * ℚ.from_int(c) = ℚ.from_int(b)
         ℚ.from_int(a) <= ℚ.from_int(b)
-        reduce(a, c) ⋅ ℚ.from_int(c) <= reduce(b, c) ⋅ ℚ.from_int(c)
+        reduce(a, c) * ℚ.from_int(c) <= reduce(b, c) * ℚ.from_int(c)
         ℚ.from_int(c) > 0
         reduce(a, c) <= reduce(b, c)
     }
@@ -329,7 +329,7 @@ theorem nonneg_lt_imp_pos(a: ℚ, b: ℚ) {
 theorem rat_lt_pos_mul_lt_pos(a: ℚ, b: ℚ, c: ℚ, d: ℚ) {
     a >= 0 and c >= 0 and a < b and c < d
     implies
-    a ⋅ c < b ⋅ d
+    a * c < b * d
 } by {
     lt_pos_mul_lt_pos(a, b, c, d)
 }
@@ -341,7 +341,7 @@ theorem abs_nonneg(a: ℚ) {
 theorem rat_lte_mul_lte(a: ℚ, b: ℚ, c: ℚ, d: ℚ) {
     a >= 0 and c >= 0 and a <= b and c <= d
     implies
-    a ⋅ c <= b ⋅ d
+    a * c <= b * d
 } by {
     lte_mul_lte(a, b, c, d)
 }
@@ -355,21 +355,21 @@ theorem sub_div_distrib(a: ℚ, b: ℚ, c: ℚ) {
 }
 
 theorem recip_mul(a: ℚ, b: ℚ) {
-    1/(a ⋅ b) = 1/a ⋅ 1/b
+    1/(a * b) = 1/a * 1/b
 } 
 
 theorem mul_fractions(a: ℚ, b: ℚ, c: ℚ, d: ℚ) {
-    (a / b) ⋅ (c / d) = (a ⋅ c) / (b ⋅ d)
+    (a / b) * (c / d) = (a * c) / (b * d)
 } 
 
 theorem cancel_left_num_denom(a: ℚ, b: ℚ, c: ℚ) {
     a != 0 implies
-    (a ⋅ b) / (a ⋅ c) = b / c
+    (a * b) / (a * c) = b / c
 } 
 
 theorem cancel_to_reciprocal(a: ℚ, b: ℚ) {
     a != 0 and b != 0 implies
-    a/(a ⋅ b) = 1/b
+    a/(a * b) = 1/b
 }
 
 theorem rat_recip_diff(a: ℚ, b: ℚ) {
@@ -379,15 +379,15 @@ theorem rat_recip_diff(a: ℚ, b: ℚ) {
 theorem lt_mul_lte(a: ℚ, b: ℚ, c: ℚ, d: ℚ) {
     a >= 0 and c > 0 and a < b and c <= d
     implies
-    a ⋅ c < b ⋅ d
+    a * c < b * d
 }
 
 // This isn't ideal but this is how we have defined division.
 theorem div_zero(a: ℚ) {
     a/0 = 0
 } by {
-    a ⋅ reduce(0.denom, ℤ.0) = 0
-    a ⋅ 1/0 = 0
+    a * reduce(0.denom, ℤ.0) = 0
+    a * 1/0 = 0
 }
 
 theorem recip_recip_raw(a: ℚ) {
@@ -422,21 +422,21 @@ theorem abs_of_div(a: ℚ, b: ℚ) {
 } 
 
 theorem lt_make_left_denom(a: ℚ, b: ℚ, c: ℚ) {
-    c > 0 and a < b ⋅ c implies a/c < b
+    c > 0 and a < b * c implies a/c < b
 }
 
 theorem rat_lt_make_right_denom(a: ℚ, b: ℚ, c: ℚ) {
-    b > 0 and a ⋅ b < c implies a < c/b
+    b > 0 and a * b < c implies a < c/b
 } by {
     lt_make_right_denom(a, b, c)
 }
 
 theorem lt_elim_left_denom(a: ℚ, b: ℚ, c: ℚ) {
-    b > 0 and a/b < c implies a < c ⋅ b
+    b > 0 and a/b < c implies a < c * b
 }
 
 theorem mul_div_swap(a: ℚ, b: ℚ, c: ℚ) {
-    a ⋅ b/c = a/c ⋅ b
+    a * b/c = a/c * b
 }
 
 theorem zero_recip(a: ℚ) {
@@ -444,7 +444,7 @@ theorem zero_recip(a: ℚ) {
 }
 
 theorem div_reciprocal(a: ℚ, b: ℚ) {
-    a ⋅ b != 0 implies a/b ⋅ b/a = 1
+    a * b != 0 implies a/b * b/a = 1
 }
 
 theorem rat_total(a: ℚ, b: ℚ) { a <= b or b <= a } 

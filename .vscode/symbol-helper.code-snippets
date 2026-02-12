@@ -117,10 +117,6 @@
 		"body": "ℚ",
 		"description": "rational"
 	},
-	"⋅": {
-		"prefix": "dot",
-		"body": "⋅"
-	},
 	"∞":{
 	  "prefix": ["infinity", "oo"],
 	  "body": "∞"

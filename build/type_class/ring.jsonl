@@ -1,33 +1,33 @@
-{"goal":"mul_zero_right","proof":["R.0 ⋅ a = a ⋅ R.0","a ⋅ R.0 != R.0","a ⋅ R.0 = R.0"]}
-{"goal":"distrib_right","proof":["c ⋅ a + c ⋅ b = c ⋅ (a + b)","(a + b) ⋅ c = c ⋅ (a + b)","c ⋅ a = a ⋅ c","c ⋅ b = b ⋅ c"]}
-{"goal":"a = R.0 implies a ⋅ b = R.0","proof":["R.0 ⋅ b != R.0","R.0 ⋅ b = R.0"]}
-{"goal":"b = R.0 implies a ⋅ b = R.0","proof":["b ⋅ a = a ⋅ b","b ⋅ a != R.0","R.0 ⋅ a = R.0"]}
+{"goal":"mul_zero_right","proof":["R.0 * a = a * R.0","a * R.0 != R.0","a * R.0 = R.0"]}
+{"goal":"distrib_right","proof":["c * a + c * b = c * (a + b)","(a + b) * c = c * (a + b)","c * a = a * c","c * b = b * c"]}
+{"goal":"a = R.0 implies a * b = R.0","proof":["R.0 * b != R.0","R.0 * b = R.0"]}
+{"goal":"b = R.0 implies a * b = R.0","proof":["b * a = a * b","b * a != R.0","R.0 * a = R.0"]}
 {"goal":"zero_mul_to_zero","proof":[]}
-{"goal":"trivial_ring","proof":["let s0: R satisfy { s0 != R.0 }","s0 ⋅ R.0 = R.0","s0 ⋅ R.1 = s0","s0 ⋅ R.1 != R.0"]}
-{"goal":"pow_zero","proof":["let s0: ℕ -> ℕ satisfy { forall(x0: ℕ) { s0(x0).suc = x0 or ℕ.0 = x0 } }","s0(n).suc != n or R.0 ⋅ R.0^s0(n) = R.0^n","s0(n).suc = n or ℕ.0 = n","R.0 ⋅ R.0^s0(n) = R.0","R.0 ⋅ R.0^s0(n) != R.0^n","s0(n).suc = n","s0(n).suc != n"]}
-{"goal":"-a ⋅ b + a ⋅ b = R.0","proof":["a ⋅ b + -a ⋅ b = (a + -a) ⋅ b","-a ⋅ b + a ⋅ b = a ⋅ b + -a ⋅ b","a ⋅ b + -a ⋅ b != R.0","(a + -a) ⋅ b != R.0","a + -a = R.0","R.0 ⋅ b != R.0","R.0 ⋅ b = R.0"]}
-{"goal":"(-a + a) ⋅ b = R.0","proof":["-a ⋅ b + a ⋅ b = (-a + a) ⋅ b"]}
-{"goal":"R.0 ⋅ b = R.0","proof":["-a + a = R.0"]}
-{"goal":"mul_neg_left","proof":["-a ⋅ b + a ⋅ b != -(a ⋅ b) + a ⋅ b or -a ⋅ b = -(a ⋅ b)","-(a ⋅ b) + a ⋅ b = R.0","-a ⋅ b + a ⋅ b != -(a ⋅ b) + a ⋅ b","-a ⋅ b + a ⋅ b = -(a ⋅ b) + a ⋅ b"]}
-{"goal":"a ⋅ -b + a ⋅ b = R.0","proof":["a ⋅ b + a ⋅ -b = a ⋅ (b + -b)","a ⋅ -b + a ⋅ b = a ⋅ b + a ⋅ -b","a ⋅ b + a ⋅ -b != R.0","a ⋅ (b + -b) != R.0","R.0 ⋅ a = a ⋅ R.0","b + -b = R.0","a ⋅ R.0 != R.0","R.0 ⋅ a = R.0"]}
-{"goal":"a ⋅ (-b + b) = R.0","proof":["a ⋅ -b + a ⋅ b = a ⋅ (-b + b)"]}
-{"goal":"a ⋅ R.0 = R.0","proof":["-b + b = R.0"]}
-{"goal":"mul_neg_right","proof":["-b ⋅ a = -(b ⋅ a)","-b ⋅ a = a ⋅ -b","b ⋅ a = a ⋅ b","-b ⋅ a != -(a ⋅ b)"]}
-{"goal":"-a ⋅ -b = -(a ⋅ -b)","proof":["-(a ⋅ -b) = -a ⋅ -b"]}
-{"goal":"-a ⋅ -b = --(a ⋅ b)","proof":["-(a ⋅ b) = a ⋅ -b"]}
-{"goal":"mul_neg_neg","proof":["--(a ⋅ b) = a ⋅ b"]}
-{"goal":"-R.1 ⋅ a + R.1 ⋅ a = R.0","proof":["-R.1 ⋅ a = -(R.1 ⋅ a)","-(R.1 ⋅ a) + R.1 ⋅ a != R.0","R.1 ⋅ a + -(R.1 ⋅ a) = -(R.1 ⋅ a) + R.1 ⋅ a","R.1 ⋅ a + -(R.1 ⋅ a) = R.0"]}
-{"goal":"(-R.1 + R.1) ⋅ a = R.0","proof":["-R.1 ⋅ a + R.1 ⋅ a = (-R.1 + R.1) ⋅ a"]}
-{"goal":"R.0 ⋅ a = R.0","proof":["-R.1 + R.1 = R.0"]}
-{"goal":"mul_neg_one_left","proof":["-R.1 ⋅ a = -(R.1 ⋅ a)","-(R.1 ⋅ a) != -a","R.1 ⋅ a != a","R.1 ⋅ a = a ⋅ R.1","a ⋅ R.1 != a","a ⋅ R.1 = a"]}
-{"goal":"a ⋅ -R.1 + a ⋅ R.1 = R.0","proof":["a ⋅ -R.1 = -(a ⋅ R.1)","-(a ⋅ R.1) + a ⋅ R.1 != R.0","a ⋅ R.1 + -(a ⋅ R.1) = -(a ⋅ R.1) + a ⋅ R.1","a ⋅ R.1 + -(a ⋅ R.1) = R.0"]}
-{"goal":"a ⋅ (-R.1 + R.1) = R.0","proof":["a ⋅ -R.1 + a ⋅ R.1 = a ⋅ (-R.1 + R.1)"]}
-{"goal":"a ⋅ R.0 = R.0","proof":["-R.1 + R.1 = R.0"]}
-{"goal":"mul_neg_one_right","proof":["-R.1 ⋅ a = a ⋅ -R.1","-R.1 ⋅ a = -a"]}
-{"goal":"(a - b) ⋅ c = (a + -b) ⋅ c","proof":["a + -b != a - b","a + -b = a - b"]}
-{"goal":"mul_sub_distrib_right","proof":["a ⋅ c + -b ⋅ c = (a + -b) ⋅ c","-(b ⋅ c) = -b ⋅ c","a ⋅ c + -(b ⋅ c) = a ⋅ c - b ⋅ c"]}
-{"goal":"a ⋅ (b - c) = a ⋅ (b + -c)","proof":["b + -c != b - c","b + -c = b - c"]}
-{"goal":"mul_sub_distrib_left","proof":["b ⋅ a - c ⋅ a = (b - c) ⋅ a","b + -c = b - c","(b + -c) ⋅ a = a ⋅ (b + -c)","b ⋅ a = a ⋅ b","c ⋅ a = a ⋅ c"]}
+{"goal":"trivial_ring","proof":["let s0: R satisfy { s0 != R.0 }","s0 * R.0 = R.0","s0 * R.1 = s0","s0 * R.1 != R.0"]}
+{"goal":"pow_zero","proof":["let s0: ℕ -> ℕ satisfy { forall(x0: ℕ) { s0(x0).suc = x0 or ℕ.0 = x0 } }","s0(n).suc != n or R.0 * R.0^s0(n) = R.0^n","s0(n).suc = n or ℕ.0 = n","R.0 * R.0^s0(n) = R.0","R.0 * R.0^s0(n) != R.0^n","s0(n).suc = n","s0(n).suc != n"]}
+{"goal":"-a * b + a * b = R.0","proof":["a * b + -a * b = (a + -a) * b","-a * b + a * b = a * b + -a * b","a * b + -a * b != R.0","(a + -a) * b != R.0","a + -a = R.0","R.0 * b != R.0","R.0 * b = R.0"]}
+{"goal":"(-a + a) * b = R.0","proof":["-a * b + a * b = (-a + a) * b"]}
+{"goal":"R.0 * b = R.0","proof":["-a + a = R.0"]}
+{"goal":"mul_neg_left","proof":["-a * b + a * b != -(a * b) + a * b or -a * b = -(a * b)","-(a * b) + a * b = R.0","-a * b + a * b != -(a * b) + a * b","-a * b + a * b = -(a * b) + a * b"]}
+{"goal":"a * -b + a * b = R.0","proof":["a * b + a * -b = a * (b + -b)","a * -b + a * b = a * b + a * -b","a * b + a * -b != R.0","a * (b + -b) != R.0","R.0 * a = a * R.0","b + -b = R.0","a * R.0 != R.0","R.0 * a = R.0"]}
+{"goal":"a * (-b + b) = R.0","proof":["a * -b + a * b = a * (-b + b)"]}
+{"goal":"a * R.0 = R.0","proof":["-b + b = R.0"]}
+{"goal":"mul_neg_right","proof":["-b * a = -(b * a)","-b * a = a * -b","b * a = a * b","-b * a != -(a * b)"]}
+{"goal":"-a * -b = -(a * -b)","proof":["-(a * -b) = -a * -b"]}
+{"goal":"-a * -b = --(a * b)","proof":["-(a * b) = a * -b"]}
+{"goal":"mul_neg_neg","proof":["--(a * b) = a * b"]}
+{"goal":"-R.1 * a + R.1 * a = R.0","proof":["-R.1 * a = -(R.1 * a)","-(R.1 * a) + R.1 * a != R.0","R.1 * a + -(R.1 * a) = -(R.1 * a) + R.1 * a","R.1 * a + -(R.1 * a) = R.0"]}
+{"goal":"(-R.1 + R.1) * a = R.0","proof":["-R.1 * a + R.1 * a = (-R.1 + R.1) * a"]}
+{"goal":"R.0 * a = R.0","proof":["-R.1 + R.1 = R.0"]}
+{"goal":"mul_neg_one_left","proof":["-R.1 * a = -(R.1 * a)","-(R.1 * a) != -a","R.1 * a != a","R.1 * a = a * R.1","a * R.1 != a","a * R.1 = a"]}
+{"goal":"a * -R.1 + a * R.1 = R.0","proof":["a * -R.1 = -(a * R.1)","-(a * R.1) + a * R.1 != R.0","a * R.1 + -(a * R.1) = -(a * R.1) + a * R.1","a * R.1 + -(a * R.1) = R.0"]}
+{"goal":"a * (-R.1 + R.1) = R.0","proof":["a * -R.1 + a * R.1 = a * (-R.1 + R.1)"]}
+{"goal":"a * R.0 = R.0","proof":["-R.1 + R.1 = R.0"]}
+{"goal":"mul_neg_one_right","proof":["-R.1 * a = a * -R.1","-R.1 * a = -a"]}
+{"goal":"(a - b) * c = (a + -b) * c","proof":["a + -b != a - b","a + -b = a - b"]}
+{"goal":"mul_sub_distrib_right","proof":["a * c + -b * c = (a + -b) * c","-(b * c) = -b * c","a * c + -(b * c) = a * c - b * c"]}
+{"goal":"a * (b - c) = a * (b + -c)","proof":["b + -c != b - c","b + -c = b - c"]}
+{"goal":"mul_sub_distrib_left","proof":["b * a - c * a = (b - c) * a","b + -c = b - c","(b + -c) * a = a * (b + -c)","b * a = a * b","c * a = a * c"]}
 {"goal":"n.suc.range = n.range.append(n)","proof":["n.suc != n.suc or n.range.append(n) = n.suc.range"]}
 {"goal":"map[ℕ, R](n.suc.range, a.pow) = map[ℕ, R](n.range.append(n), a.pow)","proof":["n.range.append(n) != n.suc.range"]}
 {"goal":"map[ℕ, R](n.range.append(n), a.pow) = map[ℕ, R](n.range, a.pow).append(a.pow(n))","proof":["n.range.map(a.pow).append(a^n) = n.range.append(n).map(a.pow)","map[ℕ, R](n.range, a.pow) = n.range.map(a.pow)","map[ℕ, R](n.suc.range, a.pow) = n.suc.range.map(a.pow)"]}
@@ -37,50 +37,50 @@
 {"goal":"ℕ.0.range = List.nil[ℕ]","proof":["ℕ.0 != ℕ.0 or ℕ.0.range = List.nil[ℕ]"]}
 {"goal":"map[ℕ, R](List.nil[ℕ], a.pow) = List.nil[R]","proof":["List.nil[ℕ] != List.nil[ℕ] or map[ℕ, R](List.nil[ℕ], a.pow) = List.nil[R]"]}
 {"goal":"sum[R](List.nil[R]) = R.0","proof":["List.nil[R] != List.nil[R] or sum[R](List.nil[R]) = R.0"]}
-{"goal":"a ⋅ R.0 = R.0","proof":["R.0 ⋅ a = a ⋅ R.0","R.0 ⋅ a != R.0","R.0 ⋅ a = R.0"]}
+{"goal":"a * R.0 = R.0","proof":["R.0 * a = a * R.0","R.0 * a != R.0","R.0 * a = R.0"]}
 {"goal":"ℕ.0.suc = ℕ.1","proof":[]}
 {"goal":"ℕ.1.range = List.singleton(ℕ.0)","proof":["ℕ.0.until(ℕ.0.suc) = ℕ.0.upto(ℕ.0)","ℕ.0.upto(ℕ.0) = ℕ.0.suc.range","ℕ.0.until(ℕ.0.suc) = List.singleton(ℕ.0)"]}
 {"goal":"sum[R](map[ℕ, R](ℕ.1.range, a.pow)) = a.pow(ℕ.0)","proof":["List.singleton(ℕ.0).map(a.pow) = List.singleton(a^ℕ.0)","map[ℕ, R](ℕ.1.range, a.pow) = ℕ.1.range.map(a.pow)","sum[R](List.singleton(a^ℕ.0)) = a^ℕ.0"]}
 {"goal":"a.pow(ℕ.0) = R.1","proof":["ℕ.0 != ℕ.0 or a^ℕ.0 = R.1"]}
-{"goal":"f(ℕ.0)","proof":["R.1 + a ⋅ sum[R](map[ℕ, R](ℕ.0.range, a.pow)) != sum[R](map[ℕ, R](ℕ.0.suc.range, a.pow)) or f(ℕ.0)","List.singleton(ℕ.0).map(a.pow) = List.singleton(a^ℕ.0)","let s0: List[ℕ] satisfy { true }","let s1: ℕ -> R satisfy { true }","map[ℕ, R](s0, s1) = s0.map(s1)","a^ℕ.0 + R.0 = a^ℕ.0","sum[R](List.singleton(a^ℕ.0)) = a^ℕ.0","map[ℕ, R] = List.map[ℕ, R]","R.1 + a ⋅ sum[R](map[ℕ, R](ℕ.0.range, a.pow)) != sum[R](map[ℕ, R](ℕ.0.suc.range, a.pow))"]}
+{"goal":"f(ℕ.0)","proof":["R.1 + a * sum[R](map[ℕ, R](ℕ.0.range, a.pow)) != sum[R](map[ℕ, R](ℕ.0.suc.range, a.pow)) or f(ℕ.0)","List.singleton(ℕ.0).map(a.pow) = List.singleton(a^ℕ.0)","let s0: List[ℕ] satisfy { true }","let s1: ℕ -> R satisfy { true }","map[ℕ, R](s0, s1) = s0.map(s1)","a^ℕ.0 + R.0 = a^ℕ.0","sum[R](List.singleton(a^ℕ.0)) = a^ℕ.0","map[ℕ, R] = List.map[ℕ, R]","R.1 + a * sum[R](map[ℕ, R](ℕ.0.range, a.pow)) != sum[R](map[ℕ, R](ℕ.0.suc.range, a.pow))"]}
 {"goal":"sum[R](map[ℕ, R](x.suc.range, a.pow)) = sum[R](map[ℕ, R](x.range, a.pow)) + a.pow(x)","proof":["sum[R](map[ℕ, R](x.range, a.pow)) + a^x = sum[R](map[ℕ, R](x.suc.range, a.pow))"]}
-{"goal":"a ⋅ sum[R](map[ℕ, R](x.suc.range, a.pow)) = a ⋅ (sum[R](map[ℕ, R](x.range, a.pow)) + a.pow(x))","proof":[]}
-{"goal":"a ⋅ (sum[R](map[ℕ, R](x.range, a.pow)) + a.pow(x)) = a ⋅ sum[R](map[ℕ, R](x.range, a.pow)) + a.pow(x.suc)","proof":["a ⋅ sum[R](map[ℕ, R](x.range, a.pow)) + a ⋅ a^x = a ⋅ (sum[R](map[ℕ, R](x.range, a.pow)) + a^x)","x.suc != x.suc or a ⋅ a^x = a^x.suc","a ⋅ a^x = a^x.suc"]}
-{"goal":"R.1 + a ⋅ sum[R](x.range.map(a.pow)) + a.pow(x.suc) = sum[R](map[ℕ, R](x.suc.range, a.pow)) + a.pow(x.suc)","proof":["not f(x) or R.1 + a ⋅ sum[R](map[ℕ, R](x.range, a.pow)) = sum[R](map[ℕ, R](x.suc.range, a.pow))","R.1 + a ⋅ sum[R](x.range.map(a.pow)) != sum[R](map[ℕ, R](x.suc.range, a.pow))","map[ℕ, R](x.range, a.pow) = x.range.map(a.pow)","R.1 + a ⋅ sum[R](map[ℕ, R](x.range, a.pow)) = sum[R](map[ℕ, R](x.suc.range, a.pow))","R.1 + a ⋅ sum[R](map[ℕ, R](x.range, a.pow)) != sum[R](map[ℕ, R](x.suc.range, a.pow))"]}
+{"goal":"a * sum[R](map[ℕ, R](x.suc.range, a.pow)) = a * (sum[R](map[ℕ, R](x.range, a.pow)) + a.pow(x))","proof":[]}
+{"goal":"a * (sum[R](map[ℕ, R](x.range, a.pow)) + a.pow(x)) = a * sum[R](map[ℕ, R](x.range, a.pow)) + a.pow(x.suc)","proof":["a * sum[R](map[ℕ, R](x.range, a.pow)) + a * a^x = a * (sum[R](map[ℕ, R](x.range, a.pow)) + a^x)","x.suc != x.suc or a * a^x = a^x.suc","a * a^x = a^x.suc"]}
+{"goal":"R.1 + a * sum[R](x.range.map(a.pow)) + a.pow(x.suc) = sum[R](map[ℕ, R](x.suc.range, a.pow)) + a.pow(x.suc)","proof":["not f(x) or R.1 + a * sum[R](map[ℕ, R](x.range, a.pow)) = sum[R](map[ℕ, R](x.suc.range, a.pow))","R.1 + a * sum[R](x.range.map(a.pow)) != sum[R](map[ℕ, R](x.suc.range, a.pow))","map[ℕ, R](x.range, a.pow) = x.range.map(a.pow)","R.1 + a * sum[R](map[ℕ, R](x.range, a.pow)) = sum[R](map[ℕ, R](x.suc.range, a.pow))","R.1 + a * sum[R](map[ℕ, R](x.range, a.pow)) != sum[R](map[ℕ, R](x.suc.range, a.pow))"]}
 {"goal":"sum[R](map[ℕ, R](x.suc.suc.range, a.pow)) = sum[R](map[ℕ, R](x.suc.range, a.pow)) + a.pow(x.suc)","proof":["sum[R](map[ℕ, R](x.suc.range, a.pow)) + a^x.suc = sum[R](map[ℕ, R](x.suc.suc.range, a.pow))"]}
-{"goal":"f(x.suc)","proof":["R.1 + a ⋅ sum[R](map[ℕ, R](x.suc.range, a.pow)) != sum[R](map[ℕ, R](x.suc.suc.range, a.pow)) or f(x.suc)","R.1 + (a ⋅ sum[R](x.range.map(a.pow)) + a^x.suc) = R.1 + a ⋅ sum[R](x.range.map(a.pow)) + a^x.suc","x.suc.suc != x.suc.suc or x.suc.range.append(x.suc) = x.suc.suc.range","sum[R](map[ℕ, R](x.range, a.pow)) ⋅ a = a ⋅ sum[R](map[ℕ, R](x.range, a.pow))","sum[R](x.range.map(a.pow)) ⋅ a = a ⋅ sum[R](x.range.map(a.pow))","map[ℕ, R](x.range, a.pow) = x.range.map(a.pow)","x.suc.range.append(x.suc) = x.suc.suc.range","R.1 + a ⋅ sum[R](map[ℕ, R](x.suc.range, a.pow)) != sum[R](map[ℕ, R](x.suc.suc.range, a.pow))"]}
+{"goal":"f(x.suc)","proof":["R.1 + a * sum[R](map[ℕ, R](x.suc.range, a.pow)) != sum[R](map[ℕ, R](x.suc.suc.range, a.pow)) or f(x.suc)","R.1 + (a * sum[R](x.range.map(a.pow)) + a^x.suc) = R.1 + a * sum[R](x.range.map(a.pow)) + a^x.suc","x.suc.suc != x.suc.suc or x.suc.range.append(x.suc) = x.suc.suc.range","sum[R](map[ℕ, R](x.range, a.pow)) * a = a * sum[R](map[ℕ, R](x.range, a.pow))","sum[R](x.range.map(a.pow)) * a = a * sum[R](x.range.map(a.pow))","map[ℕ, R](x.range, a.pow) = x.range.map(a.pow)","x.suc.range.append(x.suc) = x.suc.suc.range","R.1 + a * sum[R](map[ℕ, R](x.suc.range, a.pow)) != sum[R](map[ℕ, R](x.suc.suc.range, a.pow))"]}
 {"goal":"f(n)","proof":["let s0: (ℕ -> Bool) -> ℕ satisfy { forall(x0: ℕ -> Bool, x1: ℕ) { not x0(ℕ.0) or x0(s0(x0)) or x0(x1) } and forall(x2: ℕ -> Bool, x3: ℕ) { not x2(s0(x2).suc) or not x2(ℕ.0) or x2(x3) } }","not f(s0(f)) or f(s0(f).suc)","not f(s0(f).suc) or not f(ℕ.0) or f(n)","not f(s0(f).suc)","not f(ℕ.0) or f(s0(f)) or f(n)","not f(s0(f))","f(s0(f))"]}
-{"goal":"a ⋅ sum[R](map[ℕ, R](n.range, a.pow)) + R.1 = sum[R](map[ℕ, R](n.suc.range, a.pow))","proof":["not f(n) or R.1 + a ⋅ sum[R](map[ℕ, R](n.range, a.pow)) = sum[R](map[ℕ, R](n.suc.range, a.pow))","R.1 + a ⋅ sum[R](map[ℕ, R](n.range, a.pow)) = a ⋅ sum[R](map[ℕ, R](n.range, a.pow)) + R.1","R.1 + a ⋅ sum[R](map[ℕ, R](n.range, a.pow)) = sum[R](map[ℕ, R](n.suc.range, a.pow))","R.1 + a ⋅ sum[R](map[ℕ, R](n.range, a.pow)) != sum[R](map[ℕ, R](n.suc.range, a.pow))"]}
-{"goal":"a ⋅ sum[R](map[ℕ, R](n.range, a.pow)) = sum[R](map[ℕ, R](n.suc.range, a.pow)) + -R.1","proof":["a ⋅ sum[R](map[ℕ, R](n.range, a.pow)) + R.1 != sum[R](map[ℕ, R](n.suc.range, a.pow)) or sum[R](map[ℕ, R](n.suc.range, a.pow)) - R.1 = a ⋅ sum[R](map[ℕ, R](n.range, a.pow))","sum[R](map[ℕ, R](n.suc.range, a.pow)) + -R.1 = sum[R](map[ℕ, R](n.suc.range, a.pow)) - R.1","sum[R](map[ℕ, R](n.suc.range, a.pow)) - R.1 = a ⋅ sum[R](map[ℕ, R](n.range, a.pow))","sum[R](map[ℕ, R](n.suc.range, a.pow)) - R.1 != a ⋅ sum[R](map[ℕ, R](n.range, a.pow))"]}
-{"goal":"a ⋅ sum[R](map[ℕ, R](n.range, a.pow)) = sum[R](map[ℕ, R](n.range, a.pow)) + a.pow(n) + -R.1","proof":["sum[R](map[ℕ, R](n.range, a.pow)) + a^n = sum[R](map[ℕ, R](n.suc.range, a.pow))"]}
-{"goal":"-sum[R](map[ℕ, R](n.range, a.pow)) + a ⋅ sum[R](map[ℕ, R](n.range, a.pow)) = a.pow(n) + -R.1","proof":["-R.1 + a^n + sum[R](map[ℕ, R](n.range, a.pow)) = -R.1 + (a^n + sum[R](map[ℕ, R](n.range, a.pow)))","a^n + -R.1 - -sum[R](map[ℕ, R](n.range, a.pow)) != a ⋅ sum[R](map[ℕ, R](n.range, a.pow)) or -sum[R](map[ℕ, R](n.range, a.pow)) + a ⋅ sum[R](map[ℕ, R](n.range, a.pow)) = a^n + -R.1","a^n + -R.1 + --sum[R](map[ℕ, R](n.range, a.pow)) = a^n + -R.1 - -sum[R](map[ℕ, R](n.range, a.pow))","a^n + -R.1 = -R.1 + a^n","sum[R](map[ℕ, R](n.range, a.pow)) + a^n + -R.1 = -R.1 + (sum[R](map[ℕ, R](n.range, a.pow)) + a^n)","sum[R](map[ℕ, R](n.range, a.pow)) + a^n = a^n + sum[R](map[ℕ, R](n.range, a.pow))","map[ℕ, R](n.range, a.pow) = n.range.map(a.pow)","--sum[R](n.range.map(a.pow)) = sum[R](n.range.map(a.pow))","a^n + -R.1 - -sum[R](map[ℕ, R](n.range, a.pow)) != a ⋅ sum[R](map[ℕ, R](n.range, a.pow))"]}
-{"goal":"sum[R](map[ℕ, R](n.range, a.pow)) + -a ⋅ sum[R](map[ℕ, R](n.range, a.pow)) = -a.pow(n) + R.1","proof":["sum[R](map[ℕ, R](n.range, a.pow)) + (a^n + -R.1) = sum[R](map[ℕ, R](n.range, a.pow)) + a^n + -R.1","-a ⋅ sum[R](map[ℕ, R](n.range, a.pow)) = -(a ⋅ sum[R](map[ℕ, R](n.range, a.pow)))","sum[R](map[ℕ, R](n.range, a.pow)) - (-a^n + R.1) != -(-a ⋅ sum[R](map[ℕ, R](n.range, a.pow))) or sum[R](map[ℕ, R](n.range, a.pow)) + -a ⋅ sum[R](map[ℕ, R](n.range, a.pow)) = -a^n + R.1","R.1 + -a^n = R.1 - a^n","a^n + -R.1 = a^n - R.1","sum[R](map[ℕ, R](n.range, a.pow)) + -(-a^n + R.1) = sum[R](map[ℕ, R](n.range, a.pow)) - (-a^n + R.1)","-(R.1 - a^n) = a^n - R.1","R.1 + -a^n = -a^n + R.1","--(sum[R](map[ℕ, R](n.range, a.pow)) + a^n + -R.1) = sum[R](map[ℕ, R](n.range, a.pow)) + a^n + -R.1","sum[R](map[ℕ, R](n.range, a.pow)) - (-a^n + R.1) != -(-a ⋅ sum[R](map[ℕ, R](n.range, a.pow)))"]}
-{"goal":"sum[R](map[ℕ, R](n.range, a.pow)) + -a ⋅ sum[R](map[ℕ, R](n.range, a.pow)) = (R.1 + -a) ⋅ sum[R](map[ℕ, R](n.range, a.pow))","proof":["sum[R](map[ℕ, R](n.range, a.pow)) ⋅ R.1 + sum[R](map[ℕ, R](n.range, a.pow)) ⋅ -a = sum[R](map[ℕ, R](n.range, a.pow)) ⋅ (R.1 + -a)","R.1 + -a = R.1 - a","sum[R](map[ℕ, R](n.range, a.pow)) ⋅ (R.1 - a) = (R.1 - a) ⋅ sum[R](map[ℕ, R](n.range, a.pow))","sum[R](map[ℕ, R](n.range, a.pow)) ⋅ -a = -a ⋅ sum[R](map[ℕ, R](n.range, a.pow))","map[ℕ, R](n.range, a.pow) = n.range.map(a.pow)","sum[R](n.range.map(a.pow)) ⋅ R.1 = sum[R](n.range.map(a.pow))"]}
-{"goal":"geometric_sum","proof":["R.1 + -a^n = -a^n + R.1","(R.1 + -a) ⋅ sum[R](map[ℕ, R](n.range, a.pow)) != -a^n + R.1","sum[R](map[ℕ, R](n.range, a.pow)) + -a ⋅ sum[R](map[ℕ, R](n.range, a.pow)) != (R.1 + -a) ⋅ sum[R](map[ℕ, R](n.range, a.pow))"]}
+{"goal":"a * sum[R](map[ℕ, R](n.range, a.pow)) + R.1 = sum[R](map[ℕ, R](n.suc.range, a.pow))","proof":["not f(n) or R.1 + a * sum[R](map[ℕ, R](n.range, a.pow)) = sum[R](map[ℕ, R](n.suc.range, a.pow))","R.1 + a * sum[R](map[ℕ, R](n.range, a.pow)) = a * sum[R](map[ℕ, R](n.range, a.pow)) + R.1","R.1 + a * sum[R](map[ℕ, R](n.range, a.pow)) = sum[R](map[ℕ, R](n.suc.range, a.pow))","R.1 + a * sum[R](map[ℕ, R](n.range, a.pow)) != sum[R](map[ℕ, R](n.suc.range, a.pow))"]}
+{"goal":"a * sum[R](map[ℕ, R](n.range, a.pow)) = sum[R](map[ℕ, R](n.suc.range, a.pow)) + -R.1","proof":["a * sum[R](map[ℕ, R](n.range, a.pow)) + R.1 != sum[R](map[ℕ, R](n.suc.range, a.pow)) or sum[R](map[ℕ, R](n.suc.range, a.pow)) - R.1 = a * sum[R](map[ℕ, R](n.range, a.pow))","sum[R](map[ℕ, R](n.suc.range, a.pow)) + -R.1 = sum[R](map[ℕ, R](n.suc.range, a.pow)) - R.1","sum[R](map[ℕ, R](n.suc.range, a.pow)) - R.1 = a * sum[R](map[ℕ, R](n.range, a.pow))","sum[R](map[ℕ, R](n.suc.range, a.pow)) - R.1 != a * sum[R](map[ℕ, R](n.range, a.pow))"]}
+{"goal":"a * sum[R](map[ℕ, R](n.range, a.pow)) = sum[R](map[ℕ, R](n.range, a.pow)) + a.pow(n) + -R.1","proof":["sum[R](map[ℕ, R](n.range, a.pow)) + a^n = sum[R](map[ℕ, R](n.suc.range, a.pow))"]}
+{"goal":"-sum[R](map[ℕ, R](n.range, a.pow)) + a * sum[R](map[ℕ, R](n.range, a.pow)) = a.pow(n) + -R.1","proof":["-R.1 + a^n + sum[R](map[ℕ, R](n.range, a.pow)) = -R.1 + (a^n + sum[R](map[ℕ, R](n.range, a.pow)))","a^n + -R.1 - -sum[R](map[ℕ, R](n.range, a.pow)) != a * sum[R](map[ℕ, R](n.range, a.pow)) or -sum[R](map[ℕ, R](n.range, a.pow)) + a * sum[R](map[ℕ, R](n.range, a.pow)) = a^n + -R.1","a^n + -R.1 + --sum[R](map[ℕ, R](n.range, a.pow)) = a^n + -R.1 - -sum[R](map[ℕ, R](n.range, a.pow))","a^n + -R.1 = -R.1 + a^n","sum[R](map[ℕ, R](n.range, a.pow)) + a^n + -R.1 = -R.1 + (sum[R](map[ℕ, R](n.range, a.pow)) + a^n)","sum[R](map[ℕ, R](n.range, a.pow)) + a^n = a^n + sum[R](map[ℕ, R](n.range, a.pow))","map[ℕ, R](n.range, a.pow) = n.range.map(a.pow)","--sum[R](n.range.map(a.pow)) = sum[R](n.range.map(a.pow))","a^n + -R.1 - -sum[R](map[ℕ, R](n.range, a.pow)) != a * sum[R](map[ℕ, R](n.range, a.pow))"]}
+{"goal":"sum[R](map[ℕ, R](n.range, a.pow)) + -a * sum[R](map[ℕ, R](n.range, a.pow)) = -a.pow(n) + R.1","proof":["sum[R](map[ℕ, R](n.range, a.pow)) + (a^n + -R.1) = sum[R](map[ℕ, R](n.range, a.pow)) + a^n + -R.1","-a * sum[R](map[ℕ, R](n.range, a.pow)) = -(a * sum[R](map[ℕ, R](n.range, a.pow)))","sum[R](map[ℕ, R](n.range, a.pow)) - (-a^n + R.1) != -(-a * sum[R](map[ℕ, R](n.range, a.pow))) or sum[R](map[ℕ, R](n.range, a.pow)) + -a * sum[R](map[ℕ, R](n.range, a.pow)) = -a^n + R.1","R.1 + -a^n = R.1 - a^n","a^n + -R.1 = a^n - R.1","sum[R](map[ℕ, R](n.range, a.pow)) + -(-a^n + R.1) = sum[R](map[ℕ, R](n.range, a.pow)) - (-a^n + R.1)","-(R.1 - a^n) = a^n - R.1","R.1 + -a^n = -a^n + R.1","--(sum[R](map[ℕ, R](n.range, a.pow)) + a^n + -R.1) = sum[R](map[ℕ, R](n.range, a.pow)) + a^n + -R.1","sum[R](map[ℕ, R](n.range, a.pow)) - (-a^n + R.1) != -(-a * sum[R](map[ℕ, R](n.range, a.pow)))"]}
+{"goal":"sum[R](map[ℕ, R](n.range, a.pow)) + -a * sum[R](map[ℕ, R](n.range, a.pow)) = (R.1 + -a) * sum[R](map[ℕ, R](n.range, a.pow))","proof":["sum[R](map[ℕ, R](n.range, a.pow)) * R.1 + sum[R](map[ℕ, R](n.range, a.pow)) * -a = sum[R](map[ℕ, R](n.range, a.pow)) * (R.1 + -a)","R.1 + -a = R.1 - a","sum[R](map[ℕ, R](n.range, a.pow)) * (R.1 - a) = (R.1 - a) * sum[R](map[ℕ, R](n.range, a.pow))","sum[R](map[ℕ, R](n.range, a.pow)) * -a = -a * sum[R](map[ℕ, R](n.range, a.pow))","map[ℕ, R](n.range, a.pow) = n.range.map(a.pow)","sum[R](n.range.map(a.pow)) * R.1 = sum[R](n.range.map(a.pow))"]}
+{"goal":"geometric_sum","proof":["R.1 + -a^n = -a^n + R.1","(R.1 + -a) * sum[R](map[ℕ, R](n.range, a.pow)) != -a^n + R.1","sum[R](map[ℕ, R](n.range, a.pow)) + -a * sum[R](map[ℕ, R](n.range, a.pow)) != (R.1 + -a) * sum[R](map[ℕ, R](n.range, a.pow))"]}
 {"goal":"sum[S](List.nil[S]) = S.0","proof":["List.nil[S] != List.nil[S] or sum[S](List.nil[S]) = S.0"]}
-{"goal":"c ⋅ S.0 = S.0","proof":["S.0 ⋅ c = c ⋅ S.0","S.0 ⋅ c != S.0","S.0 ⋅ c = S.0"]}
+{"goal":"c * S.0 = S.0","proof":["S.0 * c = c * S.0","S.0 * c != S.0","S.0 * c = S.0"]}
 {"goal":"List.nil[S].map(scalar_mul(c)) = List.nil[S]","proof":["List.nil[S] != List.nil[S] or List.nil[S].map(scalar_mul(c)) = List.nil[S]"]}
 {"goal":"sum[S](List.nil[S]) = S.0","proof":[]}
-{"goal":"p(List.nil[S])","proof":["sum[S](List.nil[S].map(scalar_mul(c))) != c ⋅ sum[S](List.nil[S]) or p(List.nil[S])","sum[S](List.nil[S].map(scalar_mul(c))) != c ⋅ sum[S](List.nil[S])"]}
+{"goal":"p(List.nil[S])","proof":["sum[S](List.nil[S].map(scalar_mul(c))) != c * sum[S](List.nil[S]) or p(List.nil[S])","sum[S](List.nil[S].map(scalar_mul(c))) != c * sum[S](List.nil[S])"]}
 {"goal":"sum[S](List.cons(head, tail)) = head + sum[S](tail)","proof":["List.cons(head, tail) != List.cons(head, tail) or sum[S](List.cons(head, tail)) = head + sum[S](tail)"]}
-{"goal":"c ⋅ sum[S](List.cons(head, tail)) = c ⋅ (head + sum[S](tail))","proof":["sum[S](List.cons(head, tail)) != head + sum[S](tail)"]}
-{"goal":"c ⋅ (head + sum[S](tail)) = c ⋅ head + c ⋅ sum[S](tail)","proof":["c ⋅ head + c ⋅ sum[S](tail) = c ⋅ (head + sum[S](tail))"]}
-{"goal":"c ⋅ sum[S](tail) = sum[S](tail.map(scalar_mul(c)))","proof":["not p(tail) or sum[S](tail.map(scalar_mul(c))) = c ⋅ sum[S](tail)"]}
-{"goal":"c ⋅ head + c ⋅ sum[S](tail) = c ⋅ head + sum[S](tail.map(scalar_mul(c)))","proof":["sum[S](tail.map(scalar_mul(c))) != c ⋅ sum[S](tail)"]}
+{"goal":"c * sum[S](List.cons(head, tail)) = c * (head + sum[S](tail))","proof":["sum[S](List.cons(head, tail)) != head + sum[S](tail)"]}
+{"goal":"c * (head + sum[S](tail)) = c * head + c * sum[S](tail)","proof":["c * head + c * sum[S](tail) = c * (head + sum[S](tail))"]}
+{"goal":"c * sum[S](tail) = sum[S](tail.map(scalar_mul(c)))","proof":["not p(tail) or sum[S](tail.map(scalar_mul(c))) = c * sum[S](tail)"]}
+{"goal":"c * head + c * sum[S](tail) = c * head + sum[S](tail.map(scalar_mul(c)))","proof":["sum[S](tail.map(scalar_mul(c))) != c * sum[S](tail)"]}
 {"goal":"List.cons(head, tail).map(scalar_mul(c)) = List.cons(scalar_mul(c)(head), tail.map(scalar_mul(c)))","proof":["List.cons(head, tail) != List.cons(head, tail) or List.cons(scalar_mul(c, head), tail.map(scalar_mul(c))) = List.cons(head, tail).map(scalar_mul(c))","List.cons(scalar_mul(c, head), tail.map(scalar_mul(c))) = List.cons(head, tail).map(scalar_mul(c))"]}
-{"goal":"scalar_mul(c)(head) = c ⋅ head","proof":["scalar_mul(c, head) = c ⋅ head"]}
-{"goal":"List.cons(head, tail).map(scalar_mul(c)) = List.cons(c ⋅ head, tail.map(scalar_mul(c)))","proof":["List.cons(scalar_mul(c, head), tail.map(scalar_mul(c))) != List.cons(head, tail).map(scalar_mul(c))"]}
-{"goal":"sum[S](List.cons(head, tail).map(scalar_mul(c))) = c ⋅ head + sum[S](tail.map(scalar_mul(c)))","proof":["List.cons(c ⋅ head, tail.map(scalar_mul(c))) != List.cons(head, tail).map(scalar_mul(c)) or c ⋅ head + sum[S](tail.map(scalar_mul(c))) = sum[S](List.cons(head, tail).map(scalar_mul(c)))"]}
-{"goal":"c ⋅ sum[S](List.cons(head, tail)) = sum[S](List.cons(head, tail).map(scalar_mul(c)))","proof":[]}
-{"goal":"p(List.cons(head, tail))","proof":["sum[S](List.cons(head, tail).map(scalar_mul(c))) != c ⋅ sum[S](List.cons(head, tail)) or p(List.cons(head, tail))","sum[S](List.cons(head, tail).map(scalar_mul(c))) != c ⋅ sum[S](List.cons(head, tail))"]}
-{"goal":"sum_scalar_mul","proof":["let (s0: (List[S] -> Bool) -> S, s1: (List[S] -> Bool) -> List[S]) satisfy { forall(x0: List[S] -> Bool, x1: List[S]) { not x0(List.nil[S]) or x0(s1(x0)) or x0(x1) } and forall(x2: List[S] -> Bool, x3: List[S]) { not x2(List.cons(s0(x2), s1(x2))) or not x2(List.nil[S]) or x2(x3) } }","not p(s1(p)) or p(List.cons(s0(p), s1(p)))","not p(list) or sum[S](list.map(scalar_mul(c))) = c ⋅ sum[S](list)","not p(list)","not p(List.cons(s0(p), s1(p))) or not p(List.nil[S]) or p(list)","not p(List.nil[S]) or p(s1(p)) or p(list)","p(s1(p)) or p(list)","p(s1(p))","not p(List.cons(s0(p), s1(p))) or p(list)","not p(List.cons(s0(p), s1(p)))"]}
+{"goal":"scalar_mul(c)(head) = c * head","proof":["scalar_mul(c, head) = c * head"]}
+{"goal":"List.cons(head, tail).map(scalar_mul(c)) = List.cons(c * head, tail.map(scalar_mul(c)))","proof":["List.cons(scalar_mul(c, head), tail.map(scalar_mul(c))) != List.cons(head, tail).map(scalar_mul(c))"]}
+{"goal":"sum[S](List.cons(head, tail).map(scalar_mul(c))) = c * head + sum[S](tail.map(scalar_mul(c)))","proof":["List.cons(c * head, tail.map(scalar_mul(c))) != List.cons(head, tail).map(scalar_mul(c)) or c * head + sum[S](tail.map(scalar_mul(c))) = sum[S](List.cons(head, tail).map(scalar_mul(c)))"]}
+{"goal":"c * sum[S](List.cons(head, tail)) = sum[S](List.cons(head, tail).map(scalar_mul(c)))","proof":[]}
+{"goal":"p(List.cons(head, tail))","proof":["sum[S](List.cons(head, tail).map(scalar_mul(c))) != c * sum[S](List.cons(head, tail)) or p(List.cons(head, tail))","sum[S](List.cons(head, tail).map(scalar_mul(c))) != c * sum[S](List.cons(head, tail))"]}
+{"goal":"sum_scalar_mul","proof":["let (s0: (List[S] -> Bool) -> S, s1: (List[S] -> Bool) -> List[S]) satisfy { forall(x0: List[S] -> Bool, x1: List[S]) { not x0(List.nil[S]) or x0(s1(x0)) or x0(x1) } and forall(x2: List[S] -> Bool, x3: List[S]) { not x2(List.cons(s0(x2), s1(x2))) or not x2(List.nil[S]) or x2(x3) } }","not p(s1(p)) or p(List.cons(s0(p), s1(p)))","not p(list) or sum[S](list.map(scalar_mul(c))) = c * sum[S](list)","not p(list)","not p(List.cons(s0(p), s1(p))) or not p(List.nil[S]) or p(list)","not p(List.nil[S]) or p(s1(p)) or p(list)","p(s1(p)) or p(list)","p(s1(p))","not p(List.cons(s0(p), s1(p))) or p(list)","not p(List.cons(s0(p), s1(p)))"]}
 {"goal":"partial_sum[S](f, n, m) = sum[S](n.upto(m).map(f))","proof":["sum[S](n.upto(m).map(f)) = partial_sum[S](f, n, m)"]}
-{"goal":"c ⋅ partial_sum[S](f, n, m) = c ⋅ sum[S](n.upto(m).map(f))","proof":["sum[S](n.upto(m).map(f)) != partial_sum[S](f, n, m)"]}
-{"goal":"c ⋅ sum[S](n.upto(m).map(f)) = sum[S](n.upto(m).map(f).map(scalar_mul(c)))","proof":["sum[S](n.upto(m).map(f).map(scalar_mul(c))) = c ⋅ sum[S](n.upto(m).map(f))"]}
+{"goal":"c * partial_sum[S](f, n, m) = c * sum[S](n.upto(m).map(f))","proof":["sum[S](n.upto(m).map(f)) != partial_sum[S](f, n, m)"]}
+{"goal":"c * sum[S](n.upto(m).map(f)) = sum[S](n.upto(m).map(f).map(scalar_mul(c)))","proof":["sum[S](n.upto(m).map(f).map(scalar_mul(c))) = c * sum[S](n.upto(m).map(f))"]}
 {"goal":"n.upto(m).map(f).map(scalar_mul(c)) = n.upto(m).map(compose[ℕ, S, S](scalar_mul(c), f))","proof":["n.upto(m).map(compose[ℕ, S, S](scalar_mul(c), f)) = n.upto(m).map(f).map(scalar_mul(c))"]}
 {"goal":"compose[ℕ, S, S](scalar_mul(c), f)(k) = scalar_mul(c)(f(k))","proof":["compose[ℕ, S, S](scalar_mul(c), f, k) = scalar_mul(c, f(k))"]}
-{"goal":"scalar_mul(c)(f(k)) = c ⋅ f(k)","proof":["scalar_mul(c, f(k)) = c ⋅ f(k)"]}
-{"goal":"mul_fn[ℕ, S](c, f)(k) = c ⋅ f(k)","proof":["mul_fn(c, f, k) = c ⋅ f(k)"]}
+{"goal":"scalar_mul(c)(f(k)) = c * f(k)","proof":["scalar_mul(c, f(k)) = c * f(k)"]}
+{"goal":"mul_fn[ℕ, S](c, f)(k) = c * f(k)","proof":["mul_fn(c, f, k) = c * f(k)"]}
 {"goal":"compose[ℕ, S, S](scalar_mul(c), f)(k) = mul_fn[ℕ, S](c, f)(k)","proof":[]}
 {"goal":"compose[ℕ, S, S](scalar_mul(c), f) = mul_fn[ℕ, S](c, f)","proof":["let s0: ℕ satisfy { compose[ℕ, S, S](scalar_mul(c), f, s0) != mul_fn(c, f, s0) }","compose[ℕ, S, S](scalar_mul(c), f, s0) = mul_fn(c, f, s0)"]}
 {"goal":"n.upto(m).map(compose[ℕ, S, S](scalar_mul(c), f)) = n.upto(m).map(mul_fn[ℕ, S](c, f))","proof":["compose[ℕ, S, S](scalar_mul(c), f) != mul_fn[ℕ, S](c, f)"]}

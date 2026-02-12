@@ -28,7 +28,7 @@ attributes ℕ {
         exists(a: ℕ, b: ℕ) {
             (1 < a and a < self) and
             (1 < b and b < self) and
-            a ⋅ b = self
+            a * b = self
         }
     }
 
@@ -38,7 +38,7 @@ attributes ℕ {
         exists(a: ℕ, b: ℕ) {
             (1 < a) and
             (1 < b) and
-            a ⋅ b = self
+            a * b = self
         }
     }
 }
@@ -51,14 +51,14 @@ theorem composite_is_direct_composite(n: ℕ) {
     // Forward direction: if n is composite, then n is directly composite
     if n.is_composite {
         let a: ℕ satisfy { a.proper_divides(n) }
-        let b: ℕ satisfy { a ⋅ b = n }
+        let b: ℕ satisfy { a * b = n }
         // If a is a proper divisor, then b is also a proper divisor
         b.proper_divides(n)
         // Both a and b are strictly between 1 and n
         (
             (1 < a and a < n) and
             (1 < b and b < n) and
-            a ⋅ b = n
+            a * b = n
         )
         n.is_direct_composite
     }
@@ -80,7 +80,7 @@ theorem normal_composite_is_direct_composite(n: ℕ) {
         let (a: ℕ, b: ℕ) satisfy {
             (1 < a) and
             (1 < b) and
-            a ⋅ b = n
+            a * b = n
         }
         // Show that a,b can't be 0, 1, or n (contradiction in each case)
         a != 0
@@ -144,7 +144,7 @@ theorem has_prime_divisor(n: ℕ) {
                 // k = b*c with 1 < b,c < k
                 k.is_direct_composite
                 let (b: ℕ, c: ℕ) satisfy {
-                    1 < b and b < k and k = b ⋅ c
+                    1 < b and b < k and k = b * c
                 }
                 // By induction hypothesis, b has a prime divisor p
                 has_prime_divisor(b)
@@ -217,7 +217,7 @@ theorem prime_decomposition(n: ℕ) {
                 let (a: ℕ, b: ℕ) satisfy {
                     (1 < a and a < k) and
                     (1 < b and b < k) and
-                    a ⋅ b = k
+                    a * b = k
                 }
                 // By induction, a and b have prime factorizations
                 prime_decomposition(a)
@@ -240,7 +240,7 @@ theorem prime_decomposition(n: ℕ) {
                 }
                 are_primes(l)
                 // product of concatenated lists = product of factors
-                product(la + lb) = a ⋅ b
+                product(la + lb) = a * b
                 product(l) = k
                 prime_decomposition(k)
             }
@@ -283,7 +283,7 @@ theorem exists_infinite_primes(n: ℕ) {
 
 // We need Euclid algorithm and gcd to prove uniqueness of prime_decomposition. More explicitly, to prove
 // theorem euclids_lemma_prime(a: ℕ, b: ℕ, c: ℕ) {
-//     a.is_prime and a.divides(b ⋅ c) implies a.divides(b) or a.divides(c)
+//     a.is_prime and a.divides(b * c) implies a.divides(b) or a.divides(c)
 // }
 // Anyway we need induction to prove this, and Euclid algorithm is one way to implement inductive proof.
 
@@ -772,71 +772,71 @@ theorem gcd_one_left(a: ℕ) {
 
 // Multiplying both arguments by m (non-zero) multiplies the GCD by m
 theorem gcd_mul_left_nonzero(a: ℕ, b: ℕ, m: ℕ) {
-    m != 0 implies m ⋅ gcd(a, b) = gcd(m ⋅ a, m ⋅ b)
+    m != 0 implies m * gcd(a, b) = gcd(m * a, m * b)
 } by {
-    m.divides(m ⋅ a)
-    m.divides(m ⋅ b)
-    m.divides(gcd(m ⋅ a, m ⋅ b))
+    m.divides(m * a)
+    m.divides(m * b)
+    m.divides(gcd(m * a, m * b))
     let d: ℕ satisfy {
-        m ⋅ d = gcd(m ⋅ a, m ⋅ b)
+        m * d = gcd(m * a, m * b)
     }
 
     // Overall we will prove equality by proving both sides divide the other.
     // First we prove that d equals gcd(a, b), to prove that right divides left.
-    (m ⋅ d).divides(m ⋅ a)
+    (m * d).divides(m * a)
     d.divides(a)
-    (m ⋅ d).divides(m ⋅ b)
+    (m * d).divides(m * b)
     d.divides(b)
     d.divides(gcd(a, b))
-    (m ⋅ d).divides(m ⋅ gcd(a, b))
-    gcd(m ⋅ a, m ⋅ b).divides(m ⋅ gcd(a, b))
+    (m * d).divides(m * gcd(a, b))
+    gcd(m * a, m * b).divides(m * gcd(a, b))
 
     // Now we prove left divides right.
-    (m ⋅ gcd(a, b)).divides(m ⋅ a)
-    (m ⋅ gcd(a, b)).divides(m ⋅ b)
-    (m ⋅ gcd(a, b)).divides(gcd(m ⋅ a, m ⋅ b))
+    (m * gcd(a, b)).divides(m * a)
+    (m * gcd(a, b)).divides(m * b)
+    (m * gcd(a, b)).divides(gcd(m * a, m * b))
 }
 
 // Multiplying both arguments by m multiplies the GCD by m (including m=0)
 theorem gcd_mul_left(a: ℕ, b: ℕ, m: ℕ) {
-    m ⋅ gcd(a, b) = gcd(m ⋅ a, m ⋅ b)
+    m * gcd(a, b) = gcd(m * a, m * b)
 } by {
     // Handle zero case separately
     if m = 0 {
-        m ⋅ gcd(a, b) = 0
-        gcd(m ⋅ a, m ⋅ b) = 0
+        m * gcd(a, b) = 0
+        gcd(m * a, m * b) = 0
     } else {
         // Non-zero case proved by gcd_mul_left_nonzero
-        m ⋅ gcd(a, b) = gcd(m ⋅ a, m ⋅ b)
+        m * gcd(a, b) = gcd(m * a, m * b)
     }
 }
 
 // Right multiplication version (using commutativity)
 theorem gcd_mul_right(a: ℕ, b: ℕ, m: ℕ) {
-    gcd(a, b) ⋅ m = gcd(a ⋅ m, b ⋅ m)
+    gcd(a, b) * m = gcd(a * m, b * m)
 } by {
     gcd_mul_left(a, b, m)
     gcd_comm(a, b)
-    gcd_comm(m ⋅ a, m ⋅ b)
+    gcd_comm(m * a, m * b)
 }
 
 // If a = af * gcd(a,b) and b = bf * gcd(a,b), then gcd(af, bf) = 1
 theorem cofactor(a: ℕ, b: ℕ, af: ℕ, bf: ℕ) {
     (
         gcd(a, b) != 0 and
-        af ⋅ gcd(a, b) = a and
-        bf ⋅ gcd(a, b) = b
+        af * gcd(a, b) = a and
+        bf * gcd(a, b) = b
     ) implies gcd(af, bf) = 1
 } by {
     // gcd(af, bf) divides af, so it divides a = af * gcd(a,b)
     gcd(af, bf).divides(af)
-    (gcd(a, b) ⋅ gcd(af, bf)).divides(a)
+    (gcd(a, b) * gcd(af, bf)).divides(a)
     // Similarly for b
     gcd(af, bf).divides(bf)
-    (gcd(a, b) ⋅ gcd(af, bf)).divides(b)
+    (gcd(a, b) * gcd(af, bf)).divides(b)
     // So gcd(a,b) * gcd(af, bf) divides gcd(a,b), implying gcd(af, bf) = 1
-    (gcd(a, b) ⋅ gcd(af, bf)).divides(gcd(a, b))
-    (gcd(a, b) ⋅ gcd(af, bf)).divides(gcd(a, b) ⋅ 1)
+    (gcd(a, b) * gcd(af, bf)).divides(gcd(a, b))
+    (gcd(a, b) * gcd(af, bf)).divides(gcd(a, b) * 1)
     gcd(af, bf).divides(1)
     gcd(af, bf) = 1
 }
@@ -848,7 +848,7 @@ theorem gcd_of_prime(p: ℕ, n: ℕ) {
     // gcd(p,n) divides p, so p = d * gcd(p,n) for some d
     gcd(p, n).divides(p)
     let d: ℕ satisfy {
-        d ⋅ gcd(p, n) = p
+        d * gcd(p, n) = p
     }
     d != 0
     // If d = 1, then gcd(p,n) = p, so p divides n
@@ -870,18 +870,18 @@ theorem gcd_of_prime(p: ℕ, n: ℕ) {
 
 // Euclid's lemma for primes: if prime a divides product b*c, then a divides b or a divides c
 theorem euclids_lemma_prime(a: ℕ, b: ℕ, c: ℕ) {
-    a.is_prime and a.divides(b ⋅ c) implies a.divides(b) or a.divides(c)
+    a.is_prime and a.divides(b * c) implies a.divides(b) or a.divides(c)
 } by {
     // If a doesn't divide b, then gcd(a,b) = 1
     if not a.divides(b) {
         gcd(a, b) = 1
         // Use gcd multiplication property
-        gcd(a ⋅ c, b ⋅ c) = gcd(a, b) ⋅ c
-        gcd(a ⋅ c, b ⋅ c) = c
+        gcd(a * c, b * c) = gcd(a, b) * c
+        gcd(a * c, b * c) = c
         // a divides both a*c and b*c, so a divides gcd(a*c, b*c) = c
-        a.divides(a ⋅ c)
-        a.divides(b ⋅ c)
-        a.divides(gcd(a ⋅ c, b ⋅ c))
+        a.divides(a * c)
+        a.divides(b * c)
+        a.divides(gcd(a * c, b * c))
         a.divides(c)
     }
 }
@@ -897,7 +897,7 @@ theorem divides_prime(a: ℕ, b: ℕ) {
 }
 
 theorem euclids_lemma_divides_primes(a: ℕ, b: ℕ, c: ℕ) {
-    a.is_prime and b.is_prime and c.is_prime and a.divides(b ⋅ c) implies a = b or a = c
+    a.is_prime and b.is_prime and c.is_prime and a.divides(b * c) implies a = b or a = c
 } 
 
 theorem are_primes_decomposition(head: ℕ, tail: List[ℕ]) {
@@ -938,7 +938,7 @@ theorem euclids_lemma_prime_divides_list(a: ℕ, l: List[ℕ]) {
 
     // Inductive step: cons(head, tail)
     forall(head: ℕ, tail: List[ℕ]) {
-        product(List.cons(head, tail)) = head ⋅ product(tail)
+        product(List.cons(head, tail)) = head * product(tail)
         if f(tail) {
             if a.divides(product(List.cons(head, tail))) {
                 // By Euclid's lemma for primes
@@ -987,15 +987,15 @@ theorem euclids_lemma_prime_divides_prime_list(a: ℕ, l: List[ℕ]) {
 
 // Product of list equals x^count(x) times product of list with x removed
 theorem remove_product(x: ℕ, l: List[ℕ]) {
-    x^(l.count(x)) ⋅ product(l ∖ x) = product(l)
+    x^(l.count(x)) * product(l ∖ x) = product(l)
 } by {
     // Induction on list structure
     define f(ns: List[ℕ]) -> Bool {
-        x^(ns.count(x)) ⋅ product(ns ∖ x) = product(ns)
+        x^(ns.count(x)) * product(ns ∖ x) = product(ns)
     }
     f(List[ℕ].nil)
     forall(head: ℕ, tail: List[ℕ]) {
-        product(List.cons(head, tail)) = head ⋅ product(tail)
+        product(List.cons(head, tail)) = head * product(tail)
         if f(tail) {
             // Case: x is in the list
             if x ∈ List.cons(head, tail) {
@@ -1005,13 +1005,13 @@ theorem remove_product(x: ℕ, l: List[ℕ]) {
 
                     List.cons(head, tail).count(x) = 1 + tail.count(x)
 
-                    x^(List.cons(head, tail).count(x)) = x ⋅ x^(tail.count(x))
+                    x^(List.cons(head, tail).count(x)) = x * x^(tail.count(x))
 
-                    x^(tail.count(x)) ⋅ product(tail ∖ x) = product(tail)
+                    x^(tail.count(x)) * product(tail ∖ x) = product(tail)
 
-                    x ⋅ x^(tail.count(x)) ⋅ product(List.cons(head, tail) ∖ x) = x ⋅ product(tail)
+                    x * x^(tail.count(x)) * product(List.cons(head, tail) ∖ x) = x * product(tail)
 
-                    x^(List.cons(head, tail).count(x)) ⋅ product(List.cons(head, tail) ∖ x) = product(List.cons(head, tail))
+                    x^(List.cons(head, tail).count(x)) * product(List.cons(head, tail) ∖ x) = product(List.cons(head, tail))
 
                     f(List.cons(head, tail))
                 } else {
@@ -1023,15 +1023,15 @@ theorem remove_product(x: ℕ, l: List[ℕ]) {
 
                     List.cons(head, tail) ∖ x = List.cons(head, tail ∖ x)
 
-                    product(List.cons(head, tail) ∖ x) = head ⋅ product(tail ∖ x)
+                    product(List.cons(head, tail) ∖ x) = head * product(tail ∖ x)
 
-                    x^(tail.count(x)) ⋅ product(tail ∖ x) = product(tail)
+                    x^(tail.count(x)) * product(tail ∖ x) = product(tail)
 
-                    product(List.cons(head, tail)) = head ⋅ x^(tail.count(x)) ⋅ product(tail ∖ x)
+                    product(List.cons(head, tail)) = head * x^(tail.count(x)) * product(tail ∖ x)
 
-                    product(List.cons(head, tail)) = head ⋅ x^(List.cons(head, tail).count(x)) ⋅ product(tail ∖ x)
+                    product(List.cons(head, tail)) = head * x^(List.cons(head, tail).count(x)) * product(tail ∖ x)
 
-                    product(List.cons(head, tail)) = x^(List.cons(head, tail).count(x)) ⋅ product(List.cons(head, tail) ∖ x)
+                    product(List.cons(head, tail)) = x^(List.cons(head, tail).count(x)) * product(List.cons(head, tail) ∖ x)
 
                     f(List.cons(head, tail))
                 }
@@ -1040,7 +1040,7 @@ theorem remove_product(x: ℕ, l: List[ℕ]) {
                 x ∉ List.cons(head, tail)
                 List.cons(head, tail).count(x) = 0
                 List.cons(head, tail) ∖ x = List.cons(head, tail)
-                x^(List.cons(head, tail).count(x)) ⋅ product(List.cons(head, tail) ∖ x) = product(List.cons(head, tail))
+                x^(List.cons(head, tail).count(x)) * product(List.cons(head, tail) ∖ x) = product(List.cons(head, tail))
                 f(List.cons(head, tail))
             }
         }
@@ -1068,23 +1068,23 @@ theorem prime_decomposition_have_same_count_of_prime_helper(x: ℕ, l1: List[ℕ
     product(l1) = product(l2) 
     implies l1.count(x) >= l2.count(x)
 } by {
-    x^(l1.count(x)) ⋅ product(l1 ∖ x) = product(l1)
-    x^(l2.count(x)) ⋅ product(l2 ∖ x) = product(l2)
+    x^(l1.count(x)) * product(l1 ∖ x) = product(l1)
+    x^(l2.count(x)) * product(l2 ∖ x) = product(l2)
     if l1.count(x) < l2.count(x) {
         let n: ℕ satisfy {
             l1.count(x) + n = l2.count(x) and n != 0
         }
-        x^(l2.count(x)) = x^(l1.count(x)) ⋅ x^n
+        x^(l2.count(x)) = x^(l1.count(x)) * x^n
 
-        x^(l1.count(x)) ⋅ product(l1 ∖ x) = x^(l1.count(x)) ⋅ (x^n ⋅ product(l2 ∖ x))
+        x^(l1.count(x)) * product(l1 ∖ x) = x^(l1.count(x)) * (x^n * product(l2 ∖ x))
 
         x^(l1.count(x)) != 0
 
-        product(l1 ∖ x) = x^n ⋅ product(l2 ∖ x)
+        product(l1 ∖ x) = x^n * product(l2 ∖ x)
 
         1 <= n
 
-        product(l1 ∖ x) = x ⋅ x^(n - 1) ⋅ product(l2 ∖ x)
+        product(l1 ∖ x) = x * x^(n - 1) * product(l2 ∖ x)
 
         x.is_prime
         are_primes(l1 ∖ x)
@@ -1113,13 +1113,13 @@ theorem composite_not_divides_prime(a: ℕ, p: ℕ) {
 } by {
     if a.divides(p) {
         let (b: ℕ, c: ℕ, n: ℕ) satisfy {
-            a = b ⋅ c and
+            a = b * c and
             (1 < b and b < a) and
             (1 < c and c < a) and
-            a ⋅ n = p
+            a * n = p
         }
         // Then b * (c * n) = p with 1 < b < p
-        b ⋅ (c ⋅ n) = p
+        b * (c * n) = p
         b < p
         // So b is a proper divisor of p, contradicting p is prime
         b.proper_divides(p)
@@ -1184,7 +1184,7 @@ theorem non_nil_prime_list_product_gt_one(l: List[ℕ]) {
                     1 < product(tail)
                     head.is_prime
                     1 < head
-                    product(List.cons(head, tail)) = head ⋅ product(tail)
+                    product(List.cons(head, tail)) = head * product(tail)
                     1 < product(List.cons(head, tail))
                 }
                 1 < product(List.cons(head, tail))
@@ -1226,9 +1226,9 @@ theorem prime_list_divides_product(p: ℕ, l: List[ℕ]) {
     } else {
         l != List[ℕ].nil
         l.count(p) >= 1
-        p^(l.count(p)) ⋅ product(l ∖ p) = product(l)
+        p^(l.count(p)) * product(l ∖ p) = product(l)
         l.count(p) - 1 + 1 = l.count(p)
-        (p ⋅ p^(l.count(p) - 1)) ⋅ product(l ∖ p) = product(l)
+        (p * p^(l.count(p) - 1)) * product(l ∖ p) = product(l)
         p.divides(product(l))
     }
 }
@@ -1239,7 +1239,7 @@ theorem prime_have_singleton_prime_decomposition(x: ℕ, l: List[ℕ]) {
 } by {
     // Can't have x appearing more than once (would make product too large)
     if l.count(x) > 1 {
-        x^(l.count(x)) ⋅ product(l ∖ x) = product(l)
+        x^(l.count(x)) * product(l ∖ x) = product(l)
         product(l) = x
         x^(l.count(x)) > x
         false
@@ -1379,11 +1379,11 @@ theorem sub_prime_list_divides(l1: List[ℕ], l2: List[ℕ]) {
             if are_primes(List.cons(head, tail)) and are_primes(l2) and List.cons(head, tail) ⊆ l2 {
                 let q1 = product(tail ∖ head)
 
-                head^(tail.count(head)) ⋅ q1 = product(tail)
+                head^(tail.count(head)) * q1 = product(tail)
 
                 let q2 = product(l2 ∖ head)
 
-                head^(l2.count(head)) ⋅ q2 = product(l2)
+                head^(l2.count(head)) * q2 = product(l2)
 
                 are_primes(tail)
 
@@ -1395,10 +1395,10 @@ theorem sub_prime_list_divides(l1: List[ℕ], l2: List[ℕ]) {
                 product(tail).divides(product(l2))
 
                 let q: ℕ satisfy {
-                    product(tail) ⋅ q = product(l2)
+                    product(tail) * q = product(l2)
                 }
 
-                head^(tail.count(head)) ⋅ q1 ⋅ q = head^(l2.count(head)) ⋅ q2
+                head^(tail.count(head)) * q1 * q = head^(l2.count(head)) * q2
 
                 List.cons(head, tail).count(head) = 1 + tail.count(head)
 
@@ -1409,14 +1409,14 @@ theorem sub_prime_list_divides(l1: List[ℕ], l2: List[ℕ]) {
                 (head^(tail.count(head) + 1)).divides(product(l2))
 
                 let n: ℕ satisfy {
-                    head^(tail.count(head) + 1) ⋅ n = product(l2)
+                    head^(tail.count(head) + 1) * n = product(l2)
                 }
 
-                head^(tail.count(head)) ⋅ (q1 ⋅ q) = head^(tail.count(head)) ⋅ (head ⋅ n)
+                head^(tail.count(head)) * (q1 * q) = head^(tail.count(head)) * (head * n)
 
-                q1 ⋅ q = head ⋅ n
+                q1 * q = head * n
 
-                head.divides(q1 ⋅ q)
+                head.divides(q1 * q)
 
                 // head can't divide q1 (q1 has no head factors by construction)
                 if head.divides(q1) {
@@ -1426,15 +1426,15 @@ theorem sub_prime_list_divides(l1: List[ℕ], l2: List[ℕ]) {
 
                 head.divides(q)
 
-                let m: ℕ satisfy { q = head ⋅ m }
+                let m: ℕ satisfy { q = head * m }
 
-                head^(tail.count(head)) ⋅ q1 ⋅ (head ⋅ m) = head^(l2.count(head)) ⋅ q2
+                head^(tail.count(head)) * q1 * (head * m) = head^(l2.count(head)) * q2
 
-                head ⋅ (head^(tail.count(head)) ⋅ q1) ⋅ m = head^(l2.count(head)) ⋅ q2
+                head * (head^(tail.count(head)) * q1) * m = head^(l2.count(head)) * q2
 
-                head ⋅ product(tail) ⋅ m = product(l2)
+                head * product(tail) * m = product(l2)
 
-                product(List.cons(head, tail)) = head ⋅ product(tail)
+                product(List.cons(head, tail)) = head * product(tail)
 
                 product(List.cons(head, tail)).divides(product(l2))
 
@@ -1451,9 +1451,9 @@ theorem divides_imp_sub_prime_list(l1: List[ℕ], l2: List[ℕ]) {
     are_primes(l1) and are_primes(l2) and product(l1).divides(product(l2)) implies l1 ⊆ l2
 } by {
     forall(p: ℕ) {
-        p^(l1.count(p)) ⋅ product(l1 ∖ p) = product(l1)
+        p^(l1.count(p)) * product(l1 ∖ p) = product(l1)
 
-        p^(l2.count(p)) ⋅ product(l2 ∖ p) = product(l2)
+        p^(l2.count(p)) * product(l2 ∖ p) = product(l2)
 
         (p^(l1.count(p))).divides(product(l2))
 
@@ -1479,16 +1479,16 @@ theorem divides_imp_sub_prime_list(l1: List[ℕ], l2: List[ℕ]) {
                     }
 
                     let q: ℕ satisfy {
-                        product(l1) ⋅ q = product(l2)
+                        product(l1) * q = product(l2)
                     }
 
-                    p^(l2.count(p)) ⋅ (p^n ⋅ product(l1 ∖ p) ⋅ q) = p^(l2.count(p)) ⋅ product(l2 ∖ p)
+                    p^(l2.count(p)) * (p^n * product(l1 ∖ p) * q) = p^(l2.count(p)) * product(l2 ∖ p)
 
-                    p^n ⋅ product(l1 ∖ p) ⋅ q = product(l2 ∖ p)
+                    p^n * product(l1 ∖ p) * q = product(l2 ∖ p)
 
                     1 <= n
 
-                    p ⋅ (p^(n - 1) ⋅ product(l1 ∖ p) ⋅ q) = product(l2 ∖ p)
+                    p * (p^(n - 1) * product(l1 ∖ p) * q) = product(l2 ∖ p)
 
                     // Contradiction: p divides product(l2 ∖ p)
                     p.divides(product(l2 ∖ p))
@@ -1503,12 +1503,12 @@ theorem divides_imp_sub_prime_list(l1: List[ℕ], l2: List[ℕ]) {
 
 // General Euclid's lemma: if gcd(a,b)=1 and a divides b*c, then a divides c
 theorem euclids_lemma(a: ℕ, b: ℕ, c: ℕ) {
-    gcd(a, b) = 1 and a.divides(b ⋅ c) implies a.divides(c)
+    gcd(a, b) = 1 and a.divides(b * c) implies a.divides(c)
 } by {
     // Handle edge cases where one or more arguments is zero
     if a = 0 {
         b = 1
-        b ⋅ c = 0
+        b * c = 0
         c = 0
         a.divides(c)
     }
@@ -1540,8 +1540,8 @@ theorem euclids_lemma(a: ℕ, b: ℕ, c: ℕ) {
             }
         }
         are_primes(lb + lc)
-        product(lb + lc) = product(lb) ⋅ product(lc)
-        product(lb + lc) = b ⋅ c
+        product(lb + lc) = product(lb) * product(lc)
+        product(lb + lc) = b * c
         product(la) = a
         product(la).divides(product(lb + lc))
         divides_imp_sub_prime_list(la, lb + lc)
@@ -1580,7 +1580,7 @@ theorem prime_divide_power(p: ℕ, a: ℕ, n: ℕ) {
         if f(m) {
             if p.divides(a^(m.suc)) {
                 // a^(m+1) = a^m * a, so p divides a^m or a
-                p.divides(a^m ⋅ a)
+                p.divides(a^m * a)
                 p.divides(a^m) or p.divides(a)
                 // If p divides a^m, by induction p divides a
                 p.divides(a)

@@ -32,40 +32,40 @@
 {"goal":"forall(x0: ℕ, x1: ℕ, x2: ℕ) { x0 + (x1 + x2) = x0 + x1 + x2 }","proof":["let (s0: ℕ, s1: ℕ, s2: ℕ) satisfy { s0 + (s1 + s2) != s0 + s1 + s2 }","s0 + (s1 + s2) = s0 + s1 + s2"]}
 {"goal":"forall(x0: ℕ, x1: ℕ) { x0 + x1 = x1 + x0 }","proof":["let (s0: ℕ, s1: ℕ) satisfy { s1 + s0 != s0 + s1 }","s1 + s0 = s0 + s1"]}
 {"goal":"forall(x0: ℕ) { x0 + 0 = x0 }","proof":["let s0: ℕ satisfy { s0 + 0 != s0 }","0 != 0 or s0 + 0 = s0"]}
-{"goal":"mul_zero","proof":["let s0: (ℕ -> Bool) -> ℕ satisfy { forall(x0: ℕ -> Bool, x1: ℕ) { not x0(0) or x0(s0(x0)) or x0(x1) } and forall(x2: ℕ -> Bool, x3: ℕ) { not x2(s0(x2).suc) or not x2(0) or x2(x3) } }","not mul_zero(a) or 0 ⋅ a = 0","not mul_zero(s0(mul_zero)) or 0 ⋅ s0(mul_zero) = 0","0 ⋅ 0 != 0 or 0 ⋅ 0 != 0 or mul_zero(0)","s0(mul_zero).suc ⋅ 0 != 0 or 0 ⋅ s0(mul_zero).suc != 0 or mul_zero(s0(mul_zero).suc)","s0(mul_zero).suc != s0(mul_zero).suc or 0 ⋅ s0(mul_zero) + 0 = 0 ⋅ s0(mul_zero).suc","not mul_zero(s0(mul_zero).suc) or not mul_zero(0) or mul_zero(a)","not mul_zero(0) or mul_zero(s0(mul_zero)) or mul_zero(a)","0 != 0 or 0 ⋅ 0 = 0","0 != 0 or a ⋅ 0 = 0","0 != 0 or s0(mul_zero).suc ⋅ 0 = 0","0 + 0 = 0","0 ⋅ 0 = 0","a ⋅ 0 = 0","s0(mul_zero).suc ⋅ 0 = 0","0 ⋅ a != 0","not mul_zero(a)","mul_zero(0)","0 ⋅ s0(mul_zero) + 0 = 0 ⋅ s0(mul_zero).suc","mul_zero(s0(mul_zero))","not mul_zero(s0(mul_zero).suc)","0 ⋅ s0(mul_zero) = 0","0 ⋅ s0(mul_zero).suc != 0"]}
-{"goal":"mul_suc_right","proof":["b + 1 != b.suc or a ⋅ (b + 1) = a ⋅ b + a","b + 1 != b.suc","b + 1 = 1 + b","1 + b = b.suc"]}
-{"goal":"f(0)","proof":["(a + 1) ⋅ 0 != a ⋅ 0 + 0 or f(0)","(a + 1) ⋅ 0 = 0","a ⋅ 0 = 0","a ⋅ 0 + 0 = a ⋅ 0","(a + 1) ⋅ 0 != a ⋅ 0 + 0"]}
-{"goal":"(a + 1) ⋅ (n + 1) = (a + 1) ⋅ n + (a + 1)","proof":["(a + 1) ⋅ n + (a + 1) = (a + 1) ⋅ (n + 1)"]}
-{"goal":"(a + 1) ⋅ n + (a + 1) = a ⋅ n + n + (a + 1)","proof":["not f(n) or (a + 1) ⋅ n = a ⋅ n + n","(a + 1) ⋅ n != a ⋅ n + n","(a + 1) ⋅ n = a ⋅ n + n"]}
-{"goal":"a ⋅ n + a + (n + 1) = a ⋅ (n + 1) + (n + 1)","proof":["a ⋅ (n + 1) != a ⋅ n + a","a ⋅ (n + 1) = a ⋅ n + a"]}
-{"goal":"f(n + 1)","proof":["a ⋅ (n + 1) + (n + 1) != (a + 1) ⋅ (n + 1) or f(n + 1)","not f(n) or (a + 1) ⋅ n = a ⋅ n + n","a ⋅ (n + 1) = a ⋅ n + a","n + (a ⋅ n + (a + 1)) = n + a ⋅ n + (a + 1)","a.suc != a.suc or a ⋅ n + a.suc = (a ⋅ n + a).suc","n + (a ⋅ (n + 1)).suc = n.suc + a ⋅ (n + 1)","n + 1 + (a ⋅ n + a) = a ⋅ n + a + (n + 1)","n + 1 = 1 + n","n + a ⋅ n = a ⋅ n + n","1 + n = n.suc","a + 1 = a.suc","a ⋅ n + a.suc = (a ⋅ n + a).suc","a ⋅ (n + 1) + (n + 1) != (a + 1) ⋅ (n + 1)","(a + 1) ⋅ n = a ⋅ n + n"]}
-{"goal":"mul_suc_left","proof":["let s0: (ℕ -> Bool) -> ℕ satisfy { forall(x0: ℕ -> Bool, x1: ℕ) { not x0(0) or x0(s0(x0)) or x0(x1) } and forall(x2: ℕ -> Bool, x3: ℕ) { not x2(s0(x2).suc) or not x2(0) or x2(x3) } }","not f(s0(f)) or f(s0(f) + 1)","not f(b) or (a + 1) ⋅ b = a ⋅ b + b","not f(b)","not f(s0(f).suc) or not f(0) or f(b)","not f(0) or f(s0(f)) or f(b)","s0(f) + 1 = s0(f).suc","f(s0(f)) or f(b)","f(s0(f))","not f(s0(f).suc) or f(b)","not f(s0(f).suc)","f(s0(f) + 1)","not f(s0(f) + 1)"]}
-{"goal":"a ⋅ 0 = 0 ⋅ a","proof":["0 != 0 or a ⋅ 0 = 0","0 ⋅ a = 0","a ⋅ 0 != 0"]}
-{"goal":"mul_comm(a, 0)","proof":["a ⋅ 0 != 0 ⋅ a or mul_comm(a, 0)"]}
+{"goal":"mul_zero","proof":["let s0: (ℕ -> Bool) -> ℕ satisfy { forall(x0: ℕ -> Bool, x1: ℕ) { not x0(0) or x0(s0(x0)) or x0(x1) } and forall(x2: ℕ -> Bool, x3: ℕ) { not x2(s0(x2).suc) or not x2(0) or x2(x3) } }","not mul_zero(a) or 0 * a = 0","not mul_zero(s0(mul_zero)) or 0 * s0(mul_zero) = 0","0 * 0 != 0 or 0 * 0 != 0 or mul_zero(0)","s0(mul_zero).suc * 0 != 0 or 0 * s0(mul_zero).suc != 0 or mul_zero(s0(mul_zero).suc)","s0(mul_zero).suc != s0(mul_zero).suc or 0 * s0(mul_zero) + 0 = 0 * s0(mul_zero).suc","not mul_zero(s0(mul_zero).suc) or not mul_zero(0) or mul_zero(a)","not mul_zero(0) or mul_zero(s0(mul_zero)) or mul_zero(a)","0 != 0 or 0 * 0 = 0","0 != 0 or a * 0 = 0","0 != 0 or s0(mul_zero).suc * 0 = 0","0 + 0 = 0","0 * 0 = 0","a * 0 = 0","s0(mul_zero).suc * 0 = 0","0 * a != 0","not mul_zero(a)","mul_zero(0)","0 * s0(mul_zero) + 0 = 0 * s0(mul_zero).suc","mul_zero(s0(mul_zero))","not mul_zero(s0(mul_zero).suc)","0 * s0(mul_zero) = 0","0 * s0(mul_zero).suc != 0"]}
+{"goal":"mul_suc_right","proof":["b + 1 != b.suc or a * (b + 1) = a * b + a","b + 1 != b.suc","b + 1 = 1 + b","1 + b = b.suc"]}
+{"goal":"f(0)","proof":["(a + 1) * 0 != a * 0 + 0 or f(0)","(a + 1) * 0 = 0","a * 0 = 0","a * 0 + 0 = a * 0","(a + 1) * 0 != a * 0 + 0"]}
+{"goal":"(a + 1) * (n + 1) = (a + 1) * n + (a + 1)","proof":["(a + 1) * n + (a + 1) = (a + 1) * (n + 1)"]}
+{"goal":"(a + 1) * n + (a + 1) = a * n + n + (a + 1)","proof":["not f(n) or (a + 1) * n = a * n + n","(a + 1) * n != a * n + n","(a + 1) * n = a * n + n"]}
+{"goal":"a * n + a + (n + 1) = a * (n + 1) + (n + 1)","proof":["a * (n + 1) != a * n + a","a * (n + 1) = a * n + a"]}
+{"goal":"f(n + 1)","proof":["a * (n + 1) + (n + 1) != (a + 1) * (n + 1) or f(n + 1)","not f(n) or (a + 1) * n = a * n + n","a * (n + 1) = a * n + a","n + (a * n + (a + 1)) = n + a * n + (a + 1)","a.suc != a.suc or a * n + a.suc = (a * n + a).suc","n + (a * (n + 1)).suc = n.suc + a * (n + 1)","n + 1 + (a * n + a) = a * n + a + (n + 1)","n + 1 = 1 + n","n + a * n = a * n + n","1 + n = n.suc","a + 1 = a.suc","a * n + a.suc = (a * n + a).suc","a * (n + 1) + (n + 1) != (a + 1) * (n + 1)","(a + 1) * n = a * n + n"]}
+{"goal":"mul_suc_left","proof":["let s0: (ℕ -> Bool) -> ℕ satisfy { forall(x0: ℕ -> Bool, x1: ℕ) { not x0(0) or x0(s0(x0)) or x0(x1) } and forall(x2: ℕ -> Bool, x3: ℕ) { not x2(s0(x2).suc) or not x2(0) or x2(x3) } }","not f(s0(f)) or f(s0(f) + 1)","not f(b) or (a + 1) * b = a * b + b","not f(b)","not f(s0(f).suc) or not f(0) or f(b)","not f(0) or f(s0(f)) or f(b)","s0(f) + 1 = s0(f).suc","f(s0(f)) or f(b)","f(s0(f))","not f(s0(f).suc) or f(b)","not f(s0(f).suc)","f(s0(f) + 1)","not f(s0(f) + 1)"]}
+{"goal":"a * 0 = 0 * a","proof":["0 != 0 or a * 0 = 0","0 * a = 0","a * 0 != 0"]}
+{"goal":"mul_comm(a, 0)","proof":["a * 0 != 0 * a or mul_comm(a, 0)"]}
 {"goal":"f(0)","proof":["mul_comm(a, 0) = f(0)","a * 0 != 0 * a or mul_comm(a, 0)","not mul_comm(a, 0)","0 * a = 0","a * 0 = 0","a * 0 != 0 * a"]}
-{"goal":"a ⋅ (n + 1) = a ⋅ n + a","proof":["a ⋅ (n + 1) = a ⋅ n + a"]}
-{"goal":"a ⋅ n + a = n ⋅ a + a","proof":["mul_comm(a, n) = f(n)","not mul_comm(a, n) or n ⋅ a = a ⋅ n","n ⋅ a != a ⋅ n","mul_comm(a, n)","not mul_comm(a, n)"]}
-{"goal":"(n + 1) ⋅ a = n ⋅ a + a","proof":["(n + 1) ⋅ a = n ⋅ a + a"]}
-{"goal":"f(n + 1)","proof":["mul_comm(a, n + 1) = f(n + 1)","a ⋅ (n + 1) != (n + 1) ⋅ a or mul_comm(a, n + 1)","a ⋅ (n + 1) = a ⋅ n + a","not mul_comm(a, n + 1)","(n + 1) ⋅ a = a ⋅ n + a","a ⋅ (n + 1) != (n + 1) ⋅ a","a ⋅ (n + 1) = (n + 1) ⋅ a"]}
+{"goal":"a * (n + 1) = a * n + a","proof":["a * (n + 1) = a * n + a"]}
+{"goal":"a * n + a = n * a + a","proof":["mul_comm(a, n) = f(n)","not mul_comm(a, n) or n * a = a * n","n * a != a * n","mul_comm(a, n)","not mul_comm(a, n)"]}
+{"goal":"(n + 1) * a = n * a + a","proof":["(n + 1) * a = n * a + a"]}
+{"goal":"f(n + 1)","proof":["mul_comm(a, n + 1) = f(n + 1)","a * (n + 1) != (n + 1) * a or mul_comm(a, n + 1)","a * (n + 1) = a * n + a","not mul_comm(a, n + 1)","(n + 1) * a = a * n + a","a * (n + 1) != (n + 1) * a","a * (n + 1) = (n + 1) * a"]}
 {"goal":"f(b)","proof":["let s0: (ℕ -> Bool) -> ℕ satisfy { forall(x0: ℕ -> Bool, x1: ℕ) { not x0(0) or x0(s0(x0)) or x0(x1) } and forall(x2: ℕ -> Bool, x3: ℕ) { not x2(s0(x2).suc) or not x2(0) or x2(x3) } }","not f(s0(f)) or f(s0(f) + 1)","not f(s0(f).suc) or not f(0) or f(b)","not f(s0(f).suc)","not f(0) or f(s0(f)) or f(b)","f(s0(f))","s0(f) + 1 = s0(f).suc","f(s0(f) + 1)","not f(s0(f) + 1)"]}
 {"goal":"mul_comm(a, b)","proof":["mul_comm(a, b) = f(b)","not f(b)","let s0: ℕ -> Bool -> ℕ satisfy { forall(x0: ℕ -> Bool, x1: ℕ) { not x0(0) or x0(s0(x0)) or x0(x1) } and forall(x2: ℕ -> Bool, x3: ℕ) { not x2(s0(x2).suc) or not x2(0) or x2(x3) } }","not f(s0(f)) or f(s0(f) + 1)","not f(s0(f).suc) or not f(0) or f(b)","not f(s0(f).suc)","not f(0) or f(s0(f)) or f(b)","f(s0(f))","s0(f) + 1 = s0(f).suc","f(s0(f) + 1)","not f(s0(f) + 1)"]}
-{"goal":"mul_comm","proof":["not mul_comm(a, b) or b ⋅ a = a ⋅ b"]}
-{"goal":"one_mul_one","proof":["(0 + 1) ⋅ 1 = 0 ⋅ 1 + 1","0 ⋅ 1 = 0","0 + 1 = 1","(0 + 1) ⋅ 1 != 1","0 ⋅ 1 + 1 != 1"]}
-{"goal":"f(0)","proof":["distrib_right(a, b, 0) = f(0)","a ⋅ b + a ⋅ 0 != a ⋅ (b + 0) or distrib_right(a, b, 0)","not distrib_right(a, b, 0)","a ⋅ 0 = 0","a ⋅ b + 0 = a ⋅ b","b + 0 = b","a ⋅ b + a ⋅ 0 != a ⋅ (b + 0)"]}
+{"goal":"mul_comm","proof":["not mul_comm(a, b) or b * a = a * b"]}
+{"goal":"one_mul_one","proof":["(0 + 1) * 1 = 0 * 1 + 1","0 * 1 = 0","0 + 1 = 1","(0 + 1) * 1 != 1","0 * 1 + 1 != 1"]}
+{"goal":"f(0)","proof":["distrib_right(a, b, 0) = f(0)","a * b + a * 0 != a * (b + 0) or distrib_right(a, b, 0)","not distrib_right(a, b, 0)","a * 0 = 0","a * b + 0 = a * b","b + 0 = b","a * b + a * 0 != a * (b + 0)"]}
 {"goal":"distrib_right(a, b, x)","proof":["distrib_right(a, b, x) = f(x)"]}
-{"goal":"a ⋅ (b + x) = a ⋅ b + a ⋅ x","proof":["not distrib_right(a, b, x) or a ⋅ b + a ⋅ x = a ⋅ (b + x)"]}
-{"goal":"distrib_right(a, b, x + 1)","proof":["a ⋅ b + a ⋅ (x + 1) != a ⋅ (b + (x + 1)) or distrib_right(a, b, x + 1)","a ⋅ (x + 1) = a ⋅ x + a","a ⋅ b + (a ⋅ x + a) = a ⋅ b + a ⋅ x + a","b + (x + 1) = b + x + 1","a ⋅ b + a ⋅ (x + 1) != a ⋅ (b + (x + 1))"]}
+{"goal":"a * (b + x) = a * b + a * x","proof":["not distrib_right(a, b, x) or a * b + a * x = a * (b + x)"]}
+{"goal":"distrib_right(a, b, x + 1)","proof":["a * b + a * (x + 1) != a * (b + (x + 1)) or distrib_right(a, b, x + 1)","a * (x + 1) = a * x + a","a * b + (a * x + a) = a * b + a * x + a","b + (x + 1) = b + x + 1","a * b + a * (x + 1) != a * (b + (x + 1))"]}
 {"goal":"distrib_right(a, b, c)","proof":["let s0: (ℕ -> Bool) -> ℕ satisfy { forall(x0: ℕ -> Bool, x1: ℕ) { not x0(0) or x0(s0(x0)) or x0(x1) } and forall(x2: ℕ -> Bool, x3: ℕ) { not x2(s0(x2).suc) or not x2(0) or x2(x3) } }","distrib_right(a, b, c) = f(c)","distrib_right(a, b, s0(f) + 1) = f(s0(f) + 1)","not f(c)","not f(s0(f)) or distrib_right(a, b, s0(f) + 1)","not f(s0(f).suc) or not f(0) or f(c)","not f(s0(f).suc)","not f(0) or f(s0(f)) or f(c)","f(s0(f))","s0(f) + 1 = s0(f).suc","not f(s0(f) + 1)","distrib_right(a, b, s0(f) + 1)","not distrib_right(a, b, s0(f) + 1)"]}
-{"goal":"distrib_right","proof":["not distrib_right(a, b, c) or a ⋅ b + a ⋅ c = a ⋅ (b + c)"]}
-{"goal":"distrib_left","proof":["c ⋅ a + c ⋅ b = c ⋅ (a + b)","c ⋅ (a + b) = (a + b) ⋅ c","c ⋅ a = a ⋅ c","c ⋅ b = b ⋅ c"]}
-{"goal":"f(0)","proof":["mul_assoc(a, b, 0) = f(0)","a ⋅ (b ⋅ 0) != a ⋅ b ⋅ 0 or mul_assoc(a, b, 0)","not mul_assoc(a, b, 0)","b ⋅ 0 != 0 or a ⋅ (b ⋅ 0) = 0","a ⋅ b ⋅ 0 = 0","b ⋅ 0 = 0","a ⋅ (b ⋅ 0) != a ⋅ b ⋅ 0","a ⋅ (b ⋅ 0) != 0"]}
-{"goal":"a ⋅ b ⋅ x = a ⋅ (b ⋅ x)","proof":["mul_assoc(a, b, x) = f(x)","not mul_assoc(a, b, x) or a ⋅ (b ⋅ x) = a ⋅ b ⋅ x","mul_assoc(a, b, x)","not mul_assoc(a, b, x)"]}
-{"goal":"f(x + 1)","proof":["mul_assoc(a, b, x + 1) = f(x + 1)","a ⋅ (b ⋅ (x + 1)) != a ⋅ b ⋅ (x + 1) or mul_assoc(a, b, x + 1)","a ⋅ (b ⋅ x) + a ⋅ b = a ⋅ (b ⋅ x + b)","b ⋅ (x + 1) = b ⋅ x + b","not mul_assoc(a, b, x + 1)","a ⋅ (b ⋅ x) + a ⋅ b = a ⋅ b ⋅ (x + 1)","a ⋅ b ⋅ (x + 1) = a ⋅ (b ⋅ x + b)","a ⋅ (b ⋅ (x + 1)) != a ⋅ b ⋅ (x + 1)","a ⋅ (b ⋅ (x + 1)) = a ⋅ b ⋅ (x + 1)"]}
+{"goal":"distrib_right","proof":["not distrib_right(a, b, c) or a * b + a * c = a * (b + c)"]}
+{"goal":"distrib_left","proof":["c * a + c * b = c * (a + b)","c * (a + b) = (a + b) * c","c * a = a * c","c * b = b * c"]}
+{"goal":"f(0)","proof":["mul_assoc(a, b, 0) = f(0)","a * (b * 0) != a * b * 0 or mul_assoc(a, b, 0)","not mul_assoc(a, b, 0)","b * 0 != 0 or a * (b * 0) = 0","a * b * 0 = 0","b * 0 = 0","a * (b * 0) != a * b * 0","a * (b * 0) != 0"]}
+{"goal":"a * b * x = a * (b * x)","proof":["mul_assoc(a, b, x) = f(x)","not mul_assoc(a, b, x) or a * (b * x) = a * b * x","mul_assoc(a, b, x)","not mul_assoc(a, b, x)"]}
+{"goal":"f(x + 1)","proof":["mul_assoc(a, b, x + 1) = f(x + 1)","a * (b * (x + 1)) != a * b * (x + 1) or mul_assoc(a, b, x + 1)","a * (b * x) + a * b = a * (b * x + b)","b * (x + 1) = b * x + b","not mul_assoc(a, b, x + 1)","a * (b * x) + a * b = a * b * (x + 1)","a * b * (x + 1) = a * (b * x + b)","a * (b * (x + 1)) != a * b * (x + 1)","a * (b * (x + 1)) = a * b * (x + 1)"]}
 {"goal":"mul_assoc(a, b, c)","proof":["let s0: (ℕ -> Bool) -> ℕ satisfy { forall(x0: ℕ -> Bool, x1: ℕ) { not x0(0) or x0(s0(x0)) or x0(x1) } and forall(x2: ℕ -> Bool, x3: ℕ) { not x2(s0(x2).suc) or not x2(0) or x2(x3) } }","not f(s0(f)) or f(s0(f) + 1)","mul_assoc(a, b, c) = f(c)","not f(c)","not f(s0(f).suc) or not f(0) or f(c)","not f(s0(f).suc)","not f(0) or f(s0(f)) or f(c)","f(s0(f))","s0(f) + 1 = s0(f).suc","f(s0(f) + 1)","not f(s0(f) + 1)"]}
-{"goal":"mul_assoc","proof":["not mul_assoc(a, b, c) or a ⋅ (b ⋅ c) = a ⋅ b ⋅ c"]}
-{"goal":"a ⋅ 0 + a = a","proof":["a + a ⋅ 0 = a ⋅ 0 + a","a ⋅ 0 != 0 or a + a ⋅ 0 = a","a + a ⋅ 0 != a","a ⋅ 0 = 0"]}
-{"goal":"mul_one_right","proof":["(0 + 1) ⋅ a = 0 ⋅ a + a","a ⋅ 0 = 0 ⋅ a","a ⋅ 1 = 1 ⋅ a","0 + 1 = 1"]}
-{"goal":"mul_one_left","proof":["a ⋅ 1 = 1 ⋅ a","a ⋅ 1 != a","a ⋅ 1 = a"]}
+{"goal":"mul_assoc","proof":["not mul_assoc(a, b, c) or a * (b * c) = a * b * c"]}
+{"goal":"a * 0 + a = a","proof":["a + a * 0 = a * 0 + a","a * 0 != 0 or a + a * 0 = a","a + a * 0 != a","a * 0 = 0"]}
+{"goal":"mul_one_right","proof":["(0 + 1) * a = 0 * a + a","a * 0 = 0 * a","a * 1 = 1 * a","0 + 1 = 1"]}
+{"goal":"mul_one_left","proof":["a * 1 = 1 * a","a * 1 != a","a * 1 = a"]}
 {"goal":"suc_ne(0)","proof":["0.suc = 0 or suc_ne(0)","0.suc = 0","0.suc != 0"]}
 {"goal":"n.suc != n","proof":["n.suc != n or not suc_ne(n)"]}
 {"goal":"n.suc.suc != n.suc","proof":["n.suc.suc != n.suc or n.suc = n"]}
@@ -173,70 +173,70 @@
 {"goal":"gt_suc_left","proof":["b < a + 1 = b <= a","a >= b = b <= a","a + 1 > b != b <= a","a + 1 > b = b < a + 1"]}
 {"goal":"gt_suc_right","proof":["b + 1 <= a = b < a","a >= b + 1 = b + 1 <= a","not b + 1 <= a","not b < a","a > b = b < a"]}
 {"goal":"exists(k0: ℕ) { k0 + 1 = b }","proof":["let s0: ℕ -> ℕ satisfy { forall(x0: ℕ) { s0(x0) + 1 = x0 or 0 = x0 } }","s0(b) + 1 != b","s0(b) + 1 = b or 0 = b"]}
-{"goal":"a ⋅ b = a ⋅ b_pred + a","proof":["a ⋅ (b_pred + 1) = a ⋅ b_pred + a"]}
-{"goal":"mul_to_nonzero","proof":["a ⋅ b_pred + a = 0","a ⋅ b_pred + a != 0 or 0 = a"]}
-{"goal":"mul_to_zero","proof":["a ⋅ b != 0 or 0 = a or 0 = b"]}
-{"goal":"mul_to_zero_imp_rev","proof":["b ⋅ a = a ⋅ b","b ⋅ a != 0","0 != a or b ⋅ a = 0","0 != b or a ⋅ b = 0","0 != b","0 != a","0 = a"]}
+{"goal":"a * b = a * b_pred + a","proof":["a * (b_pred + 1) = a * b_pred + a"]}
+{"goal":"mul_to_nonzero","proof":["a * b_pred + a = 0","a * b_pred + a != 0 or 0 = a"]}
+{"goal":"mul_to_zero","proof":["a * b != 0 or 0 = a or 0 = b"]}
+{"goal":"mul_to_zero_imp_rev","proof":["b * a = a * b","b * a != 0","0 != a or b * a = 0","0 != b or a * b = 0","0 != b","0 != a","0 = a"]}
 {"goal":"exists(k0: ℕ) { k0 + 1 = b and k0 != 0 }","proof":["let s0: (ℕ, ℕ) -> ℕ satisfy { forall(x0: ℕ, x1: ℕ) { not x0 < x1 or 0 != s0(x0, x1) } and forall(x2: ℕ, x3: ℕ) { not x2 < x3 or x2 + s0(x2, x3) = x3 } and forall(x4: ℕ, x5: ℕ, x6: ℕ) { x4 + x5 != x6 or x4 < x6 or 0 = x5 } }","s0(1, b) + 1 != b or s0(1, b) = 0","not 1 < b or 1 + s0(1, b) = b","not 1 < b or s0(1, b) != 0","s0(1, b) + 1 = 1 + s0(1, b)","s0(1, b) != 0","1 + s0(1, b) = b","s0(1, b) + 1 != b","s0(1, b) + 1 = b"]}
-{"goal":"a ⋅ b = a ⋅ b_pred + a","proof":["a ⋅ (b_pred + 1) = a ⋅ b_pred + a"]}
-{"goal":"mul_increase","proof":["a + a ⋅ b_pred != a ⋅ b or a < a ⋅ b or a ⋅ b_pred = 0","a ⋅ b_pred != 0 or 0 = a or b_pred = 0","a + a ⋅ b_pred = a ⋅ b_pred + a","a + a ⋅ b_pred != a ⋅ b or a ⋅ b_pred = 0","a ⋅ b_pred != 0 or 0 = a","a ⋅ b_pred != 0","a + a ⋅ b_pred = a ⋅ b","a + a ⋅ b_pred != a ⋅ b"]}
+{"goal":"a * b = a * b_pred + a","proof":["a * (b_pred + 1) = a * b_pred + a"]}
+{"goal":"mul_increase","proof":["a + a * b_pred != a * b or a < a * b or a * b_pred = 0","a * b_pred != 0 or 0 = a or b_pred = 0","a + a * b_pred = a * b_pred + a","a + a * b_pred != a * b or a * b_pred = 0","a * b_pred != 0 or 0 = a","a * b_pred != 0","a + a * b_pred = a * b","a + a * b_pred != a * b"]}
 {"goal":"exists(k0: ℕ) { a + k0 = b }","proof":["let s0: (ℕ, ℕ) -> ℕ satisfy { forall(x0: ℕ, x1: ℕ) { not x0 < x1 or 0 != s0(x0, x1) } and forall(x2: ℕ, x3: ℕ) { not x2 < x3 or x2 + s0(x2, x3) = x3 } and forall(x4: ℕ, x5: ℕ, x6: ℕ) { x4 + x5 != x6 or x4 < x6 or 0 = x5 } }","a + 0 != b","a + s0(a, b) != b","not a < b or a + s0(a, b) = b","not a < b","not a <= b or a < b or b = a","b = a","a + 0 = a"]}
 {"goal":"a + (c + 1) = b + 1","proof":["a + (c + 1) = a + c + 1"]}
 {"goal":"c + 1 != 0","proof":["c + 1 <= 0 = c < 0","c + 1 != 0 or c + 1 <= 0","c + 1 <= 0","c < 0","not c < 0"]}
 {"goal":"lt_imp_lt_suc","proof":["a + (c + 1) != b + 1 or a < b + 1 or c + 1 = 0"]}
 {"goal":"exists(k0: ℕ) { b + k0 = c and k0 != 0 }","proof":["let s0: (ℕ, ℕ) -> ℕ satisfy { forall(x0: ℕ, x1: ℕ) { not x0 < x1 or 0 != s0(x0, x1) } and forall(x2: ℕ, x3: ℕ) { not x2 < x3 or x2 + s0(x2, x3) = x3 } and forall(x4: ℕ, x5: ℕ, x6: ℕ) { x4 + x5 != x6 or x4 < x6 or 0 = x5 } }","b + s0(b, c) != c or s0(b, c) = 0","not b < c or b + s0(b, c) = c","not b < c or s0(b, c) != 0","s0(b, c) != 0","b + s0(b, c) = c","b + s0(b, c) != c"]}
-{"goal":"a ⋅ (b + n) = a ⋅ c","proof":["b + n != c"]}
-{"goal":"a ⋅ b + a ⋅ n = a ⋅ c","proof":["a ⋅ b + a ⋅ n = a ⋅ (b + n)"]}
-{"goal":"a ⋅ n != 0","proof":["a ⋅ n != 0 or 0 = a or n = 0"]}
-{"goal":"a ⋅ b < a ⋅ c","proof":["a ⋅ b + a ⋅ n != a ⋅ c or a ⋅ b < a ⋅ c or a ⋅ n = 0"]}
+{"goal":"a * (b + n) = a * c","proof":["b + n != c"]}
+{"goal":"a * b + a * n = a * c","proof":["a * b + a * n = a * (b + n)"]}
+{"goal":"a * n != 0","proof":["a * n != 0 or 0 = a or n = 0"]}
+{"goal":"a * b < a * c","proof":["a * b + a * n != a * c or a * b < a * c or a * n = 0"]}
 {"goal":"lt_mul_both_left","proof":[]}
 {"goal":"exists(k0: ℕ) { b + k0 = c }","proof":["let s0: (ℕ, ℕ) -> ℕ satisfy { forall(x0: ℕ, x1: ℕ) { not x0 < x1 or 0 != s0(x0, x1) } and forall(x2: ℕ, x3: ℕ) { not x2 < x3 or x2 + s0(x2, x3) = x3 } and forall(x4: ℕ, x5: ℕ, x6: ℕ) { x4 + x5 != x6 or x4 < x6 or 0 = x5 } }","b + 0 != c","b + s0(b, c) != c","not b < c or b + s0(b, c) = c","not b < c","not b <= c or b < c or c = b","c = b","b + 0 = b"]}
-{"goal":"a ⋅ (b + n) = a ⋅ c","proof":["b + n != c"]}
-{"goal":"a ⋅ b + a ⋅ n = a ⋅ c","proof":["a ⋅ b + a ⋅ n = a ⋅ (b + n)"]}
-{"goal":"a ⋅ b <= a ⋅ c","proof":["a ⋅ b + a ⋅ n != a ⋅ c or a ⋅ b < a ⋅ c or a ⋅ n = 0","not a ⋅ b < a ⋅ c or a ⋅ b <= a ⋅ c","a ⋅ b = b ⋅ a","a ⋅ n + a ⋅ b = a ⋅ b + a ⋅ n","a ⋅ c != a ⋅ b or a ⋅ b <= a ⋅ c","a ⋅ c != a ⋅ b","0 + b ⋅ a = b ⋅ a","not a ⋅ b < a ⋅ c","a ⋅ n = 0"]}
+{"goal":"a * (b + n) = a * c","proof":["b + n != c"]}
+{"goal":"a * b + a * n = a * c","proof":["a * b + a * n = a * (b + n)"]}
+{"goal":"a * b <= a * c","proof":["a * b + a * n != a * c or a * b < a * c or a * n = 0","not a * b < a * c or a * b <= a * c","a * b = b * a","a * n + a * b = a * b + a * n","a * c != a * b or a * b <= a * c","a * c != a * b","0 + b * a = b * a","not a * b < a * c","a * n = 0"]}
 {"goal":"lte_mul_both_left","proof":[]}
-{"goal":"gt_mul_both_left","proof":["not c < b or a ⋅ c < a ⋅ b or 0 = a","a ⋅ b > a ⋅ c = a ⋅ c < a ⋅ b","b > c = c < b","not a ⋅ c < a ⋅ b","c < b","not c < b"]}
-{"goal":"gte_mul_both_left","proof":["not c <= b or a ⋅ c <= a ⋅ b","a ⋅ b >= a ⋅ c = a ⋅ c <= a ⋅ b","b >= c = c <= b","not a ⋅ c <= a ⋅ b","c <= b","not c <= b"]}
-{"goal":"lt_mul_both_right","proof":["not b < c or a ⋅ b < a ⋅ c or 0 = a","b ⋅ a = a ⋅ b","c ⋅ a = a ⋅ c","not a ⋅ b < c ⋅ a","not a ⋅ b < a ⋅ c"]}
-{"goal":"lte_mul_both_right","proof":["not b <= c or a ⋅ b <= a ⋅ c","a ⋅ b = b ⋅ a","a ⋅ c = c ⋅ a","not a ⋅ b <= c ⋅ a","a ⋅ b <= a ⋅ c"]}
-{"goal":"gt_mul_both_right","proof":["not c < b or c ⋅ a < b ⋅ a or 0 = a","b > c = c < b","b ⋅ a > c ⋅ a = c ⋅ a < b ⋅ a","not c ⋅ a < b ⋅ a","c < b","not c < b"]}
-{"goal":"gte_mul_both_right","proof":["not c <= b or c ⋅ a <= b ⋅ a","b >= c = c <= b","b ⋅ a >= c ⋅ a = c ⋅ a <= b ⋅ a","not c ⋅ a <= b ⋅ a","c <= b","not c <= b"]}
-{"goal":"a ⋅ c <= b ⋅ c","proof":["not a <= b or a ⋅ c <= b ⋅ c"]}
-{"goal":"b ⋅ c < b ⋅ d","proof":["not c < d or b ⋅ c < b ⋅ d or b = 0","b = 0","a <= 0","not a <= 0 or 0 = a"]}
-{"goal":"right_lte_left_lt_mul_lt","proof":["not a ⋅ c < b ⋅ c or not b ⋅ c < b ⋅ d or a ⋅ c < b ⋅ d","not a ⋅ c <= b ⋅ c or a ⋅ c < b ⋅ c or b ⋅ c = a ⋅ c","not b ⋅ c < b ⋅ d or not a ⋅ c < b ⋅ c","not a ⋅ c < b ⋅ c","b ⋅ c = a ⋅ c"]}
-{"goal":"left_lte_right_lt_mul_lt","proof":["not a <= b or not c < d or a ⋅ c < b ⋅ d or 0 = a or 0 = c","not a < b or a ⋅ c < b ⋅ c or 0 = c","not c <= d or c < d or d = c","not a < b or a <= b","not c < d or not a <= b","a <= b","not c < d","d = c","not a ⋅ c < b ⋅ c"]}
-{"goal":"a ⋅ c <= a ⋅ b","proof":["not c <= b or a ⋅ c <= a ⋅ b","not c <= b","b >= c = c <= b"]}
-{"goal":"false","proof":["not a ⋅ c <= a ⋅ b or a ⋅ c < a ⋅ b or a ⋅ c = a ⋅ b","not a ⋅ c < a ⋅ b or not a ⋅ b < a ⋅ c","not a ⋅ b < a ⋅ b","not a ⋅ c < a ⋅ b","a ⋅ c = a ⋅ b"]}
+{"goal":"gt_mul_both_left","proof":["not c < b or a * c < a * b or 0 = a","a * b > a * c = a * c < a * b","b > c = c < b","not a * c < a * b","c < b","not c < b"]}
+{"goal":"gte_mul_both_left","proof":["not c <= b or a * c <= a * b","a * b >= a * c = a * c <= a * b","b >= c = c <= b","not a * c <= a * b","c <= b","not c <= b"]}
+{"goal":"lt_mul_both_right","proof":["not b < c or a * b < a * c or 0 = a","b * a = a * b","c * a = a * c","not a * b < c * a","not a * b < a * c"]}
+{"goal":"lte_mul_both_right","proof":["not b <= c or a * b <= a * c","a * b = b * a","a * c = c * a","not a * b <= c * a","a * b <= a * c"]}
+{"goal":"gt_mul_both_right","proof":["not c < b or c * a < b * a or 0 = a","b > c = c < b","b * a > c * a = c * a < b * a","not c * a < b * a","c < b","not c < b"]}
+{"goal":"gte_mul_both_right","proof":["not c <= b or c * a <= b * a","b >= c = c <= b","b * a >= c * a = c * a <= b * a","not c * a <= b * a","c <= b","not c <= b"]}
+{"goal":"a * c <= b * c","proof":["not a <= b or a * c <= b * c"]}
+{"goal":"b * c < b * d","proof":["not c < d or b * c < b * d or b = 0","b = 0","a <= 0","not a <= 0 or 0 = a"]}
+{"goal":"right_lte_left_lt_mul_lt","proof":["not a * c < b * c or not b * c < b * d or a * c < b * d","not a * c <= b * c or a * c < b * c or b * c = a * c","not b * c < b * d or not a * c < b * c","not a * c < b * c","b * c = a * c"]}
+{"goal":"left_lte_right_lt_mul_lt","proof":["not a <= b or not c < d or a * c < b * d or 0 = a or 0 = c","not a < b or a * c < b * c or 0 = c","not c <= d or c < d or d = c","not a < b or a <= b","not c < d or not a <= b","a <= b","not c < d","d = c","not a * c < b * c"]}
+{"goal":"a * c <= a * b","proof":["not c <= b or a * c <= a * b","not c <= b","b >= c = c <= b"]}
+{"goal":"false","proof":["not a * c <= a * b or a * c < a * b or a * c = a * b","not a * c < a * b or not a * b < a * c","not a * b < a * b","not a * c < a * b","a * c = a * b"]}
 {"goal":"lt_cancel_mul","proof":["b < c or c < b or c = b","b >= c = c <= b","not c <= b","not c < b or c <= b","c != b or c <= b","c != b","not c < b","c < b"]}
-{"goal":"a ⋅ c > a ⋅ b","proof":["not b > c or a ⋅ b > a ⋅ c or 0 = a","not a ⋅ b <= a ⋅ c or a ⋅ b < a ⋅ c or a ⋅ c = a ⋅ b","a ⋅ c > a ⋅ b = a ⋅ b < a ⋅ c","not a ⋅ b < a ⋅ c","a ⋅ c = a ⋅ b","not a ⋅ b > a ⋅ b","a ⋅ b > a ⋅ c or 0 = a","not a ⋅ b > a ⋅ c","a ⋅ b > a ⋅ c"]}
-{"goal":"false","proof":["not a ⋅ b < a ⋅ c or b < c or 0 = a","not c < b or not b < c","a ⋅ c > a ⋅ b = a ⋅ b < a ⋅ c","b > c = c < b","c < b","a ⋅ b < a ⋅ c","not b < c","b < c"]}
+{"goal":"a * c > a * b","proof":["not b > c or a * b > a * c or 0 = a","not a * b <= a * c or a * b < a * c or a * c = a * b","a * c > a * b = a * b < a * c","not a * b < a * c","a * c = a * b","not a * b > a * b","a * b > a * c or 0 = a","not a * b > a * c","a * b > a * c"]}
+{"goal":"false","proof":["not a * b < a * c or b < c or 0 = a","not c < b or not b < c","a * c > a * b = a * b < a * c","b > c = c < b","c < b","a * b < a * c","not b < c","b < c"]}
 {"goal":"lte_cancel_mul","proof":["b < c or c < b or c = b","b > c = c < b","not c < b","not b < c or b <= c","not b < c","c = b","c != b or b <= c"]}
-{"goal":"mul_preserve_gt_one","proof":["not 1 < b or a < a ⋅ b or 0 = a","not a <= 0 or not 1 < a or 1 < 0","not 1 < a or not a < a ⋅ b or 1 < a ⋅ b","a > 1 = 1 < a","a ⋅ b > 1 = 1 < a ⋅ b","b > 1 = 1 < b","not 1 < a ⋅ b","1 < b","1 < a","0 != a or a <= 0","not 1 < 0","not a < a ⋅ b or not 1 < a","not a < a ⋅ b","not a <= 0 or 1 < 0","not a <= 0","0 = a","0 != a"]}
-{"goal":"b = 1 ⋅ b","proof":["1 ⋅ b = b"]}
-{"goal":"a <= 1","proof":["not b ⋅ a <= b ⋅ 1 or a <= 1 or 0 = b","a ⋅ b = b ⋅ a","b ⋅ a = b","b ⋅ a != b or b ⋅ a <= b","b ⋅ 1 = b","not b ⋅ a <= b ⋅ 1 or 0 = b","not b ⋅ a <= b ⋅ 1","b ⋅ a <= b","not b ⋅ a <= b"]}
-{"goal":"a >= 1","proof":["a ⋅ b = b ⋅ a","b ⋅ a = b","a >= 1 or 0 = a","0 = a","b ⋅ 0 = 0","b ⋅ 0 != b"]}
+{"goal":"mul_preserve_gt_one","proof":["not 1 < b or a < a * b or 0 = a","not a <= 0 or not 1 < a or 1 < 0","not 1 < a or not a < a * b or 1 < a * b","a > 1 = 1 < a","a * b > 1 = 1 < a * b","b > 1 = 1 < b","not 1 < a * b","1 < b","1 < a","0 != a or a <= 0","not 1 < 0","not a < a * b or not 1 < a","not a < a * b","not a <= 0 or 1 < 0","not a <= 0","0 = a","0 != a"]}
+{"goal":"b = 1 * b","proof":["1 * b = b"]}
+{"goal":"a <= 1","proof":["not b * a <= b * 1 or a <= 1 or 0 = b","a * b = b * a","b * a = b","b * a != b or b * a <= b","b * 1 = b","not b * a <= b * 1 or 0 = b","not b * a <= b * 1","b * a <= b","not b * a <= b"]}
+{"goal":"a >= 1","proof":["a * b = b * a","b * a = b","a >= 1 or 0 = a","0 = a","b * 0 = 0","b * 0 != b"]}
 {"goal":"a = 1","proof":["not 1 <= a or 1 < a or 1 = a","not a <= 1 or a < 1 or 1 = a","a < 1","not a < 1 or not 1 < a","a >= 1 = 1 <= a","1 <= a","not 1 < a","1 < a"]}
 {"goal":"mul_identity","proof":[]}
-{"goal":"mul_cancel","proof":["not a ⋅ b <= a ⋅ c or b <= c or 0 = a","not a ⋅ c <= a ⋅ b or c <= b or 0 = a","not b <= c or b < c or c = b","not c <= b or c < b or c = b","not b < c or not c < b","not b <= c or b < c","a ⋅ c != a ⋅ b or a ⋅ b <= a ⋅ c","a ⋅ c != a ⋅ b or a ⋅ c <= a ⋅ b","a ⋅ c <= a ⋅ b","a ⋅ b <= a ⋅ c","b <= c","b < c","c <= b","not c < b","c < b"]}
+{"goal":"mul_cancel","proof":["not a * b <= a * c or b <= c or 0 = a","not a * c <= a * b or c <= b or 0 = a","not b <= c or b < c or c = b","not c <= b or c < b or c = b","not b < c or not c < b","not b <= c or b < c","a * c != a * b or a * b <= a * c","a * c != a * b or a * c <= a * b","a * c <= a * b","a * b <= a * c","b <= c","b < c","c <= b","not c < b","c < b"]}
 {"goal":"1 != 0","proof":["1 + 0 = 0.suc","1 + 0 = 1","1 + 0 = 0","0.suc = 0","0.suc != 0"]}
-{"goal":"a != 0","proof":["0 != a or a ⋅ b = 0","a ⋅ b = 0"]}
-{"goal":"b != 0","proof":["0 != b or a ⋅ b = 0","a ⋅ b = 0"]}
-{"goal":"a ⋅ b > 1 ⋅ b","proof":["not a > 1 or a ⋅ b > 1 ⋅ b or 0 = b"]}
-{"goal":"a ⋅ b > b","proof":["1 ⋅ b = b"]}
+{"goal":"a != 0","proof":["0 != a or a * b = 0","a * b = 0"]}
+{"goal":"b != 0","proof":["0 != b or a * b = 0","a * b = 0"]}
+{"goal":"a * b > 1 * b","proof":["not a > 1 or a * b > 1 * b or 0 = b"]}
+{"goal":"a * b > b","proof":["1 * b = b"]}
 {"goal":"false","proof":["b < 0 + 1 = b <= 0","not b <= 0 or b < 0 or 0 = b","1 > b = b < 1","0 + 1 = 1","not b < 0","not b <= 0"]}
 {"goal":"a = 1","proof":["a < 0 + 1 = a <= 0","a < 1 or 1 < a or 1 = a","not a <= 0 or a < 0 or 0 = a","a > 1 = 1 < a","not 1 < a","a < 1","0 + 1 = 1","not a < 0","not a <= 0"]}
-{"goal":"b = 1","proof":["a ⋅ b = a","b ⋅ a != a or 1 = b or 0 = a","b ⋅ a = a ⋅ b","b ⋅ a != a or 0 = a","b ⋅ a = a","b ⋅ a != a"]}
+{"goal":"b = 1","proof":["a * b = a","b * a != a or 1 = b or 0 = a","b * a = a * b","b * a != a or 0 = a","b * a = a","b * a != a"]}
 {"goal":"mul_to_one","proof":["1 != a"]}
 {"goal":"not b < 0.suc","proof":["b < 0 + 1 = b <= 0","not b <= 0 or 0 = b","0 + 1 = 0.suc","b < 0 + 1","not b <= 0","b <= 0"]}
 {"goal":"not b < 1","proof":["not 1 <= 0.suc or not b < 1 or b < 0.suc","not 1 <= 0.suc or b < 0.suc","not 1 <= 0.suc","0.suc != 1 or 1 <= 0.suc","0.suc != 1"]}
 {"goal":"1 <= b","proof":["1 < b or b < 1 or 1 = b","not 1 < b or 1 <= b","not 1 < b","1 = b","1 != b or 1 <= b"]}
-{"goal":"a ⋅ 1 <= a ⋅ b","proof":["not 1 <= b or a ⋅ 1 <= a ⋅ b"]}
-{"goal":"lte_mul","proof":["a ⋅ b >= a = a <= a ⋅ b","a ⋅ b >= a ⋅ 1 = a ⋅ 1 <= a ⋅ b","a ⋅ 1 = 1 ⋅ a","1 ⋅ a = a"]}
+{"goal":"a * 1 <= a * b","proof":["not 1 <= b or a * 1 <= a * b"]}
+{"goal":"lte_mul","proof":["a * b >= a = a <= a * b","a * b >= a * 1 = a * 1 <= a * b","a * 1 = 1 * a","1 * a = a"]}
 {"goal":"exists(k0: ℕ) { a1 + k0 = a2 }","proof":["let s0: (ℕ, ℕ) -> ℕ satisfy { forall(x0: ℕ, x1: ℕ) { not x0 < x1 or 0 != s0(x0, x1) } and forall(x2: ℕ, x3: ℕ) { not x2 < x3 or x2 + s0(x2, x3) = x3 } and forall(x4: ℕ, x5: ℕ, x6: ℕ) { x4 + x5 != x6 or x4 < x6 or 0 = x5 } }","a1 + 0 != a2","a1 + s0(a1, a2) != a2","not a1 < a2 or a1 + s0(a1, a2) = a2","not a1 < a2","not a1 <= a2 or a1 < a2 or a2 = a1","a2 = a1","a1 + 0 = a1"]}
 {"goal":"a1 + b1 = a1 + n + b2","proof":["a2 + b2 != a1 + b1"]}
 {"goal":"a1 + b1 = a1 + (n + b2)","proof":["a1 + (n + b2) = a1 + n + b2"]}
 {"goal":"b1 = n + b2","proof":["a1 + (n + b2) != a1 + b1 or n + b2 = b1"]}
-{"goal":"b2 <= b1","proof":["b2 + n != b1 or b2 < b1 or n = 0","not b2 < b1 or b2 <= b1","not b2 < b1","n + b2 = b2 + n","b2 + n = b1","n = 0","b2 != b1 or b2 <= b1","b2 != b1","1 ⋅ b2 = b2","0 + 1 ⋅ b2 = 1 ⋅ b2"]}
+{"goal":"b2 <= b1","proof":["b2 + n != b1 or b2 < b1 or n = 0","not b2 < b1 or b2 <= b1","not b2 < b1","n + b2 = b2 + n","b2 + n = b1","n = 0","b2 != b1 or b2 <= b1","b2 != b1","1 * b2 = b2","0 + 1 * b2 = 1 * b2"]}
 {"goal":"cross_sum_lte","proof":[]}
 {"goal":"0 = 0","proof":[]}
 {"goal":"b <= a","proof":["b < a or a < b or b = a","not b < a or b <= a","not b < a","b = a","b != a or b <= a"]}
@@ -259,21 +259,21 @@
 {"goal":"sub_self","proof":["0 + a - a = 0","0 + a = a"]}
 {"goal":"sub_zero","proof":["a + 0 - 0 = a","a + 0 = 0 + a","0 + a = a","0 + a - 0 != a"]}
 {"goal":"add_imp_sub","proof":["a + b - b = a"]}
-{"goal":"a ⋅ (b - c) = a ⋅ b - a ⋅ c","proof":["b - c = bounded_sub(b, c)","0 != a or a ⋅ b = 0","0 != a or a ⋅ c = 0","a ⋅ bounded_sub(b, c) = bounded_sub(b, c) ⋅ a","0 != a or bounded_sub(b, c) ⋅ a = 0","0 - 0 = 0","bounded_sub(b, c) ⋅ a = 0","a ⋅ b = 0","a ⋅ c = 0"]}
-{"goal":"sub_distrib_right(a, b, c)","proof":["a ⋅ b - a ⋅ c != a ⋅ (b - c) or sub_distrib_right(a, b, c)"]}
-{"goal":"a ⋅ b < a ⋅ c","proof":["not b < c or a ⋅ b < a ⋅ c or 0 = a"]}
-{"goal":"a ⋅ b - a ⋅ c = 0","proof":["not a ⋅ b < a ⋅ c or a ⋅ b - a ⋅ c = 0"]}
+{"goal":"a * (b - c) = a * b - a * c","proof":["b - c = bounded_sub(b, c)","0 != a or a * b = 0","0 != a or a * c = 0","a * bounded_sub(b, c) = bounded_sub(b, c) * a","0 != a or bounded_sub(b, c) * a = 0","0 - 0 = 0","bounded_sub(b, c) * a = 0","a * b = 0","a * c = 0"]}
+{"goal":"sub_distrib_right(a, b, c)","proof":["a * b - a * c != a * (b - c) or sub_distrib_right(a, b, c)"]}
+{"goal":"a * b < a * c","proof":["not b < c or a * b < a * c or 0 = a"]}
+{"goal":"a * b - a * c = 0","proof":["not a * b < a * c or a * b - a * c = 0"]}
 {"goal":"b - c = 0","proof":["not b < c or b - c = 0"]}
-{"goal":"a ⋅ (b - c) = a ⋅ b - a ⋅ c","proof":["a ⋅ (b - c) != 0","a ⋅ 0 != 0","0 != 0 or a ⋅ 0 = 0"]}
-{"goal":"sub_distrib_right(a, b, c)","proof":["a ⋅ b - a ⋅ c != a ⋅ (b - c) or sub_distrib_right(a, b, c)"]}
+{"goal":"a * (b - c) = a * b - a * c","proof":["a * (b - c) != 0","a * 0 != 0","0 != 0 or a * 0 = 0"]}
+{"goal":"sub_distrib_right(a, b, c)","proof":["a * b - a * c != a * (b - c) or sub_distrib_right(a, b, c)"]}
 {"goal":"b - c + c = b","proof":["bounded_sub(b, c) + c = b or b < c","b - c = bounded_sub(b, c)","bounded_sub(b, c) + c = b","bounded_sub(b, c) + c != b"]}
-{"goal":"a ⋅ (b - c) + a ⋅ c = a ⋅ b","proof":["a ⋅ (b - c) + a ⋅ c = a ⋅ (b - c + c)"]}
-{"goal":"a ⋅ (b - c) = a ⋅ b - a ⋅ c","proof":["a ⋅ (b - c) + a ⋅ c != a ⋅ b or a ⋅ b - a ⋅ c = a ⋅ (b - c)"]}
-{"goal":"sub_distrib_right(a, b, c)","proof":["a ⋅ b - a ⋅ c != a ⋅ (b - c) or sub_distrib_right(a, b, c)"]}
+{"goal":"a * (b - c) + a * c = a * b","proof":["a * (b - c) + a * c = a * (b - c + c)"]}
+{"goal":"a * (b - c) = a * b - a * c","proof":["a * (b - c) + a * c != a * b or a * b - a * c = a * (b - c)"]}
+{"goal":"sub_distrib_right(a, b, c)","proof":["a * b - a * c != a * (b - c) or sub_distrib_right(a, b, c)"]}
 {"goal":"sub_distrib_right(a, b, c)","proof":["a · b - a · c != a · (b - c) or sub_distrib_right(a, b, c)"]}
 {"goal":"sub_distrib_right(a, b, c)","proof":["a · b - a · c != a · (b - c) or sub_distrib_right(a, b, c)"]}
-{"goal":"sub_distrib_right","proof":["not sub_distrib_right(a, b, c) or a ⋅ b - a ⋅ c = a ⋅ (b - c)"]}
-{"goal":"sub_distrib_left","proof":["c ⋅ a - c ⋅ b = c ⋅ (a - b)","a - b = bounded_sub(a, b)","c ⋅ a = a ⋅ c","c ⋅ b = b ⋅ c","c ⋅ bounded_sub(a, b) = bounded_sub(a, b) ⋅ c"]}
+{"goal":"sub_distrib_right","proof":["not sub_distrib_right(a, b, c) or a * b - a * c = a * (b - c)"]}
+{"goal":"sub_distrib_left","proof":["c * a - c * b = c * (a - b)","a - b = bounded_sub(a, b)","c * a = a * c","c * b = b * c","c * bounded_sub(a, b) = bounded_sub(a, b) * c"]}
 {"goal":"c <= b","proof":["not c <= a or not a <= b or c <= b","not a < b or a <= b","not a <= b or not c <= a","a <= b","not a <= b"]}
 {"goal":"a - c + c = a","proof":["not c <= a or a - c + c = a"]}
 {"goal":"b - c + c = b","proof":["not c <= b or b - c + c = b"]}
@@ -288,46 +288,46 @@
 {"goal":"two_neq_zero","proof":["1 + 1 <= 0 = 1 < 0","1 + 1 != 0 or 1 + 1 <= 0","1 + 1 = 0","1 + 1 <= 0","1 < 0","not 1 < 0"]}
 {"goal":"three_neq_zero","proof":["2.suc != 0"]}
 {"goal":"pow_zero","proof":["0 != 0 or a.pow(0) = 1"]}
-{"goal":"a^1 = a ⋅ a^0","proof":["0.suc != 1 or a ⋅ a^0 = a^1","0.suc != 1"]}
+{"goal":"a^1 = a * a^0","proof":["0.suc != 1 or a * a^0 = a^1","0.suc != 1"]}
 {"goal":"a^0 = 1","proof":["0 != 0 or a^0 = 1"]}
-{"goal":"pow_one","proof":["a ⋅ 1 = 1 ⋅ a","a ⋅ a^0 != a","a ⋅ 1 != a","1 ⋅ a = a"]}
-{"goal":"f(0)","proof":["a^b ⋅ a^0 != a^(b + 0) or f(0)","a^0 = 1","a^b ⋅ 1 = a^b","b + 0 = b","a^b ⋅ a^0 != a^(b + 0)"]}
-{"goal":"a^(b + x) = a^b ⋅ a^x","proof":["not f(x) or a^b ⋅ a^x = a^(b + x)"]}
+{"goal":"pow_one","proof":["a * 1 = 1 * a","a * a^0 != a","a * 1 != a","1 * a = a"]}
+{"goal":"f(0)","proof":["a^b * a^0 != a^(b + 0) or f(0)","a^0 = 1","a^b * 1 = a^b","b + 0 = b","a^b * a^0 != a^(b + 0)"]}
+{"goal":"a^(b + x) = a^b * a^x","proof":["not f(x) or a^b * a^x = a^(b + x)"]}
 {"goal":"b + (x + 1) = b + x + 1","proof":["b + (x + 1) = b + x + 1"]}
-{"goal":"a^(b + x + 1) = a^b ⋅ (a^x ⋅ a^1)","proof":["(b + x).suc != (b + x).suc or a ⋅ a^(b + x) = a^(b + x).suc","a^b ⋅ (a^x ⋅ a^1) = a^b ⋅ a^x ⋅ a^1","a^1 ⋅ (a^b ⋅ a^x) = a^b ⋅ a^x ⋅ a^1","b + x + 1 = 1 + (b + x)","1 + (b + x) = (b + x).suc","a^1 = a","a ⋅ a^(b + x) = a^(b + x).suc"]}
-{"goal":"f(x + 1)","proof":["a^b ⋅ a^(x + 1) != a^(b + (x + 1)) or f(x + 1)","x.suc != x.suc or a ⋅ a^x = a^x.suc","a^b ⋅ (a^x ⋅ a^1) = a^x ⋅ a^1 ⋅ a^b","a^b ⋅ a^(x + 1) = a^(x + 1) ⋅ a^b","a^x ⋅ a^1 = a^1 ⋅ a^x","x + 1 = 1 + x","1 + x = x.suc","a^1 = a","a ⋅ a^x = a^x.suc","a^b ⋅ a^(x + 1) != a^(b + (x + 1))"]}
+{"goal":"a^(b + x + 1) = a^b * (a^x * a^1)","proof":["(b + x).suc != (b + x).suc or a * a^(b + x) = a^(b + x).suc","a^b * (a^x * a^1) = a^b * a^x * a^1","a^1 * (a^b * a^x) = a^b * a^x * a^1","b + x + 1 = 1 + (b + x)","1 + (b + x) = (b + x).suc","a^1 = a","a * a^(b + x) = a^(b + x).suc"]}
+{"goal":"f(x + 1)","proof":["a^b * a^(x + 1) != a^(b + (x + 1)) or f(x + 1)","x.suc != x.suc or a * a^x = a^x.suc","a^b * (a^x * a^1) = a^x * a^1 * a^b","a^b * a^(x + 1) = a^(x + 1) * a^b","a^x * a^1 = a^1 * a^x","x + 1 = 1 + x","1 + x = x.suc","a^1 = a","a * a^x = a^x.suc","a^b * a^(x + 1) != a^(b + (x + 1))"]}
 {"goal":"f(c)","proof":["let s0: (ℕ -> Bool) -> ℕ satisfy { forall(x0: ℕ -> Bool, x1: ℕ) { not x0(0) or x0(s0(x0)) or x0(x1) } and forall(x2: ℕ -> Bool, x3: ℕ) { not x2(s0(x2).suc) or not x2(0) or x2(x3) } }","not f(s0(f)) or f(s0(f) + 1)","not f(s0(f).suc) or not f(0) or f(c)","not f(s0(f).suc)","not f(0) or f(s0(f)) or f(c)","f(s0(f))","s0(f) + 1 = s0(f).suc","f(s0(f) + 1)","not f(s0(f) + 1)"]}
-{"goal":"pow_add","proof":["not f(c) or a^b ⋅ a^c = a^(b + c)"]}
-{"goal":"f(0)","proof":["a^b^0 != a^(b ⋅ 0) or f(0)","b ⋅ 0 != 0 or a^(b ⋅ 0) = 1","a^b^0 = 1","b ⋅ 0 = 0","a^b^0 != a^(b ⋅ 0)","a^(b ⋅ 0) != 1"]}
-{"goal":"a^(b ⋅ x) = a^b^x","proof":["not f(x) or a^b^x = a^(b ⋅ x)"]}
-{"goal":"b ⋅ (x + 1) = b ⋅ x + b","proof":["b ⋅ (x + 1) = b ⋅ x + b"]}
-{"goal":"a^(b ⋅ (x + 1)) = a^(b ⋅ x) ⋅ a^b","proof":["a^(b ⋅ x) ⋅ a^b != a^(b ⋅ x + b)","a^(b ⋅ x) ⋅ a^b = a^(b ⋅ x + b)"]}
+{"goal":"pow_add","proof":["not f(c) or a^b * a^c = a^(b + c)"]}
+{"goal":"f(0)","proof":["a^b^0 != a^(b * 0) or f(0)","b * 0 != 0 or a^(b * 0) = 1","a^b^0 = 1","b * 0 = 0","a^b^0 != a^(b * 0)","a^(b * 0) != 1"]}
+{"goal":"a^(b * x) = a^b^x","proof":["not f(x) or a^b^x = a^(b * x)"]}
+{"goal":"b * (x + 1) = b * x + b","proof":["b * (x + 1) = b * x + b"]}
+{"goal":"a^(b * (x + 1)) = a^(b * x) * a^b","proof":["a^(b * x) * a^b != a^(b * x + b)","a^(b * x) * a^b = a^(b * x + b)"]}
 {"goal":"a^b = a^b^1","proof":["a^b^1 = a^b"]}
-{"goal":"a^(b ⋅ (x + 1)) = a^b^(x + 1)","proof":["a^b^x ⋅ a^b^1 = a^b^(x + 1)"]}
-{"goal":"f(x + 1)","proof":["a^b^(x + 1) != a^(b ⋅ (x + 1)) or f(x + 1)","a^b^(x + 1) != a^(b ⋅ (x + 1))"]}
+{"goal":"a^(b * (x + 1)) = a^b^(x + 1)","proof":["a^b^x * a^b^1 = a^b^(x + 1)"]}
+{"goal":"f(x + 1)","proof":["a^b^(x + 1) != a^(b * (x + 1)) or f(x + 1)","a^b^(x + 1) != a^(b * (x + 1))"]}
 {"goal":"f(c)","proof":["let s0: (ℕ -> Bool) -> ℕ satisfy { forall(x0: ℕ -> Bool, x1: ℕ) { not x0(0) or x0(s0(x0)) or x0(x1) } and forall(x2: ℕ -> Bool, x3: ℕ) { not x2(s0(x2).suc) or not x2(0) or x2(x3) } }","not f(s0(f)) or f(s0(f) + 1)","not f(s0(f).suc) or not f(0) or f(c)","not f(s0(f).suc)","not f(0) or f(s0(f)) or f(c)","f(s0(f))","s0(f) + 1 = s0(f).suc","f(s0(f) + 1)","not f(s0(f) + 1)"]}
-{"goal":"pow_mul","proof":["not f(c) or a^b^c = a^(b ⋅ c)"]}
+{"goal":"pow_mul","proof":["not f(c) or a^b^c = a^(b * c)"]}
 {"goal":"exists(k0: ℕ) { n = k0.suc }","proof":["let s0: ℕ -> ℕ satisfy { forall(x0: ℕ) { s0(x0).suc = x0 or 0 = x0 } }","s0(n).suc != n","s0(n).suc = n or 0 = n"]}
-{"goal":"zero_pow","proof":["b.suc != b.suc or 0 ⋅ 0^b = 0^b.suc","0^b.suc != 0","0 ⋅ 0^b = 0","0 ⋅ 0^b = 0^b.suc"]}
+{"goal":"zero_pow","proof":["b.suc != b.suc or 0 * 0^b = 0^b.suc","0^b.suc != 0","0 * 0^b = 0","0 * 0^b = 0^b.suc"]}
 {"goal":"one_pow(0)","proof":["1.pow(0) != 1 or one_pow(0)","1.pow(0) != 1","0 != 0 or 1.pow(0) = 1"]}
-{"goal":"one_pow(n)","proof":["let s0: (ℕ -> Bool) -> ℕ satisfy { forall(x0: ℕ -> Bool, x1: ℕ) { not x0(0) or x0(s0(x0)) or x0(x1) } and forall(x2: ℕ -> Bool, x3: ℕ) { not x2(s0(x2).suc) or not x2(0) or x2(x3) } }","1^s0(one_pow).suc != 1 or one_pow(s0(one_pow).suc)","not one_pow(s0(one_pow)) or 1^s0(one_pow) = 1","s0(one_pow).suc != s0(one_pow).suc or 1 ⋅ 1^s0(one_pow) = 1^s0(one_pow).suc","not one_pow(s0(one_pow).suc) or not one_pow(0) or one_pow(n)","not one_pow(s0(one_pow).suc)","not one_pow(0) or one_pow(s0(one_pow)) or one_pow(n)","one_pow(s0(one_pow))","1 ⋅ 1 = 1","1 ⋅ 1^s0(one_pow) = 1^s0(one_pow).suc","1^s0(one_pow) = 1","1^s0(one_pow).suc != 1"]}
+{"goal":"one_pow(n)","proof":["let s0: (ℕ -> Bool) -> ℕ satisfy { forall(x0: ℕ -> Bool, x1: ℕ) { not x0(0) or x0(s0(x0)) or x0(x1) } and forall(x2: ℕ -> Bool, x3: ℕ) { not x2(s0(x2).suc) or not x2(0) or x2(x3) } }","1^s0(one_pow).suc != 1 or one_pow(s0(one_pow).suc)","not one_pow(s0(one_pow)) or 1^s0(one_pow) = 1","s0(one_pow).suc != s0(one_pow).suc or 1 * 1^s0(one_pow) = 1^s0(one_pow).suc","not one_pow(s0(one_pow).suc) or not one_pow(0) or one_pow(n)","not one_pow(s0(one_pow).suc)","not one_pow(0) or one_pow(s0(one_pow)) or one_pow(n)","one_pow(s0(one_pow))","1 * 1 = 1","1 * 1^s0(one_pow) = 1^s0(one_pow).suc","1^s0(one_pow) = 1","1^s0(one_pow).suc != 1"]}
 {"goal":"one_pow","proof":["not one_pow(n) or 1.pow(n) = 1"]}
 {"goal":"f(0)","proof":["1 <= a.pow(0) = f(0)","not 1 <= a.pow(0)","a.pow(0) != 1 or 1 <= a.pow(0)","a.pow(0) = 1"]}
 {"goal":"1 <= a^x","proof":["1 <= a^x = f(x)"]}
-{"goal":"a^x <= a^(x + 1)","proof":["a^x ⋅ a^1 = a^(x + 1)","a^x <= a^x ⋅ a^1 or a^1 = 0","a^1 = a","a^1 != 0","not a^x <= a^x ⋅ a^1"]}
+{"goal":"a^x <= a^(x + 1)","proof":["a^x * a^1 = a^(x + 1)","a^x <= a^x * a^1 or a^1 = 0","a^1 = a","a^1 != 0","not a^x <= a^x * a^1"]}
 {"goal":"1 <= a^(x + 1)","proof":["not 1 <= a^x or not a^x <= a^(x + 1) or 1 <= a^(x + 1)","not a^x <= a^(x + 1) or not 1 <= a^x"]}
 {"goal":"f(x + 1)","proof":["1 <= a.pow(x + 1) = f(x + 1)"]}
 {"goal":"f(b)","proof":["let s0: (ℕ -> Bool) -> ℕ satisfy { forall(x0: ℕ -> Bool, x1: ℕ) { not x0(0) or x0(s0(x0)) or x0(x1) } and forall(x2: ℕ -> Bool, x3: ℕ) { not x2(s0(x2).suc) or not x2(0) or x2(x3) } }","not f(s0(f)) or f(s0(f) + 1)","not f(s0(f).suc) or not f(0) or f(b)","not f(s0(f).suc)","not f(0) or f(s0(f)) or f(b)","f(s0(f))","s0(f) + 1 = s0(f).suc","f(s0(f) + 1)","not f(s0(f) + 1)"]}
 {"goal":"pow_gte_one","proof":["1 <= a.pow(b) = f(b)"]}
 {"goal":"exists(k0: ℕ) { b = k0 + 1 }","proof":["let s0: ℕ -> ℕ satisfy { forall(x0: ℕ) { s0(x0) + 1 = x0 or 0 = x0 } }","s0(b) + 1 != b","s0(b) + 1 = b or 0 = b"]}
-{"goal":"a^b = a ⋅ a^b_pred","proof":["b_pred.suc != b or a ⋅ a^b_pred = a^b","b_pred.suc != b","b_pred + 1 = 1 + b_pred","1 + b_pred = b","1 + b_pred = b_pred.suc"]}
+{"goal":"a^b = a * a^b_pred","proof":["b_pred.suc != b or a * a^b_pred = a^b","b_pred.suc != b","b_pred + 1 = 1 + b_pred","1 + b_pred = b","1 + b_pred = b_pred.suc"]}
 {"goal":"a^b_pred >= 1","proof":["1 <= a^b_pred or 0 = a","0 >= 1 = 1 <= 0","a^b_pred >= 1 = 1 <= a^b_pred","not 1 <= a^b_pred","0 = a","not 1 < a or 1 <= a","a^b_pred >= 1 or a^b_pred = 0","a^b_pred = 0","not 0 >= 1","not 1 <= 0","1 <= a","not 1 <= a"]}
 {"goal":"a > 1","proof":["a > 1 = 1 < a"]}
-{"goal":"a ⋅ a^b_pred > 1","proof":["not a > 1 or not a^b_pred > 1 or a ⋅ a^b_pred > 1","not a^b_pred > 1","1 + 1 <= a = 1 < a","1 + 1 <= a ⋅ a^b_pred = 1 < a ⋅ a^b_pred","not 1 <= a^b_pred or 1 < a^b_pred or a^b_pred = 1","a^b_pred >= 1 = 1 <= a^b_pred","1 <= a^b_pred","a ⋅ a^b_pred > 1 = 1 < a ⋅ a^b_pred","a^b_pred > 1 = 1 < a^b_pred","a ⋅ a^b_pred = a^b_pred ⋅ a","1 ⋅ a = a","not 1 < a^b_pred","a^b_pred = 1"]}
+{"goal":"a * a^b_pred > 1","proof":["not a > 1 or not a^b_pred > 1 or a * a^b_pred > 1","not a^b_pred > 1","1 + 1 <= a = 1 < a","1 + 1 <= a * a^b_pred = 1 < a * a^b_pred","not 1 <= a^b_pred or 1 < a^b_pred or a^b_pred = 1","a^b_pred >= 1 = 1 <= a^b_pred","1 <= a^b_pred","a * a^b_pred > 1 = 1 < a * a^b_pred","a^b_pred > 1 = 1 < a^b_pred","a * a^b_pred = a^b_pred * a","1 * a = a","not 1 < a^b_pred","a^b_pred = 1"]}
 {"goal":"a^b > 1","proof":[]}
 {"goal":"pow_gt_one","proof":["a.pow(b) > 1 = 1 < a.pow(b)"]}
 {"goal":"1 <= a^b","proof":["1 <= a^b or 0 = a"]}
-{"goal":"pow_ne_zero","proof":["1 <= 0","a^0 ⋅ a^b = a^(0 + b)","a ⋅ 1 = 1 ⋅ a","not 1 <= 0 or 1 = 0","1 = 0","a^1 = a","b^1 = b","a^1 - 0 = a^1","b^1 - 0 = b^1","1 ⋅ (a - 0) = a - 0","1 ⋅ (b - 0) = b - 0","0 + 1 ⋅ b = 1 ⋅ b"]}
+{"goal":"pow_ne_zero","proof":["1 <= 0","a^0 * a^b = a^(0 + b)","a * 1 = 1 * a","not 1 <= 0 or 1 = 0","1 = 0","a^1 = a","b^1 = b","a^1 - 0 = a^1","b^1 - 0 = b^1","1 * (a - 0) = a - 0","1 * (b - 0) = b - 0","0 + 1 * b = 1 * b"]}
 {"goal":"pow_zero_imp_zero","proof":["a^b != 0 or 0 = a"]}
 {"goal":"a^b > 1","proof":["not 1 < a or 1 < a^b or 0 = b","a > 1 = 1 < a","a^b > 1 = 1 < a^b","not 1 < a^b","1 < a","not 1 < a"]}
 {"goal":"false","proof":["1 > 1","not 1 < 1 or not 1 < 1","1 > 1 = 1 < 1","1 < 1"]}
@@ -337,43 +337,43 @@
 {"goal":"a^b = 1","proof":[]}
 {"goal":"pow_eq_one_imp_one","proof":["not 1 <= a or 1 < a or 1 = a","1 <= a^1 or 0 = a","0^b = 0 or 0 = b","a^b != 0 or a^(a^b) = 1","a > 1 = 1 < a","not 1 < a","not 1 <= a","a^1 = a","a^1 != 1","0^b = 0","a^(a^b) != 1","not 1 <= a^1","a^b != 0","0 = a"]}
 {"goal":"exists(k0: ℕ) { b1 + k0 = b2 and k0 != 0 }","proof":["let s0: (ℕ, ℕ) -> ℕ satisfy { forall(x0: ℕ, x1: ℕ) { not x0 < x1 or 0 != s0(x0, x1) } and forall(x2: ℕ, x3: ℕ) { not x2 < x3 or x2 + s0(x2, x3) = x3 } and forall(x4: ℕ, x5: ℕ, x6: ℕ) { x4 + x5 != x6 or x4 < x6 or 0 = x5 } }","b1 + s0(b1, b2) != b2 or s0(b1, b2) = 0","not b1 < b2 or b1 + s0(b1, b2) = b2","not b1 < b2 or s0(b1, b2) != 0","s0(b1, b2) != 0","b1 + s0(b1, b2) = b2","b1 + s0(b1, b2) != b2"]}
-{"goal":"a^b2 = a^b1 ⋅ a^n","proof":["a^b1 ⋅ a^n = a^(b1 + n)"]}
+{"goal":"a^b2 = a^b1 * a^n","proof":["a^b1 * a^n = a^(b1 + n)"]}
 {"goal":"a^b1 != 0","proof":["a^b1 != 0 or 0 = a","0 = a","not 1 < 0"]}
 {"goal":"1 < a","proof":[]}
 {"goal":"1 < a^n","proof":["not 1 < a or 1 < a^n or n = 0"]}
-{"goal":"a^b2 > a^b1","proof":["not 1 < a^n or a^b1 < a^b1 ⋅ a^n or a^b1 = 0","a^b1 ⋅ a^n > a^b1 = a^b1 < a^b1 ⋅ a^n","not a^b1 ⋅ a^n > a^b1","not a^b1 < a^b1 ⋅ a^n"]}
+{"goal":"a^b2 > a^b1","proof":["not 1 < a^n or a^b1 < a^b1 * a^n or a^b1 = 0","a^b1 * a^n > a^b1 = a^b1 < a^b1 * a^n","not a^b1 * a^n > a^b1","not a^b1 < a^b1 * a^n"]}
 {"goal":"lt_imp_pow_lt","proof":["a.pow(b2) > a.pow(b1) = a.pow(b1) < a.pow(b2)"]}
 {"goal":"exists(k0: ℕ) { b1 + k0 = b2 }","proof":["let s0: (ℕ, ℕ) -> ℕ satisfy { forall(x0: ℕ, x1: ℕ) { not x0 < x1 or 0 != s0(x0, x1) } and forall(x2: ℕ, x3: ℕ) { not x2 < x3 or x2 + s0(x2, x3) = x3 } and forall(x4: ℕ, x5: ℕ, x6: ℕ) { x4 + x5 != x6 or x4 < x6 or 0 = x5 } }","b1 + 0 != b2","b1 + s0(b1, b2) != b2","not b1 < b2 or b1 + s0(b1, b2) = b2","not b1 < b2","not b1 <= b2 or b1 < b2 or b2 = b1","b2 = b1","b1 + 0 = b1"]}
-{"goal":"a^b2 = a^b1 ⋅ a^n","proof":["a^b1 ⋅ a^n = a^(b1 + n)"]}
+{"goal":"a^b2 = a^b1 * a^n","proof":["a^b1 * a^n = a^(b1 + n)"]}
 {"goal":"a^n != 0","proof":["a^n != 0 or 0 = a"]}
-{"goal":"a^b2 >= a^b1","proof":["a^b1 <= a^b1 ⋅ a^n or a^n = 0","a^b1 ⋅ a^n >= a^b1 = a^b1 <= a^b1 ⋅ a^n","not a^b1 ⋅ a^n >= a^b1","a^b1 <= a^b1 ⋅ a^n"]}
+{"goal":"a^b2 >= a^b1","proof":["a^b1 <= a^b1 * a^n or a^n = 0","a^b1 * a^n >= a^b1 = a^b1 <= a^b1 * a^n","not a^b1 * a^n >= a^b1","a^b1 <= a^b1 * a^n"]}
 {"goal":"lte_imp_pow_lte","proof":["a.pow(b2) >= a.pow(b1) = a.pow(b1) <= a.pow(b2)"]}
 {"goal":"lte_pow","proof":["not 1 <= b or a.pow(1) <= a.pow(b) or 0 = a","b >= 1 = 1 <= b","b >= 1 or 0 = b","a.pow(1) = a","not a.pow(1) <= a.pow(b)","b >= 1","not 1 <= b","1 <= b"]}
 {"goal":"pow_lt_imp_lt","proof":["not 1 < a or not b2 < b1 or a.pow(b2) < a.pow(b1)","b1 < b2 or b2 < b1 or b2 = b1","b2 < b1 or b2 = b1","not a.pow(b2) < a.pow(b1) or not a.pow(b1) < a.pow(b2)","not a.pow(b1) < a.pow(b1)","not a.pow(b2) < a.pow(b1)","not b2 < b1","b2 = b1"]}
 {"goal":"pow_lte_imp_lte","proof":["not 1 < a or not b2 < b1 or a.pow(b2) < a.pow(b1)","not a.pow(b1) <= a.pow(b2) or not a.pow(b2) < a.pow(b1) or a.pow(b2) < a.pow(b2)","b1 < b2 or b2 < b1 or b2 = b1","not b1 < b2 or b1 <= b2","not b1 < b2","b2 != b1 or b1 <= b2","b2 != b1","not a.pow(b2) < a.pow(b2)","not a.pow(b2) < a.pow(b1) or a.pow(b2) < a.pow(b2)","not a.pow(b2) < a.pow(b1)","b2 < b1","not b2 < b1"]}
 {"goal":"exists(k0: ℕ) { b = k0 + 1 }","proof":["let s0: ℕ -> ℕ satisfy { forall(x0: ℕ) { s0(x0) + 1 = x0 or 0 = x0 } }","s0(b) + 1 != b","s0(b) + 1 = b or 0 = b"]}
-{"goal":"a^b = a ⋅ a^b_pred","proof":["b_pred.suc != b or a ⋅ a^b_pred = a^b","b_pred.suc != b","b_pred + 1 = 1 + b_pred","1 + b_pred = b","1 + b_pred = b_pred.suc"]}
-{"goal":"a^b != 1","proof":["a ⋅ a^b_pred = 1","a ⋅ a^b_pred != 1 or 1 = a"]}
+{"goal":"a^b = a * a^b_pred","proof":["b_pred.suc != b or a * a^b_pred = a^b","b_pred.suc != b","b_pred + 1 = 1 + b_pred","1 + b_pred = b","1 + b_pred = b_pred.suc"]}
+{"goal":"a^b != 1","proof":["a * a^b_pred = 1","a * a^b_pred != 1 or 1 = a"]}
 {"goal":"false","proof":[]}
 {"goal":"pow_eq_one_imp","proof":[]}
 {"goal":"f(0)","proof":["0 != 0 or f(0)"]}
-{"goal":"a^m.suc = a^m ⋅ a","proof":["m.suc != m.suc or a ⋅ a^m = a^m.suc","a ⋅ a^m = a^m ⋅ a","a ⋅ a^m != a^m.suc"]}
-{"goal":"b^m.suc = b^m ⋅ b","proof":["m.suc != m.suc or b ⋅ b^m = b^m.suc","b ⋅ b^m = b^m ⋅ b","b ⋅ b^m != b^m.suc"]}
+{"goal":"a^m.suc = a^m * a","proof":["m.suc != m.suc or a * a^m = a^m.suc","a * a^m = a^m * a","a * a^m != a^m.suc"]}
+{"goal":"b^m.suc = b^m * b","proof":["m.suc != m.suc or b * b^m = b^m.suc","b * b^m = b^m * b","b * b^m != b^m.suc"]}
 {"goal":"a^m < b^m","proof":["not a < b or not f(m) or a^m < b^m or m = 0","not f(m) or a^m < b^m or m = 0"]}
 {"goal":"a < b","proof":[]}
-{"goal":"a^m.suc = 0","proof":["0 != a or a^m ⋅ a = 0","a^m ⋅ a != 0"]}
+{"goal":"a^m.suc = 0","proof":["0 != a or a^m * a = 0","a^m * a != 0"]}
 {"goal":"b^m.suc != 0","proof":["b^m.suc != 0 or b = 0","b = 0","a < 0","a < a","not a < a or not a < a"]}
 {"goal":"a^m.suc < b^m.suc","proof":["not 0 < b^m.suc","b^m.suc < 0 or 0 < b^m.suc or b^m.suc = 0","not b^m.suc < 0"]}
 {"goal":"a != 0","proof":[]}
 {"goal":"a^m != 0","proof":["a^m != 0 or 0 = a"]}
-{"goal":"a^m ⋅ a < b^m ⋅ b","proof":["not a <= b or not a^m < b^m or a^m ⋅ a < b^m ⋅ b or 0 = a or a^m = 0","not a <= b or not a^m < b^m or a^m ⋅ a < b^m ⋅ b or a^m = 0 or 0 = a","not a <= b","not a < b or a <= b"]}
+{"goal":"a^m * a < b^m * b","proof":["not a <= b or not a^m < b^m or a^m * a < b^m * b or 0 = a or a^m = 0","not a <= b or not a^m < b^m or a^m * a < b^m * b or a^m = 0 or 0 = a","not a <= b","not a < b or a <= b"]}
 {"goal":"a^m.suc < b^m.suc","proof":[]}
 {"goal":"a^m.suc < b^m.suc","proof":[]}
 {"goal":"f(m.suc)","proof":["not a^m.suc < b^m.suc or f(m.suc)","b > a = a < b","b^m.suc > a^m.suc = a^m.suc < b^m.suc","m + 1 = 1 + m","1 + m = m.suc","a^1 = a","b^1 = b","0 + 1 = 1","not a^m.suc < b^m.suc","m = 0"]}
 {"goal":"f(n)","proof":["let s0: (ℕ -> Bool) -> ℕ satisfy { forall(x0: ℕ -> Bool, x1: ℕ) { not x0(0) or x0(s0(x0)) or x0(x1) } and forall(x2: ℕ -> Bool, x3: ℕ) { not x2(s0(x2).suc) or not x2(0) or x2(x3) } }","not f(s0(f)) or f(s0(f).suc)","not f(s0(f).suc) or not f(0) or f(n)","not f(s0(f).suc)","not f(0) or f(s0(f)) or f(n)","not f(s0(f))","f(s0(f))"]}
 {"goal":"power_increase","proof":["not a < b or not f(n) or a^n < b^n or 0 = n","not f(n) or a^n < b^n or 0 = n"]}
-{"goal":"square_eq_mul","proof":["a^1 ⋅ a^1 = a^(1 + 1)","a^1 = a"]}
-{"goal":"square_gt","proof":["not 1 < a or a < a ⋅ a or 0 = a","a^2 = a ⋅ a","a > 1 = 1 < a","a^2 > a = a < a^2","not a < a^2","not a < a ⋅ a","1 < a","not 1 < 0","0 = a"]}
+{"goal":"square_eq_mul","proof":["a^1 * a^1 = a^(1 + 1)","a^1 = a"]}
+{"goal":"square_gt","proof":["not 1 < a or a < a * a or 0 = a","a^2 = a * a","a > 1 = 1 < a","a^2 > a = a < a^2","not a < a^2","not a < a * a","1 < a","not 1 < 0","0 = a"]}
 {"goal":"true_below(f, 0)","proof":["let s0: (ℕ -> Bool, ℕ) -> ℕ satisfy { forall(x0: ℕ -> Bool, x1: ℕ, x2: ℕ) { not true_below(x0, x1) or not x2 < x1 or x0(x2) } and forall(x3: ℕ -> Bool, x4: ℕ) { s0(x3, x4) < x4 or true_below(x3, x4) } and forall(x5: ℕ -> Bool, x6: ℕ) { not x5(s0(x5, x6)) or true_below(x5, x6) } }","s0(f, 0) < 0 or true_below(f, 0)","s0(f, 0) < 0","not s0(f, 0) < 0"]}
 {"goal":"g(0)","proof":["true_below(f, 0) = g(0)"]}
 {"goal":"true_below(f, x)","proof":["true_below(f, x) = g(x)"]}

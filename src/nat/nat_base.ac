@@ -132,55 +132,55 @@ attributes ℕ {
                 0
             }
             ℕ.suc(pred) {
-                (self ⋅ pred) + self
+                (self * pred) + self
             }
         }
     }
 
     /// The number formed by appending a digit to this one in base 10.
     define read(self, other: ℕ) -> ℕ {
-        10 ⋅ self + other
+        10 * self + other
     }
 }
 
-theorem mul_zero(a: ℕ) { a ⋅ 0 = 0 and 0 ⋅ a = 0 } // 0 ⋅ a = 0 by easy induction
+theorem mul_zero(a: ℕ) { a * 0 = 0 and 0 * a = 0 } // 0 * a = 0 by easy induction
 
 theorem mul_suc_right(a: ℕ, b: ℕ) {
-    a ⋅ (b + 1) = a ⋅ b + a 
+    a * (b + 1) = a * b + a 
 }
 
 theorem mul_suc_left(a: ℕ, b: ℕ) {
-    (a + 1) ⋅ b = a ⋅ b + b
+    (a + 1) * b = a * b + b
 } by {
     define f(n: ℕ) -> Bool {
-        (a + 1) ⋅ n = a ⋅ n + n
+        (a + 1) * n = a * n + n
     }
     f(0)
     forall(n: ℕ) {
         if f(n) {
-            (a + 1) ⋅ (n + 1) = (a + 1) ⋅ n + (a + 1)
+            (a + 1) * (n + 1) = (a + 1) * n + (a + 1)
             // f(n)
-            (a + 1) ⋅ n + (a + 1) = (a ⋅ n + n) + (a + 1)
+            (a + 1) * n + (a + 1) = (a * n + n) + (a + 1)
             // reorder and collect
-            (a ⋅ n + a) + (n + 1) = (a ⋅ (n + 1)) + (n + 1)
+            (a * n + a) + (n + 1) = (a * (n + 1)) + (n + 1)
             f(n + 1)
         }
     }
 }
 
-theorem mul_comm(a: ℕ, b: ℕ) { a ⋅ b = b ⋅ a } by {
+theorem mul_comm(a: ℕ, b: ℕ) { a * b = b * a } by {
     define f(n: ℕ) -> Bool { mul_comm(a, n) }
-    a ⋅ 0 = 0 ⋅ a
+    a * 0 = 0 * a
     mul_comm(a, 0)
     f(0)
     forall(n: ℕ) {
         if f(n) {
             // def of mul
-            a ⋅ (n + 1) = a ⋅ n + a
+            a * (n + 1) = a * n + a
             // f(n) & add_comm
-            a ⋅ n + a = n ⋅ a + a
+            a * n + a = n * a + a
             // mul_suc
-            (n + 1) ⋅ a = n ⋅ a + a
+            (n + 1) * a = n * a + a
             f(n + 1)
         }
     }
@@ -188,17 +188,17 @@ theorem mul_comm(a: ℕ, b: ℕ) { a ⋅ b = b ⋅ a } by {
     mul_comm(a, b)
 }
 
-theorem one_mul_one { 1 ⋅ 1 = 1 } 
+theorem one_mul_one { 1 * 1 = 1 } 
 
 theorem distrib_right(a: ℕ, b: ℕ, c: ℕ) {
-    a ⋅ (b + c) = a ⋅ b + a ⋅ c 
+    a * (b + c) = a * b + a * c 
 } by {
     define f(x: ℕ) -> Bool { distrib_right(a, b, x) }
     f(0)
     forall(x: ℕ) {
         if f(x) {
             distrib_right(a, b, x)
-            a ⋅ (b + x) = a ⋅ b + a ⋅ x            
+            a * (b + x) = a * b + a * x            
             mul_suc_right(a, b + x)
             distrib_right(a, b, x + 1)
         }
@@ -207,27 +207,27 @@ theorem distrib_right(a: ℕ, b: ℕ, c: ℕ) {
 }
 
 theorem distrib_left(a: ℕ, b: ℕ, c: ℕ) {
-    (a + b) ⋅ c = a ⋅ c + b ⋅ c
+    (a + b) * c = a * c + b * c
 } // by mul_comm
 
-theorem mul_assoc(a: ℕ, b: ℕ, c: ℕ) { (a ⋅ b) ⋅ c = a ⋅ (b ⋅ c) } by {
+theorem mul_assoc(a: ℕ, b: ℕ, c: ℕ) { (a * b) * c = a * (b * c) } by {
     define f(x: ℕ) -> Bool { mul_assoc(a, b, x) }
     f(0)
     forall(x: ℕ) {
         if f(x) {
-            (a ⋅ b) ⋅ x = a ⋅ (b ⋅ x)
-            mul_suc_right(a ⋅ b, x)
+            (a * b) * x = a * (b * x)
+            mul_suc_right(a * b, x)
             f(x + 1)
         }
     }
     mul_assoc(a, b, c)
 }
 
-theorem mul_one_right(a: ℕ) { a ⋅ 1 = a } by {
-    (a ⋅ 0) + a = a
+theorem mul_one_right(a: ℕ) { a * 1 = a } by {
+    (a * 0) + a = a
 }
 
-theorem mul_one_left(a: ℕ) { 1 ⋅ a = a }
+theorem mul_one_left(a: ℕ) { 1 * a = a }
 
 theorem suc_ne(a: ℕ) { a.suc != a } by {
     suc_ne(0) // by property of inductive
@@ -523,25 +523,25 @@ theorem gt_suc_left(a: ℕ, b: ℕ) { a + 1 > b iff a >= b }
 theorem gt_suc_right(a: ℕ, b: ℕ) { a > b implies a >= b + 1 } 
 
 theorem mul_to_nonzero(a: ℕ, b: ℕ) { 
-    a != 0 and b != 0 implies a ⋅ b != 0 
+    a != 0 and b != 0 implies a * b != 0 
 } by {
     let b_pred: ℕ satisfy { b_pred + 1 = b }
-    a ⋅ b = a ⋅ b_pred + a
+    a * b = a * b_pred + a
 } 
 
 theorem mul_to_zero(a: ℕ, b: ℕ) { 
-    a ⋅ b = 0 implies a = 0 or b = 0 
+    a * b = 0 implies a = 0 or b = 0 
 } 
 
 theorem mul_to_zero_imp_rev(a: ℕ, b: ℕ) { 
-    a = 0 or b = 0 implies a ⋅ b = 0  
+    a = 0 or b = 0 implies a * b = 0  
 }
 
 theorem mul_increase(a: ℕ, b: ℕ) {
-    a != 0 and 1 < b implies a < a ⋅ b
+    a != 0 and 1 < b implies a < a * b
 } by {
     let (b_pred: ℕ) satisfy { b_pred + 1 = b and b_pred != 0 }
-    a ⋅ b = a ⋅ b_pred + a
+    a * b = a * b_pred + a
 }
 
 theorem lt_imp_lt_suc(a: ℕ, b: ℕ) { 
@@ -553,115 +553,115 @@ theorem lt_imp_lt_suc(a: ℕ, b: ℕ) {
 }
 
 theorem lt_mul_both_left(a: ℕ, b: ℕ, c: ℕ) { 
-    a != 0 and b < c implies a ⋅ b < a ⋅ c 
+    a != 0 and b < c implies a * b < a * c 
 } by {
     let (n: ℕ) satisfy { b + n = c and n != 0 }
-    a ⋅ (b + n) = a ⋅ c
-    a ⋅ b + a ⋅ n = a ⋅ c
-    a ⋅ n != 0
-    a ⋅ b < a ⋅ c
+    a * (b + n) = a * c
+    a * b + a * n = a * c
+    a * n != 0
+    a * b < a * c
 }
 
 theorem lte_mul_both_left(a: ℕ, b: ℕ, c: ℕ) { 
-    b <= c implies a ⋅ b <= a ⋅ c 
+    b <= c implies a * b <= a * c 
 } by {
     let (n: ℕ) satisfy { b + n = c }
-    a ⋅ (b + n) = a ⋅ c
-    a ⋅ b + a ⋅ n = a ⋅ c
-    a ⋅ b <= a ⋅ c
+    a * (b + n) = a * c
+    a * b + a * n = a * c
+    a * b <= a * c
 }
 
 theorem gt_mul_both_left(a: ℕ, b: ℕ, c: ℕ) { 
-    a != 0 and b > c implies a ⋅ b > a ⋅ c 
+    a != 0 and b > c implies a * b > a * c 
 } 
 
 theorem gte_mul_both_left(a: ℕ, b: ℕ, c: ℕ) { 
-    b >= c implies a ⋅ b >= a ⋅ c 
+    b >= c implies a * b >= a * c 
 }
 
 // helper for proof search
 theorem lt_mul_both_right(a: ℕ, b: ℕ, c: ℕ) { 
-    a != 0 and b < c implies b ⋅ a < c ⋅ a 
+    a != 0 and b < c implies b * a < c * a 
 }
 
 theorem lte_mul_both_right(a: ℕ, b: ℕ, c: ℕ) { 
-    b <= c implies b ⋅ a <= c ⋅ a 
+    b <= c implies b * a <= c * a 
 }
 
 theorem gt_mul_both_right(a: ℕ, b: ℕ, c: ℕ) { 
-    a != 0 and b > c implies b ⋅ a > c ⋅ a 
+    a != 0 and b > c implies b * a > c * a 
 }
 
 theorem gte_mul_both_right(a: ℕ, b: ℕ, c: ℕ) { 
-    b >= c implies b ⋅ a >= c ⋅ a 
+    b >= c implies b * a >= c * a 
 }
 
 theorem right_lte_left_lt_mul_lt(a: ℕ, b: ℕ, c: ℕ, d: ℕ) { 
-    a != 0 and c != 0 and a <= b and c < d implies a ⋅ c < b ⋅ d 
+    a != 0 and c != 0 and a <= b and c < d implies a * c < b * d 
 } by {
-    a ⋅ c <= b ⋅ c
-    b ⋅ c < b ⋅ d
+    a * c <= b * c
+    b * c < b * d
 }
 
 theorem left_lte_right_lt_mul_lt(a: ℕ, b: ℕ, c: ℕ, d: ℕ) { 
-    a != 0 and c != 0 and a < b and c <= d implies a ⋅ c < b ⋅ d 
+    a != 0 and c != 0 and a < b and c <= d implies a * c < b * d 
 }
 
 theorem lt_cancel_mul(a: ℕ, b: ℕ, c: ℕ) { 
-    a != 0 and a ⋅ b < a ⋅ c implies b < c 
+    a != 0 and a * b < a * c implies b < c 
 } by {
     if b >= c {
-        a ⋅ c <= a ⋅ b
+        a * c <= a * b
         false
     }
 }
 
 theorem lte_cancel_mul(a: ℕ, b: ℕ, c: ℕ) { 
-    a != 0 and a ⋅ b <= a ⋅ c implies b <= c 
+    a != 0 and a * b <= a * c implies b <= c 
 } by {
     if b > c {
-        a ⋅ c > a ⋅ b
+        a * c > a * b
         false
     }
 }
 
 theorem mul_preserve_gt_one(a: ℕ, b: ℕ) {
-    a > 1 and b > 1 implies a ⋅ b > 1
+    a > 1 and b > 1 implies a * b > 1
 }
 
 theorem mul_identity(a: ℕ, b: ℕ) {
-    b != 0 and a ⋅ b = b implies a = 1
+    b != 0 and a * b = b implies a = 1
 } by {
-    b = 1 ⋅ b
+    b = 1 * b
     a <= 1
     a >= 1
     a = 1
 }
 
 theorem mul_cancel(a: ℕ, b: ℕ, c: ℕ) {
-    a != 0 and a ⋅ b = a ⋅ c implies b = c
+    a != 0 and a * b = a * c implies b = c
 } 
 
 theorem mul_to_one(a: ℕ, b: ℕ) { 
-    a ⋅ b = 1 implies a = 1 and b = 1
+    a * b = 1 implies a = 1 and b = 1
 } by {
     1 != 0
     a != 0
     b != 0
     if a > 1 {
-        a ⋅ b > 1 ⋅ b
-        a ⋅ b > b
+        a * b > 1 * b
+        a * b > b
         false
     }
     a = 1
     b = 1
 }
 
-theorem lte_mul(a: ℕ, b: ℕ) { b != 0 implies a <= a ⋅ b } by {
+theorem lte_mul(a: ℕ, b: ℕ) { b != 0 implies a <= a * b } by {
     not b < 0.suc
     not (b < 1)
     1 <= b
-    a ⋅ 1 <= a ⋅ b
+    a * 1 <= a * b
 }
 
 theorem cross_sum_lte(a1: ℕ, a2: ℕ, b1: ℕ, b2: ℕ) { a1 + b1 = a2 + b2 and a1 <= a2 implies b2 <= b1 } by {
@@ -740,23 +740,23 @@ theorem sub_zero(a: ℕ) { a - 0 = a }
 theorem add_imp_sub(a: ℕ, b: ℕ, c: ℕ) { a + b = c implies c - b = a }
 
 theorem sub_distrib_right(a: ℕ, b: ℕ, c: ℕ) {
-    a ⋅ (b - c) = a ⋅ b - a ⋅ c
+    a * (b - c) = a * b - a * c
 } by {
     if a = 0 {
-        a ⋅ (b - c) = a ⋅ b - a ⋅ c
+        a * (b - c) = a * b - a * c
         sub_distrib_right(a, b, c)
     } else {
         if b < c {
-            a ⋅ b < a ⋅ c
-            a ⋅ b - a ⋅ c = 0
+            a * b < a * c
+            a * b - a * c = 0
             b - c = 0
-            a ⋅ (b - c) = a ⋅ b - a ⋅ c
+            a * (b - c) = a * b - a * c
             sub_distrib_right(a, b, c)
         }
         if not (b < c) {
             b - c + c = b
-            a ⋅ (b - c) + a ⋅ c = a ⋅ b
-            a ⋅ (b - c) = a ⋅ b - a ⋅ c
+            a * (b - c) + a * c = a * b
+            a * (b - c) = a * b - a * c
             sub_distrib_right(a, b, c)
         }
         sub_distrib_right(a, b, c)
@@ -765,7 +765,7 @@ theorem sub_distrib_right(a: ℕ, b: ℕ, c: ℕ) {
 }
 
 theorem sub_distrib_left(a: ℕ, b: ℕ, c: ℕ) {
-    (a - b) ⋅ c = a ⋅ c - b ⋅ c
+    (a - b) * c = a * c - b * c
 } 
 
 theorem lt_sub_lt(a: ℕ, b: ℕ, c: ℕ) {
@@ -807,7 +807,7 @@ attributes ℕ {
                 1
             }
             ℕ.suc(pred) {
-                self ⋅ self.pow(pred)
+                self * self.pow(pred)
             }
         }
     }
@@ -820,26 +820,26 @@ theorem pow_zero(a: ℕ) {
 theorem pow_one(a: ℕ) {
     a^1 = a
 } by {
-    a^1 = a ⋅ a^0
+    a^1 = a * a^0
     a^0 = 1
 }
 
 // ℕ is not a ring. But I now do not want to define a new typeclass for it
 theorem pow_add(a: ℕ, b: ℕ, c: ℕ) {
-    a^(b + c) = a^b ⋅ a^c
+    a^(b + c) = a^b * a^c
 } by {
     // Inductive step
     let f: ℕ -> Bool = function(x: ℕ) {
-        a^(b + x) = a^b ⋅ a^x
+        a^(b + x) = a^b * a^x
     }
     f(0)
     forall(x: ℕ) {
         if f(x) {
-            a^(b + x) = a^b ⋅ a^x
+            a^(b + x) = a^b * a^x
             
             b + (x + 1) = (b + x) + 1
 
-            a^((b + x) + 1) = a^b ⋅ (a^x ⋅ a^1)
+            a^((b + x) + 1) = a^b * (a^x * a^1)
 
             f(x + 1)
         }
@@ -848,20 +848,20 @@ theorem pow_add(a: ℕ, b: ℕ, c: ℕ) {
 }
 
 theorem pow_mul(a: ℕ, b: ℕ, c: ℕ) {
-    a^(b ⋅ c) = (a^b)^c
+    a^(b * c) = (a^b)^c
 } by {
     // Inductive step
     let f: ℕ -> Bool = function(x: ℕ) {
-        a^(b ⋅ x) = (a^b)^x
+        a^(b * x) = (a^b)^x
     }
     f(0)
     forall(x: ℕ) {
         if f(x) {
-            a^(b ⋅ x) = (a^b)^x
-            b ⋅ (x + 1) = b ⋅ x + b
-            a^(b ⋅ (x + 1)) = a^(b ⋅ x) ⋅ a^b
+            a^(b * x) = (a^b)^x
+            b * (x + 1) = b * x + b
+            a^(b * (x + 1)) = a^(b * x) * a^b
             a^b = (a^b)^1
-            a^(b ⋅ (x + 1)) = (a^b)^(x + 1)
+            a^(b * (x + 1)) = (a^b)^(x + 1)
             f(x + 1)
         }
     }
@@ -873,14 +873,14 @@ theorem zero_pow(n: ℕ) {
 } by {
     let b: ℕ satisfy {
         n = b.suc
-    } // 0^(b.suc) = 0^b ⋅ 0^1 with 0^1 = 0
+    } // 0^(b.suc) = 0^b * 0^1 with 0^1 = 0
 }
 
 theorem one_pow(n: ℕ) {
     1^n = 1
 } by {
     one_pow(0)
-    one_pow(n) // induction 1^n = 1^(n - 1) ⋅ 1 with 1^(n - 1) = 1
+    one_pow(n) // induction 1^n = 1^(n - 1) * 1 with 1^(n - 1) = 1
 }
 
 theorem pow_gte_one(a: ℕ, b: ℕ) {
@@ -908,10 +908,10 @@ theorem pow_gt_one(a: ℕ, b: ℕ) {
     let b_pred: ℕ satisfy {
         b = b_pred + 1
     }
-    a^b = a ⋅ a^(b_pred)
+    a^b = a * a^(b_pred)
     a^(b_pred) >= 1
     a > 1
-    a ⋅ a^(b_pred) > 1
+    a * a^(b_pred) > 1
     a^b > 1
 }
 
@@ -948,7 +948,7 @@ theorem lt_imp_pow_lt(a: ℕ, b1: ℕ, b2: ℕ) {
     let n: ℕ satisfy {
         b1 + n = b2 and n != 0
     }
-    a^b2 = a^b1 ⋅ a^n
+    a^b2 = a^b1 * a^n
     a^b1 != 0
     1 < a
     1 < a^n
@@ -961,7 +961,7 @@ theorem lte_imp_pow_lte(a: ℕ, b1: ℕ, b2: ℕ) {
     let n: ℕ satisfy {
         b1 + n = b2
     }
-    a^b2 = a^b1 ⋅ a^n
+    a^b2 = a^b1 * a^n
     a^n != 0
     a^b2 >= a^b1
 }
@@ -989,7 +989,7 @@ theorem pow_eq_one_imp(a: ℕ, b: ℕ) {
         let b_pred: ℕ satisfy {
             b = b_pred + 1
         }
-        a^b = a ⋅ a^(b_pred)
+        a^b = a * a^(b_pred)
         a^b != 1
         false
     }
@@ -1005,8 +1005,8 @@ theorem power_increase(a: ℕ, b: ℕ, n: ℕ) {
     forall(m: ℕ) {
         if f(m) {
             if m != 0 and a < b  {
-                a^(m.suc) = a^m ⋅ a
-                b^(m.suc) = b^m ⋅ b
+                a^(m.suc) = a^m * a
+                b^(m.suc) = b^m * b
                 a^m < b^m
                 a < b
                 if a = 0 {
@@ -1016,7 +1016,7 @@ theorem power_increase(a: ℕ, b: ℕ, n: ℕ) {
                 } else {
                     a != 0
                     a^m != 0
-                    a^m ⋅ a < b^m ⋅ b
+                    a^m * a < b^m * b
                     a^(m.suc) < b^(m.suc)
                 }
                 a^(m.suc) < b^(m.suc)
@@ -1028,7 +1028,7 @@ theorem power_increase(a: ℕ, b: ℕ, n: ℕ) {
 }
 
 theorem square_eq_mul(a: ℕ) {
-    a^2 = a ⋅ a
+    a^2 = a * a
 }
 
 theorem square_gt(a: ℕ) {

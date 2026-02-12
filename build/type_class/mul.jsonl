@@ -1,21 +1,21 @@
-{"goal":"f(ℕ.0)","proof":["a^b ⋅ a^ℕ.0 != a^(b + ℕ.0) or f(ℕ.0)","ℕ.0 != ℕ.0 or a^ℕ.0 = M.1","a^b ⋅ M.1 = a^b","b + ℕ.0 = b","a^ℕ.0 = M.1","a^b ⋅ a^ℕ.0 != a^(b + ℕ.0)"]}
-{"goal":"a^(b + x) = a^b ⋅ a^x","proof":["not f(x) or a^b ⋅ a^x = a^(b + x)"]}
-{"goal":"a^(b + x.suc) = a^b ⋅ a^x.suc","proof":["(b + x).suc != (b + x).suc or a ⋅ a^(b + x) = a^(b + x).suc","x.suc != x.suc or a ⋅ a^x = a^x.suc","a ⋅ a^x ⋅ a^b = a ⋅ (a^x ⋅ a^b)","x.suc != x.suc or b + x.suc = (b + x).suc","a^b ⋅ a^x.suc = a^x.suc ⋅ a^b","a^x ⋅ a^b = a^b ⋅ a^x","b + x.suc = (b + x).suc","a ⋅ a^(b + x) = a^(b + x).suc","a ⋅ a^x = a^x.suc"]}
-{"goal":"f(x.suc)","proof":["a^b ⋅ a^x.suc != a^(b + x.suc) or f(x.suc)"]}
+{"goal":"f(ℕ.0)","proof":["a^b * a^ℕ.0 != a^(b + ℕ.0) or f(ℕ.0)","ℕ.0 != ℕ.0 or a^ℕ.0 = M.1","a^b * M.1 = a^b","b + ℕ.0 = b","a^ℕ.0 = M.1","a^b * a^ℕ.0 != a^(b + ℕ.0)"]}
+{"goal":"a^(b + x) = a^b * a^x","proof":["not f(x) or a^b * a^x = a^(b + x)"]}
+{"goal":"a^(b + x.suc) = a^b * a^x.suc","proof":["(b + x).suc != (b + x).suc or a * a^(b + x) = a^(b + x).suc","x.suc != x.suc or a * a^x = a^x.suc","a * a^x * a^b = a * (a^x * a^b)","x.suc != x.suc or b + x.suc = (b + x).suc","a^b * a^x.suc = a^x.suc * a^b","a^x * a^b = a^b * a^x","b + x.suc = (b + x).suc","a * a^(b + x) = a^(b + x).suc","a * a^x = a^x.suc"]}
+{"goal":"f(x.suc)","proof":["a^b * a^x.suc != a^(b + x.suc) or f(x.suc)"]}
 {"goal":"f(c)","proof":["let s0: (ℕ -> Bool) -> ℕ satisfy { forall(x0: ℕ -> Bool, x1: ℕ) { not x0(ℕ.0) or x0(s0(x0)) or x0(x1) } and forall(x2: ℕ -> Bool, x3: ℕ) { not x2(s0(x2).suc) or not x2(ℕ.0) or x2(x3) } }","not f(s0(f)) or f(s0(f).suc)","not f(s0(f).suc) or not f(ℕ.0) or f(c)","not f(s0(f).suc)","not f(ℕ.0) or f(s0(f)) or f(c)","not f(s0(f))","f(s0(f))"]}
-{"goal":"pow_add","proof":["not f(c) or a^b ⋅ a^c = a^(b + c)"]}
+{"goal":"pow_add","proof":["not f(c) or a^b * a^c = a^(b + c)"]}
 {"goal":"a^ℕ.1 = a^ℕ.0.suc","proof":["ℕ.0.suc != ℕ.1"]}
-{"goal":"a^ℕ.0.suc = a ⋅ a^ℕ.0","proof":["ℕ.0.suc != ℕ.0.suc or a ⋅ a^ℕ.0 = a^ℕ.0.suc"]}
-{"goal":"a ⋅ a^ℕ.0 = a ⋅ M.1","proof":["a^ℕ.0 != M.1","ℕ.0 != ℕ.0 or a^ℕ.0 = M.1"]}
-{"goal":"a ⋅ M.1 = a","proof":["a ⋅ M.1 = a"]}
+{"goal":"a^ℕ.0.suc = a * a^ℕ.0","proof":["ℕ.0.suc != ℕ.0.suc or a * a^ℕ.0 = a^ℕ.0.suc"]}
+{"goal":"a * a^ℕ.0 = a * M.1","proof":["a^ℕ.0 != M.1","ℕ.0 != ℕ.0 or a^ℕ.0 = M.1"]}
+{"goal":"a * M.1 = a","proof":["a * M.1 = a"]}
 {"goal":"a^ℕ.1 = a","proof":[]}
 {"goal":"pow_one","proof":[]}
-{"goal":"f(ℕ.0)","proof":["a^(b ⋅ ℕ.0) != a^b^ℕ.0 or f(ℕ.0)","b ⋅ ℕ.0 != ℕ.0 or a^(b ⋅ ℕ.0) = M.1","ℕ.0 != ℕ.0 or a^b^ℕ.0 = M.1","b ⋅ ℕ.0 = ℕ.0","a^b^ℕ.0 = M.1","a^(b ⋅ ℕ.0) != a^b^ℕ.0","a^(b ⋅ ℕ.0) != M.1"]}
-{"goal":"a^(b ⋅ x) = a^b^x","proof":["not f(x) or a^(b ⋅ x) = a^b^x"]}
-{"goal":"a^(b ⋅ x.suc) = a^b^x.suc","proof":["a^(b ⋅ x) ⋅ a^b = a^(b ⋅ x + b)","a^b^x ⋅ a^b^ℕ.1 = a^b^(x + ℕ.1)","x.suc != x.suc or b ⋅ x + b = b ⋅ x.suc","x + ℕ.1 = x.suc","a^b^ℕ.1 = a^b","b ⋅ x + b = b ⋅ x.suc"]}
-{"goal":"f(x.suc)","proof":["a^(b ⋅ x.suc) != a^b^x.suc or f(x.suc)"]}
+{"goal":"f(ℕ.0)","proof":["a^(b * ℕ.0) != a^b^ℕ.0 or f(ℕ.0)","b * ℕ.0 != ℕ.0 or a^(b * ℕ.0) = M.1","ℕ.0 != ℕ.0 or a^b^ℕ.0 = M.1","b * ℕ.0 = ℕ.0","a^b^ℕ.0 = M.1","a^(b * ℕ.0) != a^b^ℕ.0","a^(b * ℕ.0) != M.1"]}
+{"goal":"a^(b * x) = a^b^x","proof":["not f(x) or a^(b * x) = a^b^x"]}
+{"goal":"a^(b * x.suc) = a^b^x.suc","proof":["a^(b * x) * a^b = a^(b * x + b)","a^b^x * a^b^ℕ.1 = a^b^(x + ℕ.1)","x.suc != x.suc or b * x + b = b * x.suc","x + ℕ.1 = x.suc","a^b^ℕ.1 = a^b","b * x + b = b * x.suc"]}
+{"goal":"f(x.suc)","proof":["a^(b * x.suc) != a^b^x.suc or f(x.suc)"]}
 {"goal":"f(c)","proof":["let s0: (ℕ -> Bool) -> ℕ satisfy { forall(x0: ℕ -> Bool, x1: ℕ) { not x0(ℕ.0) or x0(s0(x0)) or x0(x1) } and forall(x2: ℕ -> Bool, x3: ℕ) { not x2(s0(x2).suc) or not x2(ℕ.0) or x2(x3) } }","not f(s0(f)) or f(s0(f).suc)","not f(s0(f).suc) or not f(ℕ.0) or f(c)","not f(s0(f).suc)","not f(ℕ.0) or f(s0(f)) or f(c)","not f(s0(f))","f(s0(f))"]}
-{"goal":"pow_mul","proof":["not f(c) or a^(b ⋅ c) = a^b^c"]}
+{"goal":"pow_mul","proof":["not f(c) or a^(b * c) = a^b^c"]}
 {"goal":"one_pow[M](ℕ.0)","proof":["M.1^ℕ.0 != M.1 or one_pow[M](ℕ.0)","M.1^ℕ.0 != M.1","ℕ.0 != ℕ.0 or M.1^ℕ.0 = M.1"]}
-{"goal":"one_pow[M](n)","proof":["let s0: (ℕ -> Bool) -> ℕ satisfy { forall(x0: ℕ -> Bool, x1: ℕ) { not x0(ℕ.0) or x0(s0(x0)) or x0(x1) } and forall(x2: ℕ -> Bool, x3: ℕ) { not x2(s0(x2).suc) or not x2(ℕ.0) or x2(x3) } }","M.1^s0(one_pow[M]).suc != M.1 or one_pow[M](s0(one_pow[M]).suc)","not one_pow[M](s0(one_pow[M])) or M.1^s0(one_pow[M]) = M.1","s0(one_pow[M]).suc != s0(one_pow[M]).suc or M.1 ⋅ M.1^s0(one_pow[M]) = M.1^s0(one_pow[M]).suc","not one_pow[M](s0(one_pow[M]).suc) or not one_pow[M](ℕ.0) or one_pow[M](n)","not one_pow[M](s0(one_pow[M]).suc)","not one_pow[M](ℕ.0) or one_pow[M](s0(one_pow[M])) or one_pow[M](n)","one_pow[M](s0(one_pow[M]))","M.1 ⋅ M.1 = M.1","M.1 ⋅ M.1^s0(one_pow[M]) = M.1^s0(one_pow[M]).suc","M.1^s0(one_pow[M]) = M.1","M.1^s0(one_pow[M]).suc != M.1"]}
+{"goal":"one_pow[M](n)","proof":["let s0: (ℕ -> Bool) -> ℕ satisfy { forall(x0: ℕ -> Bool, x1: ℕ) { not x0(ℕ.0) or x0(s0(x0)) or x0(x1) } and forall(x2: ℕ -> Bool, x3: ℕ) { not x2(s0(x2).suc) or not x2(ℕ.0) or x2(x3) } }","M.1^s0(one_pow[M]).suc != M.1 or one_pow[M](s0(one_pow[M]).suc)","not one_pow[M](s0(one_pow[M])) or M.1^s0(one_pow[M]) = M.1","s0(one_pow[M]).suc != s0(one_pow[M]).suc or M.1 * M.1^s0(one_pow[M]) = M.1^s0(one_pow[M]).suc","not one_pow[M](s0(one_pow[M]).suc) or not one_pow[M](ℕ.0) or one_pow[M](n)","not one_pow[M](s0(one_pow[M]).suc)","not one_pow[M](ℕ.0) or one_pow[M](s0(one_pow[M])) or one_pow[M](n)","one_pow[M](s0(one_pow[M]))","M.1 * M.1 = M.1","M.1 * M.1^s0(one_pow[M]) = M.1^s0(one_pow[M]).suc","M.1^s0(one_pow[M]) = M.1","M.1^s0(one_pow[M]).suc != M.1"]}
 {"goal":"one_pow","proof":["not one_pow[M](n) or M.1^n = M.1"]}

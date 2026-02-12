@@ -47,64 +47,64 @@
 {"goal":"neg_change_sign","proof":["R.0 > -a = -a < R.0","a > R.0 = R.0 < a","-a < R.0 != R.0 < a","-a < R.0 or R.0 < a","R.0 < a","not -a < R.0","a > R.0","not R.0 > -a","R.0 > -a"]}
 {"goal":"a >= R.0 implies -a <= R.0","proof":["not R.0 <= a + R.0 or R.0 - a <= R.0","a >= R.0 = R.0 <= a","R.0 <= a","R.0 - a = -a","not R.0 - a <= R.0","a + R.0 = a","not R.0 <= a + R.0","R.0 <= a + R.0"]}
 {"goal":"neg_change_sign_weak","proof":["-a <= R.0 or a >= R.0","not -a <= R.0 or not a >= R.0","not a >= R.0","-a <= R.0","not -a <= R.0 or (-a).abs = --a","--a = a","(-a).abs >= R.0","not --a >= R.0","(-a).abs = --a"]}
-{"goal":"a ⋅ b = R.0","proof":["R.0 != b or a ⋅ b = R.0","R.0 != b","R.0 = a","R.0 != a or a ⋅ b = R.0"]}
-{"goal":"a ⋅ b >= R.0","proof":["a ⋅ b >= R.0 = R.0 <= a ⋅ b","not R.0 <= a ⋅ b","a ⋅ b != R.0 or R.0 <= a ⋅ b"]}
+{"goal":"a * b = R.0","proof":["R.0 != b or a * b = R.0","R.0 != b","R.0 = a","R.0 != a or a * b = R.0"]}
+{"goal":"a * b >= R.0","proof":["a * b >= R.0 = R.0 <= a * b","not R.0 <= a * b","a * b != R.0 or R.0 <= a * b"]}
 {"goal":"a > R.0","proof":["not a >= R.0 or a.max(R.0) = a","a.max(R.0) = R.0 or a > R.0","a.max(R.0) = R.0","a.max(R.0) = a","a.max(R.0) != a"]}
 {"goal":"b > R.0","proof":["not b >= R.0 or b.max(R.0) = b","b.max(R.0) = R.0 or b > R.0","b.max(R.0) = R.0","b.max(R.0) = b","b.max(R.0) != b"]}
-{"goal":"a ⋅ b > R.0","proof":["not a > R.0 or not b > R.0 or a ⋅ b > R.0"]}
-{"goal":"a ⋅ b >= R.0","proof":["a ⋅ b >= R.0 = R.0 <= a ⋅ b","not R.0 <= a ⋅ b","not R.0 < a ⋅ b or R.0 <= a ⋅ b","a ⋅ b > R.0 = R.0 < a ⋅ b","not R.0 < a ⋅ b","R.0 < a ⋅ b"]}
+{"goal":"a * b > R.0","proof":["not a > R.0 or not b > R.0 or a * b > R.0"]}
+{"goal":"a * b >= R.0","proof":["a * b >= R.0 = R.0 <= a * b","not R.0 <= a * b","not R.0 < a * b or R.0 <= a * b","a * b > R.0 = R.0 < a * b","not R.0 < a * b","R.0 < a * b"]}
 {"goal":"mul_nonneg_nonneg_nonneg","proof":[]}
-{"goal":"mul_nonneg_nonpos_nonpos","proof":["not a >= R.0 or not -b >= R.0 or a ⋅ -b >= R.0","-a ⋅ -b = a ⋅ b","-a ⋅ -b = -(a ⋅ -b)","-(a ⋅ -b) <= R.0 = a ⋅ -b >= R.0","--b <= R.0 = -b >= R.0","--b = b","not -a ⋅ -b <= R.0","not -(a ⋅ -b) <= R.0","not a ⋅ -b >= R.0","--b <= R.0","not -b >= R.0","-b >= R.0"]}
-{"goal":"mul_pos_neg_neg","proof":["not a > R.0 or not -b > R.0 or a ⋅ -b > R.0","-a ⋅ -b = a ⋅ b","-a ⋅ -b = -(a ⋅ -b)","R.0 - b > R.0 = R.0 > b","-(a ⋅ -b) < R.0 = a ⋅ -b > R.0","R.0 > b = b < R.0","R.0 - b = -b","not -a ⋅ -b < R.0","not -(a ⋅ -b) < R.0","not a ⋅ -b > R.0","not -b > R.0"]}
-{"goal":"mul_nonpos_nonneg_nonpos","proof":["not b >= R.0 or not a <= R.0 or b ⋅ a <= R.0","b ⋅ a = a ⋅ b","not b ⋅ a <= R.0"]}
-{"goal":"mul_nonpos_nonpos_nonneg","proof":["not -a >= R.0 or not -b >= R.0 or -a ⋅ -b >= R.0","-a ⋅ -b = a ⋅ b","--a <= R.0 = -a >= R.0","--b <= R.0 = -b >= R.0","--a = a","--b = b","not -a ⋅ -b >= R.0","not --b <= R.0 or -b >= R.0","--b <= R.0","--a <= R.0","-a >= R.0","-b >= R.0","not -b >= R.0"]}
-{"goal":"mul_neg_neg_pos","proof":["not -a > R.0 or not -b > R.0 or -a ⋅ -b > R.0","-a ⋅ -b = a ⋅ b","--a < R.0 = -a > R.0","--b < R.0 = -b > R.0","--a = a","--b = b","not -a ⋅ -b > R.0","not --b < R.0 or -b > R.0","--b < R.0","--a < R.0","-a > R.0","-b > R.0","not -b > R.0"]}
-{"goal":"mul_neg_pos_neg","proof":["not b > R.0 or not a < R.0 or b ⋅ a < R.0","b ⋅ a = a ⋅ b","not b ⋅ a < R.0"]}
+{"goal":"mul_nonneg_nonpos_nonpos","proof":["not a >= R.0 or not -b >= R.0 or a * -b >= R.0","-a * -b = a * b","-a * -b = -(a * -b)","-(a * -b) <= R.0 = a * -b >= R.0","--b <= R.0 = -b >= R.0","--b = b","not -a * -b <= R.0","not -(a * -b) <= R.0","not a * -b >= R.0","--b <= R.0","not -b >= R.0","-b >= R.0"]}
+{"goal":"mul_pos_neg_neg","proof":["not a > R.0 or not -b > R.0 or a * -b > R.0","-a * -b = a * b","-a * -b = -(a * -b)","R.0 - b > R.0 = R.0 > b","-(a * -b) < R.0 = a * -b > R.0","R.0 > b = b < R.0","R.0 - b = -b","not -a * -b < R.0","not -(a * -b) < R.0","not a * -b > R.0","not -b > R.0"]}
+{"goal":"mul_nonpos_nonneg_nonpos","proof":["not b >= R.0 or not a <= R.0 or b * a <= R.0","b * a = a * b","not b * a <= R.0"]}
+{"goal":"mul_nonpos_nonpos_nonneg","proof":["not -a >= R.0 or not -b >= R.0 or -a * -b >= R.0","-a * -b = a * b","--a <= R.0 = -a >= R.0","--b <= R.0 = -b >= R.0","--a = a","--b = b","not -a * -b >= R.0","not --b <= R.0 or -b >= R.0","--b <= R.0","--a <= R.0","-a >= R.0","-b >= R.0","not -b >= R.0"]}
+{"goal":"mul_neg_neg_pos","proof":["not -a > R.0 or not -b > R.0 or -a * -b > R.0","-a * -b = a * b","--a < R.0 = -a > R.0","--b < R.0 = -b > R.0","--a = a","--b = b","not -a * -b > R.0","not --b < R.0 or -b > R.0","--b < R.0","--a < R.0","-a > R.0","-b > R.0","not -b > R.0"]}
+{"goal":"mul_neg_pos_neg","proof":["not b > R.0 or not a < R.0 or b * a < R.0","b * a = a * b","not b * a < R.0"]}
 {"goal":"a <= R.0","proof":["R.0.max(a) = R.0 or R.0 < a","R.0.max(a) = a or a <= R.0","R.0.max(a) = a","a > R.0 = R.0 < a","not R.0 < a","R.0 != a or a <= R.0","R.0 != a","R.0.max(a) = R.0","R.0.max(a) != R.0"]}
-{"goal":"square_gte_zero","proof":["not a <= R.0 or not a <= R.0 or a ⋅ a >= R.0","not a <= R.0","a > R.0","not a >= R.0 or not a >= R.0 or a ⋅ a >= R.0","not a >= R.0","lib(order).lte_from(R.lt, R.0, a) = R.0 <= a","not R.0 < a or lib(order).lte_from(R.lt, R.0, a)","a > R.0 = R.0 < a","R.0 < a","a >= R.0 = R.0 <= a","not R.0 <= a","lib(order).lte_from(R.lt, R.0, a)","not lib(order).lte_from(R.lt, R.0, a)"]}
-{"goal":"R.1 ⋅ R.1 = R.1","proof":["-R.1 ⋅ -R.1 = R.1 ⋅ R.1","R.1 + -R.1 != R.0 or --R.1 = R.1","-R.1 ⋅ -R.1 = --R.1","-R.1 ⋅ -R.1 != R.1","--R.1 != R.1","R.1 + -R.1 = R.0"]}
-{"goal":"R.1 ⋅ R.1 >= R.0","proof":["not R.1 >= R.0","not R.1 <= R.0 or not R.1 <= R.0 or R.1 ⋅ R.1 >= R.0","not R.1 <= R.0","R.1.min(R.0) = R.1 or R.1 >= R.0","R.1.min(R.0) = R.1","R.1.min(R.0) = R.0 or R.1 <= R.0","R.1 ⋅ R.1 >= R.0 = R.0 <= R.1 ⋅ R.1","not R.0 <= R.1 ⋅ R.1","R.1 ⋅ R.1 != R.0 or R.0 <= R.1 ⋅ R.1","R.1 ⋅ R.1 != R.0","R.0 != R.1","R.1.min(R.0) = R.0","R.1.min(R.0) != R.0"]}
-{"goal":"R.1 >= R.0","proof":["not R.1 ⋅ R.1 >= R.0"]}
+{"goal":"square_gte_zero","proof":["not a <= R.0 or not a <= R.0 or a * a >= R.0","not a <= R.0","a > R.0","not a >= R.0 or not a >= R.0 or a * a >= R.0","not a >= R.0","lib(order).lte_from(R.lt, R.0, a) = R.0 <= a","not R.0 < a or lib(order).lte_from(R.lt, R.0, a)","a > R.0 = R.0 < a","R.0 < a","a >= R.0 = R.0 <= a","not R.0 <= a","lib(order).lte_from(R.lt, R.0, a)","not lib(order).lte_from(R.lt, R.0, a)"]}
+{"goal":"R.1 * R.1 = R.1","proof":["-R.1 * -R.1 = R.1 * R.1","R.1 + -R.1 != R.0 or --R.1 = R.1","-R.1 * -R.1 = --R.1","-R.1 * -R.1 != R.1","--R.1 != R.1","R.1 + -R.1 = R.0"]}
+{"goal":"R.1 * R.1 >= R.0","proof":["not R.1 >= R.0","not R.1 <= R.0 or not R.1 <= R.0 or R.1 * R.1 >= R.0","not R.1 <= R.0","R.1.min(R.0) = R.1 or R.1 >= R.0","R.1.min(R.0) = R.1","R.1.min(R.0) = R.0 or R.1 <= R.0","R.1 * R.1 >= R.0 = R.0 <= R.1 * R.1","not R.0 <= R.1 * R.1","R.1 * R.1 != R.0 or R.0 <= R.1 * R.1","R.1 * R.1 != R.0","R.0 != R.1","R.1.min(R.0) = R.0","R.1.min(R.0) != R.0"]}
+{"goal":"R.1 >= R.0","proof":["not R.1 * R.1 >= R.0"]}
 {"goal":"one_gte_zero","proof":[]}
 {"goal":"one_gt_zero","proof":["not R.0 <= R.1 or R.0 < R.1 or R.0 = R.1","R.1 >= R.0 = R.0 <= R.1","R.1 > R.0 = R.0 < R.1","not R.0 < R.1","not R.0 <= R.1","not R.1 >= R.0"]}
 {"goal":"b - a > R.0","proof":["b - a > R.0 = b > a","not b > a","b > a = a < b"]}
 {"goal":"c > R.0","proof":[]}
-{"goal":"(b - a) ⋅ c > R.0","proof":["not b - a > R.0 or not c > R.0 or (b - a) ⋅ c > R.0"]}
-{"goal":"b ⋅ c - a ⋅ c > R.0","proof":["b ⋅ c - a ⋅ c = (b - a) ⋅ c"]}
-{"goal":"lt_mul_pos","proof":["b ⋅ c - a ⋅ c > R.0 = b ⋅ c > a ⋅ c","b ⋅ c > a ⋅ c = a ⋅ c < b ⋅ c"]}
-{"goal":"lt_mul_pos_neg","proof":["a ⋅ c - b ⋅ c = (a - b) ⋅ c","not a - b < R.0 or not c < R.0 or (a - b) ⋅ c > R.0","not a < b + R.0 or a - b < R.0","a ⋅ c - b ⋅ c > R.0 = a ⋅ c > b ⋅ c","b + R.0 = b","not a ⋅ c - b ⋅ c > R.0","not (a - b) ⋅ c > R.0","a < b + R.0","not a - b < R.0","a - b < R.0"]}
-{"goal":"lte_mul_pos","proof":["not c > R.0 or not a < b or a ⋅ c < b ⋅ c","not a <= b or a < b or b = a","not a ⋅ c < b ⋅ c or a ⋅ c <= b ⋅ c","b ⋅ c != a ⋅ c or a ⋅ c <= b ⋅ c","b ⋅ c != a ⋅ c","b != a","a < b","not a ⋅ c < b ⋅ c"]}
-{"goal":"a ⋅ c < b ⋅ c","proof":["not c > R.0 or not a < b or a ⋅ c < b ⋅ c"]}
+{"goal":"(b - a) * c > R.0","proof":["not b - a > R.0 or not c > R.0 or (b - a) * c > R.0"]}
+{"goal":"b * c - a * c > R.0","proof":["b * c - a * c = (b - a) * c"]}
+{"goal":"lt_mul_pos","proof":["b * c - a * c > R.0 = b * c > a * c","b * c > a * c = a * c < b * c"]}
+{"goal":"lt_mul_pos_neg","proof":["a * c - b * c = (a - b) * c","not a - b < R.0 or not c < R.0 or (a - b) * c > R.0","not a < b + R.0 or a - b < R.0","a * c - b * c > R.0 = a * c > b * c","b + R.0 = b","not a * c - b * c > R.0","not (a - b) * c > R.0","a < b + R.0","not a - b < R.0","a - b < R.0"]}
+{"goal":"lte_mul_pos","proof":["not c > R.0 or not a < b or a * c < b * c","not a <= b or a < b or b = a","not a * c < b * c or a * c <= b * c","b * c != a * c or a * c <= b * c","b * c != a * c","b != a","a < b","not a * c < b * c"]}
+{"goal":"a * c < b * c","proof":["not c > R.0 or not a < b or a * c < b * c"]}
 {"goal":"b > R.0","proof":["not a > R.0 or not a <= b or b > R.0","not a < b or a <= b","not a > R.0 or not a <= b","a <= b","not a <= b"]}
-{"goal":"b ⋅ c < b ⋅ d","proof":["not b > R.0 or not c < d or c ⋅ b < d ⋅ b","b ⋅ c = c ⋅ b","d ⋅ b = b ⋅ d","not b ⋅ c < d ⋅ b","not c ⋅ b < d ⋅ b"]}
-{"goal":"mul_lt_lt","proof":["not lib(util).is_transitive[R](R.lt) or not a ⋅ c < c ⋅ b or not c ⋅ b < b ⋅ d or a ⋅ c < b ⋅ d","b ⋅ c = c ⋅ b","a ⋅ c < c ⋅ b","c ⋅ b < b ⋅ d","not c ⋅ b < b ⋅ d or not a ⋅ c < c ⋅ b"]}
-{"goal":"a ⋅ c < b ⋅ c","proof":["not c > R.0 or not a < b or a ⋅ c < b ⋅ c"]}
+{"goal":"b * c < b * d","proof":["not b > R.0 or not c < d or c * b < d * b","b * c = c * b","d * b = b * d","not b * c < d * b","not c * b < d * b"]}
+{"goal":"mul_lt_lt","proof":["not lib(util).is_transitive[R](R.lt) or not a * c < c * b or not c * b < b * d or a * c < b * d","b * c = c * b","a * c < c * b","c * b < b * d","not c * b < b * d or not a * c < c * b"]}
+{"goal":"a * c < b * c","proof":["not c > R.0 or not a < b or a * c < b * c"]}
 {"goal":"b > R.0","proof":["not a > R.0 or not a <= b or b > R.0","not a < b or a <= b","not a > R.0 or not a <= b","a <= b","not a <= b"]}
-{"goal":"b ⋅ c <= b ⋅ d","proof":["not b > R.0 or not c <= d or c ⋅ b <= d ⋅ b","b ⋅ c = c ⋅ b","d ⋅ b = b ⋅ d","not b ⋅ c <= d ⋅ b","not c ⋅ b <= d ⋅ b"]}
-{"goal":"mul_lt_lte","proof":["not a > R.0 or not c > R.0 or not a < b or not c < d or a ⋅ c < b ⋅ d","not c < d","not c <= d or c < d or d = c","d = c"]}
-{"goal":"a ⋅ c <= b ⋅ c","proof":["not c > R.0 or not a <= b or a ⋅ c <= b ⋅ c"]}
+{"goal":"b * c <= b * d","proof":["not b > R.0 or not c <= d or c * b <= d * b","b * c = c * b","d * b = b * d","not b * c <= d * b","not c * b <= d * b"]}
+{"goal":"mul_lt_lte","proof":["not a > R.0 or not c > R.0 or not a < b or not c < d or a * c < b * d","not c < d","not c <= d or c < d or d = c","d = c"]}
+{"goal":"a * c <= b * c","proof":["not c > R.0 or not a <= b or a * c <= b * c"]}
 {"goal":"b > R.0","proof":["not a > R.0 or not a <= b or b > R.0"]}
-{"goal":"b ⋅ c < b ⋅ d","proof":["not c > R.0 or not b > R.0 or not b <= b or not c < d or c ⋅ b < d ⋅ b","b ⋅ c = c ⋅ b","d ⋅ b = b ⋅ d","b != b or b <= b","not b ⋅ c < d ⋅ b","b <= b","not c ⋅ b < d ⋅ b"]}
-{"goal":"mul_lte_lt","proof":["not a > R.0 or not c > R.0 or not a < b or not c < d or a ⋅ c < b ⋅ d","not a < b","not a <= b or a < b or b = a","b = a"]}
-{"goal":"a ⋅ c <= b ⋅ c","proof":["not c > R.0 or not a <= b or a ⋅ c <= b ⋅ c","not R.0 <= c or R.0 < c or R.0 = c","a ⋅ c - b ⋅ c > R.0 = a ⋅ c > b ⋅ c","-c ⋅ -b = c ⋅ b","-b ⋅ c = -(b ⋅ c)","c >= R.0 = R.0 <= c","R.0 <= c","not a < b or a <= b","not a ⋅ c < b ⋅ c or a ⋅ c <= b ⋅ c","b ⋅ c > a ⋅ c = a ⋅ c < b ⋅ c","c > R.0 = R.0 < c","-b ⋅ c = c ⋅ -b","b ⋅ c = c ⋅ b","c ⋅ a = a ⋅ c","a ⋅ c > b ⋅ c != a ⋅ c <= b ⋅ c","not c > R.0 or not a <= b","R.0 - b ⋅ c = -(b ⋅ c)","R.0 - c = -c","R.0 ⋅ a = R.0","R.0 - R.0 = R.0","not a ⋅ c < b ⋅ c","a <= b","not c > R.0","not R.0 < c","a ⋅ c > b ⋅ c or a ⋅ c <= b ⋅ c","a ⋅ c > b ⋅ c","R.0 = c"]}
+{"goal":"b * c < b * d","proof":["not c > R.0 or not b > R.0 or not b <= b or not c < d or c * b < d * b","b * c = c * b","d * b = b * d","b != b or b <= b","not b * c < d * b","b <= b","not c * b < d * b"]}
+{"goal":"mul_lte_lt","proof":["not a > R.0 or not c > R.0 or not a < b or not c < d or a * c < b * d","not a < b","not a <= b or a < b or b = a","b = a"]}
+{"goal":"a * c <= b * c","proof":["not c > R.0 or not a <= b or a * c <= b * c","not R.0 <= c or R.0 < c or R.0 = c","a * c - b * c > R.0 = a * c > b * c","-c * -b = c * b","-b * c = -(b * c)","c >= R.0 = R.0 <= c","R.0 <= c","not a < b or a <= b","not a * c < b * c or a * c <= b * c","b * c > a * c = a * c < b * c","c > R.0 = R.0 < c","-b * c = c * -b","b * c = c * b","c * a = a * c","a * c > b * c != a * c <= b * c","not c > R.0 or not a <= b","R.0 - b * c = -(b * c)","R.0 - c = -c","R.0 * a = R.0","R.0 - R.0 = R.0","not a * c < b * c","a <= b","not c > R.0","not R.0 < c","a * c > b * c or a * c <= b * c","a * c > b * c","R.0 = c"]}
 {"goal":"b > R.0","proof":["not R.0 <= a or not a < b or R.0 < b","a >= R.0 = R.0 <= a","R.0 <= a","b > R.0 = R.0 < b","not R.0 < b","not R.0 <= a or not a < b"]}
-{"goal":"b ⋅ c < b ⋅ d","proof":["not b > R.0 or not c < d or c ⋅ b < d ⋅ b","b ⋅ c = c ⋅ b","d ⋅ b = b ⋅ d","not b ⋅ c < d ⋅ b","not c ⋅ b < d ⋅ b"]}
-{"goal":"lt_pos_mul_lt_pos","proof":["not lib(util).is_transitive[R](R.lt) or not a ⋅ c < b ⋅ c or not b ⋅ c < b ⋅ d or a ⋅ c < b ⋅ d","not a ⋅ c <= b ⋅ c or a ⋅ c < b ⋅ c or b ⋅ c = a ⋅ c","not b ⋅ c < b ⋅ d or not a ⋅ c < b ⋅ c","not a ⋅ c < b ⋅ c","b ⋅ c = a ⋅ c"]}
+{"goal":"b * c < b * d","proof":["not b > R.0 or not c < d or c * b < d * b","b * c = c * b","d * b = b * d","not b * c < d * b","not c * b < d * b"]}
+{"goal":"lt_pos_mul_lt_pos","proof":["not lib(util).is_transitive[R](R.lt) or not a * c < b * c or not b * c < b * d or a * c < b * d","not a * c <= b * c or a * c < b * c or b * c = a * c","not b * c < b * d or not a * c < b * c","not a * c < b * c","b * c = a * c"]}
 {"goal":"not b < R.0","proof":["not a <= b or not b < R.0 or a < R.0","a >= R.0 = R.0 <= a","R.0 <= a","R.0 > a = a < R.0","R.0 > a != R.0 <= a","not a <= b or a < R.0","a < R.0","not R.0 > a or not R.0 <= a","R.0 > a","not R.0 > a"]}
 {"goal":"not d < R.0","proof":["not c <= d or not d < R.0 or c < R.0","c >= R.0 = R.0 <= c","R.0 <= c","R.0 > c = c < R.0","R.0 > c != R.0 <= c","not c <= d or c < R.0","c < R.0","not R.0 > c or not R.0 <= c","R.0 > c","not R.0 > c"]}
-{"goal":"c ⋅ b <= d ⋅ b","proof":["not b > R.0 or not c <= d or c ⋅ b <= d ⋅ b","not b > R.0","not R.0.comparable(b) or R.0 < b or b < R.0 or R.0 = b","c ⋅ b - d ⋅ b > R.0 = c ⋅ b > d ⋅ b","d ⋅ -b = -(d ⋅ b)","-(R.0 - b) = b - R.0","not c ⋅ b < d ⋅ b or c ⋅ b <= d ⋅ b","b > R.0 = R.0 < b","d ⋅ b > c ⋅ b = c ⋅ b < d ⋅ b","not R.0 < b","c ⋅ a = a ⋅ c","c ⋅ b > d ⋅ b != c ⋅ b <= d ⋅ b","R.0 - d ⋅ b = -(d ⋅ b)","R.0 ⋅ c = R.0","R.0 - R.0 = R.0","a - R.0 = a","R.0.comparable(b)","R.0 = b","not c ⋅ b < d ⋅ b","c ⋅ b > d ⋅ b or c ⋅ b <= d ⋅ b","c ⋅ b > d ⋅ b"]}
-{"goal":"a ⋅ c <= b ⋅ d","proof":["a ⋅ d >= a ⋅ c = a ⋅ c <= a ⋅ d","d ⋅ b >= c ⋅ b = c ⋅ b <= d ⋅ b","c ⋅ a = a ⋅ c","d ⋅ a = a ⋅ d"]}
+{"goal":"c * b <= d * b","proof":["not b > R.0 or not c <= d or c * b <= d * b","not b > R.0","not R.0.comparable(b) or R.0 < b or b < R.0 or R.0 = b","c * b - d * b > R.0 = c * b > d * b","d * -b = -(d * b)","-(R.0 - b) = b - R.0","not c * b < d * b or c * b <= d * b","b > R.0 = R.0 < b","d * b > c * b = c * b < d * b","not R.0 < b","c * a = a * c","c * b > d * b != c * b <= d * b","R.0 - d * b = -(d * b)","R.0 * c = R.0","R.0 - R.0 = R.0","a - R.0 = a","R.0.comparable(b)","R.0 = b","not c * b < d * b","c * b > d * b or c * b <= d * b","c * b > d * b"]}
+{"goal":"a * c <= b * d","proof":["a * d >= a * c = a * c <= a * d","d * b >= c * b = c * b <= d * b","c * a = a * c","d * a = a * d"]}
 {"goal":"a < b","proof":["not a <= b or a < b or b = a"]}
-{"goal":"a ⋅ c <= b ⋅ d","proof":["not a ⋅ c <= b ⋅ c","not c < R.0","not c > R.0 or not a <= b or a ⋅ c <= b ⋅ c","not c > R.0","not R.0.comparable(c) or R.0 < c or c < R.0 or R.0 = c","a ⋅ c - b ⋅ d > R.0 = a ⋅ c > b ⋅ d","b ⋅ -d = -(b ⋅ d)","d + -c = d - c","not a ⋅ c < b ⋅ d or a ⋅ c <= b ⋅ d","b ⋅ d > a ⋅ c = a ⋅ c < b ⋅ d","c > R.0 = R.0 < c","not R.0 < c","c ⋅ a = a ⋅ c","d != c or d - c = R.0","a ⋅ c > b ⋅ d != a ⋅ c <= b ⋅ d","R.0 - b ⋅ d = -(b ⋅ d)","R.0 + -d = -d","R.0 ⋅ a = R.0","R.0.comparable(c)","not a ⋅ c < b ⋅ d","d - c = R.0","a ⋅ c > b ⋅ d or a ⋅ c <= b ⋅ d","a ⋅ c > b ⋅ d","R.0 = c"]}
+{"goal":"a * c <= b * d","proof":["not a * c <= b * c","not c < R.0","not c > R.0 or not a <= b or a * c <= b * c","not c > R.0","not R.0.comparable(c) or R.0 < c or c < R.0 or R.0 = c","a * c - b * d > R.0 = a * c > b * d","b * -d = -(b * d)","d + -c = d - c","not a * c < b * d or a * c <= b * d","b * d > a * c = a * c < b * d","c > R.0 = R.0 < c","not R.0 < c","c * a = a * c","d != c or d - c = R.0","a * c > b * d != a * c <= b * d","R.0 - b * d = -(b * d)","R.0 + -d = -d","R.0 * a = R.0","R.0.comparable(c)","not a * c < b * d","d - c = R.0","a * c > b * d or a * c <= b * d","a * c > b * d","R.0 = c"]}
 {"goal":"c < d","proof":["not c <= d or c < d or d = c"]}
-{"goal":"a ⋅ c < b ⋅ d","proof":["not a >= R.0 or not c >= R.0 or not a < b or not c < d or a ⋅ c < b ⋅ d"]}
-{"goal":"a ⋅ c <= b ⋅ d","proof":["lib(order).lt_from(R.lte, a ⋅ c, b ⋅ d) = a ⋅ c < b ⋅ d","not lib(order).lt_from(R.lte, a ⋅ c, b ⋅ d) or a ⋅ c <= b ⋅ d","lib(order).lt_from(R.lte, a ⋅ c, b ⋅ d)","not lib(order).lt_from(R.lte, a ⋅ c, b ⋅ d)"]}
+{"goal":"a * c < b * d","proof":["not a >= R.0 or not c >= R.0 or not a < b or not c < d or a * c < b * d"]}
+{"goal":"a * c <= b * d","proof":["lib(order).lt_from(R.lte, a * c, b * d) = a * c < b * d","not lib(order).lt_from(R.lte, a * c, b * d) or a * c <= b * d","lib(order).lt_from(R.lte, a * c, b * d)","not lib(order).lt_from(R.lte, a * c, b * d)"]}
 {"goal":"lte_mul_lte","proof":[]}
-{"goal":"a ⋅ c = R.0","proof":["R.0 != c or a ⋅ c = R.0"]}
-{"goal":"b ⋅ c = R.0","proof":["R.0 != c or b ⋅ c = R.0"]}
-{"goal":"a ⋅ c <= b ⋅ c","proof":["not a ⋅ c <= R.0","not R.0 <= R.0","not c <= R.0","c >= c","not c <= c","c >= c = c <= c"]}
+{"goal":"a * c = R.0","proof":["R.0 != c or a * c = R.0"]}
+{"goal":"b * c = R.0","proof":["R.0 != c or b * c = R.0"]}
+{"goal":"a * c <= b * c","proof":["not a * c <= R.0","not R.0 <= R.0","not c <= R.0","c >= c","not c <= c","c >= c = c <= c"]}
 {"goal":"c > R.0","proof":["c.min(R.0) = c or c > R.0","c.min(R.0) = c","not c >= R.0 or c.min(R.0) = R.0","c.min(R.0) != R.0","c.min(R.0) = R.0"]}
-{"goal":"a ⋅ c <= b ⋅ c","proof":["not c > R.0 or not a <= b or a ⋅ c <= b ⋅ c"]}
+{"goal":"a * c <= b * c","proof":["not c > R.0 or not a <= b or a * c <= b * c"]}
 {"goal":"lte_mul_nonneg","proof":[]}
 {"goal":"q - p > R.0","proof":["q - p > R.0 = q > p","not q > p","q > p = p < q"]}
 {"goal":"q - p + -q > -q","proof":["not q - p > q + -q or q - p - q > -q","q - p + -q = q - p - q","not q - p - q > -q","q + -q = R.0","not q - p > q + -q"]}
@@ -112,31 +112,31 @@
 {"goal":"-p > -q","proof":["-(p - (q + -q)) = q + -q - p","-(p - R.0) = R.0 - p","-p > -q = -q < -p","q - p + -q > -q = -q < q - p + -q","R.0 - p = -p","q + -q = R.0"]}
 {"goal":"lt_neg","proof":[]}
 {"goal":"lte_neg","proof":["not p <= q or p < q or q = p","not p < q or -p > -q","not -q < -p or -q <= -p","-p > -q = -q < -p","-p >= -q = -q <= -p","not -q <= -p","-q != -p or -q <= -p","-q != -p","q != p","not -q < -p","p < q","not -p > -q","-p > -q"]}
-{"goal":"a ⋅ c >= b ⋅ c","proof":["not c > R.0 or not b <= a or b ⋅ c <= a ⋅ c","a >= b = b <= a","a ⋅ c >= b ⋅ c = b ⋅ c <= a ⋅ c","not b ⋅ c <= a ⋅ c","b <= a","not b <= a"]}
-{"goal":"not a ⋅ c < b ⋅ c","proof":["not b ⋅ c <= a ⋅ c or b ⋅ c < a ⋅ c or b ⋅ c = a ⋅ c","not lib(util).is_acyclic[R](R.lt) or not b ⋅ c < a ⋅ c or not a ⋅ c < b ⋅ c","a ⋅ c >= b ⋅ c = b ⋅ c <= a ⋅ c","not a ⋅ c < b ⋅ c or b ⋅ c != a ⋅ c","b ⋅ c != a ⋅ c","b ⋅ c <= a ⋅ c","b ⋅ c < a ⋅ c","not b ⋅ c < a ⋅ c"]}
+{"goal":"a * c >= b * c","proof":["not c > R.0 or not b <= a or b * c <= a * c","a >= b = b <= a","a * c >= b * c = b * c <= a * c","not b * c <= a * c","b <= a","not b <= a"]}
+{"goal":"not a * c < b * c","proof":["not b * c <= a * c or b * c < a * c or b * c = a * c","not lib(util).is_acyclic[R](R.lt) or not b * c < a * c or not a * c < b * c","a * c >= b * c = b * c <= a * c","not a * c < b * c or b * c != a * c","b * c != a * c","b * c <= a * c","b * c < a * c","not b * c < a * c"]}
 {"goal":"false","proof":[]}
 {"goal":"lt_cancel_pos_mul_right","proof":["a.min(b) = b or a < b","a.min(b) = b","a >= a.min(b)"]}
-{"goal":"lt_cancel_pos_mul_left","proof":["not a ⋅ c < b ⋅ c or not c > R.0 or a < b","a ⋅ c = c ⋅ a","b ⋅ c = c ⋅ b","not a ⋅ c < b ⋅ c or not c > R.0","not a ⋅ c < b ⋅ c"]}
-{"goal":"gt_cancel_pos_mul_right","proof":["not b ⋅ c < a ⋅ c or not c > R.0 or b < a","a > b = b < a","a ⋅ c > b ⋅ c = b ⋅ c < a ⋅ c","not b < a","b ⋅ c < a ⋅ c"]}
-{"goal":"gt_cancel_pos_mul_left","proof":["not c ⋅ b < c ⋅ a or not c > R.0 or b < a","a > b = b < a","c ⋅ a > c ⋅ b = c ⋅ b < c ⋅ a","not b < a","c ⋅ b < c ⋅ a"]}
-{"goal":"cancel_positivity_left","proof":["not b ⋅ a > R.0 ⋅ a or not a > R.0 or b > R.0","b ⋅ a = a ⋅ b","R.0 ⋅ a = R.0","b ⋅ a > R.0","not b ⋅ a > R.0 ⋅ a or not a > R.0","not b ⋅ a > R.0 ⋅ a"]}
-{"goal":"cancel_positivity_right","proof":["not b ⋅ a > R.0 or not b > R.0 or a > R.0","a ⋅ b = b ⋅ a","b ⋅ a > R.0"]}
-{"goal":"a ⋅ b > R.0","proof":["not a > R.0 or not b > R.0 or a ⋅ b > R.0"]}
-{"goal":"abs(a ⋅ b) = abs(a) ⋅ abs(b)","proof":["abs(b) ⋅ abs(a) = abs(a) ⋅ abs(b)","b ⋅ a = a ⋅ b","not a > R.0 or a.abs = a","not a ⋅ b > R.0 or (a ⋅ b).abs = a ⋅ b","not b > R.0 or b.abs = b","(a ⋅ b).abs = abs(a ⋅ b)","a.abs = abs(a)","b.abs = abs(b)","b.abs = b","a.abs = a","(a ⋅ b).abs = a ⋅ b"]}
-{"goal":"a ⋅ b <= R.0","proof":["not a ⋅ b > R.0 or not a > R.0 or b > R.0","a ⋅ b > R.0 != a ⋅ b <= R.0","a ⋅ b > R.0 or a ⋅ b <= R.0","a ⋅ b > R.0"]}
-{"goal":"abs(a ⋅ b) = abs(a) ⋅ abs(b)","proof":["abs(a) ⋅ --abs(b) = -(abs(a) ⋅ -abs(b))","not a ⋅ b <= R.0 or (a ⋅ b).abs = -(a ⋅ b)","b > R.0 or b.abs = -b","b.abs = -b","not a > R.0 or a.abs = a","R.0 - b = -b","(a ⋅ b).abs = abs(a ⋅ b)","a.abs = abs(a)","b.abs = abs(b)","--b = b","a.abs = a","(a ⋅ b).abs = -(a ⋅ b)"]}
-{"goal":"a ⋅ b <= R.0","proof":["not b > R.0 or not a <= R.0 or a ⋅ b <= R.0 ⋅ b","a > R.0 != a <= R.0","R.0 ⋅ b = R.0","not a ⋅ b <= R.0 ⋅ b","a > R.0 or a <= R.0","not a <= R.0","a <= R.0"]}
-{"goal":"abs(a ⋅ b) = abs(a) ⋅ abs(b)","proof":["-a ⋅ -b = a ⋅ b","abs(a) ⋅ --abs(b) = -(abs(a) ⋅ -abs(b))","not a ⋅ b <= R.0 or (a ⋅ b).abs = -(a ⋅ b)","a > R.0 or a.abs = -a","a.abs = -a","not b > R.0 or b.abs = b","(a ⋅ b).abs = abs(a ⋅ b)","a.abs = abs(a)","b.abs = abs(b)","--abs(b) = abs(b)","b.abs = b","(a ⋅ b).abs = -(a ⋅ b)"]}
-{"goal":"a ⋅ b >= R.0","proof":["not a <= R.0 or not b <= R.0 or a ⋅ b >= R.0","a > R.0 != a <= R.0","b > R.0 != b <= R.0","not b <= R.0 or not a <= R.0","a > R.0 or a <= R.0","b > R.0 or b <= R.0","b <= R.0","a <= R.0","not a <= R.0"]}
-{"goal":"abs(a ⋅ b) = abs(a) ⋅ abs(b)","proof":["-a ⋅ -b = a ⋅ b","a > R.0 or a.abs = -a","b > R.0 or b.abs = -b","b.abs = -b","a.abs = -a","not a ⋅ b >= R.0 or (a ⋅ b).abs = a ⋅ b","(a ⋅ b).abs = abs(a ⋅ b)","a.abs = abs(a)","b.abs = abs(b)","(a ⋅ b).abs = a ⋅ b"]}
-{"goal":"abs_distrib_mul","proof":["lib(type_class.ring).scalar_mul(a.abs, b.abs) = a.abs ⋅ b.abs","lib(type_class.ring).scalar_mul(abs(a), abs(b)) = abs(a) ⋅ abs(b)","(a ⋅ b).abs = abs(a ⋅ b)","a.abs = abs(a)","b.abs = abs(b)"]}
+{"goal":"lt_cancel_pos_mul_left","proof":["not a * c < b * c or not c > R.0 or a < b","a * c = c * a","b * c = c * b","not a * c < b * c or not c > R.0","not a * c < b * c"]}
+{"goal":"gt_cancel_pos_mul_right","proof":["not b * c < a * c or not c > R.0 or b < a","a > b = b < a","a * c > b * c = b * c < a * c","not b < a","b * c < a * c"]}
+{"goal":"gt_cancel_pos_mul_left","proof":["not c * b < c * a or not c > R.0 or b < a","a > b = b < a","c * a > c * b = c * b < c * a","not b < a","c * b < c * a"]}
+{"goal":"cancel_positivity_left","proof":["not b * a > R.0 * a or not a > R.0 or b > R.0","b * a = a * b","R.0 * a = R.0","b * a > R.0","not b * a > R.0 * a or not a > R.0","not b * a > R.0 * a"]}
+{"goal":"cancel_positivity_right","proof":["not b * a > R.0 or not b > R.0 or a > R.0","a * b = b * a","b * a > R.0"]}
+{"goal":"a * b > R.0","proof":["not a > R.0 or not b > R.0 or a * b > R.0"]}
+{"goal":"abs(a * b) = abs(a) * abs(b)","proof":["abs(b) * abs(a) = abs(a) * abs(b)","b * a = a * b","not a > R.0 or a.abs = a","not a * b > R.0 or (a * b).abs = a * b","not b > R.0 or b.abs = b","(a * b).abs = abs(a * b)","a.abs = abs(a)","b.abs = abs(b)","b.abs = b","a.abs = a","(a * b).abs = a * b"]}
+{"goal":"a * b <= R.0","proof":["not a * b > R.0 or not a > R.0 or b > R.0","a * b > R.0 != a * b <= R.0","a * b > R.0 or a * b <= R.0","a * b > R.0"]}
+{"goal":"abs(a * b) = abs(a) * abs(b)","proof":["abs(a) * --abs(b) = -(abs(a) * -abs(b))","not a * b <= R.0 or (a * b).abs = -(a * b)","b > R.0 or b.abs = -b","b.abs = -b","not a > R.0 or a.abs = a","R.0 - b = -b","(a * b).abs = abs(a * b)","a.abs = abs(a)","b.abs = abs(b)","--b = b","a.abs = a","(a * b).abs = -(a * b)"]}
+{"goal":"a * b <= R.0","proof":["not b > R.0 or not a <= R.0 or a * b <= R.0 * b","a > R.0 != a <= R.0","R.0 * b = R.0","not a * b <= R.0 * b","a > R.0 or a <= R.0","not a <= R.0","a <= R.0"]}
+{"goal":"abs(a * b) = abs(a) * abs(b)","proof":["-a * -b = a * b","abs(a) * --abs(b) = -(abs(a) * -abs(b))","not a * b <= R.0 or (a * b).abs = -(a * b)","a > R.0 or a.abs = -a","a.abs = -a","not b > R.0 or b.abs = b","(a * b).abs = abs(a * b)","a.abs = abs(a)","b.abs = abs(b)","--abs(b) = abs(b)","b.abs = b","(a * b).abs = -(a * b)"]}
+{"goal":"a * b >= R.0","proof":["not a <= R.0 or not b <= R.0 or a * b >= R.0","a > R.0 != a <= R.0","b > R.0 != b <= R.0","not b <= R.0 or not a <= R.0","a > R.0 or a <= R.0","b > R.0 or b <= R.0","b <= R.0","a <= R.0","not a <= R.0"]}
+{"goal":"abs(a * b) = abs(a) * abs(b)","proof":["-a * -b = a * b","a > R.0 or a.abs = -a","b > R.0 or b.abs = -b","b.abs = -b","a.abs = -a","not a * b >= R.0 or (a * b).abs = a * b","(a * b).abs = abs(a * b)","a.abs = abs(a)","b.abs = abs(b)","(a * b).abs = a * b"]}
+{"goal":"abs_distrib_mul","proof":["lib(type_class.ring).scalar_mul(a.abs, b.abs) = a.abs * b.abs","lib(type_class.ring).scalar_mul(abs(a), abs(b)) = abs(a) * abs(b)","(a * b).abs = abs(a * b)","a.abs = abs(a)","b.abs = abs(b)"]}
 {"goal":"a^ℕ.0 = R.1","proof":["ℕ.0 != ℕ.0 or a^ℕ.0 = R.1"]}
 {"goal":"R.1 >= R.0","proof":[]}
 {"goal":"abs(R.1) = R.1","proof":["not R.1 >= R.0 or R.1.abs = R.1","abs(R.1) = R.1.abs","R.1.abs = R.1","R.1.abs != R.1"]}
 {"goal":"abs(a)^ℕ.0 = R.1","proof":["ℕ.0 != ℕ.0 or abs(a)^ℕ.0 = R.1"]}
 {"goal":"f(ℕ.0)","proof":["abs(a)^ℕ.0 != abs(a^ℕ.0) or f(ℕ.0)","let s0: R satisfy { true }","abs(R.1) = R.1.abs","abs(s0) = s0.abs","abs[R] = R.abs","abs(a)^ℕ.0 != abs(a^ℕ.0)"]}
 {"goal":"abs(a^x) = abs(a)^x","proof":["not f(x) or abs(a)^x = abs(a^x)"]}
-{"goal":"abs(a^x.suc) = abs(a)^x.suc","proof":["x.suc != x.suc or a ⋅ a^x = a^x.suc","x.suc != x.suc or a.abs ⋅ a.abs^x = a.abs^x.suc","a.abs ⋅ (a^x).abs = (a ⋅ a^x).abs","abs(a) = a.abs","abs(a^x) = (a^x).abs","abs(a^x.suc) = (a^x.suc).abs","a ⋅ a^x = a^x.suc","a.abs ⋅ a.abs^x = a.abs^x.suc"]}
+{"goal":"abs(a^x.suc) = abs(a)^x.suc","proof":["x.suc != x.suc or a * a^x = a^x.suc","x.suc != x.suc or a.abs * a.abs^x = a.abs^x.suc","a.abs * (a^x).abs = (a * a^x).abs","abs(a) = a.abs","abs(a^x) = (a^x).abs","abs(a^x.suc) = (a^x.suc).abs","a * a^x = a^x.suc","a.abs * a.abs^x = a.abs^x.suc"]}
 {"goal":"f(x.suc)","proof":["abs(a)^x.suc != abs(a^x.suc) or f(x.suc)"]}
 {"goal":"f(n)","proof":["let s0: (ℕ -> Bool) -> ℕ satisfy { forall(x0: ℕ -> Bool, x1: ℕ) { not x0(ℕ.0) or x0(s0(x0)) or x0(x1) } and forall(x2: ℕ -> Bool, x3: ℕ) { not x2(s0(x2).suc) or not x2(ℕ.0) or x2(x3) } }","not f(s0(f)) or f(s0(f).suc)","not f(s0(f).suc) or not f(ℕ.0) or f(n)","not f(s0(f).suc)","not f(ℕ.0) or f(s0(f)) or f(n)","not f(s0(f))","f(s0(f))"]}
 {"goal":"pow_abs_eq_abs_pow","proof":["not f(n) or abs(a)^n = abs(a^n)"]}

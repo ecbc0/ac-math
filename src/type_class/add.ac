@@ -1,5 +1,5 @@
 /// also called "commutative monoid".  
-/// also apply to mul ⋅
+/// also apply to mul *
 typeclass A: P_Add {
     /// The binary addition operation that combines two elements
     add: (A, A) -> A

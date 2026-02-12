@@ -32,7 +32,7 @@ typeclass V: Vec extends Add {
     
     // Scalar multiplication is associative
     scal_assco(a1: ℝ, a2: ℝ, v: V) {
-        Vec.scal(a1, Vec.scal(a2, v)) = Vec.scal(a1 ⋅ a2, v)
+        Vec.scal(a1, Vec.scal(a2, v)) = Vec.scal(a1 * a2, v)
     }
 }
 

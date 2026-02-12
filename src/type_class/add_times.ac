@@ -49,19 +49,19 @@ theorem times_one[A: P_Add](a: A) {
     a.times(ℕ.1) = a // transitivity
 }
 
-// Proof that (a.times(n)).times(m) = a.times(n ⋅ m)
+// Proof that (a.times(n)).times(m) = a.times(n * m)
 theorem times_mul[A: P_Add](a: A, b: ℕ, c: ℕ) {
-    a.times(b ⋅ c) = (a.times(b)).times(c)
+    a.times(b * c) = (a.times(b)).times(c)
 } by {
     // Inductive step
     let f = function(x: ℕ) {
-        a.times(b ⋅ x) = (a.times(b)).times(x)
+        a.times(b * x) = (a.times(b)).times(x)
     }
     f(ℕ.0)
     forall(x: ℕ) {
         if f(x) {
-            a.times(b ⋅ x) = (a.times(b)).times(x)
-            a.times(b ⋅ x.suc) = (a.times(b)).times(x.suc)
+            a.times(b * x) = (a.times(b)).times(x)
+            a.times(b * x.suc) = (a.times(b)).times(x.suc)
             f(x.suc)
         }
     }

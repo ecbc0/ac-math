@@ -10,12 +10,12 @@
 {"goal":"a + A.0 = a","proof":["a + A.0 = a"]}
 {"goal":"a.times(ℕ.1) = a","proof":[]}
 {"goal":"times_one","proof":[]}
-{"goal":"f(ℕ.0)","proof":["a.times(b).times(ℕ.0) != a.times(b ⋅ ℕ.0) or f(ℕ.0)","b ⋅ ℕ.0 != ℕ.0 or a.times(b ⋅ ℕ.0) = A.0","ℕ.0 != ℕ.0 or a.times(b).times(ℕ.0) = A.0","b ⋅ ℕ.0 = ℕ.0","a.times(b).times(ℕ.0) = A.0","a.times(b).times(ℕ.0) != a.times(b ⋅ ℕ.0)","a.times(b ⋅ ℕ.0) != A.0"]}
-{"goal":"a.times(b ⋅ x) = a.times(b).times(x)","proof":["not f(x) or a.times(b).times(x) = a.times(b ⋅ x)"]}
-{"goal":"a.times(b ⋅ x.suc) = a.times(b).times(x.suc)","proof":["a.times(b ⋅ x) + a.times(b) = a.times(b ⋅ x + b)","a.times(b).times(x) + a.times(b).times(ℕ.1) = a.times(b).times(x + ℕ.1)","x.suc != x.suc or b ⋅ x + b = b ⋅ x.suc","x + ℕ.1 = x.suc","a.times(b).times(ℕ.1) = a.times(b)","b ⋅ x + b = b ⋅ x.suc"]}
-{"goal":"f(x.suc)","proof":["a.times(b).times(x.suc) != a.times(b ⋅ x.suc) or f(x.suc)"]}
+{"goal":"f(ℕ.0)","proof":["a.times(b).times(ℕ.0) != a.times(b * ℕ.0) or f(ℕ.0)","b * ℕ.0 != ℕ.0 or a.times(b * ℕ.0) = A.0","ℕ.0 != ℕ.0 or a.times(b).times(ℕ.0) = A.0","b * ℕ.0 = ℕ.0","a.times(b).times(ℕ.0) = A.0","a.times(b).times(ℕ.0) != a.times(b * ℕ.0)","a.times(b * ℕ.0) != A.0"]}
+{"goal":"a.times(b * x) = a.times(b).times(x)","proof":["not f(x) or a.times(b).times(x) = a.times(b * x)"]}
+{"goal":"a.times(b * x.suc) = a.times(b).times(x.suc)","proof":["a.times(b * x) + a.times(b) = a.times(b * x + b)","a.times(b).times(x) + a.times(b).times(ℕ.1) = a.times(b).times(x + ℕ.1)","x.suc != x.suc or b * x + b = b * x.suc","x + ℕ.1 = x.suc","a.times(b).times(ℕ.1) = a.times(b)","b * x + b = b * x.suc"]}
+{"goal":"f(x.suc)","proof":["a.times(b).times(x.suc) != a.times(b * x.suc) or f(x.suc)"]}
 {"goal":"f(c)","proof":["let s0: (ℕ -> Bool) -> ℕ satisfy { forall(x0: ℕ -> Bool, x1: ℕ) { not x0(ℕ.0) or x0(s0(x0)) or x0(x1) } and forall(x2: ℕ -> Bool, x3: ℕ) { not x2(s0(x2).suc) or not x2(ℕ.0) or x2(x3) } }","not f(s0(f)) or f(s0(f).suc)","not f(s0(f).suc) or not f(ℕ.0) or f(c)","not f(s0(f).suc)","not f(ℕ.0) or f(s0(f)) or f(c)","not f(s0(f))","f(s0(f))"]}
-{"goal":"times_mul","proof":["not f(c) or a.times(b).times(c) = a.times(b ⋅ c)"]}
+{"goal":"times_mul","proof":["not f(c) or a.times(b).times(c) = a.times(b * c)"]}
 {"goal":"one_times[A](ℕ.0)","proof":["A.0.times(ℕ.0) != A.0 or one_times[A](ℕ.0)","A.0.times(ℕ.0) != A.0","ℕ.0 != ℕ.0 or A.0.times(ℕ.0) = A.0"]}
 {"goal":"one_times[A](n)","proof":["let s0: (ℕ -> Bool) -> ℕ satisfy { forall(x0: ℕ -> Bool, x1: ℕ) { not x0(ℕ.0) or x0(s0(x0)) or x0(x1) } and forall(x2: ℕ -> Bool, x3: ℕ) { not x2(s0(x2).suc) or not x2(ℕ.0) or x2(x3) } }","A.0.times(s0(one_times[A]).suc) != A.0 or one_times[A](s0(one_times[A]).suc)","not one_times[A](s0(one_times[A])) or A.0.times(s0(one_times[A])) = A.0","s0(one_times[A]).suc != s0(one_times[A]).suc or A.0 + A.0.times(s0(one_times[A])) = A.0.times(s0(one_times[A]).suc)","not one_times[A](s0(one_times[A]).suc) or not one_times[A](ℕ.0) or one_times[A](n)","not one_times[A](s0(one_times[A]).suc)","not one_times[A](ℕ.0) or one_times[A](s0(one_times[A])) or one_times[A](n)","one_times[A](s0(one_times[A]))","A.0 + A.0 = A.0","A.0 + A.0.times(s0(one_times[A])) = A.0.times(s0(one_times[A]).suc)","A.0.times(s0(one_times[A])) = A.0","A.0.times(s0(one_times[A]).suc) != A.0"]}
 {"goal":"one_times","proof":["not one_times[A](n) or A.0.times(n) = A.0"]}

@@ -14,7 +14,7 @@ typeclass V: Norm_Vec extends Vec {
     }
 
     scal_norm(a: ℝ, v: V) {
-        scal(a, v).norm = a.abs ⋅ v.norm
+        scal(a, v).norm = a.abs * v.norm
     }
 
     norm_triangle(v: V, w: V) {

@@ -10,12 +10,12 @@ theorem pos_reciprocal_raw[F: Ordered_Field](a: F) {
 } by {
     if not a.reciprocal > F.0 {
         a.reciprocal <= F.0
-        a ⋅ a.reciprocal <= F.0
-        a ⋅ a.reciprocal = F.1
+        a * a.reciprocal <= F.0
+        a * a.reciprocal = F.1
         F.1 >= F.0
         F.1 != F.0
         F.1 > F.0
-        a ⋅ a.reciprocal > F.0
+        a * a.reciprocal > F.0
         false
     }
 }
@@ -39,7 +39,7 @@ theorem lt_div_pos[F: Ordered_Field](a: F, b: F, c: F) {
     c > F.0 and a < b implies a/c < b/c
 } by {
     F.1/c > F.0
-    a ⋅ F.1/c < b ⋅ F.1/c
+    a * F.1/c < b * F.1/c
 }
 
 theorem lte_div_pos[F: Ordered_Field](a: F, b: F, c: F) {
@@ -51,10 +51,10 @@ theorem lt_pos_reciprocal[F: Ordered_Field](a: F, b: F) {
 } by {
     F.1/a > F.0
     F.1/b > F.0
-    a ⋅ F.1/a ⋅ F.1/b < b ⋅ F.1/a ⋅ F.1/b
-    a ⋅ F.1/a ⋅ F.1/b = F.1/b
-    (b ⋅ F.1/a) ⋅ F.1/b = b ⋅ (F.1/a ⋅ F.1/b)
-    b ⋅ F.1/a ⋅ F.1/b = F.1/a
+    a * F.1/a * F.1/b < b * F.1/a * F.1/b
+    a * F.1/a * F.1/b = F.1/b
+    (b * F.1/a) * F.1/b = b * (F.1/a * F.1/b)
+    b * F.1/a * F.1/b = F.1/a
     F.1/b < F.1/a
 }
 
@@ -64,7 +64,7 @@ theorem pos_inverses_lt[F: Ordered_Field](p: F, q: F, r: F) {
     implies
     p > q
 } by {
-    r ⋅ F.1/p < r ⋅ F.1/q
+    r * F.1/p < r * F.1/q
     F.1/p < F.1/q
     F.1/(F.1/q) < F.1/(F.1/p)
     F.1/(F.1/q) = q
@@ -117,35 +117,35 @@ theorem lt_cancel_add_right[F: Ordered_Field](p: F, q: F, r: F) {
 }
 
 theorem square_lt_imp_lt[F: Ordered_Field](a: F, b: F) {
-    a > F.0 and b > F.0 and a ⋅ a < b ⋅ b
+    a > F.0 and b > F.0 and a * a < b * b
     implies
     a < b
 } by {
     if a >= b {
-        a ⋅ a >= b ⋅ a
-        b ⋅ a >= b ⋅ b
-        a ⋅ a >= b ⋅ b
+        a * a >= b * a
+        b * a >= b * b
+        a * a >= b * b
         false
     }
 }
 
 theorem lt_rhs_div_pos[F: Ordered_Field](a: F, b: F, c: F) {
-    c > F.0 and a < b/c implies a ⋅ c < b
+    c > F.0 and a < b/c implies a * c < b
 } by {
-    a ⋅ c < b/c ⋅ c
-    b/c ⋅ c = b
+    a * c < b/c * c
+    b/c * c = b
 }
 
 theorem lte_cancel_mul_pos[F: Ordered_Field](p: F, q: F, r: F) {
-    r > F.0 and p ⋅ r <= q ⋅ r
+    r > F.0 and p * r <= q * r
     implies
     p <= q
 } by {
-    if p ⋅ r = q ⋅ r {
+    if p * r = q * r {
         p = q
         p <= q
     } else {
-        p ⋅ r < q ⋅ r
+        p * r < q * r
         p < q
         p <= q
     }
@@ -156,7 +156,7 @@ theorem div_neg_neg[F: Ordered_Field](a: F, b: F) {
     implies
     a/b > F.0
 } by {
-    a/b = a ⋅ F.1/b
+    a/b = a * F.1/b
     F.1/b < F.0
 }
 
@@ -164,8 +164,8 @@ theorem div_negs_cancel[F: Ordered_Field](a: F, b: F) {
     a / b = (-a) / (-b)
 } by {
     -F.1 != F.0
-    (-F.1 ⋅ a) / (-F.1 ⋅ b) = a / b
-    (-F.1 ⋅ a) / -b = a / b
+    (-F.1 * a) / (-F.1 * b) = a / b
+    (-F.1 * a) / -b = a / b
 }
 
 theorem abs_reciprocal[F: Ordered_Field](a: F) {
@@ -192,18 +192,18 @@ theorem abs_of_div[F: Ordered_Field](a: F, b: F) {
 } 
 
 theorem lt_make_left_denom[F: Ordered_Field](a: F, b: F, c: F) {
-    c > F.0 and a < b ⋅ c implies a/c < b
+    c > F.0 and a < b * c implies a/c < b
 }
 
 theorem lt_make_right_denom[F: Ordered_Field](a: F, b: F, c: F) {
-    b > F.0 and a ⋅ b < c implies a < c/b
+    b > F.0 and a * b < c implies a < c/b
 } by {
     F.1/b > F.0
-    a ⋅ b ⋅ F.1/b < c ⋅ F.1/b
-    a ⋅ b ⋅ F.1/b = a
-    a < c ⋅ F.1/b
+    a * b * F.1/b < c * F.1/b
+    a * b * F.1/b = a
+    a < c * F.1/b
 }
 
 theorem lt_elim_left_denom[F: Ordered_Field](a: F, b: F, c: F) {
-    b > F.0 and a/b < c implies a < c ⋅ b
+    b > F.0 and a/b < c implies a < c * b
 }

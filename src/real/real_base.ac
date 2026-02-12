@@ -1368,31 +1368,31 @@ theorem lt_add_pos_rat(a: ℝ, r: ℚ) {
 } by {
     let ub: ℚ satisfy { a < ℝ.from_rat(ub) }
     let q: ℚ satisfy { a.gt_rat(q) }
-    let m: ℕ satisfy { ub - q < ℚ.from_nat(m) ⋅ r }
-    ub < ℚ.from_nat(m) ⋅ r + q
+    let m: ℕ satisfy { ub - q < ℚ.from_nat(m) * r }
+    ub < ℚ.from_nat(m) * r + q
 
     a <= a + ℝ.from_rat(r)
     if a = a + ℝ.from_rat(r) {
         define f(n: ℕ) -> Bool {
-            a = a + ℝ.from_rat(ℚ.from_nat(n) ⋅ r)
+            a = a + ℝ.from_rat(ℚ.from_nat(n) * r)
         }
         f(ℕ.0)
         forall(n: ℕ) {
             if f(n) {
-                a = a + ℝ.from_rat(ℚ.from_nat(n) ⋅ r)
+                a = a + ℝ.from_rat(ℚ.from_nat(n) * r)
                 a = a + ℝ.from_rat(r)
-                a = a + (ℝ.from_rat(ℚ.from_nat(n) ⋅ r) + ℝ.from_rat(r))
-                a = a + ℝ.from_rat(ℚ.from_nat(n + ℕ.1) ⋅ r)
+                a = a + (ℝ.from_rat(ℚ.from_nat(n) * r) + ℝ.from_rat(r))
+                a = a + ℝ.from_rat(ℚ.from_nat(n + ℕ.1) * r)
                 f(n + ℕ.1)
             }
         }
         f(m + ℕ.1)
-        a = a + ℝ.from_rat(ℚ.from_nat(m + ℕ.1) ⋅ r)
+        a = a + ℝ.from_rat(ℚ.from_nat(m + ℕ.1) * r)
         ℚ.from_nat(m + ℕ.1) > ℚ.from_nat(m)
-        ℚ.from_nat(m + ℕ.1) ⋅ r > ℚ.from_nat(m) ⋅ r
-        ℝ.from_rat(ℚ.from_nat(m + ℕ.1) ⋅ r).gt_rat(ℚ.from_nat(m) ⋅ r)
-        add_gt(a, ℝ.from_rat(ℚ.from_nat(m + ℕ.1) ⋅ r), q + ℚ.from_nat(m) ⋅ r)
-        a.gt_rat(q + ℚ.from_nat(m) ⋅ r)
+        ℚ.from_nat(m + ℕ.1) * r > ℚ.from_nat(m) * r
+        ℝ.from_rat(ℚ.from_nat(m + ℕ.1) * r).gt_rat(ℚ.from_nat(m) * r)
+        add_gt(a, ℝ.from_rat(ℚ.from_nat(m + ℕ.1) * r), q + ℚ.from_nat(m) * r)
+        a.gt_rat(q + ℚ.from_nat(m) * r)
         a.gt_rat(ub)
         false
     }
@@ -2247,7 +2247,7 @@ theorem swap_minus_plus(a: ℝ, b: ℝ, c: ℝ) {
     a + b - c = a - c + b
 }
 
-/// Multiplication not preserve order. We will first use ℚ_(0, a) + ℚ_(a, ∞), truncated from ℚ_(< a) + ℚ_(> a), or just ℚ_(0, a), and define ℚ_(0, a) ⋅ ℚ_(0, b) = ℚ_(0, a ⋅ b).  
+/// Multiplication not preserve order. We will first use ℚ_(0, a) + ℚ_(a, ∞), truncated from ℚ_(< a) + ℚ_(> a), or just ℚ_(0, a), and define ℚ_(0, a) * ℚ_(0, b) = ℚ_(0, a * b).  
 /// Then use neg to define mul in cases other than a > 0 and b > 0  
 /// Indeed, after defing add on ℝ, you can define mul, reciprocal on ℝ using net of ℚ that converge to ℝ.  
 /// That maybe more convenient than defining mul by Dedekind cut, but I will not try it now. (Need intersection_of_net_non_empty_theorem.) Measure and integral will also be defined by completion of net (rather than completion of linear order, as the case of from ℚ to ℝ)
@@ -2256,7 +2256,7 @@ define pos_mul_truncated_gt(a: ℝ, b: ℝ, r: ℚ) -> Bool {
     exists(ra: ℚ, rb: ℚ) {
         ra > ℚ.0 and a.gt_rat(ra) and
         rb > ℚ.0 and b.gt_rat(rb) and
-        r = ra ⋅ rb
+        r = ra * rb
     }
 }
 
@@ -2283,24 +2283,24 @@ theorem pos_mul_truncated_is_lower_interval(a: ℝ, b: ℝ) {
             let (ray: ℚ, rby: ℚ) satisfy {
                 ray > ℚ.0 and a.gt_rat(ray) and 
                 rby > ℚ.0 and b.gt_rat(rby) and
-                y = ray ⋅ rby
+                y = ray * rby
             }
             // no square root now, so how to make it symmetrical?
-            let rax = x/y ⋅ ray
+            let rax = x/y * ray
             let rbx = rby
             y > ℚ.0
             x/y > ℚ.0
             x/y < ℚ.1
             ray > ℚ.0
-            x/y ⋅ ray < ray
+            x/y * ray < ray
             rax < ray
             a.gt_rat(rax)
             b.gt_rat(rbx)
-            rax ⋅ rbx = x/y ⋅ (ray ⋅ rby)
-            rax ⋅ rbx = x
+            rax * rbx = x/y * (ray * rby)
+            rax * rbx = x
             ℝ.new(a.gt_rat).gt_rat(rax)
             ℝ.new(b.gt_rat).gt_rat(rbx)
-            pos_mul_truncated_gt(ℝ.new(a.gt_rat), ℝ.new(b.gt_rat), rax ⋅ rbx)
+            pos_mul_truncated_gt(ℝ.new(a.gt_rat), ℝ.new(b.gt_rat), rax * rbx)
             pos_mul_truncated_gt(a, b, x)
         }
     }
@@ -2346,13 +2346,13 @@ theorem pos_mul_truncated_is_cut(a: ℝ, b: ℝ) {
     }
     a.gt_rat(ra)
     b.gt_rat(rb)
-    let r = ra ⋅ rb
+    let r = ra * rb
     ra > ℚ.0
     rb > ℚ.0
     r > ℚ.0
     ℝ.new(a.gt_rat).gt_rat(ra)
     ℝ.new(b.gt_rat).gt_rat(rb)
-    pos_mul_truncated_gt(ℝ.new(a.gt_rat), ℝ.new(b.gt_rat), ra ⋅ rb)
+    pos_mul_truncated_gt(ℝ.new(a.gt_rat), ℝ.new(b.gt_rat), ra * rb)
     pos_mul_truncated_gt(a, b, r)
 
     let qa: ℚ satisfy {
@@ -2361,7 +2361,7 @@ theorem pos_mul_truncated_is_cut(a: ℝ, b: ℝ) {
     let qb: ℚ satisfy {
         b < ℝ.from_rat(qb)
     }
-    let q = qa ⋅ qb
+    let q = qa * qb
     forall(za: ℚ, zb: ℚ) {
         if za > ℚ.0 and a.gt_rat(za) and zb > ℚ.0 and b.gt_rat(zb) {
             ℝ.from_rat(za) < a
@@ -2370,16 +2370,16 @@ theorem pos_mul_truncated_is_cut(a: ℝ, b: ℝ) {
             ℝ.from_rat(zb) < ℝ.from_rat(qb)
             za < qa
             zb < qb
-            za ⋅ zb < qa ⋅ qb
-            za ⋅ zb < q
-            za ⋅ zb != q
+            za * zb < qa * qb
+            za * zb < q
+            za * zb != q
         }
     }
     ℝ.from_rat(qa) > 0
     ℝ.from_rat(qb) > 0
     qa > ℚ.0
     qb > ℚ.0
-    qa ⋅ qb > ℚ.0
+    qa * qb > ℚ.0
     q > ℚ.0
     not pos_mul_truncated_gt(a, b, q)
 }
@@ -2437,7 +2437,7 @@ theorem pos_mul_truncated_has_no_greatest(a: ℝ, b: ℝ) {
         let (xa: ℚ, xb: ℚ) satisfy {
             xa > ℚ.0 and a.gt_rat(xa) and 
             xb > ℚ.0 and b.gt_rat(xb) and
-            x = xa ⋅ xb
+            x = xa * xb
         }
         ℝ.from_rat(xa) < a
         ℝ.from_rat(xb) < b
@@ -2453,13 +2453,13 @@ theorem pos_mul_truncated_has_no_greatest(a: ℝ, b: ℝ) {
         qa > ℚ.0
         a.gt_rat(qa)
         b.gt_rat(qb)
-        let q = qa ⋅ qb
-        qa ⋅ qb > xa ⋅ xb
+        let q = qa * qb
+        qa * qb > xa * xb
         q > x
         q > ℚ.0
         ℝ.new(a.gt_rat).gt_rat(qa)
         ℝ.new(b.gt_rat).gt_rat(qb)
-        pos_mul_truncated_gt(ℝ.new(a.gt_rat), ℝ.new(b.gt_rat), qa ⋅ qb)
+        pos_mul_truncated_gt(ℝ.new(a.gt_rat), ℝ.new(b.gt_rat), qa * qb)
         pos_mul_truncated_gt(a, b, q)
         false
     }
@@ -2556,38 +2556,38 @@ attributes ℝ {
 
 /// Zero on the left of multiplication yields zero.
 theorem mul_zero_left(a: ℝ) {
-    0 ⋅ a = 0
+    0 * a = 0
 } by {
     not 0 > 0
 }
 
 /// Zero on the right of multiplication yields zero.
 theorem mul_zero_right(a: ℝ) {
-    a ⋅ 0 = 0
+    a * 0 = 0
 } by {
     not 0 > 0
 }
 
 /// Zero times any number is zero.
 theorem zero_mul(a: ℝ, b: ℝ) {
-    a = 0 or b = 0 implies a ⋅ b = 0
+    a = 0 or b = 0 implies a * b = 0
 } by {
     if a = 0 {
-        a ⋅ b = 0
+        a * b = 0
     }
     if b = 0 {
-        a ⋅ b = 0
+        a * b = 0
     }
 }
 
 /// Product of two positive numbers is pos_mul.
 theorem mul_pos_pos(a: ℝ, b: ℝ) {
-    a > 0 and b > 0 implies a ⋅ b = pos_mul(a, b)
+    a > 0 and b > 0 implies a * b = pos_mul(a, b)
 }
 
 /// Product of positive and negative is negative.
 theorem mul_pos_neg(a: ℝ, b: ℝ) {
-    a > 0 and b < 0 implies a ⋅ b = -pos_mul(a, -b)
+    a > 0 and b < 0 implies a * b = -pos_mul(a, -b)
 } by {
     if a = 0 or b = 0 {
         false
@@ -2596,19 +2596,19 @@ theorem mul_pos_neg(a: ℝ, b: ℝ) {
             if b > 0 {
                 false
             } else {
-                a ⋅ b = -pos_mul(a, -b) 
+                a * b = -pos_mul(a, -b) 
             }
-            a ⋅ b = -pos_mul(a, -b) 
+            a * b = -pos_mul(a, -b) 
         } else {
             false
         }
-        a ⋅ b = -pos_mul(a, -b) 
+        a * b = -pos_mul(a, -b) 
     }
 }
 
 /// Product of negative and positive is negative.
 theorem mul_neg_pos(a: ℝ, b: ℝ) {
-    a < 0 and b > 0 implies a ⋅ b = -pos_mul(-a, b)
+    a < 0 and b > 0 implies a * b = -pos_mul(-a, b)
 } by {
     if a = 0 or b = 0 {
         false
@@ -2617,19 +2617,19 @@ theorem mul_neg_pos(a: ℝ, b: ℝ) {
             false
         } else {
             if b > 0 {
-                a ⋅ b = -pos_mul(-a, b)
+                a * b = -pos_mul(-a, b)
             } else {
                 false
             }
-            a ⋅ b = -pos_mul(-a, b)
+            a * b = -pos_mul(-a, b)
         }
-        a ⋅ b = -pos_mul(-a, b)
+        a * b = -pos_mul(-a, b)
     }
 }
 
 /// Product of two negative numbers is positive.
 theorem mul_neg_neg(a: ℝ, b: ℝ) {
-    a < 0 and b < 0 implies a ⋅ b = pos_mul(-a, -b)
+    a < 0 and b < 0 implies a * b = pos_mul(-a, -b)
 } by {
     if a = 0 or b = 0 {
         false
@@ -2640,54 +2640,54 @@ theorem mul_neg_neg(a: ℝ, b: ℝ) {
             if b > 0 {
                 false
             } else {
-                a ⋅ b = pos_mul(-a, -b)
+                a * b = pos_mul(-a, -b)
             }
-            a ⋅ b = pos_mul(-a, -b)
+            a * b = pos_mul(-a, -b)
         }
-        a ⋅ b = pos_mul(-a, -b)
+        a * b = pos_mul(-a, -b)
     }
 }
 
 /// Positive times positive is positive.
 theorem mul_pos_pos_gt_zero(a: ℝ, b: ℝ) {
-    a > 0 and b > 0 implies a ⋅ b > 0
+    a > 0 and b > 0 implies a * b > 0
 } 
 
 /// Positive times negative is negative.
 theorem mul_pos_neg_lt_zero(a: ℝ, b: ℝ) {
-    a > 0 and b < 0 implies a ⋅ b < 0
+    a > 0 and b < 0 implies a * b < 0
 } 
 
 /// Negative times positive is negative.
 theorem mul_neg_pos_lt_zero(a: ℝ, b: ℝ) {
-    a < 0 and b > 0 implies a ⋅ b < 0
+    a < 0 and b > 0 implies a * b < 0
 } 
 
 /// Negative times negative is positive.
 theorem mul_neg_neg_lt_zero(a: ℝ, b: ℝ) {
-    a < 0 and b < 0 implies a ⋅ b > 0
+    a < 0 and b < 0 implies a * b > 0
 } 
 
 /// Multiplying by negative on right distributes negation.
 theorem mul_neg_right(a: ℝ, b: ℝ) {
-    a ⋅ -b = -(a ⋅ b)
+    a * -b = -(a * b)
 } by {
     if a = 0 or b = 0 {
-        a ⋅ -b = 0
-        -(a ⋅ b) = 0
+        a * -b = 0
+        -(a * b) = 0
         mul_neg_right(a, b)
     } else {
         if a > 0 {
             if b > 0 {
                 -b < 0
-                a ⋅ -b = -pos_mul(a, b)
-                a ⋅ b = pos_mul(a, b)
+                a * -b = -pos_mul(a, b)
+                a * b = pos_mul(a, b)
                 mul_neg_right(a, b)
             } else {
                 b < 0
                 -b > 0
-                a ⋅ -b = pos_mul(a, -b)
-                a ⋅ b = -pos_mul(a, -b)
+                a * -b = pos_mul(a, -b)
+                a * b = -pos_mul(a, -b)
                 mul_neg_right(a, b)
             }
             mul_neg_right(a, b)
@@ -2695,14 +2695,14 @@ theorem mul_neg_right(a: ℝ, b: ℝ) {
             a < 0
             if b > 0 {
                 -b < 0
-                a ⋅ -b = pos_mul(-a, b)
-                a ⋅ b = -pos_mul(-a, b)
+                a * -b = pos_mul(-a, b)
+                a * b = -pos_mul(-a, b)
                 mul_neg_right(a, b)
             } else {
                 b < 0
                 -b > 0
-                a ⋅ -b = -pos_mul(-a, -b)
-                a ⋅ b = pos_mul(-a, -b)
+                a * -b = -pos_mul(-a, -b)
+                a * b = pos_mul(-a, -b)
                 mul_neg_right(a, b)
             }
             mul_neg_right(a, b)
@@ -2718,7 +2718,7 @@ theorem pos_mul_truncated_gt_comm_imp(a: ℝ, b: ℝ, r: ℚ) {
     let (ra: ℚ, rb: ℚ) satisfy {
         ra > ℚ.0 and a.gt_rat(ra) and
         rb > ℚ.0 and b.gt_rat(rb) and
-        r = ra ⋅ rb
+        r = ra * rb
     }
     pos_mul_truncated_gt(b, a, r)
 }
@@ -2782,27 +2782,27 @@ theorem pos_mul_comm(a: ℝ, b: ℝ) {
 
 /// Multiplication is commutative.
 theorem mul_comm(a: ℝ, b: ℝ) {
-    a ⋅ b = b ⋅ a
+    a * b = b * a
 } by {
   if a = 0 or b = 0 {
-    a ⋅ b = 0
-    b ⋅ a = 0
+    a * b = 0
+    b * a = 0
     mul_comm(a, b)
   } else {
     if a > 0 {
         if b > 0 {
-            a ⋅ b = pos_mul(a, b)
+            a * b = pos_mul(a, b)
             mul_comm(a, b)
         } else {
-            a ⋅ b = -pos_mul(a, -b)
+            a * b = -pos_mul(a, -b)
             mul_comm(a, b)
         }
     } else {
         if b > 0 {
-            a ⋅ b = -pos_mul(-a, b)
+            a * b = -pos_mul(-a, b)
             mul_comm(a, b)
         } else {
-            a ⋅ b = pos_mul(-a, -b)
+            a * b = pos_mul(-a, -b)
             mul_comm(a, b)
         }
     }
@@ -2811,14 +2811,14 @@ theorem mul_comm(a: ℝ, b: ℝ) {
 
 /// Multiplying by negative on left distributes negation.
 theorem mul_neg_left(a: ℝ, b: ℝ) {
-    -a ⋅ b = -(a ⋅ b)
+    -a * b = -(a * b)
 }
 
 theorem pos_mul_truncated_gt_helper_imp(a: ℝ, b: ℝ, r: ℚ) {
     pos_mul_truncated_gt(a, b, r) implies exists(ra: ℚ, rb: ℚ) {
         ra > ℚ.0 and a.gt_rat(ra) and
         rb > ℚ.0 and b.gt_rat(rb) and
-        r = ra ⋅ rb
+        r = ra * rb
     }
 }
 
@@ -2826,7 +2826,7 @@ theorem pos_mul_truncated_gt_helper_imp_rev(a: ℝ, b: ℝ, r: ℚ) {
     exists(ra: ℚ, rb: ℚ) {
         ra > ℚ.0 and a.gt_rat(ra) and
         rb > ℚ.0 and b.gt_rat(rb) and
-        r = ra ⋅ rb
+        r = ra * rb
     } implies pos_mul_truncated_gt(a, b, r)
 }
 
@@ -2862,7 +2862,7 @@ theorem pos_mul_gt_assoc_imp(a: ℝ, b: ℝ, c: ℝ, r: ℚ) {
             let (rab: ℚ, rc: ℚ) satisfy {
                 rab > ℚ.0 and pos_mul(a, b).gt_rat(rab) and
                 rc > ℚ.0 and c.gt_rat(rc) and 
-                r = rab ⋅ rc
+                r = rab * rc
             }
             pos_mul_gt(a, b, rab)
             pos_mul_truncated_gt(a, b, rab)
@@ -2870,11 +2870,11 @@ theorem pos_mul_gt_assoc_imp(a: ℝ, b: ℝ, c: ℝ, r: ℚ) {
             let (ra: ℚ, rb: ℚ) satisfy {
                 ra > ℚ.0 and a.gt_rat(ra) and
                 rb > ℚ.0 and b.gt_rat(rb) and
-                rab = ra ⋅ rb
+                rab = ra * rb
             }
-            r = (ra ⋅ rb) ⋅ rc
-            r = ra ⋅ (rb ⋅ rc)
-            let rbc = rb ⋅ rc
+            r = (ra * rb) * rc
+            r = ra * (rb * rc)
+            let rbc = rb * rc
             rbc > ℚ.0
             pos_mul_truncated_gt(b, c, rbc)
             pos_mul_gt(b, c, rbc)
@@ -2919,15 +2919,15 @@ theorem pos_mul_assoc(a: ℝ, b: ℝ, c: ℝ) {
 /// If any of three factors is zero, both associative products are zero.
 theorem mul_3_zero(a: ℝ, b: ℝ, c: ℝ) {
     a = 0 or b = 0 or c = 0 implies (
-        (a ⋅ b) ⋅ c = 0 and a ⋅ (b ⋅ c) = 0
+        (a * b) * c = 0 and a * (b * c) = 0
     )
 } by {
     if a = 0 {
         mul_3_zero(a, b, c)
     } else {
         if b = 0 {
-            a ⋅ b = 0
-            b ⋅ c = 0
+            a * b = 0
+            b * c = 0
             mul_3_zero(a, b, c)
         } else {
             c = 0
@@ -2936,38 +2936,38 @@ theorem mul_3_zero(a: ℝ, b: ℝ, c: ℝ) {
         mul_3_zero(a, b, c)
     }
     mul_3_zero(a, b, c)
-    (a ⋅ b) ⋅ c = 0
-    a ⋅ (b ⋅ c) = 0
+    (a * b) * c = 0
+    a * (b * c) = 0
 }
 
 /// Associativity of multiplication.
 /// Tedious proof with 1 + 2^3 = 9 cases to handle sign combinations.
 theorem mul_assoc(a: ℝ, b: ℝ, c: ℝ) {
-    (a ⋅ b) ⋅ c = a ⋅ (b ⋅ c)
+    (a * b) * c = a * (b * c)
 } by {
     if a = 0 or b = 0 or c = 0 {
-        (a ⋅ b) ⋅ c = 0
-        a ⋅ (b ⋅ c) = 0 
+        (a * b) * c = 0
+        a * (b * c) = 0 
         mul_assoc(a, b, c)
     } else {
         if a > 0 {
             if b > 0 {
                 if c > 0 {
-                    (a ⋅ b) ⋅ c = pos_mul(pos_mul(a, b), c)
+                    (a * b) * c = pos_mul(pos_mul(a, b), c)
 
-                    a ⋅ (b ⋅ c) = pos_mul(a, pos_mul(b, c))
+                    a * (b * c) = pos_mul(a, pos_mul(b, c))
 
                     mul_assoc(a, b, c)
                 } else {
                     // a > 0, b > 0, c < 0
-                    a ⋅ b > 0
+                    a * b > 0
                     c < 0
-                    b ⋅ c < 0
+                    b * c < 0
 
-                    (a ⋅ b) ⋅ c = -pos_mul(pos_mul(a, b), -c)
+                    (a * b) * c = -pos_mul(pos_mul(a, b), -c)
 
 
-                    a ⋅ (b ⋅ c) = -pos_mul(a, pos_mul(b, -c))
+                    a * (b * c) = -pos_mul(a, pos_mul(b, -c))
 
                     -c > 0
 
@@ -2980,16 +2980,16 @@ theorem mul_assoc(a: ℝ, b: ℝ, c: ℝ) {
                 if c > 0 {
                     a > 0
                     b < 0
-                    a ⋅ b < 0
-                    b ⋅ c < 0
+                    a * b < 0
+                    b * c < 0
 
-                    (a ⋅ b) ⋅ c = -pos_mul(-(a ⋅ b), c)
+                    (a * b) * c = -pos_mul(-(a * b), c)
 
-                    (a ⋅ b) ⋅ c = -pos_mul(pos_mul(a, -b), c)
+                    (a * b) * c = -pos_mul(pos_mul(a, -b), c)
 
-                    a ⋅ (b ⋅ c) = -pos_mul(a, -(b ⋅ c))
+                    a * (b * c) = -pos_mul(a, -(b * c))
 
-                    a ⋅ (b ⋅ c) = -pos_mul(a, pos_mul(-b, c))
+                    a * (b * c) = -pos_mul(a, pos_mul(-b, c))
 
                     -b > 0
 
@@ -3000,21 +3000,21 @@ theorem mul_assoc(a: ℝ, b: ℝ, c: ℝ) {
                     a > 0
                     b < 0
                     c < 0
-                    a ⋅ b < 0
-                    b ⋅ c > 0
+                    a * b < 0
+                    b * c > 0
 
-                    (a ⋅ b) ⋅ c = pos_mul(-(a ⋅ b), -c)
+                    (a * b) * c = pos_mul(-(a * b), -c)
 
-                    (a ⋅ b) ⋅ c = pos_mul(pos_mul(a, -b), -c)
+                    (a * b) * c = pos_mul(pos_mul(a, -b), -c)
 
-                    a ⋅ (b ⋅ c) = pos_mul(a, b ⋅ c)
+                    a * (b * c) = pos_mul(a, b * c)
 
-                    a ⋅ (b ⋅ c) = pos_mul(a, pos_mul(-b, -c))
+                    a * (b * c) = pos_mul(a, pos_mul(-b, -c))
 
                     -b > 0
                     -c > 0
                     
-                    pos_mul(-(a ⋅ b), -c) = pos_mul(a, pos_mul(-b, -c))
+                    pos_mul(-(a * b), -c) = pos_mul(a, pos_mul(-b, -c))
 
                     mul_assoc(a, b, c)
                 }
@@ -3025,16 +3025,16 @@ theorem mul_assoc(a: ℝ, b: ℝ, c: ℝ) {
             if b > 0 {
                 if c > 0 {
                     a < 0
-                    a ⋅ b < 0
-                    b ⋅ c > 0
+                    a * b < 0
+                    b * c > 0
 
-                    (a ⋅ b) ⋅ c = -pos_mul(-(a ⋅ b), c)
+                    (a * b) * c = -pos_mul(-(a * b), c)
 
-                    (a ⋅ b) ⋅ c = -pos_mul(pos_mul(-a, b), c)
+                    (a * b) * c = -pos_mul(pos_mul(-a, b), c)
 
-                    a ⋅ (b ⋅ c) = -pos_mul(-a, b ⋅ c)
+                    a * (b * c) = -pos_mul(-a, b * c)
 
-                    a ⋅ (b ⋅ c) = -pos_mul(-a, pos_mul(b, c))
+                    a * (b * c) = -pos_mul(-a, pos_mul(b, c))
 
                     -a > 0
 
@@ -3045,16 +3045,16 @@ theorem mul_assoc(a: ℝ, b: ℝ, c: ℝ) {
                     a < 0
                     b > 0
                     c < 0
-                    a ⋅ b < 0
-                    b ⋅ c < 0
+                    a * b < 0
+                    b * c < 0
 
-                    (a ⋅ b) ⋅ c = pos_mul(-(a ⋅ b), -c)
+                    (a * b) * c = pos_mul(-(a * b), -c)
 
-                    (a ⋅ b) ⋅ c = pos_mul(pos_mul(-a, b), -c)
+                    (a * b) * c = pos_mul(pos_mul(-a, b), -c)
 
-                    a ⋅ (b ⋅ c) = pos_mul(-a, -(b ⋅ c))
+                    a * (b * c) = pos_mul(-a, -(b * c))
 
-                    a ⋅ (b ⋅ c) = pos_mul(-a, pos_mul(b, -c))
+                    a * (b * c) = pos_mul(-a, pos_mul(b, -c))
 
                     -a > 0
                     -c > 0
@@ -3069,16 +3069,16 @@ theorem mul_assoc(a: ℝ, b: ℝ, c: ℝ) {
                     a < 0
                     b < 0
                     c > 0
-                    a ⋅ b > 0
-                    b ⋅ c < 0
+                    a * b > 0
+                    b * c < 0
 
-                    (a ⋅ b) ⋅ c = pos_mul(a ⋅ b, c)
+                    (a * b) * c = pos_mul(a * b, c)
 
-                    (a ⋅ b) ⋅ c = pos_mul(pos_mul(-a, -b), c)
+                    (a * b) * c = pos_mul(pos_mul(-a, -b), c)
 
-                    a ⋅ (b ⋅ c) = pos_mul(-a, -(b ⋅ c))
+                    a * (b * c) = pos_mul(-a, -(b * c))
 
-                    a ⋅ (b ⋅ c) = pos_mul(-a, pos_mul(-b, c))
+                    a * (b * c) = pos_mul(-a, pos_mul(-b, c))
 
                     -a > 0
                     -b > 0
@@ -3090,16 +3090,16 @@ theorem mul_assoc(a: ℝ, b: ℝ, c: ℝ) {
                     a < 0
                     b < 0
                     c < 0
-                    a ⋅ b > 0
-                    b ⋅ c > 0
+                    a * b > 0
+                    b * c > 0
 
-                    (a ⋅ b) ⋅ c = -pos_mul(a ⋅ b, -c)
+                    (a * b) * c = -pos_mul(a * b, -c)
 
-                    (a ⋅ b) ⋅ c = -pos_mul(pos_mul(-a, -b), -c)
+                    (a * b) * c = -pos_mul(pos_mul(-a, -b), -c)
 
-                    a ⋅ (b ⋅ c) = -pos_mul(-a, b ⋅ c)
+                    a * (b * c) = -pos_mul(-a, b * c)
 
-                    a ⋅ (b ⋅ c) = -pos_mul(-a, pos_mul(-b, -c))
+                    a * (b * c) = -pos_mul(-a, pos_mul(-b, -c))
 
                     -a > 0
                     -b > 0
@@ -3118,13 +3118,13 @@ theorem mul_assoc(a: ℝ, b: ℝ, c: ℝ) {
     mul_assoc(a, b, c)
 }
 
-/// If a > 0, then a⋅1 > r implies a > r.
+/// If a > 0, then a*1 > r implies a > r.
 theorem pos_mul_one_lte(a: ℝ, r: ℚ) {
     a > 0 implies (
-        (a ⋅ 1).gt_rat(r) implies a.gt_rat(r)
+        (a * 1).gt_rat(r) implies a.gt_rat(r)
     )
 } by {
-    if (a ⋅ 1).gt_rat(r) {
+    if (a * 1).gt_rat(r) {
         1 > 0
         pos_mul_gt(a, 1, r)
         if r <= ℚ.0 {
@@ -3134,26 +3134,26 @@ theorem pos_mul_one_lte(a: ℝ, r: ℚ) {
             let (ra: ℚ, r1: ℚ) satisfy {
                 ra > ℚ.0 and a.gt_rat(ra) and
                 r1 > ℚ.0 and 1.gt_rat(r1) and
-                r = ra ⋅ r1
+                r = ra * r1
             }
             r1 < ℚ.1
-            ra ⋅ r1 < ra ⋅ ℚ.1
+            ra * r1 < ra * ℚ.1
             r < ra
             a.gt_rat(r)
         }
     }
 }
 
-/// If a > 0, then a > r implies a⋅1 > r.
+/// If a > 0, then a > r implies a*1 > r.
 theorem lte_pos_mul_one(a: ℝ, r: ℚ) {
     a > 0 implies (
-        a.gt_rat(r) implies (a ⋅ 1).gt_rat(r)
+        a.gt_rat(r) implies (a * 1).gt_rat(r)
     )
 } by {
     1 > 0
     if a.gt_rat(r) {
         if r <= ℚ.0 {
-            (a ⋅ 1).gt_rat(r)
+            (a * 1).gt_rat(r)
         } else {
             r > ℚ.0
             ℝ.from_rat(r) < a
@@ -3168,53 +3168,53 @@ theorem lte_pos_mul_one(a: ℝ, r: ℚ) {
             r/q > ℚ.0
             1.gt_rat(r/q)
             a.gt_rat(ra)
-            r = q ⋅ r/q
-            r = ra ⋅ r1
+            r = q * r/q
+            r = ra * r1
             pos_mul_truncated_gt(a, 1, r)
             pos_mul_gt(a, 1, r)
             pos_mul_gt_helper(a, 1, r)
-            a ⋅ 1 = pos_mul(a, 1)
-            (a ⋅ 1).gt_rat(r)
+            a * 1 = pos_mul(a, 1)
+            (a * 1).gt_rat(r)
         }
-        (a ⋅ 1).gt_rat(r)
+        (a * 1).gt_rat(r)
     }
 }
 
 /// One is right identity for multiplication of positive reals.
 theorem pos_mul_one(a: ℝ) {
     a > 0 implies (
-        a ⋅ 1 = a
+        a * 1 = a
     )
 } by {
     forall(r: ℚ) {
-        (a ⋅ 1).gt_rat(r) implies a.gt_rat(r)
-        (a ⋅ 1).gt_rat(r) = a.gt_rat(r)
+        (a * 1).gt_rat(r) implies a.gt_rat(r)
+        (a * 1).gt_rat(r) = a.gt_rat(r)
     }
-    (a ⋅ 1).gt_rat = a.gt_rat
+    (a * 1).gt_rat = a.gt_rat
 }
 
 /// One is right identity for multiplication.
 theorem mul_one_right(a: ℝ) {
-    a ⋅ 1 = a
+    a * 1 = a
 } by {
     if a = 0 {
-        a ⋅ 1 = a
+        a * 1 = a
     } else {
         if a > 0 {
-            a ⋅ 1 = a
+            a * 1 = a
         } else {
             a < 0
             -a > 0
-            -a ⋅ 1 = -a
-            -a ⋅ 1 = -(a ⋅ 1)
-            a ⋅ 1 = a
+            -a * 1 = -a
+            -a * 1 = -(a * 1)
+            a * 1 = a
         }
     }
 }
 
 /// One is left identity for multiplication.
 theorem mul_one_left(a: ℝ) {
-    1 ⋅ a = a
+    1 * a = a
 }
 
 instance ℝ: Mul {
@@ -3224,18 +3224,18 @@ instance ℝ: Mul {
 
 /// pos_mul preserves rational multiplication (for positive rationals).
 theorem pos_mul_from_rat(a: ℚ, b: ℚ) {
-    a > ℚ.0 and b > ℚ.0 implies pos_mul(ℝ.from_rat(a), ℝ.from_rat(b)) = ℝ.from_rat(a ⋅ b)
+    a > ℚ.0 and b > ℚ.0 implies pos_mul(ℝ.from_rat(a), ℝ.from_rat(b)) = ℝ.from_rat(a * b)
 } by {
     ℝ.from_rat(a) > 0
     ℝ.from_rat(b) > 0
-    a ⋅ b > ℚ.0
-    ℝ.from_rat(a ⋅ b) > 0
+    a * b > ℚ.0
+    ℝ.from_rat(a * b) > 0
     forall(r: ℚ) {
         if r <= ℚ.0 {
             pos_mul(ℝ.from_rat(a), ℝ.from_rat(b)).gt_rat(r)
-            ℝ.from_rat(a ⋅ b).gt_rat(r)
+            ℝ.from_rat(a * b).gt_rat(r)
             pos_mul(ℝ.from_rat(a), ℝ.from_rat(b)).gt_rat(r)
-            pos_mul(ℝ.from_rat(a), ℝ.from_rat(b)).gt_rat(r) = ℝ.from_rat(a ⋅ b).gt_rat(r) 
+            pos_mul(ℝ.from_rat(a), ℝ.from_rat(b)).gt_rat(r) = ℝ.from_rat(a * b).gt_rat(r) 
         } else {
             r > ℚ.0
             if pos_mul(ℝ.from_rat(a), ℝ.from_rat(b)).gt_rat(r) {
@@ -3244,17 +3244,17 @@ theorem pos_mul_from_rat(a: ℚ, b: ℚ) {
                 let (ra: ℚ, rb: ℚ) satisfy {
                     ra > ℚ.0 and ℝ.from_rat(a).gt_rat(ra) and
                     rb > ℚ.0 and ℝ.from_rat(b).gt_rat(rb) and 
-                    r = ra ⋅ rb
+                    r = ra * rb
                 }
                 ra < a
                 rb < b
-                ra ⋅ rb < a ⋅ b
-                r < a ⋅ b
-                ℝ.from_rat(a ⋅ b).gt_rat(r)
+                ra * rb < a * b
+                r < a * b
+                ℝ.from_rat(a * b).gt_rat(r)
             }
-            if ℝ.from_rat(a ⋅ b).gt_rat(r) {
-                r < a ⋅ b
-                let q = r/(a ⋅ b)
+            if ℝ.from_rat(a * b).gt_rat(r) {
+                r < a * b
+                let q = r/(a * b)
                 q < ℚ.1
                 ℚ.0 < q
                 let x: ℚ satisfy {
@@ -3263,89 +3263,89 @@ theorem pos_mul_from_rat(a: ℚ, b: ℚ) {
                 x > ℚ.0
                 x < ℚ.1
                 q/x > ℚ.0
-                let ra = a ⋅ x
-                ra < a ⋅ ℚ.1
+                let ra = a * x
+                ra < a * ℚ.1
                 ra < a
-                let rb = q/x ⋅ b
+                let rb = q/x * b
                 q/x < ℚ.1
-                rb < ℚ.1 ⋅ b
+                rb < ℚ.1 * b
                 rb < b
                 ra > ℚ.0
                 rb > ℚ.0
-                ra ⋅ rb = a ⋅ x ⋅ q/x ⋅ b
-                ra ⋅ rb = a ⋅ (x ⋅ q/x) ⋅ b
-                (x ⋅ q/x) = q
-                ra ⋅ rb = a ⋅ q ⋅ b
-                a ⋅ q ⋅ b = q ⋅ a ⋅ b
-                q ⋅ a ⋅ b = r ⋅ ℚ.1/(a ⋅ b) ⋅ (a ⋅ b)
-                q ⋅ a ⋅ b = r ⋅ (ℚ.1/(a ⋅ b) ⋅ (a ⋅ b))
-                ℚ.1/(a ⋅ b) ⋅ (a ⋅ b) = ℚ.1
-                q ⋅ a ⋅ b = r 
-                ra ⋅ rb = r
+                ra * rb = a * x * q/x * b
+                ra * rb = a * (x * q/x) * b
+                (x * q/x) = q
+                ra * rb = a * q * b
+                a * q * b = q * a * b
+                q * a * b = r * ℚ.1/(a * b) * (a * b)
+                q * a * b = r * (ℚ.1/(a * b) * (a * b))
+                ℚ.1/(a * b) * (a * b) = ℚ.1
+                q * a * b = r 
+                ra * rb = r
                 ℝ.from_rat(a).gt_rat(ra)
                 ℝ.from_rat(b).gt_rat(rb)
                 pos_mul_truncated_gt(ℝ.from_rat(a), ℝ.from_rat(b), r)
                 pos_mul_gt(ℝ.from_rat(a), ℝ.from_rat(b), r)
                 pos_mul(ℝ.from_rat(a), ℝ.from_rat(b)).gt_rat(r)
             }
-            pos_mul(ℝ.from_rat(a), ℝ.from_rat(b)).gt_rat(r) = ℝ.from_rat(a ⋅ b).gt_rat(r)
+            pos_mul(ℝ.from_rat(a), ℝ.from_rat(b)).gt_rat(r) = ℝ.from_rat(a * b).gt_rat(r)
         }
-        pos_mul(ℝ.from_rat(a), ℝ.from_rat(b)).gt_rat(r) = ℝ.from_rat(a ⋅ b).gt_rat(r)
+        pos_mul(ℝ.from_rat(a), ℝ.from_rat(b)).gt_rat(r) = ℝ.from_rat(a * b).gt_rat(r)
     }
-    pos_mul(ℝ.from_rat(a), ℝ.from_rat(b)).gt_rat = ℝ.from_rat(a ⋅ b).gt_rat
+    pos_mul(ℝ.from_rat(a), ℝ.from_rat(b)).gt_rat = ℝ.from_rat(a * b).gt_rat
 }
 
 /// Multiplication preserves rational embedding.
 theorem mul_from_rat(a: ℚ, b: ℚ) {
-    ℝ.from_rat(a) ⋅ ℝ.from_rat(b) = ℝ.from_rat(a ⋅ b)
+    ℝ.from_rat(a) * ℝ.from_rat(b) = ℝ.from_rat(a * b)
 } by {
     if a = ℚ.0 or b = ℚ.0 {
-        a = ℚ.0 implies ℝ.from_rat(a) ⋅ ℝ.from_rat(b) = 0
-        b = ℚ.0 implies ℝ.from_rat(a) ⋅ ℝ.from_rat(b) = 0
-        a ⋅ b = ℚ.0
-        ℝ.from_rat(a) ⋅ ℝ.from_rat(b) = ℝ.from_rat(a ⋅ b)
+        a = ℚ.0 implies ℝ.from_rat(a) * ℝ.from_rat(b) = 0
+        b = ℚ.0 implies ℝ.from_rat(a) * ℝ.from_rat(b) = 0
+        a * b = ℚ.0
+        ℝ.from_rat(a) * ℝ.from_rat(b) = ℝ.from_rat(a * b)
 
     } else {
         if a > ℚ.0 {
             if b > ℚ.0 {
-                ℝ.from_rat(a) ⋅ ℝ.from_rat(b) = pos_mul(ℝ.from_rat(a), ℝ.from_rat(b))
-                pos_mul(ℝ.from_rat(a), ℝ.from_rat(b)) = ℝ.from_rat(a ⋅ b)
-                ℝ.from_rat(a) ⋅ ℝ.from_rat(b) = ℝ.from_rat(a ⋅ b)
+                ℝ.from_rat(a) * ℝ.from_rat(b) = pos_mul(ℝ.from_rat(a), ℝ.from_rat(b))
+                pos_mul(ℝ.from_rat(a), ℝ.from_rat(b)) = ℝ.from_rat(a * b)
+                ℝ.from_rat(a) * ℝ.from_rat(b) = ℝ.from_rat(a * b)
             } else {
                 b < ℚ.0
                 -b > ℚ.0
-                ℝ.from_rat(a) ⋅ ℝ.from_rat(b) = -pos_mul(ℝ.from_rat(a), -ℝ.from_rat(b))
+                ℝ.from_rat(a) * ℝ.from_rat(b) = -pos_mul(ℝ.from_rat(a), -ℝ.from_rat(b))
                 -pos_mul(ℝ.from_rat(a), -ℝ.from_rat(b)) = -pos_mul(ℝ.from_rat(a), ℝ.from_rat(-b))
-                pos_mul(ℝ.from_rat(a), ℝ.from_rat(-b)) = ℝ.from_rat(a ⋅ -b)
-                ℝ.from_rat(a ⋅ -b) = -ℝ.from_rat(a ⋅ b)
-                ℝ.from_rat(a) ⋅ ℝ.from_rat(b) = ℝ.from_rat(a ⋅ b)
+                pos_mul(ℝ.from_rat(a), ℝ.from_rat(-b)) = ℝ.from_rat(a * -b)
+                ℝ.from_rat(a * -b) = -ℝ.from_rat(a * b)
+                ℝ.from_rat(a) * ℝ.from_rat(b) = ℝ.from_rat(a * b)
             }
-            ℝ.from_rat(a) ⋅ ℝ.from_rat(b) = ℝ.from_rat(a ⋅ b)
+            ℝ.from_rat(a) * ℝ.from_rat(b) = ℝ.from_rat(a * b)
         } else {
             a < ℚ.0
             -a > ℚ.0
             if b > ℚ.0 {
-                ℝ.from_rat(a) ⋅ ℝ.from_rat(b) = -pos_mul(-ℝ.from_rat(a), ℝ.from_rat(b))
+                ℝ.from_rat(a) * ℝ.from_rat(b) = -pos_mul(-ℝ.from_rat(a), ℝ.from_rat(b))
                 -pos_mul(-ℝ.from_rat(a), ℝ.from_rat(b)) = -pos_mul(ℝ.from_rat(-a), ℝ.from_rat(b))
-                pos_mul(ℝ.from_rat(-a), ℝ.from_rat(b)) = ℝ.from_rat(-a ⋅ b)
-                ℝ.from_rat(-a ⋅ b) = -ℝ.from_rat(a ⋅ b)
-                ℝ.from_rat(a) ⋅ ℝ.from_rat(b) = ℝ.from_rat(a ⋅ b)
+                pos_mul(ℝ.from_rat(-a), ℝ.from_rat(b)) = ℝ.from_rat(-a * b)
+                ℝ.from_rat(-a * b) = -ℝ.from_rat(a * b)
+                ℝ.from_rat(a) * ℝ.from_rat(b) = ℝ.from_rat(a * b)
             } else {
                 b < ℚ.0
                 -b > ℚ.0
                 ℝ.from_rat(a) < 0
                 ℝ.from_rat(b) < 0
-                ℝ.from_rat(a) ⋅ ℝ.from_rat(b) = pos_mul(-ℝ.from_rat(a), -ℝ.from_rat(b))
+                ℝ.from_rat(a) * ℝ.from_rat(b) = pos_mul(-ℝ.from_rat(a), -ℝ.from_rat(b))
                 pos_mul(-ℝ.from_rat(a), -ℝ.from_rat(b)) = pos_mul(ℝ.from_rat(-a), ℝ.from_rat(-b))
-                pos_mul(ℝ.from_rat(-a), ℝ.from_rat(-b)) = ℝ.from_rat(-a ⋅ -b)
-                ℝ.from_rat(-a ⋅ -b) = ℝ.from_rat(a ⋅ b)
-                ℝ.from_rat(a) ⋅ ℝ.from_rat(b) = ℝ.from_rat(a ⋅ b)        
+                pos_mul(ℝ.from_rat(-a), ℝ.from_rat(-b)) = ℝ.from_rat(-a * -b)
+                ℝ.from_rat(-a * -b) = ℝ.from_rat(a * b)
+                ℝ.from_rat(a) * ℝ.from_rat(b) = ℝ.from_rat(a * b)        
             }
-            ℝ.from_rat(a) ⋅ ℝ.from_rat(b) = ℝ.from_rat(a ⋅ b)
+            ℝ.from_rat(a) * ℝ.from_rat(b) = ℝ.from_rat(a * b)
         }
-        ℝ.from_rat(a) ⋅ ℝ.from_rat(b) = ℝ.from_rat(a ⋅ b)
+        ℝ.from_rat(a) * ℝ.from_rat(b) = ℝ.from_rat(a * b)
     }
-    ℝ.from_rat(a) ⋅ ℝ.from_rat(b) = ℝ.from_rat(a ⋅ b)
+    ℝ.from_rat(a) * ℝ.from_rat(b) = ℝ.from_rat(a * b)
 }
 
 /// Lemma: if add_gt(z1, z2, r) with z1, z2 > 0, r > 0, and one component q1 <= 0, then there exist positive r1, r2 with r = r1 + r2.
@@ -3444,24 +3444,24 @@ theorem add_gt_pos(z1: ℝ, z2: ℝ, r: ℚ) {
 /// Distributive law: a*(b+c) = a*b + a*c (implication direction).
 theorem pos_mul_gt_distrib_imp(a: ℝ, b: ℝ, c: ℝ, r: ℚ) {
     a > 0 and b > 0 and c > 0 implies (
-        pos_mul_gt(a, b + c, r) implies add_gt(a ⋅ b, a ⋅ c, r)
+        pos_mul_gt(a, b + c, r) implies add_gt(a * b, a * c, r)
     )
 } by {
     b + c > 0
-    a ⋅ b > 0
-    a ⋅ c > 0
-    a ⋅ b + a ⋅ c > 0
+    a * b > 0
+    a * c > 0
+    a * b + a * c > 0
 
     if pos_mul_gt(a, b + c, r) {
         if r <= ℚ.0 {
-            a ⋅ b + a ⋅ c > ℝ.from_rat(r)
-            add_gt(a ⋅ b, a ⋅ c, r)
+            a * b + a * c > ℝ.from_rat(r)
+            add_gt(a * b, a * c, r)
         } else {
             pos_mul_truncated_gt(a, b + c, r)
             let (ra: ℚ, rbc: ℚ) satisfy {
                 ra > ℚ.0 and a.gt_rat(ra) and
                 rbc > ℚ.0 and (b + c).gt_rat(rbc) and
-                r = ra ⋅ rbc
+                r = ra * rbc
             }
             add_gt(b, c, rbc)
             add_gt_pos(b, c, rbc)
@@ -3470,63 +3470,63 @@ theorem pos_mul_gt_distrib_imp(a: ℝ, b: ℝ, c: ℝ, r: ℚ) {
                 rc > ℚ.0 and c.gt_rat(rc) and
                 rbc = rb + rc
             }
-            ra ⋅ (rb + rc) = ra ⋅ rb + ra ⋅ rc
-            ra ⋅ rb > ℚ.0 
-            ra ⋅ rc > ℚ.0
-            r = ra ⋅ rb + ra ⋅ rc
-            pos_mul_gt(a, b, ra ⋅ rb)
-            a ⋅ b = pos_mul(a, b)
-            (a ⋅ b).gt_rat(ra ⋅ rb)
-            pos_mul_gt(a, c, ra ⋅ rc)
-            a ⋅ c = pos_mul(a, c)
-            (a ⋅ c).gt_rat(ra ⋅ rc)
-            add_gt(a ⋅ b, a ⋅ c, r)
+            ra * (rb + rc) = ra * rb + ra * rc
+            ra * rb > ℚ.0 
+            ra * rc > ℚ.0
+            r = ra * rb + ra * rc
+            pos_mul_gt(a, b, ra * rb)
+            a * b = pos_mul(a, b)
+            (a * b).gt_rat(ra * rb)
+            pos_mul_gt(a, c, ra * rc)
+            a * c = pos_mul(a, c)
+            (a * c).gt_rat(ra * rc)
+            add_gt(a * b, a * c, r)
         }
-        add_gt(a ⋅ b, a ⋅ c, r)
+        add_gt(a * b, a * c, r)
     }
 }
 
 /// Distributive law: a*(b+c) = a*b + a*c (reverse implication).
 theorem pos_mul_gt_distrib_imp_rev(a: ℝ, b: ℝ, c: ℝ, r: ℚ) {
     a > 0 and b > 0 and c > 0 implies (
-        add_gt(a ⋅ b, a ⋅ c, r) implies pos_mul_gt(a, b + c, r)
+        add_gt(a * b, a * c, r) implies pos_mul_gt(a, b + c, r)
     )
 } by {
     b + c > 0
-    a ⋅ b > 0
-    a ⋅ c > 0
-    a ⋅ b + a ⋅ c > 0
+    a * b > 0
+    a * c > 0
+    a * b + a * c > 0
 
-    if add_gt(a ⋅ b, a ⋅ c, r) {
+    if add_gt(a * b, a * c, r) {
         if r <= ℚ.0 {
             pos_mul_gt(a, b + c, r)
         } else {
             r > ℚ.0
-            add_gt_pos(a ⋅ b, a ⋅ c, r)
+            add_gt_pos(a * b, a * c, r)
             let (rab: ℚ, rac: ℚ) satisfy {
-                rab > ℚ.0 and (a ⋅ b).gt_rat(rab) and 
-                rac > ℚ.0 and (a ⋅ c).gt_rat(rac) and
+                rab > ℚ.0 and (a * b).gt_rat(rab) and 
+                rac > ℚ.0 and (a * c).gt_rat(rac) and
                 r = rab + rac
             }
-            a ⋅ b = pos_mul(a, b)
-            a ⋅ c = pos_mul(a, c)
+            a * b = pos_mul(a, b)
+            a * c = pos_mul(a, c)
             pos_mul_truncated_gt(a, b, rab)
             pos_mul_truncated_gt_helper_imp(a, b, rab)
             let (ra1: ℚ, rb1: ℚ) satisfy {
                 ra1 > ℚ.0 and a.gt_rat(ra1) and
                 rb1 > ℚ.0 and b.gt_rat(rb1) and
-                rab = ra1 ⋅ rb1
+                rab = ra1 * rb1
             }
             pos_mul_truncated_gt(a, c, rac)
             pos_mul_truncated_gt_helper_imp(a, c, rac)
             let (ra2: ℚ, rc2: ℚ) satisfy {
                 ra2 > ℚ.0 and a.gt_rat(ra2) and
                 rc2 > ℚ.0 and c.gt_rat(rc2) and
-                rac = ra2 ⋅ rc2
+                rac = ra2 * rc2
             }
             let ra = ra1.max(ra2)
-            let rb = ra1/ra ⋅ rb1
-            let rc = ra2/ra ⋅ rc2
+            let rb = ra1/ra * rb1
+            let rc = ra2/ra * rc2
             if ra = ra1 {
                 ra > ℚ.0
             } 
@@ -3541,22 +3541,22 @@ theorem pos_mul_gt_distrib_imp_rev(a: ℝ, b: ℝ, c: ℝ, r: ℚ) {
             ra1 <= ra1.max(ra2)
             ra1 <= ra
             ra1/ra <= ℚ.1
-            ra1/ra ⋅ rb1 <= ℚ.1 ⋅ rb1
+            ra1/ra * rb1 <= ℚ.1 * rb1
             rb <= rb1
             b.gt_rat(rb)
-            rab = ra ⋅ ra1/ra ⋅ rb1
-            rab = ra ⋅ rb
+            rab = ra * ra1/ra * rb1
+            rab = ra * rb
             ra2 <= ra1.max(ra2)
             ra2 <= ra
             ra2/ra <= ℚ.1
-            ra2/ra ⋅ rc2 <= ℚ.1 ⋅ rc2
+            ra2/ra * rc2 <= ℚ.1 * rc2
             rc <= rc2
             c.gt_rat(rc)
-            rac = ra ⋅ ra2/ra ⋅ rc2
-            rac = ra ⋅ rc
-            ra ⋅ rb + ra ⋅ rc = ra ⋅ (rb + rc)
-            r = ra ⋅ rb + ra ⋅ rc
-            r = ra ⋅ (rb + rc)
+            rac = ra * ra2/ra * rc2
+            rac = ra * rc
+            ra * rb + ra * rc = ra * (rb + rc)
+            r = ra * rb + ra * rc
+            r = ra * (rb + rc)
             rb + rc > ℚ.0
             (b + c).gt_rat(rb + rc)
             if ra = ra1 {
@@ -3577,24 +3577,24 @@ theorem pos_mul_gt_distrib_imp_rev(a: ℝ, b: ℝ, c: ℝ, r: ℚ) {
 /// Distributive law: a*(b+c) = a*b + a*c (for positive a, b, c).
 theorem pos_mul_distrib(a: ℝ, b: ℝ, c: ℝ) {
     a > 0 and b > 0 and c > 0 implies (
-        a ⋅ (b + c) = a ⋅ b + a ⋅ c
+        a * (b + c) = a * b + a * c
     )
 } by {
     forall(r: ℚ) {
         b + c > 0
-        pos_mul_gt(a, b + c, r) = (a ⋅ (b + c)).gt_rat(r)
-        add_gt(a ⋅ b, a ⋅ c, r) = (a ⋅ b + a ⋅ c).gt_rat(r)
+        pos_mul_gt(a, b + c, r) = (a * (b + c)).gt_rat(r)
+        add_gt(a * b, a * c, r) = (a * b + a * c).gt_rat(r)
 
-        (a ⋅ (b + c)).gt_rat(r) implies (a ⋅ b + a ⋅ c).gt_rat(r)
-        (a ⋅ (b + c)).gt_rat(r) = (a ⋅ b + a ⋅ c).gt_rat(r)
+        (a * (b + c)).gt_rat(r) implies (a * b + a * c).gt_rat(r)
+        (a * (b + c)).gt_rat(r) = (a * b + a * c).gt_rat(r)
     }
-    (a ⋅ (b + c)).gt_rat = (a ⋅ b + a ⋅ c).gt_rat
+    (a * (b + c)).gt_rat = (a * b + a * c).gt_rat
 }
 
 /// Distributive law when a > 0, b < 0, c > 0, b + c > 0.
 theorem pos_pos_mul_distrib_sub(a: ℝ, b: ℝ, c: ℝ) {
     a > 0 and b < 0 and c > 0 and b + c > 0 implies (
-        a ⋅ (b + c) = a ⋅ b + a ⋅ c
+        a * (b + c) = a * b + a * c
     )
 } by {
     -b > 0
@@ -3602,34 +3602,34 @@ theorem pos_pos_mul_distrib_sub(a: ℝ, b: ℝ, c: ℝ) {
     d > 0
     -b + d = -b + b + c
     c = -b + d
-    a ⋅ (-b + d) = a ⋅ -b + a ⋅ d
-    a ⋅ c = -(a ⋅ b) + a ⋅ (b + c)
-    a ⋅ b + a ⋅ c = a ⋅ b + -(a ⋅ b) + a ⋅ (b + c)
-    a ⋅ (b + c) = a ⋅ b + a ⋅ c
+    a * (-b + d) = a * -b + a * d
+    a * c = -(a * b) + a * (b + c)
+    a * b + a * c = a * b + -(a * b) + a * (b + c)
+    a * (b + c) = a * b + a * c
 }
 
 /// Distributive law when a > 0, b < 0, c > 0, b + c < 0.
 theorem pos_neg_mul_distrib_sub(a: ℝ, b: ℝ, c: ℝ) {
     a > 0 and b < 0 and c > 0 and b + c < 0 implies (
-        a ⋅ (b + c) = a ⋅ b + a ⋅ c
+        a * (b + c) = a * b + a * c
     )
 } by {
-    a ⋅ (b + c) = -a ⋅ -(b + c)
-    a ⋅ (b + c) = -(a ⋅ -(b + c))
+    a * (b + c) = -a * -(b + c)
+    a * (b + c) = -(a * -(b + c))
     -(b + c) > 0
     -(b + c) = -b + -c
     -b + -c > 0
-    a ⋅ -(b + c) = a ⋅ (-b + -c)
+    a * -(b + c) = a * (-b + -c)
     pos_pos_mul_distrib_sub(a, -c, -b)
-    a ⋅ (-c + -b) = a ⋅ -c + a ⋅ -b
-    a ⋅ -(b + c) = -(a ⋅ b + a ⋅ c)
-    a ⋅ (b + c) = a ⋅ b + a ⋅ c
+    a * (-c + -b) = a * -c + a * -b
+    a * -(b + c) = -(a * b + a * c)
+    a * (b + c) = a * b + a * c
 }
 
 /// Distributive law when any factor is zero.
 theorem mul_distrib_zero(a: ℝ, b: ℝ, c: ℝ) {
     a = 0 or b = 0 or c = 0 implies (
-        a ⋅ (b + c) = a ⋅ b + a ⋅ c
+        a * (b + c) = a * b + a * c
     )
 } by {
     if a = 0 {
@@ -3647,7 +3647,7 @@ theorem mul_distrib_zero(a: ℝ, b: ℝ, c: ℝ) {
 /// Distributive law for any b, c when a > 0.
 theorem pos_mul_other_distrib(a: ℝ, b: ℝ, c: ℝ) {
     a > 0 implies (
-        a ⋅ (b + c) = a ⋅ b + a ⋅ c
+        a * (b + c) = a * b + a * c
     )
 } by {
     if b = 0 or c = 0 {
@@ -3660,9 +3660,9 @@ theorem pos_mul_other_distrib(a: ℝ, b: ℝ, c: ℝ) {
         } else {
             if b + c = 0 {
                 b = -c
-                a ⋅ b = a ⋅ -c
-                a ⋅ b = -(a ⋅ c)
-                a ⋅ b + a ⋅ c = 0
+                a * b = a * -c
+                a * b = -(a * c)
+                a * b + a * c = 0
                 pos_mul_other_distrib(a, b, c)
             } else {
                 if b + c > 0 {
@@ -3710,7 +3710,7 @@ theorem pos_mul_other_distrib(a: ℝ, b: ℝ, c: ℝ) {
 
 /// Right distributive law: a(b + c) = ab + ac.
 theorem mul_distrib_right(a: ℝ, b: ℝ, c: ℝ) {
-    a ⋅ (b + c) = a ⋅ b + a ⋅ c
+    a * (b + c) = a * b + a * c
 } by {
     if a = 0  {
         mul_distrib_right(a, b, c)
@@ -3734,71 +3734,71 @@ instance ℝ: Ordered_Ring
 
 /// Left distributive law: (a + b)*c = a*c + b*c.
 theorem mul_distrib_left(a: ℝ, b: ℝ, c: ℝ) {
-    (a + b) ⋅ c = a ⋅ c + b ⋅ c
+    (a + b) * c = a * c + b * c
 }
 
 /// Distributive law over subtraction: a*(b-c) = a*b - a*c.
 theorem mul_distrib_sub_right(a: ℝ, b: ℝ, c: ℝ) {
-    a ⋅ (b - c) = a ⋅ b - a ⋅ c
+    a * (b - c) = a * b - a * c
 }
 
 /// Distributive law over subtraction on left: (a-b)*c = a*c - b*c.
 theorem mul_distrib_sub_left(a: ℝ, b: ℝ, c: ℝ) {
-    (a - b) ⋅ c = a ⋅ c - b ⋅ c
+    (a - b) * c = a * c - b * c
 }
 
 /// Multiplication by positive preserves strict inequality.
 theorem real_lt_mul_pos(a: ℝ, b: ℝ, c: ℝ) {
-    a < b and c > 0 implies a ⋅ c < b ⋅ c
+    a < b and c > 0 implies a * c < b * c
 } by {
     lt_mul_pos(a, b, c)
 }
 
 /// Multiplication on left by positive preserves strict inequality.
 theorem lt_imp_pos_mul_lt_left(a: ℝ, b: ℝ, c: ℝ) {
-    a < b and c > 0 implies c ⋅ a < c ⋅ b
+    a < b and c > 0 implies c * a < c * b
 }
 
 /// Multiplication on right by negative reverses strict inequality.
 theorem lt_imp_neg_mul_gt_right(a: ℝ, b: ℝ, c: ℝ) {
-    a < b and c < 0 implies a ⋅ c > b ⋅ c
+    a < b and c < 0 implies a * c > b * c
 }
 
 /// Multiplication on left by negative reverses strict inequality.
 theorem lt_imp_neg_mul_gt_left(a: ℝ, b: ℝ, c: ℝ) {
-    a < b and c < 0 implies c ⋅ a > c ⋅ b
+    a < b and c < 0 implies c * a > c * b
 }
 
 theorem real_mul_lt_lt(a: ℝ, b: ℝ, c: ℝ, d: ℝ) {
-    a > 0 and a < b and c > 0 and c < d implies a ⋅ c < b ⋅ d
+    a > 0 and a < b and c > 0 and c < d implies a * c < b * d
 } by {
     mul_lt_lt(a, b, c, d)
 }
 
 theorem real_lte_mul_pos(a: ℝ, b: ℝ, c: ℝ) {
-    a <= b and c > 0 implies a ⋅ c <= b ⋅ c
+    a <= b and c > 0 implies a * c <= b * c
 } by {
     lte_mul_pos(a, b, c)
 }
 
 theorem lte_imp_pos_mul_lte_left(a: ℝ, b: ℝ, c: ℝ) {
-    a <= b and c > 0 implies c ⋅ a <= c ⋅ b
+    a <= b and c > 0 implies c * a <= c * b
 }
 
 theorem lte_imp_neg_mul_gte_right(a: ℝ, b: ℝ, c: ℝ) {
-    a <= b and c < 0 implies a ⋅ c >= b ⋅ c
+    a <= b and c < 0 implies a * c >= b * c
 }
 
 theorem lte_imp_neg_mul_gte_left(a: ℝ, b: ℝ, c: ℝ) {
-    a <= b and c < 0 implies c ⋅ a >= c ⋅ b
+    a <= b and c < 0 implies c * a >= c * b
 }
 
 theorem pos_left_lte_imp_mul_lt(a: ℝ, b: ℝ, c: ℝ, d: ℝ) {
-    a > 0 and a <= b and c > 0 and d > c implies a ⋅ c < b ⋅ d
+    a > 0 and a <= b and c > 0 and d > c implies a * c < b * d
 }
 
 theorem pos_right_lte_imp_mul_lt(a: ℝ, b: ℝ, c: ℝ, d: ℝ) {
-    a > 0 and a < b and c > 0 and c <= d implies a ⋅ c < b ⋅ d
+    a > 0 and a < b and c > 0 and c <= d implies a * c < b * d
 }
 
 theorem real_lte_mul_lte(a: ℝ, b: ℝ, c: ℝ, d: ℝ) {
@@ -4072,10 +4072,10 @@ theorem neg_reciprocal(a: ℝ) {
 /// a * a.reciprocal > r implies 1 > r (for positive a).
 theorem reciprocal_is_field_reciprocal_imp(a: ℝ, r: ℚ) {
     a > 0 implies (
-        (a ⋅ a.reciprocal).gt_rat(r) implies 1.gt_rat(r)
+        (a * a.reciprocal).gt_rat(r) implies 1.gt_rat(r)
     )
 } by {
-    if (a ⋅ a.reciprocal).gt_rat(r) {
+    if (a * a.reciprocal).gt_rat(r) {
         if r <= ℚ.0 {
             1 > 0
             ℚ.1 > r
@@ -4089,7 +4089,7 @@ theorem reciprocal_is_field_reciprocal_imp(a: ℝ, r: ℚ) {
             let (ra: ℚ, qa_recip: ℚ) satisfy {
                 ra > ℚ.0 and a.gt_rat(ra) and 
                 qa_recip > ℚ.0 and a.reciprocal.gt_rat(qa_recip) and 
-                r = ra ⋅ qa_recip
+                r = ra * qa_recip
             }
             ℝ.from_rat(ra) < a
             let qa = qa_recip.reciprocal
@@ -4097,8 +4097,8 @@ theorem reciprocal_is_field_reciprocal_imp(a: ℝ, r: ℚ) {
             a < ℝ.from_rat(qa)
             ra < qa
             qa.reciprocal = qa_recip
-            ra ⋅ qa.reciprocal < ℚ.1
-            ra ⋅ qa_recip < ℚ.1
+            ra * qa.reciprocal < ℚ.1
+            ra * qa_recip < ℚ.1
             r < ℚ.1
             1.gt_rat(r)
         }
@@ -4108,13 +4108,13 @@ theorem reciprocal_is_field_reciprocal_imp(a: ℝ, r: ℚ) {
 /// 1 > r implies a * a.reciprocal > r (for positive a).
 theorem reciprocal_is_field_reciprocal_imp_rev(a: ℝ, r: ℚ) {
     a > 0 implies (
-        1.gt_rat(r) implies (a ⋅ a.reciprocal).gt_rat(r)
+        1.gt_rat(r) implies (a * a.reciprocal).gt_rat(r)
     )
 } by {
     a.reciprocal > 0
     if 1.gt_rat(r) {
         if r <= ℚ.0 {
-            (a ⋅ a.reciprocal).gt_rat(r) 
+            (a * a.reciprocal).gt_rat(r) 
         } else {
             r > ℚ.0
             ℝ.from_rat(r) < ℝ.from_rat(ℚ.1)
@@ -4125,41 +4125,41 @@ theorem reciprocal_is_field_reciprocal_imp_rev(a: ℝ, r: ℚ) {
             r/q < ℚ.1
             r/q > ℚ.0
             ℝ.from_rat(r/q) < 1
-            a ⋅ ℝ.from_rat(r/q) < a
-            rat_between_reals(a ⋅ ℝ.from_rat(r/q), a)
+            a * ℝ.from_rat(r/q) < a
+            rat_between_reals(a * ℝ.from_rat(r/q), a)
             let x: ℚ satisfy {
-                a ⋅ ℝ.from_rat(r/q) < ℝ.from_rat(x) and ℝ.from_rat(x) < a
+                a * ℝ.from_rat(r/q) < ℝ.from_rat(x) and ℝ.from_rat(x) < a
             }
             a.gt_rat(x)
-            a ⋅ ℝ.from_rat(r/q) > 0
+            a * ℝ.from_rat(r/q) > 0
             ℝ.from_rat(x) > 0
             x > ℚ.0
             ℚ.1/x > ℚ.0
             let y = r/x
-            x ⋅ y = (x ⋅ r) ⋅ ℚ.1/x
-            x ⋅ y = r ⋅ (x ⋅ ℚ.1/x)
-            (x ⋅ ℚ.1/x) = ℚ.1
-            x ⋅ y = r
+            x * y = (x * r) * ℚ.1/x
+            x * y = r * (x * ℚ.1/x)
+            (x * ℚ.1/x) = ℚ.1
+            x * y = r
             y > ℚ.0
             ℚ.1/y = x/r
             y.reciprocal = x/r
             q/r > ℚ.0
-            a ⋅ ℝ.from_rat(r/q) ⋅ ℝ.from_rat(q/r) < ℝ.from_rat(x) ⋅ ℝ.from_rat(q/r)
-            ℝ.from_rat(r/q) ⋅ ℝ.from_rat(q/r) = ℝ.from_rat(r/q ⋅ q/r)
-            r/q ⋅ q/r = ℚ.1
-            ℝ.from_rat(r/q) ⋅ ℝ.from_rat(q/r) = 1
-            a < ℝ.from_rat(x) ⋅ ℝ.from_rat(q/r)
-            ℝ.from_rat(x) ⋅ ℝ.from_rat(q/r) = ℝ.from_rat(x/r ⋅ q)
-            x/r ⋅ q < x/r 
-            ℝ.from_rat(x/r ⋅ q) < ℝ.from_rat(x/r)
+            a * ℝ.from_rat(r/q) * ℝ.from_rat(q/r) < ℝ.from_rat(x) * ℝ.from_rat(q/r)
+            ℝ.from_rat(r/q) * ℝ.from_rat(q/r) = ℝ.from_rat(r/q * q/r)
+            r/q * q/r = ℚ.1
+            ℝ.from_rat(r/q) * ℝ.from_rat(q/r) = 1
+            a < ℝ.from_rat(x) * ℝ.from_rat(q/r)
+            ℝ.from_rat(x) * ℝ.from_rat(q/r) = ℝ.from_rat(x/r * q)
+            x/r * q < x/r 
+            ℝ.from_rat(x/r * q) < ℝ.from_rat(x/r)
             a < ℝ.from_rat(x/r)
             a < ℝ.from_rat(y.reciprocal)
             pos_reciprocal_gt(a, y)
             pos_mul_truncated_gt(a, a.reciprocal, r)
             pos_mul_gt(a, a.reciprocal, r)
             pos_mul(a, a.reciprocal).gt_rat(r)
-            a ⋅ a.reciprocal = pos_mul(a, a.reciprocal)
-            (a ⋅ a.reciprocal).gt_rat(r) 
+            a * a.reciprocal = pos_mul(a, a.reciprocal)
+            (a * a.reciprocal).gt_rat(r) 
         }
     }
 }
@@ -4167,20 +4167,20 @@ theorem reciprocal_is_field_reciprocal_imp_rev(a: ℝ, r: ℚ) {
 /// For positive a, a * a.reciprocal = 1.
 theorem pos_reciprocal_is_field_reciprocal(a: ℝ) {
     a > 0 implies (
-        (a ⋅ a.reciprocal) = 1
+        (a * a.reciprocal) = 1
     )
 } by {
     forall(r: ℚ) {
-        (a ⋅ a.reciprocal).gt_rat(r) implies 1.gt_rat(r)
-        (a ⋅ a.reciprocal).gt_rat(r) = 1.gt_rat(r)
+        (a * a.reciprocal).gt_rat(r) implies 1.gt_rat(r)
+        (a * a.reciprocal).gt_rat(r) = 1.gt_rat(r)
     }
-    (a ⋅ a.reciprocal).gt_rat = 1.gt_rat
+    (a * a.reciprocal).gt_rat = 1.gt_rat
 }
 
 /// For nonzero a, a * a.reciprocal = 1.
 theorem reciprocal_is_field_reciprocal(a: ℝ) {
     a != 0 implies (
-        (a ⋅ a.reciprocal) = 1
+        (a * a.reciprocal) = 1
     )
 } by {
     if a > 0 {
@@ -4189,9 +4189,9 @@ theorem reciprocal_is_field_reciprocal(a: ℝ) {
         a < 0
         -a > 0
         reciprocal_is_field_reciprocal(-a)
-        (-a ⋅ (-a).reciprocal) = 1
-        (-a ⋅ -a.reciprocal) = 1
-        (a ⋅ a.reciprocal) = 1
+        (-a * (-a).reciprocal) = 1
+        (-a * -a.reciprocal) = 1
+        (a * a.reciprocal) = 1
     }
 }
 
@@ -4206,9 +4206,9 @@ instance ℝ: Field {
     let reciprocal = ℝ.reciprocal
 }
 
-/// Field property: for f ≠ 0, f⁻¹ ⋅ f = 1.
+/// Field property: for f ≠ 0, f⁻¹ * f = 1.
 theorem field_reciprocal_left(f: ℝ) {
-    f != 0 implies f.reciprocal ⋅ f = 1
+    f != 0 implies f.reciprocal * f = 1
 }
 
 instance ℝ: Ordered_Field
@@ -4292,13 +4292,13 @@ theorem one_plus_one_eq_two(r: ℝ) {
 
 /// r + r = 2r.
 theorem times_two(r: ℝ) {
-    r + r = 2 ⋅ r
+    r + r = 2 * r
 } by {
     if r = 0 {
-        r + r = 2 ⋅ r
+        r + r = 2 * r
     } else {
         r != 0
-        (r + r) ⋅ 1/r = 2 ⋅ (r ⋅ 1/r)
+        (r + r) * 1/r = 2 * (r * 1/r)
         1 + 1 = 2
     }
 }
@@ -4308,7 +4308,7 @@ theorem times_two_half(r: ℝ) {
     r/2 + r/2 = r
 } by {
     2 != 0
-    2 ⋅ r/2 = r
+    2 * r/2 = r
 }
 
 /// 1/2 < 1.

@@ -20,7 +20,7 @@ typeclass F: Field extends Ring {
 
     /// The definition of "multiplicative inverse" in a field.
     field_reciprocal(f: F) {
-        f != F.0 implies f ⋅ f.reciprocal = F.1
+        f != F.0 implies f * f.reciprocal = F.1
     }
 
     /// Zero and one are distinct elements.
@@ -30,7 +30,7 @@ typeclass F: Field extends Ring {
 }
 
 theorem field_reciprocal_left[F: Field](f: F) {
-    f != F.0 implies f.reciprocal ⋅ f = F.1
+    f != F.0 implies f.reciprocal * f = F.1
 }
 
 attributes F: Field {
@@ -72,15 +72,15 @@ theorem zero_pow_nonnegative[F: Field](n: ℤ) {
 
 // inverses are unique
 theorem unique_inverse[F: Field](a: F, b: F) {
-    a ⋅ b = F.1 implies b = a.reciprocal
+    a * b = F.1 implies b = a.reciprocal
 } by {
     if F.0 = F.1 {
         false
     } else {
         a != F.0
-        a.reciprocal ⋅ a ⋅ b = a.reciprocal ⋅ F.1
-        a ⋅ a.reciprocal ⋅ b = a.reciprocal
-        F.1 ⋅ b = a.reciprocal
+        a.reciprocal * a * b = a.reciprocal * F.1
+        a * a.reciprocal * b = a.reciprocal
+        F.1 * b = a.reciprocal
     }
     
 }
@@ -89,28 +89,28 @@ theorem inverse_inverse[F: Field](a: F) {
     a.reciprocal.reciprocal = a
 }
 
-// (a ⋅ b).reciprocal = a.reciprocal ⋅ b.reciprocal
+// (a * b).reciprocal = a.reciprocal * b.reciprocal
 theorem inverse_dist[F: Field](a: F, b: F) {
-    (a ⋅ b).reciprocal = a.reciprocal ⋅ b.reciprocal
+    (a * b).reciprocal = a.reciprocal * b.reciprocal
 } by {
     if a = F.0 {
-        (a ⋅ b).reciprocal = F.0.reciprocal
-        (a ⋅ b).reciprocal = F.0
-        a.reciprocal ⋅ b.reciprocal = F.0 ⋅ b.reciprocal
-        a.reciprocal ⋅ b.reciprocal = F.0
-        (a ⋅ b).reciprocal = a.reciprocal ⋅ b.reciprocal
+        (a * b).reciprocal = F.0.reciprocal
+        (a * b).reciprocal = F.0
+        a.reciprocal * b.reciprocal = F.0 * b.reciprocal
+        a.reciprocal * b.reciprocal = F.0
+        (a * b).reciprocal = a.reciprocal * b.reciprocal
     } else {
         if b = F.0 {
-            (a ⋅ b).reciprocal = F.0.reciprocal
-            (a ⋅ b).reciprocal = F.0
-            a.reciprocal ⋅ b.reciprocal = a.reciprocal ⋅ F.0
-            a.reciprocal ⋅ b.reciprocal = F.0
+            (a * b).reciprocal = F.0.reciprocal
+            (a * b).reciprocal = F.0
+            a.reciprocal * b.reciprocal = a.reciprocal * F.0
+            a.reciprocal * b.reciprocal = F.0
         } else {
-            a ⋅ b ⋅ a.reciprocal ⋅ b.reciprocal = a ⋅ a.reciprocal ⋅ b ⋅ b.reciprocal
-            a ⋅ b ⋅ a.reciprocal ⋅ b.reciprocal = F.1 ⋅ b ⋅ b.reciprocal
-            (a ⋅ b) ⋅ (a.reciprocal ⋅ b.reciprocal) = F.1 ⋅ F.1
-            (a ⋅ b) ⋅ (a.reciprocal ⋅ b.reciprocal) = F.1
-            a.reciprocal ⋅ b.reciprocal = (a ⋅ b).reciprocal
+            a * b * a.reciprocal * b.reciprocal = a * a.reciprocal * b * b.reciprocal
+            a * b * a.reciprocal * b.reciprocal = F.1 * b * b.reciprocal
+            (a * b) * (a.reciprocal * b.reciprocal) = F.1 * F.1
+            (a * b) * (a.reciprocal * b.reciprocal) = F.1
+            a.reciprocal * b.reciprocal = (a * b).reciprocal
         }
     }   
 }
@@ -130,8 +130,8 @@ theorem pow_inverse_nat[F: Field](a: F, k: ℕ) {
     // Inductive step
     forall(l: ℕ) {
         if f(l) {
-            a.pow(l.suc.suc) = a.pow(l.suc) ⋅ a
-            (a.pow(l.suc) ⋅ a).reciprocal = a.pow(l.suc).reciprocal ⋅ a.reciprocal
+            a.pow(l.suc.suc) = a.pow(l.suc) * a
+            (a.pow(l.suc) * a).reciprocal = a.pow(l.suc).reciprocal * a.reciprocal
             // f(l)
             a.zpow(ℤ.neg_suc(l)).reciprocal = a.reciprocal.zpow(ℤ.neg_suc(l))
             // define of zpow
@@ -169,10 +169,10 @@ theorem pow_inverse[F: Field](a: F, n: ℤ) {
 }
 
 theorem pow_nat_times_inverse[F: Field](a: F, n: ℕ) {
-   a != F.0 implies a.pow(n.suc) ⋅ a.reciprocal = a.pow(n)
+   a != F.0 implies a.pow(n.suc) * a.reciprocal = a.pow(n)
 } by {
     let f: ℕ -> Bool = function(x: ℕ) {
-        a.pow(x.suc) ⋅ a.reciprocal = a.pow(x)
+        a.pow(x.suc) * a.reciprocal = a.pow(x)
     }
 
     // base case
@@ -181,18 +181,18 @@ theorem pow_nat_times_inverse[F: Field](a: F, n: ℕ) {
     // Induction step
     forall(l: ℕ) {
         if f(l) {
-            a.pow(l.suc) ⋅ a.reciprocal = a.pow(l)
-            a.pow(l.suc.suc) ⋅ a.reciprocal = a.pow(l.suc)
+            a.pow(l.suc) * a.reciprocal = a.pow(l)
+            a.pow(l.suc.suc) * a.reciprocal = a.pow(l.suc)
             f(l.suc)
         }
     }
 }
 
 theorem pow_nat_sub_inverse[F: Field](a: F, n: ℕ, m: ℕ) {
-    a != F.0 and m <= n implies a.pow(n) ⋅ a.reciprocal.pow(m) = a.pow(n - m)
+    a != F.0 and m <= n implies a.pow(n) * a.reciprocal.pow(m) = a.pow(n - m)
 } by {
     let f: ℕ -> Bool = function(x: ℕ) {
-        x > n or a.pow(n) ⋅ a.reciprocal.pow(x) = a.pow(n - x)
+        x > n or a.pow(n) * a.reciprocal.pow(x) = a.pow(n - x)
     }
 
     // base case
@@ -206,11 +206,11 @@ theorem pow_nat_sub_inverse[F: Field](a: F, n: ℕ, m: ℕ) {
                 f(l.suc)
             } else {
                 l.suc <= n
-                a.reciprocal.pow(l.suc) = a.reciprocal.pow(l) ⋅ a.reciprocal
-                a.pow(n) ⋅ a.reciprocal.pow(l.suc) = a.pow(n) ⋅ a.reciprocal.pow(l) ⋅ a.reciprocal
-                a.pow(n) ⋅ a.reciprocal.pow(l.suc) = a.pow(n - l) ⋅ a.reciprocal
+                a.reciprocal.pow(l.suc) = a.reciprocal.pow(l) * a.reciprocal
+                a.pow(n) * a.reciprocal.pow(l.suc) = a.pow(n) * a.reciprocal.pow(l) * a.reciprocal
+                a.pow(n) * a.reciprocal.pow(l.suc) = a.pow(n - l) * a.reciprocal
                 n - l = (n - l.suc).suc
-                a.pow(n) ⋅ a.reciprocal.pow(l.suc) = a.pow(n - l.suc)
+                a.pow(n) * a.reciprocal.pow(l.suc) = a.pow(n - l.suc)
                 f(l.suc)
             }
         }
@@ -244,7 +244,7 @@ theorem use_from_nat_pow[F: Field](a: F, k: ℤ, n: ℕ) {
 } 
 
 theorem pow_sub_inverse[F: Field](a: F, n: ℤ, m: ℤ) {
-    a != F.0 and n >= ℤ.0 and m >= ℤ.0 implies a.zpow(n) ⋅ a.reciprocal.zpow(m) = a.zpow(n - m)
+    a != F.0 and n >= ℤ.0 and m >= ℤ.0 implies a.zpow(n) * a.reciprocal.zpow(m) = a.zpow(n - m)
 } by {
     let l: ℕ satisfy {
         n = ℤ.from_nat(l)
@@ -253,24 +253,24 @@ theorem pow_sub_inverse[F: Field](a: F, n: ℤ, m: ℤ) {
         m = ℤ.from_nat(k)
     }
     if m <= n {
-        a.zpow(n) ⋅ a.reciprocal.zpow(m) = a.pow(l) ⋅ a.reciprocal.pow(k)
+        a.zpow(n) * a.reciprocal.zpow(m) = a.pow(l) * a.reciprocal.pow(k)
         k <= l
-        a.zpow(n) ⋅ a.reciprocal.zpow(m) = a.pow(l - k)
+        a.zpow(n) * a.reciprocal.zpow(m) = a.pow(l - k)
         ℤ.from_nat(l - k) = n - m
-        a.zpow(n) ⋅ a.reciprocal.zpow(m) = a.zpow(n - m)
+        a.zpow(n) * a.reciprocal.zpow(m) = a.zpow(n - m)
     } else {
-        a.zpow(n) ⋅ a.reciprocal.zpow(m) = a.reciprocal.zpow(m) ⋅ a.reciprocal.reciprocal.zpow(n)
-        a.zpow(n) ⋅ a.reciprocal.zpow(m) = a.reciprocal.pow(k) ⋅ a.reciprocal.reciprocal.pow(l)
+        a.zpow(n) * a.reciprocal.zpow(m) = a.reciprocal.zpow(m) * a.reciprocal.reciprocal.zpow(n)
+        a.zpow(n) * a.reciprocal.zpow(m) = a.reciprocal.pow(k) * a.reciprocal.reciprocal.pow(l)
         l <= k
         a.reciprocal != F.0
-        a.zpow(n) ⋅ a.reciprocal.zpow(m) = a.reciprocal.pow(k - l)
-        a.zpow(n) ⋅ a.reciprocal.zpow(m) = a.reciprocal.zpow(m - n)
-        a.zpow(n) ⋅ a.reciprocal.zpow(m) = a.zpow(n - m)
+        a.zpow(n) * a.reciprocal.zpow(m) = a.reciprocal.pow(k - l)
+        a.zpow(n) * a.reciprocal.zpow(m) = a.reciprocal.zpow(m - n)
+        a.zpow(n) * a.reciprocal.zpow(m) = a.zpow(n - m)
     }
 }
 
 theorem pow_add_nonnegative[F: Field](a: F, n: ℤ, m: ℤ) {
-    n >= ℤ.0 and m >= ℤ.0 implies a.zpow(n) ⋅ a.zpow(m) = a.zpow(n + m)
+    n >= ℤ.0 and m >= ℤ.0 implies a.zpow(n) * a.zpow(m) = a.zpow(n + m)
 } by {
     let l: ℕ satisfy {
         n = ℤ.from_nat(l)
@@ -278,33 +278,33 @@ theorem pow_add_nonnegative[F: Field](a: F, n: ℤ, m: ℤ) {
     let k: ℕ satisfy {
         m = ℤ.from_nat(k)
     }
-    a.zpow(n) ⋅ a.zpow(m) = a.pow(l) ⋅ a.pow(k)
+    a.zpow(n) * a.zpow(m) = a.pow(l) * a.pow(k)
 }
 
 theorem pow_add[F: Field](a: F, n: ℤ, m: ℤ) {
-    a != F.0 implies a.zpow(n) ⋅ a.zpow(m) = a.zpow(n + m)
+    a != F.0 implies a.zpow(n) * a.zpow(m) = a.zpow(n + m)
 } by {
     if n >= ℤ.0 {
         if m >= ℤ.0 {
-            a.zpow(n) ⋅ a.zpow(m) = a.zpow(n + m)
+            a.zpow(n) * a.zpow(m) = a.zpow(n + m)
         } else {
-            a.zpow(n) ⋅ a.zpow(m) = a.zpow(n) ⋅ a.reciprocal.zpow(-m)
+            a.zpow(n) * a.zpow(m) = a.zpow(n) * a.reciprocal.zpow(-m)
             pow_sub_inverse(a, n, -m)
-            a.zpow(n) ⋅ a.zpow(m) = a.zpow(n - (-m))
-            a.zpow(n) ⋅ a.zpow(m) = a.zpow(n + m)
+            a.zpow(n) * a.zpow(m) = a.zpow(n - (-m))
+            a.zpow(n) * a.zpow(m) = a.zpow(n + m)
         }
     } else {
         -n >= ℤ.0
         if m >= ℤ.0 {
-            a.zpow(n) ⋅ a.zpow(m) = a.reciprocal.zpow(-n) ⋅ a.zpow(m)
-            a.zpow(n) ⋅ a.zpow(m) = a.zpow(m) ⋅ a.reciprocal.zpow(-n)
-            a.zpow(n) ⋅ a.zpow(m) = a.zpow(m - (-n))
-            a.zpow(n) ⋅ a.zpow(m) = a.zpow(n + m)
+            a.zpow(n) * a.zpow(m) = a.reciprocal.zpow(-n) * a.zpow(m)
+            a.zpow(n) * a.zpow(m) = a.zpow(m) * a.reciprocal.zpow(-n)
+            a.zpow(n) * a.zpow(m) = a.zpow(m - (-n))
+            a.zpow(n) * a.zpow(m) = a.zpow(n + m)
         } else {
             -m >= ℤ.0
-            a.zpow(n) ⋅ a.zpow(m) = a.reciprocal.zpow(-n) ⋅ a.reciprocal.zpow(-m)
-            a.zpow(n) ⋅ a.zpow(m) = a.reciprocal.zpow(-n + (-m))
-            a.zpow(n) ⋅ a.zpow(m) = a.zpow(n + m)
+            a.zpow(n) * a.zpow(m) = a.reciprocal.zpow(-n) * a.reciprocal.zpow(-m)
+            a.zpow(n) * a.zpow(m) = a.reciprocal.zpow(-n + (-m))
+            a.zpow(n) * a.zpow(m) = a.zpow(n + m)
         }
     }
 }
@@ -337,7 +337,7 @@ theorem pow_inverse_2[F: Field](a: F, n: ℤ) {
             a.zpow(-n) = a.zpow(n).reciprocal
         }
     } else {
-        a.zpow(n) ⋅ a.zpow(-n) = a.zpow(n + -n)
+        a.zpow(n) * a.zpow(-n) = a.zpow(n + -n)
     }
 }
 
@@ -348,7 +348,7 @@ theorem one_pow[F: Field](n: ℤ) {
 }
 
 theorem pow_pow_nonnegative[F: Field](a: F, n: ℤ, m: ℤ) {
-    n >= ℤ.0 and m >= ℤ.0 implies a.zpow(n).zpow(m) = a.zpow(n ⋅ m)
+    n >= ℤ.0 and m >= ℤ.0 implies a.zpow(n).zpow(m) = a.zpow(n * m)
 } by {
      let l: ℕ satisfy {
         n = ℤ.from_nat(l)
@@ -357,36 +357,36 @@ theorem pow_pow_nonnegative[F: Field](a: F, n: ℤ, m: ℤ) {
         m = ℤ.from_nat(k)
     }
     a.zpow(n).zpow(m) = a.pow(l).pow(k)
-    a.zpow(n ⋅ m) = a.pow(l ⋅ k)
+    a.zpow(n * m) = a.pow(l * k)
 }
 
-// Proof that (a^n)^m = a^(n ⋅ m)
+// Proof that (a^n)^m = a^(n * m)
 theorem pow_pow[F: Field](a: F, n: ℤ, m: ℤ) {
-    a != F.0 implies a.zpow(n).zpow(m) = a.zpow(n ⋅ m)
+    a != F.0 implies a.zpow(n).zpow(m) = a.zpow(n * m)
 } by {
     if n >= ℤ.0 {
         if m >= ℤ.0 {
-            a.zpow(n).zpow(m) = a.zpow(n ⋅ m)
+            a.zpow(n).zpow(m) = a.zpow(n * m)
         } else {
             a != F.0
             a.zpow(n).zpow(m) = a.zpow(n).zpow(-m).reciprocal
             -m >= ℤ.0
-            a.zpow(n).zpow(m) = a.zpow(n ⋅ (-m)).reciprocal
-            a.zpow(n).zpow(m) = a.zpow(n ⋅ m)
+            a.zpow(n).zpow(m) = a.zpow(n * (-m)).reciprocal
+            a.zpow(n).zpow(m) = a.zpow(n * m)
         }
     } else {
         a != F.0
         -n >= ℤ.0
         if m >= ℤ.0 {
             a.zpow(n).zpow(m) = a.reciprocal.zpow(-n).zpow(m)
-            a.zpow(n).zpow(m) = a.reciprocal.zpow(-n ⋅ m)
-            a.zpow(n).zpow(m) = a.zpow(n ⋅ m)
+            a.zpow(n).zpow(m) = a.reciprocal.zpow(-n * m)
+            a.zpow(n).zpow(m) = a.zpow(n * m)
         } else {
             m.is_negative
             -m >= ℤ.0
             a.zpow(n).zpow(m) = a.reciprocal.zpow(-n).zpow(-m).reciprocal
-            a.zpow(n).zpow(m) = a.reciprocal.zpow(-n ⋅ -m).reciprocal
-            a.zpow(n).zpow(m) = a.zpow(n ⋅ m)
+            a.zpow(n).zpow(m) = a.reciprocal.zpow(-n * -m).reciprocal
+            a.zpow(n).zpow(m) = a.zpow(n * m)
         }
     }
 }
@@ -396,10 +396,10 @@ theorem inverse_not_zero[F: Field](a: F) {
 }
 
 theorem mul_not_zero[F: Field](a: F, b: F) {
-    a != F.0 and b != F.0 implies a ⋅ b != F.0
+    a != F.0 and b != F.0 implies a * b != F.0
 } by {
-    if a ⋅ b = F.0 {
-        a ⋅ b ⋅ b.reciprocal = F.0
+    if a * b = F.0 {
+        a * b * b.reciprocal = F.0
         false
     }
 }
@@ -416,7 +416,7 @@ theorem pow_not_zero[F: Field](a: F, n: ℕ) {
     // Inductive step
     forall(x: ℕ) {
         if f(x) {
-            a.pow(x.suc) = a.pow(x) ⋅ a
+            a.pow(x.suc) = a.pow(x) * a
             f(x.suc)
         }
     }
@@ -426,7 +426,7 @@ attributes F: Field {
     /// The quotient of two numbers.
     /// Division by zero is defined to yield zero.
     define div(self, other: F) -> F {
-        self ⋅ other.reciprocal
+        self * other.reciprocal
     }
 }
 
@@ -435,7 +435,7 @@ theorem reciprocal_by_div[F: Field](a: F) {
 } 
 
 theorem div_by_reciprocal[F: Field](p: F, q: F) {
-    p/q = p ⋅ F.1 / q
+    p/q = p * F.1 / q
 }
 
 theorem neg_by_div[F: Field](a: F) {
@@ -444,18 +444,18 @@ theorem neg_by_div[F: Field](a: F) {
     if a = F.0 {
         F.1 / (-a) = - (F.1 / a)
     } else {
-        (-a) ⋅ (-(F.1 / a)) = a ⋅ (F.1 / a)
-        (-a) ⋅ (-(F.1 / a)) = F.1
+        (-a) * (-(F.1 / a)) = a * (F.1 / a)
+        (-a) * (-(F.1 / a)) = F.1
         -(F.1 / a) = (-a).reciprocal
     }
 }
 
 theorem mul_inv_cancels_right[F: Field](a: F) {
-    a != F.0 implies a ⋅ F.1/a = F.1
+    a != F.0 implies a * F.1/a = F.1
 } 
 
 theorem mul_inv_cancels_left[F: Field](a: F) {
-    a != F.0 implies F.1/a ⋅ a = F.1
+    a != F.0 implies F.1/a * a = F.1
 }
 
 theorem reciprocal_inverts[F: Field](a: F) {
@@ -463,28 +463,28 @@ theorem reciprocal_inverts[F: Field](a: F) {
 } 
 
 theorem mul_cancels_div[F: Field](a: F, b: F) {
-    b != F.0 implies (a / b) ⋅ b = a
+    b != F.0 implies (a / b) * b = a
 } by {
-    (a / b) ⋅ b = a ⋅ b.reciprocal ⋅ b
-    (a / b) ⋅ b = a ⋅ (b.reciprocal ⋅ b)
-    (a / b) ⋅ b = a ⋅ F.1
-    (a / b) ⋅ b = a
+    (a / b) * b = a * b.reciprocal * b
+    (a / b) * b = a * (b.reciprocal * b)
+    (a / b) * b = a * F.1
+    (a / b) * b = a
 }
 
 theorem mul_cancels_right[F: Field](a: F, b: F, c: F) {
-    c != F.0 and a ⋅ c = b ⋅ c implies a = b
+    c != F.0 and a * c = b * c implies a = b
 } by {
-    a ⋅ c ⋅ c.reciprocal = b ⋅ c ⋅ c.reciprocal
-    a ⋅ (c ⋅ c.reciprocal) = b ⋅ (c ⋅ c.reciprocal)
-    a ⋅ F.1 = b ⋅ F.1
+    a * c * c.reciprocal = b * c * c.reciprocal
+    a * (c * c.reciprocal) = b * (c * c.reciprocal)
+    a * F.1 = b * F.1
     a = b
 }
 
 theorem mul_div_cancels[F: Field](a: F, b: F)  {
-    b != F.0 implies (a ⋅ b) / b = a
+    b != F.0 implies (a * b) / b = a
 } by {
-    (a ⋅ b) / b = a ⋅ (b / b)
-    (a ⋅ b) / b = a ⋅ F.1
+    (a * b) / b = a * (b / b)
+    (a * b) / b = a * F.1
 }
 
 theorem reciprocal_eq[F: Field](p: F, q: F) {
@@ -500,9 +500,9 @@ theorem inverses_eq[F: Field](p: F, q: F, r: F) {
     implies
     p = q
 } by {
-    r/p = r ⋅ F.1/p
-    r/q = r ⋅ F.1/q
-    r ⋅ F.1/p = r ⋅ F.1/q
+    r/p = r * F.1/p
+    r/q = r * F.1/q
+    r * F.1/p = r * F.1/q
     F.1/p = F.1/q
 }
 
@@ -515,53 +515,53 @@ theorem sub_div_distrib[F: Field](a: F, b: F, c: F) {
 }
 
 theorem recip_mul[F: Field](a: F, b: F) {
-    F.1/(a ⋅ b) = F.1/a ⋅ F.1/b
+    F.1/(a * b) = F.1/a * F.1/b
 } by {
     if a = F.0 {
         // Degenerate but it works
-        a ⋅ b = F.0
-        F.1/(a ⋅ b) = F.0
-        F.1/(a ⋅ b) = F.1/a ⋅ F.1/b
+        a * b = F.0
+        F.1/(a * b) = F.0
+        F.1/(a * b) = F.1/a * F.1/b
     } else {
         if b = F.0 {
-            a ⋅ b = F.0
-            F.1/(a ⋅ b) = F.0
-            F.1/(a ⋅ b) = F.1/a ⋅ F.1/b
+            a * b = F.0
+            F.1/(a * b) = F.0
+            F.1/(a * b) = F.1/a * F.1/b
         } else {
-            F.1/(a ⋅ b) ⋅ (a ⋅ b) = F.1
-            F.1/(a ⋅ b) = F.1/a ⋅ F.1/b
+            F.1/(a * b) * (a * b) = F.1
+            F.1/(a * b) = F.1/a * F.1/b
         }
     }
 }
 
 theorem mul_fractions[F: Field](a: F, b: F, c: F, d: F) {
-    (a / b) ⋅ (c / d) = (a ⋅ c) / (b ⋅ d)
+    (a / b) * (c / d) = (a * c) / (b * d)
 } by {
-    (a / b) ⋅ (c / d) = (a ⋅ F.1/b) ⋅ (c ⋅ F.1/d)
-    (a / b) ⋅ (c / d) = (a ⋅ c) ⋅ (F.1/b ⋅ F.1/d)
-    (F.1/b ⋅ F.1/d) = F.1/(b ⋅ d)
-    (a / b) ⋅ (c / d) = (a ⋅ c) ⋅ F.1/(b ⋅ d)
+    (a / b) * (c / d) = (a * F.1/b) * (c * F.1/d)
+    (a / b) * (c / d) = (a * c) * (F.1/b * F.1/d)
+    (F.1/b * F.1/d) = F.1/(b * d)
+    (a / b) * (c / d) = (a * c) * F.1/(b * d)
 }
 
 theorem cancel_left_num_denom[F: Field](a: F, b: F, c: F) {
     a != F.0 implies
-    (a ⋅ b) / (a ⋅ c) = b / c
+    (a * b) / (a * c) = b / c
 } by {
-    (a / a) ⋅ (b / c) = (a ⋅ b) / (a ⋅ c)
+    (a / a) * (b / c) = (a * b) / (a * c)
 }
 
 theorem cancel_to_reciprocal[F: Field](a: F, b: F) {
     a != F.0 and b != F.0 implies
-    a/(a ⋅ b) = F.1/b
+    a/(a * b) = F.1/b
 }
 
 theorem recip_diff[F: Field](a: F, b: F) {
     a != F.0 and b != F.0 implies
-    F.1/a - F.1/b = (b - a) / (a ⋅ b)
+    F.1/a - F.1/b = (b - a) / (a * b)
 } by {
-    b / (a ⋅ b) = F.1/a
-    a / (a ⋅ b) = F.1/b
-    (b - a) / (a ⋅ b) = (b / (a ⋅ b)) - (a / (a ⋅ b))
+    b / (a * b) = F.1/a
+    a / (a * b) = F.1/b
+    (b - a) / (a * b) = (b / (a * b)) - (a / (a * b))
 }
 
 theorem recip_recip_raw[F: Field](a: F) {
@@ -573,7 +573,7 @@ theorem recip_recip[F: Field](a: F) {
 }
 
 theorem mul_div_swap[F: Field](a: F, b: F, c: F) {
-    a ⋅ b/c = a/c ⋅ b
+    a * b/c = a/c * b
 }
 
 theorem zero_recip[F: Field](a: F) {
@@ -581,12 +581,12 @@ theorem zero_recip[F: Field](a: F) {
 }
 
 theorem div_reciprocal[F: Field](a: F, b: F) {
-    a ⋅ b != F.0 implies a/b ⋅ b/a = F.1
+    a * b != F.0 implies a/b * b/a = F.1
 } by {
-    a/b ⋅ b/a = (a ⋅ b)/(b ⋅ a)
-    a/b ⋅ b/a = (a ⋅ b)/(a ⋅ b)
-    a/b ⋅ b/a = (a ⋅ b) ⋅ F.1/(a ⋅ b)
-    (a ⋅ b) ⋅ F.1/(a ⋅ b) = F.1
+    a/b * b/a = (a * b)/(b * a)
+    a/b * b/a = (a * b)/(a * b)
+    a/b * b/a = (a * b) * F.1/(a * b)
+    (a * b) * F.1/(a * b) = F.1
 }
 
 theorem div_pow[F: Field](a: F, b: F, n: ℕ) {
@@ -598,9 +598,9 @@ theorem div_pow[F: Field](a: F, b: F, n: ℕ) {
     f(ℕ.0)
     forall(m: ℕ) {
         if f(m) {
-            (a/b)^(m.suc) = (a/b)^m ⋅ a/b
-            (a/b)^m ⋅ a/b = (a^m)/(b^m) ⋅ a/b
-            (a^m)/(b^m) ⋅ a/b = (a^m ⋅ a)/(b^m ⋅ b)
+            (a/b)^(m.suc) = (a/b)^m * a/b
+            (a/b)^m * a/b = (a^m)/(b^m) * a/b
+            (a^m)/(b^m) * a/b = (a^m * a)/(b^m * b)
             (a/b)^(m.suc) = (a^(m.suc))/(b^(m.suc))
             f(m.suc)
         }

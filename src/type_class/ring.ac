@@ -6,32 +6,32 @@ from list import List, sum, partial_sum, map
 /// It has two operations, addition, multiplication
 /// and multiplication distributes over addition.
 typeclass R: Ring extends Add, Mul {
-    /// Multiplication distributes over addition from the left: `a ⋅ (b + c) = (a ⋅ b) + (a ⋅ c)`.
+    /// Multiplication distributes over addition from the left: `a * (b + c) = (a * b) + (a * c)`.
     distrib_left(a: R, b: R, c: R) {
-        a ⋅ (b + c) = (a ⋅ b) + (a ⋅ c)
+        a * (b + c) = (a * b) + (a * c)
     }
 
     /// Multiplying by the additive identity yields the additive identity.
     mul_zero_left(a: R) {
-        a ⋅ R.0 = R.0
+        a * R.0 = R.0
     }
 }
 
 /// Multiplying the additive identity by anything yields the additive identity.
 theorem mul_zero_right[R: Ring](a: R) {
-    R.0 ⋅ a = R.0
+    R.0 * a = R.0
 }
 
-/// Multiplication distributes over addition from the right: `(a + b) ⋅ c = (a ⋅ c) + (b ⋅ c)`.
+/// Multiplication distributes over addition from the right: `(a + b) * c = (a * c) + (b * c)`.
 theorem distrib_right[R: Ring](a: R, b: R, c: R) {
-    (a + b) ⋅ c = (a ⋅ c) + (b ⋅ c)
+    (a + b) * c = (a * c) + (b * c)
 }
 
 theorem zero_mul_to_zero[R: Ring](a: R, b: R) {
-    a = R.0 or b = R.0 implies (a ⋅ b) = R.0
+    a = R.0 or b = R.0 implies (a * b) = R.0
 } by {
-    a = R.0 implies (a ⋅ b) = R.0
-    b = R.0 implies (a ⋅ b) = R.0
+    a = R.0 implies (a * b) = R.0
+    b = R.0 implies (a * b) = R.0
 }
 
 theorem trivial_ring[R: Ring] {
@@ -45,54 +45,54 @@ theorem pow_zero[R: Ring](n: ℕ) {
 }
 
 theorem mul_neg_left[R: Ring](a: R, b: R) {
-    -a ⋅ b = -(a ⋅ b)
+    -a * b = -(a * b)
 } by {
-    -a ⋅ b + a ⋅ b = R.0
-    (-a + a) ⋅ b = R.0
-    R.0 ⋅ b = R.0
+    -a * b + a * b = R.0
+    (-a + a) * b = R.0
+    R.0 * b = R.0
 }
 
 theorem mul_neg_right[R: Ring](a: R, b: R) {
-    a ⋅ -b = -(a ⋅ b)
+    a * -b = -(a * b)
 } by {
-    a ⋅ -b + a ⋅ b = R.0
-    a ⋅ (-b + b) = R.0
-    a ⋅ R.0 = R.0
+    a * -b + a * b = R.0
+    a * (-b + b) = R.0
+    a * R.0 = R.0
 }
 
 theorem mul_neg_neg[R: Ring](a: R, b: R) {
-    -a ⋅ -b = a ⋅ b
+    -a * -b = a * b
 } by {
-    -a ⋅ -b = -(a ⋅ -b)
-    -a ⋅ -b = --(a ⋅ b)
+    -a * -b = -(a * -b)
+    -a * -b = --(a * b)
 }
 
 theorem mul_neg_one_left[R: Ring](a: R) {
-    -R.1 ⋅ a = -a
+    -R.1 * a = -a
 } by {
-    -R.1 ⋅ a + R.1 ⋅ a = R.0
-    (-R.1 + R.1) ⋅ a = R.0
-    R.0 ⋅ a = R.0
+    -R.1 * a + R.1 * a = R.0
+    (-R.1 + R.1) * a = R.0
+    R.0 * a = R.0
 }
 
 theorem mul_neg_one_right[R: Ring](a: R) {
-    a ⋅ -R.1 = -a
+    a * -R.1 = -a
 } by {
-    a ⋅ -R.1 + a ⋅ R.1 = R.0
-    a ⋅ (-R.1 + R.1) = R.0
-    a ⋅ R.0 = R.0
+    a * -R.1 + a * R.1 = R.0
+    a * (-R.1 + R.1) = R.0
+    a * R.0 = R.0
 }
 
 theorem mul_sub_distrib_right[R: Ring](a: R, b: R, c: R) { 
-    (a - b) ⋅ c = a ⋅ c - b ⋅ c 
+    (a - b) * c = a * c - b * c 
 } by {
-    (a - b) ⋅ c = (a + -b) ⋅ c
+    (a - b) * c = (a + -b) * c
 }
 
 theorem mul_sub_distrib_left[R: Ring](a: R, b: R, c: R) { 
-    a ⋅ (b - c) = a ⋅ b - a ⋅ c 
+    a * (b - c) = a * b - a * c 
 } by {
-    a ⋅ (b - c) = a ⋅ (b + -(c))
+    a * (b - c) = a * (b + -(c))
 }
 
 theorem geometric_sum_suc[R: Ring](a: R, n: ℕ) {
@@ -109,21 +109,21 @@ theorem geometric_sum_suc[R: Ring](a: R, n: ℕ) {
 }
 
 theorem geometric_sum[R: Ring](a: R, n: ℕ) {
-    (R.1 + -a) ⋅ sum(map(n.range, a.pow)) = R.1 + -a.pow(n)
+    (R.1 + -a) * sum(map(n.range, a.pow)) = R.1 + -a.pow(n)
 } by {
     define f(x: ℕ) -> Bool {
-        R.1 + a ⋅ sum(map(x.range, a.pow)) = sum(map(x.suc.range, a.pow))
+        R.1 + a * sum(map(x.range, a.pow)) = sum(map(x.suc.range, a.pow))
     }
 
     // Base case: n = 0
     // range(0) = []
     // sum(map([], a.pow)) = 0
-    // (a + -R.1) ⋅ 0 = 0
+    // (a + -R.1) * 0 = 0
     // pow(a, 0) + -R.1 = R.1 + -R.1 = 0
     ℕ.0.range = List.nil[ℕ]
     map(List.nil[ℕ], a.pow) = List.nil[R]
     sum(List.nil[R]) = R.0
-    a ⋅ R.0 = R.0
+    a * R.0 = R.0
     ℕ.0.suc = ℕ.1
     ℕ.1.range = List.singleton(ℕ.0)
     sum(map(ℕ.1.range, a.pow)) = a.pow(ℕ.0)
@@ -133,17 +133,17 @@ theorem geometric_sum[R: Ring](a: R, n: ℕ) {
     // Inductive step
     forall(x: ℕ) {
         if f(x) {
-            // Induction hypothesis: (a + -R.1) ⋅ sum(map(x.range, a.pow)) = a.pow(x) + -R.1
+            // Induction hypothesis: (a + -R.1) * sum(map(x.range, a.pow)) = a.pow(x) + -R.1
             
             // sum of appended list
             sum(map(x.suc.range, a.pow)) = sum(map(x.range, a.pow)) + a.pow(x)
             
-            // Left side: a ⋅ sum(map(range(x.suc), a.pow))
-            a ⋅ sum(map(x.suc.range, a.pow)) = a ⋅ (sum(map(x.range, a.pow)) + a.pow(x))
-            a ⋅ (sum(map(x.range, a.pow)) + a.pow(x)) = a ⋅ sum(map(x.range, a.pow)) + a.pow(x.suc)
+            // Left side: a * sum(map(range(x.suc), a.pow))
+            a * sum(map(x.suc.range, a.pow)) = a * (sum(map(x.range, a.pow)) + a.pow(x))
+            a * (sum(map(x.range, a.pow)) + a.pow(x)) = a * sum(map(x.range, a.pow)) + a.pow(x.suc)
             
             // Use induction hypothesis
-            R.1 + a ⋅ sum(x.range.map(a.pow)) + a.pow(x.suc) = sum(map(x.suc.range, a.pow)) + a.pow(x.suc)
+            R.1 + a * sum(x.range.map(a.pow)) + a.pow(x.suc) = sum(map(x.suc.range, a.pow)) + a.pow(x.suc)
 
             sum(map(x.suc.suc.range, a.pow)) = sum(map(x.suc.range, a.pow)) + a.pow(x.suc)
 
@@ -152,35 +152,35 @@ theorem geometric_sum[R: Ring](a: R, n: ℕ) {
     }
     f(n)
 
-    a ⋅ sum(map(n.range, a.pow)) + R.1 = sum(map(n.suc.range, a.pow))
+    a * sum(map(n.range, a.pow)) + R.1 = sum(map(n.suc.range, a.pow))
 
-    a ⋅ sum(map(n.range, a.pow)) = sum(map(n.suc.range, a.pow)) + -R.1
+    a * sum(map(n.range, a.pow)) = sum(map(n.suc.range, a.pow)) + -R.1
 
-    a ⋅ sum(map(n.range, a.pow)) = sum(map(n.range, a.pow)) + a.pow(n) + -R.1
+    a * sum(map(n.range, a.pow)) = sum(map(n.range, a.pow)) + a.pow(n) + -R.1
 
-    -sum(map(n.range, a.pow)) + a ⋅ sum(map(n.range, a.pow)) = a.pow(n) + -R.1 
+    -sum(map(n.range, a.pow)) + a * sum(map(n.range, a.pow)) = a.pow(n) + -R.1 
 
-    sum(map(n.range, a.pow)) + -a ⋅ sum(map(n.range, a.pow)) = -a.pow(n) + R.1 
+    sum(map(n.range, a.pow)) + -a * sum(map(n.range, a.pow)) = -a.pow(n) + R.1 
 
-    sum(map(n.range, a.pow)) + -a ⋅ sum(map(n.range, a.pow)) = (R.1 + -a) ⋅ sum(map(n.range, a.pow))
+    sum(map(n.range, a.pow)) + -a * sum(map(n.range, a.pow)) = (R.1 + -a) * sum(map(n.range, a.pow))
 }
 
 /// Helper function for scalar multiplication.
 define scalar_mul[S: Ring](c: S, x: S) -> S {
-    c ⋅ x
+    c * x
 }
 
 /// Multiplying a constant by a sum equals the sum of the products.
 theorem sum_scalar_mul[S: Ring](c: S, list: List[S]) {
-    c ⋅ sum(list) = sum(list.map(scalar_mul(c)))
+    c * sum(list) = sum(list.map(scalar_mul(c)))
 } by {
     define p(xs: List[S]) -> Bool {
-        c ⋅ sum(xs) = sum(xs.map(scalar_mul(c)))
+        c * sum(xs) = sum(xs.map(scalar_mul(c)))
     }
 
-    // Base case: c ⋅ sum(nil) = sum(map(nil, scalar_mul(c)))
+    // Base case: c * sum(nil) = sum(map(nil, scalar_mul(c)))
     sum(List.nil[S]) = S.0
-    c ⋅ S.0 = S.0
+    c * S.0 = S.0
     List.nil[S].map(scalar_mul(c)) = List.nil[S]
     sum(List.nil[S]) = S.0
     p(List.nil)
@@ -188,24 +188,24 @@ theorem sum_scalar_mul[S: Ring](c: S, list: List[S]) {
     // Inductive step
     forall(head: S, tail: List[S]) {
         if p(tail) {
-            // Induction hypothesis: c ⋅ sum(tail) = sum(tail.map(scalar_mul(c)))
+            // Induction hypothesis: c * sum(tail) = sum(tail.map(scalar_mul(c)))
 
-            // Left side: c ⋅ sum(cons(head, tail))
+            // Left side: c * sum(cons(head, tail))
             sum(List.cons(head, tail)) = head + sum(tail)
-            c ⋅ sum(List.cons(head, tail)) = c ⋅ (head + sum(tail))
-            c ⋅ (head + sum(tail)) = (c ⋅ head) + (c ⋅ sum(tail))
+            c * sum(List.cons(head, tail)) = c * (head + sum(tail))
+            c * (head + sum(tail)) = (c * head) + (c * sum(tail))
 
             // Apply induction hypothesis
-            c ⋅ sum(tail) = sum(tail.map(scalar_mul(c)))
-            (c ⋅ head) + (c ⋅ sum(tail)) = (c ⋅ head) + sum(tail.map(scalar_mul(c)))
+            c * sum(tail) = sum(tail.map(scalar_mul(c)))
+            (c * head) + (c * sum(tail)) = (c * head) + sum(tail.map(scalar_mul(c)))
 
             // Right side: sum(map(cons(head, tail), scalar_mul(c)))
             List.cons(head, tail).map(scalar_mul(c)) = List.cons(scalar_mul(c)(head), tail.map(scalar_mul(c)))
-            scalar_mul(c)(head) = c ⋅ head
-            List.cons(head, tail).map(scalar_mul(c)) = List.cons(c ⋅ head, tail.map(scalar_mul(c)))
-            sum(List.cons(head, tail).map(scalar_mul(c))) = (c ⋅ head) + sum(tail.map(scalar_mul(c)))
+            scalar_mul(c)(head) = c * head
+            List.cons(head, tail).map(scalar_mul(c)) = List.cons(c * head, tail.map(scalar_mul(c)))
+            sum(List.cons(head, tail).map(scalar_mul(c))) = (c * head) + sum(tail.map(scalar_mul(c)))
 
-            c ⋅ sum(List.cons(head, tail)) = sum(List.cons(head, tail).map(scalar_mul(c)))
+            c * sum(List.cons(head, tail)) = sum(List.cons(head, tail).map(scalar_mul(c)))
             p(List.cons(head, tail))
         }
     }
@@ -216,14 +216,14 @@ from util import compose
 
 /// Distributing scalar multiplication through a partial sum.
 theorem partial_scalar_mul[S: Ring](c: S, f: ℕ -> S, n: ℕ, m: ℕ) {
-    c ⋅ partial_sum(f, n, m) = partial_sum(mul_fn(c, f), n, m)
+    c * partial_sum(f, n, m) = partial_sum(mul_fn(c, f), n, m)
 } by {
     // Expand the definition of partial
     partial_sum(f, n, m) = sum(n.upto(m).map(f))
-    c ⋅ partial_sum(f, n, m) = c ⋅ sum(n.upto(m).map(f))
+    c * partial_sum(f, n, m) = c * sum(n.upto(m).map(f))
 
     // Use sum_scalar_mul theorem
-    c ⋅ sum(n.upto(m).map(f)) = sum(n.upto(m).map(f).map(scalar_mul(c)))
+    c * sum(n.upto(m).map(f)) = sum(n.upto(m).map(f).map(scalar_mul(c)))
 
     // Use the map_map theorem
     n.upto(m).map(f).map(scalar_mul(c)) = n.upto(m).map(compose(scalar_mul(c), f))
@@ -231,8 +231,8 @@ theorem partial_scalar_mul[S: Ring](c: S, f: ℕ -> S, n: ℕ, m: ℕ) {
     // Show that compose(scalar_mul(c), f) = mul_fn(c, f)
     forall(k: ℕ) {
         compose(scalar_mul(c), f)(k) = scalar_mul(c)(f(k))
-        scalar_mul(c)(f(k)) = c ⋅ f(k)
-        mul_fn(c, f)(k) = c ⋅ f(k)
+        scalar_mul(c)(f(k)) = c * f(k)
+        mul_fn(c, f)(k) = c * f(k)
         compose(scalar_mul(c), f)(k) = mul_fn(c, f)(k)
     }
 

@@ -124,7 +124,7 @@ theorem subset_imp_sum_lte[A: Ordered_P_Add](list_1: List[A], list_2: List[A]) {
 typeclass R: Ordered_Ring extends Ring, Ordered_Add {
     /// product of positive elements is positive
     mul_preserves_pos(a: R, b: R) {
-        a > R.0 and b > R.0 implies a ⋅ b > R.0
+        a > R.0 and b > R.0 implies a * b > R.0
     } 
 }
 
@@ -148,46 +148,46 @@ theorem neg_change_sign_weak[R: Ordered_Ring](a: R) {
 }
 
 theorem mul_nonneg_nonneg_nonneg[R: Ordered_Ring](a: R, b: R) {
-    a >= R.0 and b >= R.0 implies (a ⋅ b) >= R.0
+    a >= R.0 and b >= R.0 implies (a * b) >= R.0
 } by {
     if a = R.0 or b = R.0 {
-        a ⋅ b = R.0
-        (a ⋅ b) >= R.0
+        a * b = R.0
+        (a * b) >= R.0
     } else {
         a > R.0
         b > R.0
-        a ⋅ b > R.0
-        (a ⋅ b) >= R.0
+        a * b > R.0
+        (a * b) >= R.0
     }
 }
 
 theorem mul_nonneg_nonpos_nonpos[R: Ordered_Ring](a: R, b: R) {
-    a >= R.0 and b <= R.0 implies (a ⋅ b) <= R.0
+    a >= R.0 and b <= R.0 implies (a * b) <= R.0
 }
 
 theorem mul_pos_neg_neg[R: Ordered_Ring](a: R, b: R) {
-    a > R.0 and b < R.0 implies (a ⋅ b) < R.0
+    a > R.0 and b < R.0 implies (a * b) < R.0
 }
 
 theorem mul_nonpos_nonneg_nonpos[R: Ordered_Ring](a: R, b: R) {
-    a <= R.0 and b >= R.0 implies (a ⋅ b) <= R.0
+    a <= R.0 and b >= R.0 implies (a * b) <= R.0
 }
 
 theorem mul_nonpos_nonpos_nonneg[R: Ordered_Ring](a: R, b: R) {
-    a <= R.0 and b <= R.0 implies (a ⋅ b) >= R.0
+    a <= R.0 and b <= R.0 implies (a * b) >= R.0
 }
 
 theorem mul_neg_neg_pos[R: Ordered_Ring](a: R, b: R) {
-    a < R.0 and b < R.0 implies (a ⋅ b) > R.0
+    a < R.0 and b < R.0 implies (a * b) > R.0
 }
 
 
 theorem mul_neg_pos_neg[R: Ordered_Ring](a: R, b: R) {
-    a < R.0 and b > R.0 implies (a ⋅ b) < R.0
+    a < R.0 and b > R.0 implies (a * b) < R.0
 }
 
 theorem square_gte_zero[R: Ordered_Ring](a: R) {
-    a ⋅ a >= R.0
+    a * a >= R.0
 } by {
     if a > R.0 {
     } else {
@@ -198,8 +198,8 @@ theorem square_gte_zero[R: Ordered_Ring](a: R) {
 theorem one_gte_zero[R: Ordered_Ring] {
     R.1 >= R.0
 } by {
-    R.1 ⋅ R.1 = R.1
-    R.1 ⋅ R.1 >= R.0
+    R.1 * R.1 = R.1
+    R.1 * R.1 >= R.0
     R.1 >= R.0
 }
 
@@ -208,88 +208,88 @@ theorem one_gt_zero[R: Ordered_Ring] {
 }
 
 theorem lt_mul_pos[R: Ordered_Ring](a: R, b: R, c: R) {
-    a < b and c > R.0 implies a ⋅ c < b ⋅ c
+    a < b and c > R.0 implies a * c < b * c
 } by {
     b - a > R.0
     c > R.0
-    (b - a) ⋅ c > R.0
-    b ⋅ c - a ⋅ c > R.0
+    (b - a) * c > R.0
+    b * c - a * c > R.0
 }
 
 theorem lt_mul_pos_neg[R: Ordered_Ring](a: R, b: R, c: R) {
-    a < b and c < R.0 implies a ⋅ c > b ⋅ c
+    a < b and c < R.0 implies a * c > b * c
 } 
 
 theorem lte_mul_pos[R: Ordered_Ring](a: R, b: R, c: R) {
-    a <= b and c > R.0 implies a ⋅ c <= b ⋅ c
+    a <= b and c > R.0 implies a * c <= b * c
 } 
 
 theorem mul_lt_lt[R: Ordered_Ring](a: R, b: R, c: R, d: R) {
-    a > R.0 and c > R.0 and a < b and c < d implies a ⋅ c < b ⋅ d
+    a > R.0 and c > R.0 and a < b and c < d implies a * c < b * d
 } by {
-    a ⋅ c < b ⋅ c
+    a * c < b * c
     b > R.0
-    b ⋅ c < b ⋅ d
+    b * c < b * d
 }
 
 theorem mul_lt_lte[R: Ordered_Ring](a: R, b: R, c: R, d: R) {
-    a > R.0 and c > R.0 and a < b and c <= d implies a ⋅ c < b ⋅ d
+    a > R.0 and c > R.0 and a < b and c <= d implies a * c < b * d
 } by {
-    a ⋅ c < b ⋅ c
+    a * c < b * c
     b > R.0
-    b ⋅ c <= b ⋅ d
+    b * c <= b * d
 }
 
 theorem mul_lte_lt[R: Ordered_Ring](a: R, b: R, c: R, d: R) {
-    a > R.0 and c > R.0 and a <= b and c < d implies a ⋅ c < b ⋅ d
+    a > R.0 and c > R.0 and a <= b and c < d implies a * c < b * d
 } by {
-    a ⋅ c <= b ⋅ c
+    a * c <= b * c
     b > R.0
-    b ⋅ c < b ⋅ d
+    b * c < b * d
 }
 
 theorem lt_pos_mul_lt_pos[R: Ordered_Ring](a: R, b: R, c: R, d: R) {
     a >= R.0 and c >= R.0 and a < b and c < d
     implies
-    a ⋅ c < b ⋅ d
+    a * c < b * d
 } by {
-    a ⋅ c <= b ⋅ c
+    a * c <= b * c
     b > R.0
-    b ⋅ c < b ⋅ d
+    b * c < b * d
 }
 
 theorem lte_mul_lte[R: Ordered_Ring](a: R, b: R, c: R, d: R) {
     a >= R.0 and c >= R.0 and a <= b and c <= d
     implies
-    a ⋅ c <= b ⋅ d
+    a * c <= b * d
 } by {
     not b < R.0
     not d < R.0
     if a = b {
-        c ⋅ b <= d ⋅ b
-        a ⋅ c <= b ⋅ d
+        c * b <= d * b
+        a * c <= b * d
     } else {
         a < b
         if c = d {
-            a ⋅ c <= b ⋅ d
+            a * c <= b * d
         } else {
             c < d
-            a ⋅ c < b ⋅ d
-            a ⋅ c <= b ⋅ d
+            a * c < b * d
+            a * c <= b * d
         }
     }
 }
 
 theorem lte_mul_nonneg[R: Ordered_Ring](a: R, b: R, c: R) {
-    a <= b and c >= R.0 implies a ⋅ c <= b ⋅ c
+    a <= b and c >= R.0 implies a * c <= b * c
 } by {
     if c = R.0 {
-        a ⋅ c = R.0
-        b ⋅ c = R.0
-        a ⋅ c <= b ⋅ c
+        a * c = R.0
+        b * c = R.0
+        a * c <= b * c
     } else {
         c > R.0
-        a ⋅ c <= b ⋅ c
+        a * c <= b * c
     }
 }
 
@@ -307,53 +307,53 @@ theorem lte_neg[R: Ordered_Ring](p: R, q: R) {
 } 
 
 theorem lt_cancel_pos_mul_right[R: Ordered_Ring](a: R, b: R, c: R) {
-    c > R.0 and a ⋅ c < b ⋅ c implies a < b
+    c > R.0 and a * c < b * c implies a < b
 } by {
     if a >= b {
-        a ⋅ c >= b ⋅ c
-        not (a ⋅ c < b ⋅ c)
+        a * c >= b * c
+        not (a * c < b * c)
         false
     }
 }
 
 theorem lt_cancel_pos_mul_left[R: Ordered_Ring](a: R, b: R, c: R) {
-    c > R.0 and c ⋅ a < c ⋅ b implies a < b
+    c > R.0 and c * a < c * b implies a < b
 }
 
 theorem gt_cancel_pos_mul_right[R: Ordered_Ring](a: R, b: R, c: R) {
-    c > R.0 and a ⋅ c > b ⋅ c implies a > b
+    c > R.0 and a * c > b * c implies a > b
 } 
 
 theorem gt_cancel_pos_mul_left[R: Ordered_Ring](a: R, b: R, c: R) {
-    c > R.0 and c ⋅ a > c ⋅ b implies a > b
+    c > R.0 and c * a > c * b implies a > b
 } 
 
 theorem cancel_positivity_left[R: Ordered_Ring](a: R, b: R) {
-    a > R.0 and (a ⋅ b) > R.0 implies b > R.0
+    a > R.0 and (a * b) > R.0 implies b > R.0
 } 
 
 theorem cancel_positivity_right[R: Ordered_Ring](a: R, b: R) {
-    b > R.0 and (a ⋅ b) > R.0 implies a > R.0
+    b > R.0 and (a * b) > R.0 implies a > R.0
 }
 
 theorem abs_distrib_mul[R: Ordered_Ring](a: R, b: R) {
-    (a ⋅ b).abs = (a).abs ⋅ (b).abs
+    (a * b).abs = (a).abs * (b).abs
 } by {
     if a > R.0 {
         if b > R.0 {
-            a ⋅ b > R.0
-            abs(a ⋅ b) = abs(a) ⋅ abs(b)
+            a * b > R.0
+            abs(a * b) = abs(a) * abs(b)
         } else {
-            a ⋅ b <= R.0
-            abs(a ⋅ b) = abs(a) ⋅ abs(b)
+            a * b <= R.0
+            abs(a * b) = abs(a) * abs(b)
         }
     } else {
         if b > R.0 {
-            a ⋅ b <= R.0
-            abs(a ⋅ b) = abs(a) ⋅ abs(b)
+            a * b <= R.0
+            abs(a * b) = abs(a) * abs(b)
         } else {
-            a ⋅ b >= R.0
-            abs(a ⋅ b) = abs(a) ⋅ abs(b)
+            a * b >= R.0
+            abs(a * b) = abs(a) * abs(b)
         }
     }
 }

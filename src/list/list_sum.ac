@@ -4,7 +4,7 @@ from nat import ℕ
 numerals ℕ
 
 /// Computes the sum of all elements in a list (requires elements to form an additive commutative monoid).  
-/// also aplly to mul ⋅
+/// also aplly to mul *
 define sum[A: P_Add](items: List[A]) -> A {
     match items {
         List.nil {

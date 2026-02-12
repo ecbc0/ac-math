@@ -1099,9 +1099,9 @@ attributes ℤ {
     /// Multiply this integer by a natural number.
     define mul_nat(self, n: ℕ) -> ℤ {
         if self < 0 {
-            -(from_nat(abs(self) ⋅ n))
+            -(from_nat(abs(self) * n))
         } else {
-            from_nat(abs(self) ⋅ n)
+            from_nat(abs(self) * n)
         }
     }
 }
@@ -1109,23 +1109,23 @@ attributes ℤ {
 theorem mul_nat_zero_right(a: ℤ) { 
     a.mul_nat(ℕ.0) = 0 
 } by {
-    from_nat(abs(a) ⋅ ℕ.0) = 0
-    -from_nat(abs(a) ⋅ ℕ.0) = 0
+    from_nat(abs(a) * ℕ.0) = 0
+    -from_nat(abs(a) * ℕ.0) = 0
 }
 
 theorem mul_nat_zero_left(n: ℕ) { 
     0.mul_nat(n) = 0 
 } by {
-    from_nat(abs(0) ⋅ n) = 0
+    from_nat(abs(0) * n) = 0
 }
 
 theorem mul_nat_nonpos_left(a: ℤ, n: ℕ) {
-    a <= 0 implies a.mul_nat(n) = -(from_nat(abs(a) ⋅ n))
+    a <= 0 implies a.mul_nat(n) = -(from_nat(abs(a) * n))
 } by {
     if a = 0 {
-        a.mul_nat(n) = -(from_nat(abs(a) ⋅ n))
+        a.mul_nat(n) = -(from_nat(abs(a) * n))
     } else {
-        a.mul_nat(n) = -(from_nat(abs(a) ⋅ n))
+        a.mul_nat(n) = -(from_nat(abs(a) * n))
     }
 }
 
@@ -1136,18 +1136,18 @@ theorem mul_nat_negate_left(a: ℤ, n: ℕ) {
         (-a).mul_nat(n) = -(a.mul_nat(n)) 
     }
     if a > 0 {
-        a.mul_nat(n) = from_nat(abs(a) ⋅ n)
+        a.mul_nat(n) = from_nat(abs(a) * n)
         (-a) < 0
-        (-a).mul_nat(n) = -(from_nat(abs(-a) ⋅ n))
-        (-a).mul_nat(n) = -(from_nat(abs(a) ⋅ n))
+        (-a).mul_nat(n) = -(from_nat(abs(-a) * n))
+        (-a).mul_nat(n) = -(from_nat(abs(a) * n))
 
         (-a).mul_nat(n) = -(a.mul_nat(n))
     } 
     if a < 0 {
-        a.mul_nat(n) = -(from_nat(abs(a) ⋅ n))
+        a.mul_nat(n) = -(from_nat(abs(a) * n))
         (-a) > 0
-        (-a).mul_nat(n) = from_nat(abs(-a) ⋅ n)
-        (-a).mul_nat(n) = from_nat(abs(a) ⋅ n)
+        (-a).mul_nat(n) = from_nat(abs(-a) * n)
+        (-a).mul_nat(n) = from_nat(abs(a) * n)
 
         (-a).mul_nat(n) = -(a.mul_nat(n))
     }
@@ -1156,9 +1156,9 @@ theorem mul_nat_negate_left(a: ℤ, n: ℕ) {
 theorem mul_nat_nonneg_suc(a: ℤ, n: ℕ) {
     a >= 0 implies a.mul_nat(n.suc) = a.mul_nat(n) + a
 } by {
-    a.mul_nat(n.suc) = from_nat(abs(a) ⋅ n.suc)
-    a.mul_nat(n.suc) = from_nat(abs(a) ⋅ n + abs(a))
-    a.mul_nat(n.suc) = from_nat(abs(a) ⋅ n) +  from_nat(abs(a))
+    a.mul_nat(n.suc) = from_nat(abs(a) * n.suc)
+    a.mul_nat(n.suc) = from_nat(abs(a) * n + abs(a))
+    a.mul_nat(n.suc) = from_nat(abs(a) * n) +  from_nat(abs(a))
     from_nat(abs(a)) = a
     a.mul_nat(n.suc) = a.mul_nat(n) + a
 }
@@ -1210,15 +1210,15 @@ theorem mul_nat_distrib_right(a: ℤ, b: ℤ, n: ℕ) {
 }
 
 theorem mul_nat_from_nat_left(a: ℕ, b: ℕ) { 
-    from_nat(a).mul_nat(b) = from_nat(a ⋅ b) 
+    from_nat(a).mul_nat(b) = from_nat(a * b) 
 } by {
     if a = ℕ.0 {
-        from_nat(a).mul_nat(b) = from_nat(a ⋅ b)
+        from_nat(a).mul_nat(b) = from_nat(a * b)
     } else {
         from_nat(a) > 0
         abs(from_nat(a)) = a
-        from_nat(a).mul_nat(b) = from_nat(abs(from_nat(a)) ⋅ b)
-        from_nat(a).mul_nat(b) = from_nat(a ⋅ b)
+        from_nat(a).mul_nat(b) = from_nat(abs(from_nat(a)) * b)
+        from_nat(a).mul_nat(b) = from_nat(a * b)
     }
 }
 
@@ -1235,197 +1235,197 @@ attributes ℤ {
     }
 
     /// The integer formed by appending a digit to this integer in base 10.
-    define read(self, other: ℤ) -> ℤ { 10 ⋅ self + other }
+    define read(self, other: ℤ) -> ℤ { 10 * self + other }
 }
 
-theorem mul_zero_right(a: ℤ) { a ⋅ 0 = 0 } by {
-    a ⋅ 0 = -(a.mul_nat(ℕ.0))
-    a ⋅ 0 = -(0)
+theorem mul_zero_right(a: ℤ) { a * 0 = 0 } by {
+    a * 0 = -(a.mul_nat(ℕ.0))
+    a * 0 = -(0)
 }
 
 theorem mul_zero_left(a: ℤ) {
-    0 ⋅ a = 0
+    0 * a = 0
 } 
 
 theorem mul_to_zero(a: ℤ, b: ℤ) {
-    a = 0 or b = 0 implies a ⋅ b = 0
+    a = 0 or b = 0 implies a * b = 0
 } by {
     if a = 0 { 
-        a ⋅ b = 0 
+        a * b = 0 
     } else { 
         b = 0
-        a ⋅ b = 0
+        a * b = 0
     }
 }
 
 theorem mul_nat_from_nat_right(a: ℤ, n: ℕ) { 
-    a.mul_nat(n) = (a ⋅ from_nat(n)) 
+    a.mul_nat(n) = (a * from_nat(n)) 
 } by {
     if n = ℕ.0 {
-        a.mul_nat(n) = (a ⋅ from_nat(n)) 
+        a.mul_nat(n) = (a * from_nat(n)) 
     } else {
         from_nat(n) > 0
-        a ⋅ from_nat(n) = a.mul_nat(abs(from_nat(n)))
+        a * from_nat(n) = a.mul_nat(abs(from_nat(n)))
     }
 }
 
-theorem mul_nonneg_right(a: ℤ, b: ℤ) { b >= 0 implies a ⋅ b = a.mul_nat(abs(b)) } by {
+theorem mul_nonneg_right(a: ℤ, b: ℤ) { b >= 0 implies a * b = a.mul_nat(abs(b)) } by {
     if b = 0 {
-        a ⋅ b = 0
+        a * b = 0
         a.mul_nat(abs(b)) = 0
-        a ⋅ b = a.mul_nat(abs(b))
+        a * b = a.mul_nat(abs(b))
     } else {
-        a ⋅ b = a.mul_nat(abs(b))
+        a * b = a.mul_nat(abs(b))
     }
 }
 
 theorem mul_nonneg_nonneg(a: ℤ, b: ℤ) {
-    a >= 0 and b >= 0 implies a ⋅ b = from_nat(abs(a) ⋅ abs(b))
+    a >= 0 and b >= 0 implies a * b = from_nat(abs(a) * abs(b))
 } by {
-    a ⋅ b = a.mul_nat(abs(b))
+    a * b = a.mul_nat(abs(b))
 }
 
 theorem mul_nonneg_nonpos(a: ℤ, b: ℤ) {
-    a >= 0 and b <= 0 implies a ⋅ b = -(from_nat(abs(a) ⋅ abs(b)))
+    a >= 0 and b <= 0 implies a * b = -(from_nat(abs(a) * abs(b)))
 } by {
-    a ⋅ b = -(a.mul_nat(abs(b)))
+    a * b = -(a.mul_nat(abs(b)))
 }
 
 theorem mul_nonpos_nonneg(a: ℤ, b: ℤ) {
-    a <= 0 and b >= 0 implies a ⋅ b = -(from_nat(abs(a) ⋅ abs(b)))
+    a <= 0 and b >= 0 implies a * b = -(from_nat(abs(a) * abs(b)))
 } by {
-    a ⋅ b = a.mul_nat(abs(b))
+    a * b = a.mul_nat(abs(b))
 }
 
 theorem mul_nonpos_nonpos(a: ℤ, b: ℤ) {
-    a <= 0 and b <= 0 implies a ⋅ b = from_nat(abs(a) ⋅ abs(b))
+    a <= 0 and b <= 0 implies a * b = from_nat(abs(a) * abs(b))
 } by {
-    a ⋅ b = -(a.mul_nat(abs(b)))
-    a ⋅ b = -(-(from_nat(abs(a) ⋅ abs(b))))
+    a * b = -(a.mul_nat(abs(b)))
+    a * b = -(-(from_nat(abs(a) * abs(b))))
 }
 
-theorem mul_comm(a: ℤ, b: ℤ) { a ⋅ b = b ⋅ a } by {
+theorem mul_comm(a: ℤ, b: ℤ) { a * b = b * a } by {
     if a > 0 {
         if b > 0 {
-            a ⋅ b = from_nat(abs(a) ⋅ abs(b))
-            b ⋅ a = from_nat(abs(b) ⋅ abs(a))
-            a ⋅ b = b ⋅ a
+            a * b = from_nat(abs(a) * abs(b))
+            b * a = from_nat(abs(b) * abs(a))
+            a * b = b * a
         } else {
-            a ⋅ b = -(from_nat(abs(a) ⋅ abs(b)))
-            b ⋅ a = -(from_nat(abs(b) ⋅ abs(a)))
-            a ⋅ b = b ⋅ a
+            a * b = -(from_nat(abs(a) * abs(b)))
+            b * a = -(from_nat(abs(b) * abs(a)))
+            a * b = b * a
         }
     } else {
         if b > 0 {
-            a ⋅ b = -(from_nat(abs(a) ⋅ abs(b)))
-            b ⋅ a = -(from_nat(abs(b) ⋅ abs(a)))
-            a ⋅ b = b ⋅ a
+            a * b = -(from_nat(abs(a) * abs(b)))
+            b * a = -(from_nat(abs(b) * abs(a)))
+            a * b = b * a
         } else {
-            a ⋅ b = from_nat(abs(a) ⋅ abs(b))
-            b ⋅ a = from_nat(abs(b) ⋅ abs(a))
-            a ⋅ b = b ⋅ a
+            a * b = from_nat(abs(a) * abs(b))
+            b * a = from_nat(abs(b) * abs(a))
+            a * b = b * a
         }
     }
 }
 
-theorem mul_one_right(a: ℤ) { a ⋅ 1 = a } by {
+theorem mul_one_right(a: ℤ) { a * 1 = a } by {
     1 > 0
-    a ⋅ 1 = a.mul_nat(ℕ.1)
+    a * 1 = a.mul_nat(ℕ.1)
     if a > 0 {
-        a ⋅ 1 = from_nat(abs(a) ⋅ ℕ.1)
-        a ⋅ 1 = from_nat(abs(a))
-        a ⋅ 1 = a
+        a * 1 = from_nat(abs(a) * ℕ.1)
+        a * 1 = from_nat(abs(a))
+        a * 1 = a
     } else {
-        a ⋅ 1 = -(from_nat(abs(a) ⋅ ℕ.1))
+        a * 1 = -(from_nat(abs(a) * ℕ.1))
         from_nat(abs(a)) = -a
-        a ⋅ 1 = a
+        a * 1 = a
     }
 }
 
-theorem mul_one_left(a: ℤ) { 1 ⋅ a = a }
+theorem mul_one_left(a: ℤ) { 1 * a = a }
 
 theorem mul_neg_left(a: ℤ, b: ℤ) { 
-    -a ⋅ b = -(a ⋅ b) 
+    -a * b = -(a * b) 
 } by {
     if a > 0 {
         if b > 0 {
-            -a ⋅ b = -from_nat(abs(a) ⋅ abs(b))
-            a ⋅ b = from_nat(abs(a) ⋅ abs(b))
+            -a * b = -from_nat(abs(a) * abs(b))
+            a * b = from_nat(abs(a) * abs(b))
 
-            -a ⋅ b = -(a ⋅ b)
+            -a * b = -(a * b)
         } else {
-            -a ⋅ b = from_nat(abs(a) ⋅ abs(b))
-            a ⋅ b = -from_nat(abs(a) ⋅ abs(b))
+            -a * b = from_nat(abs(a) * abs(b))
+            a * b = -from_nat(abs(a) * abs(b))
 
-            -a ⋅ b = -(a ⋅ b)
+            -a * b = -(a * b)
         }
     } else {
         if b > 0 {
-            -a ⋅ b = from_nat(abs(a) ⋅ abs(b))
-            a ⋅ b = -from_nat(abs(a) ⋅ abs(b))
+            -a * b = from_nat(abs(a) * abs(b))
+            a * b = -from_nat(abs(a) * abs(b))
 
-            -a ⋅ b = -(a ⋅ b)
+            -a * b = -(a * b)
         } else {
-            -a ⋅ b = -from_nat(abs(a) ⋅ abs(b))
-            a ⋅ b = from_nat(abs(a) ⋅ abs(b))
+            -a * b = -from_nat(abs(a) * abs(b))
+            a * b = from_nat(abs(a) * abs(b))
 
-            -a ⋅ b = -(a ⋅ b)
+            -a * b = -(a * b)
         }
     }
 }
 
 theorem mul_neg_right(a: ℤ, b: ℤ) { 
-    a ⋅ -b = -(a ⋅ b) 
+    a * -b = -(a * b) 
 }
 
 theorem mul_distrib_nonneg_right(a: ℤ, b: ℤ, c: ℤ) {
-    c >= 0 implies (a + b) ⋅ c = a ⋅ c + b ⋅ c
+    c >= 0 implies (a + b) * c = a * c + b * c
 } by {
-    (a + b) ⋅ c = (a + b).mul_nat(abs(c))
-    (a + b) ⋅ c = a.mul_nat(abs(c)) + b.mul_nat(abs(c))
-    (a + b) ⋅ c = a ⋅ c + b ⋅ c
+    (a + b) * c = (a + b).mul_nat(abs(c))
+    (a + b) * c = a.mul_nat(abs(c)) + b.mul_nat(abs(c))
+    (a + b) * c = a * c + b * c
 }
 
-theorem mul_distrib_right(a: ℤ, b: ℤ, c: ℤ) { (a + b) ⋅ c = a ⋅ c + b ⋅ c } by {
+theorem mul_distrib_right(a: ℤ, b: ℤ, c: ℤ) { (a + b) * c = a * c + b * c } by {
     if c < 0 {
         (-c) > 0
-        (a + b) ⋅ -(c) = a ⋅ -(c) + b ⋅ -(c)
-        (a + b) ⋅ c = a ⋅ c + b ⋅ c
+        (a + b) * -(c) = a * -(c) + b * -(c)
+        (a + b) * c = a * c + b * c
     } else {
-        (a + b) ⋅ c = a ⋅ c + b ⋅ c
+        (a + b) * c = a * c + b * c
     }
 }
 
 theorem mul_distrib_left(a: ℤ, b: ℤ, c: ℤ) { 
-    a ⋅ (b + c) = a ⋅ b + a ⋅ c 
+    a * (b + c) = a * b + a * c 
 } 
 
 theorem mul_sub_distrib_right(a: ℤ, b: ℤ, c: ℤ) { 
-    (a - b) ⋅ c = a ⋅ c - b ⋅ c 
+    (a - b) * c = a * c - b * c 
 } by {
-    (a - b) ⋅ c = (a + -b) ⋅ c
+    (a - b) * c = (a + -b) * c
 }
 
 theorem mul_sub_distrib_left(a: ℤ, b: ℤ, c: ℤ) { 
-    a ⋅ (b - c) = a ⋅ b - a ⋅ c 
+    a * (b - c) = a * b - a * c 
 } by {
-    a ⋅ (b - c) = a ⋅ (b + -(c))
+    a * (b - c) = a * (b + -(c))
 }
 
 theorem abs_mul(a: ℤ, b: ℤ) { 
-    abs(a ⋅ b) = abs(a) ⋅ abs(b) 
+    abs(a * b) = abs(a) * abs(b) 
 } by {
     if a > 0 {
         if b > 0 {
-            abs(a ⋅ b) = abs(a) ⋅ abs(b)
+            abs(a * b) = abs(a) * abs(b)
         } else {
-            abs(a ⋅ b) = abs(a) ⋅ abs(b)
+            abs(a * b) = abs(a) * abs(b)
         }
     } else {
         if b > 0 {
-            abs(a ⋅ b) = abs(a) ⋅ abs(b)
+            abs(a * b) = abs(a) * abs(b)
         } else {
-            abs(a ⋅ b) = abs(a) ⋅ abs(b)
+            abs(a * b) = abs(a) * abs(b)
         }
     }
 }
